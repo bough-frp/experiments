@@ -1,0 +1,2212 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0004-patch-cell-crossover-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0004-patch-cell-crossover-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.09s
+     Running benches/rfd-0004-patch-cell-crossover-wallclock.rs (target/release/deps/rfd_0004_patch_cell_crossover_wallclock-ca6c8a9153efcd3d)
+Gnuplot not found, using plotters backend
+Benchmarking vec-one/baseline/3
+Benchmarking vec-one/baseline/3: Warming up for 200.00 ms
+Benchmarking vec-one/baseline/3: Collecting 50 samples in estimated 800.02 ms (25M iterations)
+Benchmarking vec-one/baseline/3: Analyzing
+vec-one/baseline/3      time:   [31.988 ns 32.048 ns 32.121 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-one/delta/3
+Benchmarking vec-one/delta/3: Warming up for 200.00 ms
+Benchmarking vec-one/delta/3: Collecting 50 samples in estimated 800.02 ms (37M iterations)
+Benchmarking vec-one/delta/3: Analyzing
+vec-one/delta/3         time:   [21.408 ns 21.452 ns 21.502 ns]
+Benchmarking vec-one/rope/3
+Benchmarking vec-one/rope/3: Warming up for 200.00 ms
+Benchmarking vec-one/rope/3: Collecting 50 samples in estimated 800.04 ms (25M iterations)
+Benchmarking vec-one/rope/3: Analyzing
+vec-one/rope/3          time:   [31.960 ns 31.985 ns 32.008 ns]
+Benchmarking vec-one/btree/3
+Benchmarking vec-one/btree/3: Warming up for 200.00 ms
+Benchmarking vec-one/btree/3: Collecting 50 samples in estimated 800.02 ms (27M iterations)
+Benchmarking vec-one/btree/3: Analyzing
+vec-one/btree/3         time:   [29.329 ns 29.382 ns 29.432 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking vec-one/btree-shared/3
+Benchmarking vec-one/btree-shared/3: Warming up for 200.00 ms
+Benchmarking vec-one/btree-shared/3: Collecting 50 samples in estimated 800.00 ms (35M iterations)
+Benchmarking vec-one/btree-shared/3: Analyzing
+vec-one/btree-shared/3  time:   [22.559 ns 22.581 ns 22.604 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  1 (2.00%) low mild
+  2 (4.00%) high mild
+Benchmarking vec-one/baseline/10
+Benchmarking vec-one/baseline/10: Warming up for 200.00 ms
+Benchmarking vec-one/baseline/10: Collecting 50 samples in estimated 800.04 ms (19M iterations)
+Benchmarking vec-one/baseline/10: Analyzing
+vec-one/baseline/10     time:   [41.631 ns 42.009 ns 42.383 ns]
+Found 8 outliers among 50 measurements (16.00%)
+  8 (16.00%) high mild
+Benchmarking vec-one/delta/10
+Benchmarking vec-one/delta/10: Warming up for 200.00 ms
+Benchmarking vec-one/delta/10: Collecting 50 samples in estimated 800.03 ms (32M iterations)
+Benchmarking vec-one/delta/10: Analyzing
+vec-one/delta/10        time:   [25.078 ns 25.120 ns 25.161 ns]
+Benchmarking vec-one/rope/10
+Benchmarking vec-one/rope/10: Warming up for 200.00 ms
+Benchmarking vec-one/rope/10: Collecting 50 samples in estimated 800.02 ms (23M iterations)
+Benchmarking vec-one/rope/10: Analyzing
+vec-one/rope/10         time:   [35.814 ns 35.867 ns 35.919 ns]
+Benchmarking vec-one/btree/10
+Benchmarking vec-one/btree/10: Warming up for 200.00 ms
+Benchmarking vec-one/btree/10: Collecting 50 samples in estimated 800.02 ms (25M iterations)
+Benchmarking vec-one/btree/10: Analyzing
+vec-one/btree/10        time:   [32.255 ns 32.284 ns 32.311 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking vec-one/btree-shared/10
+Benchmarking vec-one/btree-shared/10: Warming up for 200.00 ms
+Benchmarking vec-one/btree-shared/10: Collecting 50 samples in estimated 800.02 ms (32M iterations)
+Benchmarking vec-one/btree-shared/10: Analyzing
+vec-one/btree-shared/10 time:   [24.915 ns 24.960 ns 25.009 ns]
+Benchmarking vec-one/baseline/30
+Benchmarking vec-one/baseline/30: Warming up for 200.00 ms
+Benchmarking vec-one/baseline/30: Collecting 50 samples in estimated 800.01 ms (13M iterations)
+Benchmarking vec-one/baseline/30: Analyzing
+vec-one/baseline/30     time:   [60.734 ns 60.835 ns 60.933 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  1 (2.00%) low severe
+  4 (8.00%) low mild
+Benchmarking vec-one/delta/30
+Benchmarking vec-one/delta/30: Warming up for 200.00 ms
+Benchmarking vec-one/delta/30: Collecting 50 samples in estimated 800.03 ms (27M iterations)
+Benchmarking vec-one/delta/30: Analyzing
+vec-one/delta/30        time:   [29.378 ns 29.424 ns 29.471 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-one/rope/30
+Benchmarking vec-one/rope/30: Warming up for 200.00 ms
+Benchmarking vec-one/rope/30: Collecting 50 samples in estimated 800.03 ms (19M iterations)
+Benchmarking vec-one/rope/30: Analyzing
+vec-one/rope/30         time:   [41.492 ns 41.516 ns 41.538 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+Benchmarking vec-one/btree/30
+Benchmarking vec-one/btree/30: Warming up for 200.00 ms
+Benchmarking vec-one/btree/30: Collecting 50 samples in estimated 800.04 ms (21M iterations)
+Benchmarking vec-one/btree/30: Analyzing
+vec-one/btree/30        time:   [36.989 ns 37.006 ns 37.022 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking vec-one/btree-shared/30
+Benchmarking vec-one/btree-shared/30: Warming up for 200.00 ms
+Benchmarking vec-one/btree-shared/30: Collecting 50 samples in estimated 800.03 ms (26M iterations)
+Benchmarking vec-one/btree-shared/30: Analyzing
+vec-one/btree-shared/30 time:   [30.701 ns 30.778 ns 30.852 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  2 (4.00%) low mild
+  5 (10.00%) high mild
+Benchmarking vec-one/baseline/100
+Benchmarking vec-one/baseline/100: Warming up for 200.00 ms
+Benchmarking vec-one/baseline/100: Collecting 50 samples in estimated 800.06 ms (7.2M iterations)
+Benchmarking vec-one/baseline/100: Analyzing
+vec-one/baseline/100    time:   [110.66 ns 110.90 ns 111.10 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) low mild
+Benchmarking vec-one/delta/100
+Benchmarking vec-one/delta/100: Warming up for 200.00 ms
+Benchmarking vec-one/delta/100: Collecting 50 samples in estimated 800.02 ms (17M iterations)
+Benchmarking vec-one/delta/100: Analyzing
+vec-one/delta/100       time:   [47.351 ns 47.393 ns 47.436 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  3 (6.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-one/rope/100
+Benchmarking vec-one/rope/100: Warming up for 200.00 ms
+Benchmarking vec-one/rope/100: Collecting 50 samples in estimated 800.03 ms (18M iterations)
+Benchmarking vec-one/rope/100: Analyzing
+vec-one/rope/100        time:   [45.075 ns 45.105 ns 45.131 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-one/btree/100
+Benchmarking vec-one/btree/100: Warming up for 200.00 ms
+Benchmarking vec-one/btree/100: Collecting 50 samples in estimated 800.01 ms (15M iterations)
+Benchmarking vec-one/btree/100: Analyzing
+vec-one/btree/100       time:   [52.818 ns 52.882 ns 52.939 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) low mild
+  1 (2.00%) high mild
+Benchmarking vec-one/btree-shared/100
+Benchmarking vec-one/btree-shared/100: Warming up for 200.00 ms
+Benchmarking vec-one/btree-shared/100: Collecting 50 samples in estimated 800.00 ms (21M iterations)
+Benchmarking vec-one/btree-shared/100: Analyzing
+vec-one/btree-shared/100
+                        time:   [37.789 ns 37.810 ns 37.827 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-one/baseline/1000
+Benchmarking vec-one/baseline/1000: Warming up for 200.00 ms
+Benchmarking vec-one/baseline/1000: Collecting 50 samples in estimated 800.49 ms (1.1M iterations)
+Benchmarking vec-one/baseline/1000: Analyzing
+vec-one/baseline/1000   time:   [717.27 ns 720.43 ns 723.38 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking vec-one/delta/1000
+Benchmarking vec-one/delta/1000: Warming up for 200.00 ms
+Benchmarking vec-one/delta/1000: Collecting 50 samples in estimated 800.20 ms (3.4M iterations)
+Benchmarking vec-one/delta/1000: Analyzing
+vec-one/delta/1000      time:   [238.74 ns 239.15 ns 239.50 ns]
+Benchmarking vec-one/rope/1000
+Benchmarking vec-one/rope/1000: Warming up for 200.00 ms
+Benchmarking vec-one/rope/1000: Collecting 50 samples in estimated 800.02 ms (11M iterations)
+Benchmarking vec-one/rope/1000: Analyzing
+vec-one/rope/1000       time:   [74.508 ns 74.686 ns 74.888 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking vec-one/btree/1000
+Benchmarking vec-one/btree/1000: Warming up for 200.00 ms
+Benchmarking vec-one/btree/1000: Collecting 50 samples in estimated 800.01 ms (9.7M iterations)
+Benchmarking vec-one/btree/1000: Analyzing
+vec-one/btree/1000      time:   [80.905 ns 81.199 ns 81.827 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-one/btree-shared/1000
+Benchmarking vec-one/btree-shared/1000: Warming up for 200.00 ms
+Benchmarking vec-one/btree-shared/1000: Collecting 50 samples in estimated 800.03 ms (14M iterations)
+Benchmarking vec-one/btree-shared/1000: Analyzing
+vec-one/btree-shared/1000
+                        time:   [56.476 ns 56.538 ns 56.622 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  2 (4.00%) high mild
+  3 (6.00%) high severe
+Benchmarking vec-one/baseline/10000
+Benchmarking vec-one/baseline/10000: Warming up for 200.00 ms
+Benchmarking vec-one/baseline/10000: Collecting 50 samples in estimated 801.97 ms (115k iterations)
+Benchmarking vec-one/baseline/10000: Analyzing
+vec-one/baseline/10000  time:   [6.9031 µs 6.9058 µs 6.9092 µs]
+Found 11 outliers among 50 measurements (22.00%)
+  1 (2.00%) high mild
+  10 (20.00%) high severe
+Benchmarking vec-one/delta/10000
+Benchmarking vec-one/delta/10000: Warming up for 200.00 ms
+Benchmarking vec-one/delta/10000: Collecting 50 samples in estimated 801.76 ms (311k iterations)
+Benchmarking vec-one/delta/10000: Analyzing
+vec-one/delta/10000     time:   [2.5784 µs 2.5803 µs 2.5819 µs]
+Benchmarking vec-one/rope/10000
+Benchmarking vec-one/rope/10000: Warming up for 200.00 ms
+Benchmarking vec-one/rope/10000: Collecting 50 samples in estimated 800.03 ms (5.7M iterations)
+Benchmarking vec-one/rope/10000: Analyzing
+vec-one/rope/10000      time:   [141.02 ns 141.07 ns 141.14 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  1 (2.00%) low severe
+  1 (2.00%) high mild
+  2 (4.00%) high severe
+Benchmarking vec-one/btree/10000
+Benchmarking vec-one/btree/10000: Warming up for 200.00 ms
+Benchmarking vec-one/btree/10000: Collecting 50 samples in estimated 800.16 ms (6.1M iterations)
+Benchmarking vec-one/btree/10000: Analyzing
+vec-one/btree/10000     time:   [131.28 ns 131.33 ns 131.39 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-one/btree-shared/10000
+Benchmarking vec-one/btree-shared/10000: Warming up for 200.00 ms
+Benchmarking vec-one/btree-shared/10000: Collecting 50 samples in estimated 800.04 ms (10M iterations)
+Benchmarking vec-one/btree-shared/10000: Analyzing
+vec-one/btree-shared/10000
+                        time:   [79.798 ns 79.967 ns 80.178 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-one/baseline/100000
+Benchmarking vec-one/baseline/100000: Warming up for 200.00 ms
+Benchmarking vec-one/baseline/100000: Collecting 50 samples in estimated 822.51 ms (11k iterations)
+Benchmarking vec-one/baseline/100000: Analyzing
+vec-one/baseline/100000 time:   [71.867 µs 72.100 µs 72.280 µs]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-one/delta/100000
+Benchmarking vec-one/delta/100000: Warming up for 200.00 ms
+Benchmarking vec-one/delta/100000: Collecting 50 samples in estimated 813.32 ms (29k iterations)
+Benchmarking vec-one/delta/100000: Analyzing
+vec-one/delta/100000    time:   [27.675 µs 27.696 µs 27.718 µs]
+Found 5 outliers among 50 measurements (10.00%)
+  2 (4.00%) low severe
+  1 (2.00%) low mild
+  2 (4.00%) high severe
+Benchmarking vec-one/rope/100000
+Benchmarking vec-one/rope/100000: Warming up for 200.00 ms
+Benchmarking vec-one/rope/100000: Collecting 50 samples in estimated 800.02 ms (2.6M iterations)
+Benchmarking vec-one/rope/100000: Analyzing
+vec-one/rope/100000     time:   [305.99 ns 306.34 ns 306.87 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  1 (2.00%) low severe
+  4 (8.00%) high mild
+Benchmarking vec-one/btree/100000
+Benchmarking vec-one/btree/100000: Warming up for 200.00 ms
+Benchmarking vec-one/btree/100000: Collecting 50 samples in estimated 800.23 ms (4.4M iterations)
+Benchmarking vec-one/btree/100000: Analyzing
+vec-one/btree/100000    time:   [184.84 ns 185.29 ns 185.71 ns]
+Benchmarking vec-one/btree-shared/100000
+Benchmarking vec-one/btree-shared/100000: Warming up for 200.00 ms
+Benchmarking vec-one/btree-shared/100000: Collecting 50 samples in estimated 800.11 ms (7.9M iterations)
+Benchmarking vec-one/btree-shared/100000: Analyzing
+vec-one/btree-shared/100000
+                        time:   [100.96 ns 101.08 ns 101.24 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking vec-one/baseline/1000000
+Benchmarking vec-one/baseline/1000000: Warming up for 200.00 ms
+Benchmarking vec-one/baseline/1000000: Collecting 50 samples in estimated 882.56 ms (450 iterations)
+Benchmarking vec-one/baseline/1000000: Analyzing
+vec-one/baseline/1000000
+                        time:   [1.8771 ms 1.8980 ms 1.9198 ms]
+Benchmarking vec-one/delta/1000000
+Benchmarking vec-one/delta/1000000: Warming up for 200.00 ms
+Benchmarking vec-one/delta/1000000: Collecting 50 samples in estimated 1.5891 s (2550 iterations)
+Benchmarking vec-one/delta/1000000: Analyzing
+vec-one/delta/1000000   time:   [600.72 µs 609.39 µs 618.34 µs]
+Found 5 outliers among 50 measurements (10.00%)
+  2 (4.00%) low severe
+  3 (6.00%) high severe
+Benchmarking vec-one/rope/1000000
+Benchmarking vec-one/rope/1000000: Warming up for 200.00 ms
+Benchmarking vec-one/rope/1000000: Collecting 50 samples in estimated 800.05 ms (859k iterations)
+Benchmarking vec-one/rope/1000000: Analyzing
+vec-one/rope/1000000    time:   [927.90 ns 932.34 ns 936.64 ns]
+Benchmarking vec-one/btree/1000000
+Benchmarking vec-one/btree/1000000: Warming up for 200.00 ms
+Benchmarking vec-one/btree/1000000: Collecting 50 samples in estimated 800.26 ms (3.5M iterations)
+Benchmarking vec-one/btree/1000000: Analyzing
+vec-one/btree/1000000   time:   [229.23 ns 230.01 ns 230.90 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-one/btree-shared/1000000
+Benchmarking vec-one/btree-shared/1000000: Warming up for 200.00 ms
+Benchmarking vec-one/btree-shared/1000000: Collecting 50 samples in estimated 800.11 ms (6.5M iterations)
+Benchmarking vec-one/btree-shared/1000000: Analyzing
+vec-one/btree-shared/1000000
+                        time:   [125.92 ns 126.09 ns 126.26 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+
+Benchmarking vec-two/baseline/3
+Benchmarking vec-two/baseline/3: Warming up for 200.00 ms
+Benchmarking vec-two/baseline/3: Collecting 50 samples in estimated 800.03 ms (18M iterations)
+Benchmarking vec-two/baseline/3: Analyzing
+vec-two/baseline/3      time:   [43.793 ns 44.045 ns 44.317 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  1 (2.00%) low severe
+  1 (2.00%) high mild
+  3 (6.00%) high severe
+Benchmarking vec-two/delta/3
+Benchmarking vec-two/delta/3: Warming up for 200.00 ms
+Benchmarking vec-two/delta/3: Collecting 50 samples in estimated 800.01 ms (25M iterations)
+Benchmarking vec-two/delta/3: Analyzing
+vec-two/delta/3         time:   [31.991 ns 32.049 ns 32.110 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-two/rope/3
+Benchmarking vec-two/rope/3: Warming up for 200.00 ms
+Benchmarking vec-two/rope/3: Collecting 50 samples in estimated 800.05 ms (15M iterations)
+Benchmarking vec-two/rope/3: Analyzing
+vec-two/rope/3          time:   [53.301 ns 53.383 ns 53.459 ns]
+Benchmarking vec-two/btree/3
+Benchmarking vec-two/btree/3: Warming up for 200.00 ms
+Benchmarking vec-two/btree/3: Collecting 50 samples in estimated 800.02 ms (16M iterations)
+Benchmarking vec-two/btree/3: Analyzing
+vec-two/btree/3         time:   [50.160 ns 50.221 ns 50.272 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-two/btree-shared/3
+Benchmarking vec-two/btree-shared/3: Warming up for 200.00 ms
+Benchmarking vec-two/btree-shared/3: Collecting 50 samples in estimated 800.03 ms (24M iterations)
+Benchmarking vec-two/btree-shared/3: Analyzing
+vec-two/btree-shared/3  time:   [32.869 ns 32.890 ns 32.909 ns]
+Found 10 outliers among 50 measurements (20.00%)
+  1 (2.00%) low mild
+  6 (12.00%) high mild
+  3 (6.00%) high severe
+Benchmarking vec-two/baseline/10
+Benchmarking vec-two/baseline/10: Warming up for 200.00 ms
+Benchmarking vec-two/baseline/10: Collecting 50 samples in estimated 800.06 ms (16M iterations)
+Benchmarking vec-two/baseline/10: Analyzing
+vec-two/baseline/10     time:   [49.462 ns 49.589 ns 49.711 ns]
+Benchmarking vec-two/delta/10
+Benchmarking vec-two/delta/10: Warming up for 200.00 ms
+Benchmarking vec-two/delta/10: Collecting 50 samples in estimated 800.03 ms (24M iterations)
+Benchmarking vec-two/delta/10: Analyzing
+vec-two/delta/10        time:   [33.967 ns 34.041 ns 34.121 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking vec-two/rope/10
+Benchmarking vec-two/rope/10: Warming up for 200.00 ms
+Benchmarking vec-two/rope/10: Collecting 50 samples in estimated 800.04 ms (14M iterations)
+Benchmarking vec-two/rope/10: Analyzing
+vec-two/rope/10         time:   [57.972 ns 58.023 ns 58.072 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-two/btree/10
+Benchmarking vec-two/btree/10: Warming up for 200.00 ms
+Benchmarking vec-two/btree/10: Collecting 50 samples in estimated 800.01 ms (15M iterations)
+Benchmarking vec-two/btree/10: Analyzing
+vec-two/btree/10        time:   [52.246 ns 52.298 ns 52.344 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking vec-two/btree-shared/10
+Benchmarking vec-two/btree-shared/10: Warming up for 200.00 ms
+Benchmarking vec-two/btree-shared/10: Collecting 50 samples in estimated 800.04 ms (22M iterations)
+Benchmarking vec-two/btree-shared/10: Analyzing
+vec-two/btree-shared/10 time:   [36.012 ns 36.055 ns 36.102 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking vec-two/baseline/30
+Benchmarking vec-two/baseline/30: Warming up for 200.00 ms
+Benchmarking vec-two/baseline/30: Collecting 50 samples in estimated 800.01 ms (12M iterations)
+Benchmarking vec-two/baseline/30: Analyzing
+vec-two/baseline/30     time:   [66.854 ns 66.901 ns 66.948 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking vec-two/delta/30
+Benchmarking vec-two/delta/30: Warming up for 200.00 ms
+Benchmarking vec-two/delta/30: Collecting 50 samples in estimated 800.05 ms (18M iterations)
+Benchmarking vec-two/delta/30: Analyzing
+vec-two/delta/30        time:   [45.770 ns 45.805 ns 45.842 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-two/rope/30
+Benchmarking vec-two/rope/30: Warming up for 200.00 ms
+Benchmarking vec-two/rope/30: Collecting 50 samples in estimated 800.03 ms (11M iterations)
+Benchmarking vec-two/rope/30: Analyzing
+vec-two/rope/30         time:   [73.218 ns 73.261 ns 73.297 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-two/btree/30
+Benchmarking vec-two/btree/30: Warming up for 200.00 ms
+Benchmarking vec-two/btree/30: Collecting 50 samples in estimated 800.01 ms (12M iterations)
+Benchmarking vec-two/btree/30: Analyzing
+vec-two/btree/30        time:   [64.349 ns 64.401 ns 64.461 ns]
+Found 10 outliers among 50 measurements (20.00%)
+  6 (12.00%) high mild
+  4 (8.00%) high severe
+Benchmarking vec-two/btree-shared/30
+Benchmarking vec-two/btree-shared/30: Warming up for 200.00 ms
+Benchmarking vec-two/btree-shared/30: Collecting 50 samples in estimated 800.01 ms (18M iterations)
+Benchmarking vec-two/btree-shared/30: Analyzing
+vec-two/btree-shared/30 time:   [45.009 ns 45.041 ns 45.069 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-two/baseline/100
+Benchmarking vec-two/baseline/100: Warming up for 200.00 ms
+Benchmarking vec-two/baseline/100: Collecting 50 samples in estimated 800.08 ms (6.1M iterations)
+Benchmarking vec-two/baseline/100: Analyzing
+vec-two/baseline/100    time:   [129.39 ns 129.81 ns 130.21 ns]
+Benchmarking vec-two/delta/100
+Benchmarking vec-two/delta/100: Warming up for 200.00 ms
+Benchmarking vec-two/delta/100: Collecting 50 samples in estimated 800.07 ms (9.7M iterations)
+Benchmarking vec-two/delta/100: Analyzing
+vec-two/delta/100       time:   [83.140 ns 83.289 ns 83.414 ns]
+Benchmarking vec-two/rope/100
+Benchmarking vec-two/rope/100: Warming up for 200.00 ms
+Benchmarking vec-two/rope/100: Collecting 50 samples in estimated 800.09 ms (10M iterations)
+Benchmarking vec-two/rope/100: Analyzing
+vec-two/rope/100        time:   [79.654 ns 79.939 ns 80.240 ns]
+Found 9 outliers among 50 measurements (18.00%)
+  2 (4.00%) low mild
+  2 (4.00%) high mild
+  5 (10.00%) high severe
+Benchmarking vec-two/btree/100
+Benchmarking vec-two/btree/100: Warming up for 200.00 ms
+Benchmarking vec-two/btree/100: Collecting 50 samples in estimated 800.12 ms (7.6M iterations)
+Benchmarking vec-two/btree/100: Analyzing
+vec-two/btree/100       time:   [105.04 ns 105.10 ns 105.16 ns]
+Benchmarking vec-two/btree-shared/100
+Benchmarking vec-two/btree-shared/100: Warming up for 200.00 ms
+Benchmarking vec-two/btree-shared/100: Collecting 50 samples in estimated 800.01 ms (12M iterations)
+Benchmarking vec-two/btree-shared/100: Analyzing
+vec-two/btree-shared/100
+                        time:   [67.195 ns 67.249 ns 67.310 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-two/baseline/1000
+Benchmarking vec-two/baseline/1000: Warming up for 200.00 ms
+Benchmarking vec-two/baseline/1000: Collecting 50 samples in estimated 800.90 ms (919k iterations)
+Benchmarking vec-two/baseline/1000: Analyzing
+vec-two/baseline/1000   time:   [866.39 ns 868.15 ns 869.94 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-two/delta/1000
+Benchmarking vec-two/delta/1000: Warming up for 200.00 ms
+Benchmarking vec-two/delta/1000: Collecting 50 samples in estimated 800.26 ms (1.7M iterations)
+Benchmarking vec-two/delta/1000: Analyzing
+vec-two/delta/1000      time:   [462.10 ns 462.63 ns 463.14 ns]
+Benchmarking vec-two/rope/1000
+Benchmarking vec-two/rope/1000: Warming up for 200.00 ms
+Benchmarking vec-two/rope/1000: Collecting 50 samples in estimated 800.14 ms (5.4M iterations)
+Benchmarking vec-two/rope/1000: Analyzing
+vec-two/rope/1000       time:   [148.08 ns 148.17 ns 148.28 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-two/btree/1000
+Benchmarking vec-two/btree/1000: Warming up for 200.00 ms
+Benchmarking vec-two/btree/1000: Collecting 50 samples in estimated 800.01 ms (4.7M iterations)
+Benchmarking vec-two/btree/1000: Analyzing
+vec-two/btree/1000      time:   [169.55 ns 169.62 ns 169.68 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-two/btree-shared/1000
+Benchmarking vec-two/btree-shared/1000: Warming up for 200.00 ms
+Benchmarking vec-two/btree-shared/1000: Collecting 50 samples in estimated 800.00 ms (7.5M iterations)
+Benchmarking vec-two/btree-shared/1000: Analyzing
+vec-two/btree-shared/1000
+                        time:   [107.38 ns 107.46 ns 107.51 ns]
+Benchmarking vec-two/baseline/10000
+Benchmarking vec-two/baseline/10000: Warming up for 200.00 ms
+Benchmarking vec-two/baseline/10000: Collecting 50 samples in estimated 801.79 ms (99k iterations)
+Benchmarking vec-two/baseline/10000: Analyzing
+vec-two/baseline/10000  time:   [8.0607 µs 8.0904 µs 8.1205 µs]
+Found 7 outliers among 50 measurements (14.00%)
+  2 (4.00%) high mild
+  5 (10.00%) high severe
+Benchmarking vec-two/delta/10000
+Benchmarking vec-two/delta/10000: Warming up for 200.00 ms
+Benchmarking vec-two/delta/10000: Collecting 50 samples in estimated 801.17 ms (170k iterations)
+Benchmarking vec-two/delta/10000: Analyzing
+vec-two/delta/10000     time:   [4.7080 µs 4.7171 µs 4.7277 µs]
+Found 6 outliers among 50 measurements (12.00%)
+  1 (2.00%) low mild
+  3 (6.00%) high mild
+  2 (4.00%) high severe
+Benchmarking vec-two/rope/10000
+Benchmarking vec-two/rope/10000: Warming up for 200.00 ms
+Benchmarking vec-two/rope/10000: Collecting 50 samples in estimated 800.15 ms (2.8M iterations)
+Benchmarking vec-two/rope/10000: Analyzing
+vec-two/rope/10000      time:   [283.03 ns 283.17 ns 283.32 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high severe
+Benchmarking vec-two/btree/10000
+Benchmarking vec-two/btree/10000: Warming up for 200.00 ms
+Benchmarking vec-two/btree/10000: Collecting 50 samples in estimated 800.33 ms (2.9M iterations)
+Benchmarking vec-two/btree/10000: Analyzing
+vec-two/btree/10000     time:   [277.12 ns 277.42 ns 277.74 ns]
+Found 8 outliers among 50 measurements (16.00%)
+  1 (2.00%) low severe
+  2 (4.00%) low mild
+  3 (6.00%) high mild
+  2 (4.00%) high severe
+Benchmarking vec-two/btree-shared/10000
+Benchmarking vec-two/btree-shared/10000: Warming up for 200.00 ms
+Benchmarking vec-two/btree-shared/10000: Collecting 50 samples in estimated 800.01 ms (5.0M iterations)
+Benchmarking vec-two/btree-shared/10000: Analyzing
+vec-two/btree-shared/10000
+                        time:   [159.14 ns 159.64 ns 160.20 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  1 (2.00%) high mild
+  2 (4.00%) high severe
+Benchmarking vec-two/baseline/100000
+Benchmarking vec-two/baseline/100000: Warming up for 200.00 ms
+Benchmarking vec-two/baseline/100000: Collecting 50 samples in estimated 847.00 ms (10k iterations)
+Benchmarking vec-two/baseline/100000: Analyzing
+vec-two/baseline/100000 time:   [82.957 µs 83.056 µs 83.197 µs]
+Found 12 outliers among 50 measurements (24.00%)
+  3 (6.00%) low severe
+  5 (10.00%) high mild
+  4 (8.00%) high severe
+Benchmarking vec-two/delta/100000
+Benchmarking vec-two/delta/100000: Warming up for 200.00 ms
+Benchmarking vec-two/delta/100000: Collecting 50 samples in estimated 824.59 ms (17k iterations)
+Benchmarking vec-two/delta/100000: Analyzing
+vec-two/delta/100000    time:   [49.750 µs 49.880 µs 50.007 µs]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) low severe
+  3 (6.00%) low mild
+  3 (6.00%) high mild
+Benchmarking vec-two/rope/100000
+Benchmarking vec-two/rope/100000: Warming up for 200.00 ms
+Benchmarking vec-two/rope/100000: Collecting 50 samples in estimated 800.80 ms (1.2M iterations)
+Benchmarking vec-two/rope/100000: Analyzing
+vec-two/rope/100000     time:   [672.73 ns 674.39 ns 676.95 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  3 (6.00%) low mild
+  3 (6.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-two/btree/100000
+Benchmarking vec-two/btree/100000: Warming up for 200.00 ms
+Benchmarking vec-two/btree/100000: Collecting 50 samples in estimated 800.11 ms (2.1M iterations)
+Benchmarking vec-two/btree/100000: Analyzing
+vec-two/btree/100000    time:   [396.98 ns 399.82 ns 402.74 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-two/btree-shared/100000
+Benchmarking vec-two/btree-shared/100000: Warming up for 200.00 ms
+Benchmarking vec-two/btree-shared/100000: Collecting 50 samples in estimated 800.21 ms (3.9M iterations)
+Benchmarking vec-two/btree-shared/100000: Analyzing
+vec-two/btree-shared/100000
+                        time:   [209.15 ns 209.56 ns 209.99 ns]
+Benchmarking vec-two/baseline/1000000
+Benchmarking vec-two/baseline/1000000: Warming up for 200.00 ms
+Benchmarking vec-two/baseline/1000000: Collecting 50 samples in estimated 882.50 ms (400 iterations)
+Benchmarking vec-two/baseline/1000000: Analyzing
+vec-two/baseline/1000000
+                        time:   [2.0857 ms 2.0998 ms 2.1131 ms]
+Found 6 outliers among 50 measurements (12.00%)
+  6 (12.00%) low mild
+Benchmarking vec-two/delta/1000000
+Benchmarking vec-two/delta/1000000: Warming up for 200.00 ms
+
+Warning: Unable to complete 50 samples in 800.0ms. You may wish to increase target time to 1.4s, enable flat sampling, or reduce sample count to 20.
+Benchmarking vec-two/delta/1000000: Collecting 50 samples in estimated 1.4165 s (1275 iterations)
+Benchmarking vec-two/delta/1000000: Analyzing
+vec-two/delta/1000000   time:   [1.0903 ms 1.1051 ms 1.1199 ms]
+Found 4 outliers among 50 measurements (8.00%)
+  1 (2.00%) low severe
+  1 (2.00%) high mild
+  2 (4.00%) high severe
+Benchmarking vec-two/rope/1000000
+Benchmarking vec-two/rope/1000000: Warming up for 200.00 ms
+Benchmarking vec-two/rope/1000000: Collecting 50 samples in estimated 800.22 ms (411k iterations)
+Benchmarking vec-two/rope/1000000: Analyzing
+vec-two/rope/1000000    time:   [1.9063 µs 1.9103 µs 1.9143 µs]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-two/btree/1000000
+Benchmarking vec-two/btree/1000000: Warming up for 200.00 ms
+Benchmarking vec-two/btree/1000000: Collecting 50 samples in estimated 800.67 ms (1.3M iterations)
+Benchmarking vec-two/btree/1000000: Analyzing
+vec-two/btree/1000000   time:   [697.08 ns 700.11 ns 702.53 ns]
+Benchmarking vec-two/btree-shared/1000000
+Benchmarking vec-two/btree-shared/1000000: Warming up for 200.00 ms
+Benchmarking vec-two/btree-shared/1000000: Collecting 50 samples in estimated 800.31 ms (2.5M iterations)
+Benchmarking vec-two/btree-shared/1000000: Analyzing
+vec-two/btree-shared/1000000
+                        time:   [345.29 ns 346.47 ns 347.54 ns]
+
+Benchmarking vec-rare/baseline/3
+Benchmarking vec-rare/baseline/3: Warming up for 200.00 ms
+Benchmarking vec-rare/baseline/3: Collecting 50 samples in estimated 800.02 ms (40M iterations)
+Benchmarking vec-rare/baseline/3: Analyzing
+vec-rare/baseline/3     time:   [19.919 ns 19.946 ns 19.974 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high severe
+Benchmarking vec-rare/delta/3
+Benchmarking vec-rare/delta/3: Warming up for 200.00 ms
+Benchmarking vec-rare/delta/3: Collecting 50 samples in estimated 800.00 ms (39M iterations)
+Benchmarking vec-rare/delta/3: Analyzing
+vec-rare/delta/3        time:   [20.524 ns 20.576 ns 20.633 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  1 (2.00%) low mild
+  3 (6.00%) high mild
+Benchmarking vec-rare/rope/3
+Benchmarking vec-rare/rope/3: Warming up for 200.00 ms
+Benchmarking vec-rare/rope/3: Collecting 50 samples in estimated 800.03 ms (26M iterations)
+Benchmarking vec-rare/rope/3: Analyzing
+vec-rare/rope/3         time:   [30.731 ns 30.817 ns 30.902 ns]
+Found 6 outliers among 50 measurements (12.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+  4 (8.00%) high severe
+Benchmarking vec-rare/btree/3
+Benchmarking vec-rare/btree/3: Warming up for 200.00 ms
+Benchmarking vec-rare/btree/3: Collecting 50 samples in estimated 800.00 ms (27M iterations)
+Benchmarking vec-rare/btree/3: Analyzing
+vec-rare/btree/3        time:   [29.548 ns 29.594 ns 29.633 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+Benchmarking vec-rare/btree-shared/3
+Benchmarking vec-rare/btree-shared/3: Warming up for 200.00 ms
+Benchmarking vec-rare/btree-shared/3: Collecting 50 samples in estimated 800.02 ms (36M iterations)
+Benchmarking vec-rare/btree-shared/3: Analyzing
+vec-rare/btree-shared/3 time:   [22.307 ns 22.357 ns 22.405 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  3 (6.00%) low mild
+  1 (2.00%) high mild
+Benchmarking vec-rare/baseline/10
+Benchmarking vec-rare/baseline/10: Warming up for 200.00 ms
+Benchmarking vec-rare/baseline/10: Collecting 50 samples in estimated 800.01 ms (35M iterations)
+Benchmarking vec-rare/baseline/10: Analyzing
+vec-rare/baseline/10    time:   [22.647 ns 22.682 ns 22.718 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking vec-rare/delta/10
+Benchmarking vec-rare/delta/10: Warming up for 200.00 ms
+Benchmarking vec-rare/delta/10: Collecting 50 samples in estimated 800.01 ms (33M iterations)
+Benchmarking vec-rare/delta/10: Analyzing
+vec-rare/delta/10       time:   [23.915 ns 23.954 ns 23.995 ns]
+Benchmarking vec-rare/rope/10
+Benchmarking vec-rare/rope/10: Warming up for 200.00 ms
+Benchmarking vec-rare/rope/10: Collecting 50 samples in estimated 800.00 ms (23M iterations)
+Benchmarking vec-rare/rope/10: Analyzing
+vec-rare/rope/10        time:   [34.206 ns 34.245 ns 34.279 ns]
+Benchmarking vec-rare/btree/10
+Benchmarking vec-rare/btree/10: Warming up for 200.00 ms
+Benchmarking vec-rare/btree/10: Collecting 50 samples in estimated 800.01 ms (25M iterations)
+Benchmarking vec-rare/btree/10: Analyzing
+vec-rare/btree/10       time:   [31.912 ns 31.991 ns 32.064 ns]
+Benchmarking vec-rare/btree-shared/10
+Benchmarking vec-rare/btree-shared/10: Warming up for 200.00 ms
+Benchmarking vec-rare/btree-shared/10: Collecting 50 samples in estimated 800.03 ms (33M iterations)
+Benchmarking vec-rare/btree-shared/10: Analyzing
+vec-rare/btree-shared/10
+                        time:   [24.221 ns 24.268 ns 24.318 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  1 (2.00%) low mild
+  3 (6.00%) high mild
+Benchmarking vec-rare/baseline/30
+Benchmarking vec-rare/baseline/30: Warming up for 200.00 ms
+Benchmarking vec-rare/baseline/30: Collecting 50 samples in estimated 800.02 ms (31M iterations)
+Benchmarking vec-rare/baseline/30: Analyzing
+vec-rare/baseline/30    time:   [25.573 ns 25.611 ns 25.650 ns]
+Benchmarking vec-rare/delta/30
+Benchmarking vec-rare/delta/30: Warming up for 200.00 ms
+Benchmarking vec-rare/delta/30: Collecting 50 samples in estimated 800.02 ms (27M iterations)
+Benchmarking vec-rare/delta/30: Analyzing
+vec-rare/delta/30       time:   [29.062 ns 29.140 ns 29.221 ns]
+Benchmarking vec-rare/rope/30
+Benchmarking vec-rare/rope/30: Warming up for 200.00 ms
+Benchmarking vec-rare/rope/30: Collecting 50 samples in estimated 800.05 ms (20M iterations)
+Benchmarking vec-rare/rope/30: Analyzing
+vec-rare/rope/30        time:   [40.929 ns 40.950 ns 40.974 ns]
+Found 9 outliers among 50 measurements (18.00%)
+  2 (4.00%) low mild
+  7 (14.00%) high mild
+Benchmarking vec-rare/btree/30
+Benchmarking vec-rare/btree/30: Warming up for 200.00 ms
+Benchmarking vec-rare/btree/30: Collecting 50 samples in estimated 800.01 ms (22M iterations)
+Benchmarking vec-rare/btree/30: Analyzing
+vec-rare/btree/30       time:   [36.471 ns 36.492 ns 36.508 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-rare/btree-shared/30
+Benchmarking vec-rare/btree-shared/30: Warming up for 200.00 ms
+Benchmarking vec-rare/btree-shared/30: Collecting 50 samples in estimated 800.01 ms (27M iterations)
+Benchmarking vec-rare/btree-shared/30: Analyzing
+vec-rare/btree-shared/30
+                        time:   [29.927 ns 29.977 ns 30.020 ns]
+Benchmarking vec-rare/baseline/100
+Benchmarking vec-rare/baseline/100: Warming up for 200.00 ms
+Benchmarking vec-rare/baseline/100: Collecting 50 samples in estimated 800.04 ms (22M iterations)
+Benchmarking vec-rare/baseline/100: Analyzing
+vec-rare/baseline/100   time:   [35.922 ns 35.982 ns 36.052 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-rare/delta/100
+Benchmarking vec-rare/delta/100: Warming up for 200.00 ms
+Benchmarking vec-rare/delta/100: Collecting 50 samples in estimated 800.04 ms (17M iterations)
+Benchmarking vec-rare/delta/100: Analyzing
+vec-rare/delta/100      time:   [47.645 ns 47.720 ns 47.793 ns]
+Found 10 outliers among 50 measurements (20.00%)
+  9 (18.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-rare/rope/100
+Benchmarking vec-rare/rope/100: Warming up for 200.00 ms
+Benchmarking vec-rare/rope/100: Collecting 50 samples in estimated 800.01 ms (18M iterations)
+Benchmarking vec-rare/rope/100: Analyzing
+vec-rare/rope/100       time:   [43.725 ns 43.799 ns 43.870 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) high mild
+Benchmarking vec-rare/btree/100
+Benchmarking vec-rare/btree/100: Warming up for 200.00 ms
+Benchmarking vec-rare/btree/100: Collecting 50 samples in estimated 800.06 ms (15M iterations)
+Benchmarking vec-rare/btree/100: Analyzing
+vec-rare/btree/100      time:   [51.999 ns 52.043 ns 52.082 ns]
+Benchmarking vec-rare/btree-shared/100
+Benchmarking vec-rare/btree-shared/100: Warming up for 200.00 ms
+Benchmarking vec-rare/btree-shared/100: Collecting 50 samples in estimated 800.01 ms (21M iterations)
+Benchmarking vec-rare/btree-shared/100: Analyzing
+vec-rare/btree-shared/100
+                        time:   [37.416 ns 37.450 ns 37.490 ns]
+Benchmarking vec-rare/baseline/1000
+Benchmarking vec-rare/baseline/1000: Warming up for 200.00 ms
+Benchmarking vec-rare/baseline/1000: Collecting 50 samples in estimated 800.08 ms (5.0M iterations)
+Benchmarking vec-rare/baseline/1000: Analyzing
+vec-rare/baseline/1000  time:   [160.24 ns 160.36 ns 160.52 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-rare/delta/1000
+Benchmarking vec-rare/delta/1000: Warming up for 200.00 ms
+Benchmarking vec-rare/delta/1000: Collecting 50 samples in estimated 800.10 ms (3.4M iterations)
+Benchmarking vec-rare/delta/1000: Analyzing
+vec-rare/delta/1000     time:   [236.83 ns 237.19 ns 237.58 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-rare/rope/1000
+Benchmarking vec-rare/rope/1000: Warming up for 200.00 ms
+Benchmarking vec-rare/rope/1000: Collecting 50 samples in estimated 800.00 ms (11M iterations)
+Benchmarking vec-rare/rope/1000: Analyzing
+vec-rare/rope/1000      time:   [74.654 ns 74.802 ns 74.989 ns]
+Benchmarking vec-rare/btree/1000
+Benchmarking vec-rare/btree/1000: Warming up for 200.00 ms
+Benchmarking vec-rare/btree/1000: Collecting 50 samples in estimated 800.02 ms (9.6M iterations)
+Benchmarking vec-rare/btree/1000: Analyzing
+vec-rare/btree/1000     time:   [82.871 ns 83.026 ns 83.186 ns]
+Benchmarking vec-rare/btree-shared/1000
+Benchmarking vec-rare/btree-shared/1000: Warming up for 200.00 ms
+Benchmarking vec-rare/btree-shared/1000: Collecting 50 samples in estimated 800.01 ms (14M iterations)
+Benchmarking vec-rare/btree-shared/1000: Analyzing
+vec-rare/btree-shared/1000
+                        time:   [56.856 ns 56.908 ns 56.953 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-rare/baseline/10000
+Benchmarking vec-rare/baseline/10000: Warming up for 200.00 ms
+Benchmarking vec-rare/baseline/10000: Collecting 50 samples in estimated 800.84 ms (497k iterations)
+Benchmarking vec-rare/baseline/10000: Analyzing
+vec-rare/baseline/10000 time:   [1.6039 µs 1.6044 µs 1.6049 µs]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-rare/delta/10000
+Benchmarking vec-rare/delta/10000: Warming up for 200.00 ms
+Benchmarking vec-rare/delta/10000: Collecting 50 samples in estimated 803.28 ms (311k iterations)
+Benchmarking vec-rare/delta/10000: Analyzing
+vec-rare/delta/10000    time:   [2.5930 µs 2.5943 µs 2.5958 µs]
+Found 19 outliers among 50 measurements (38.00%)
+  4 (8.00%) low severe
+  8 (16.00%) low mild
+  7 (14.00%) high severe
+Benchmarking vec-rare/rope/10000
+Benchmarking vec-rare/rope/10000: Warming up for 200.00 ms
+Benchmarking vec-rare/rope/10000: Collecting 50 samples in estimated 800.15 ms (5.7M iterations)
+Benchmarking vec-rare/rope/10000: Analyzing
+vec-rare/rope/10000     time:   [140.26 ns 140.40 ns 140.58 ns]
+Found 8 outliers among 50 measurements (16.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+  6 (12.00%) high severe
+Benchmarking vec-rare/btree/10000
+Benchmarking vec-rare/btree/10000: Warming up for 200.00 ms
+Benchmarking vec-rare/btree/10000: Collecting 50 samples in estimated 800.17 ms (6.1M iterations)
+Benchmarking vec-rare/btree/10000: Analyzing
+vec-rare/btree/10000    time:   [131.17 ns 131.37 ns 131.62 ns]
+Found 6 outliers among 50 measurements (12.00%)
+  1 (2.00%) high mild
+  5 (10.00%) high severe
+Benchmarking vec-rare/btree-shared/10000
+Benchmarking vec-rare/btree-shared/10000: Warming up for 200.00 ms
+Benchmarking vec-rare/btree-shared/10000: Collecting 50 samples in estimated 800.00 ms (10M iterations)
+Benchmarking vec-rare/btree-shared/10000: Analyzing
+vec-rare/btree-shared/10000
+                        time:   [79.309 ns 79.332 ns 79.356 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-rare/baseline/100000
+Benchmarking vec-rare/baseline/100000: Warming up for 200.00 ms
+Benchmarking vec-rare/baseline/100000: Collecting 50 samples in estimated 801.41 ms (46k iterations)
+Benchmarking vec-rare/baseline/100000: Analyzing
+vec-rare/baseline/100000
+                        time:   [17.423 µs 17.447 µs 17.485 µs]
+Found 9 outliers among 50 measurements (18.00%)
+  5 (10.00%) low mild
+  1 (2.00%) high mild
+  3 (6.00%) high severe
+Benchmarking vec-rare/delta/100000
+Benchmarking vec-rare/delta/100000: Warming up for 200.00 ms
+Benchmarking vec-rare/delta/100000: Collecting 50 samples in estimated 817.45 ms (29k iterations)
+Benchmarking vec-rare/delta/100000: Analyzing
+vec-rare/delta/100000   time:   [27.952 µs 28.043 µs 28.122 µs]
+Found 8 outliers among 50 measurements (16.00%)
+  1 (2.00%) low severe
+  2 (4.00%) low mild
+  4 (8.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-rare/rope/100000
+Benchmarking vec-rare/rope/100000: Warming up for 200.00 ms
+Benchmarking vec-rare/rope/100000: Collecting 50 samples in estimated 800.05 ms (2.6M iterations)
+Benchmarking vec-rare/rope/100000: Analyzing
+vec-rare/rope/100000    time:   [304.95 ns 305.26 ns 305.66 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-rare/btree/100000
+Benchmarking vec-rare/btree/100000: Warming up for 200.00 ms
+Benchmarking vec-rare/btree/100000: Collecting 50 samples in estimated 800.13 ms (4.5M iterations)
+Benchmarking vec-rare/btree/100000: Analyzing
+vec-rare/btree/100000   time:   [180.69 ns 180.97 ns 181.24 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking vec-rare/btree-shared/100000
+Benchmarking vec-rare/btree-shared/100000: Warming up for 200.00 ms
+Benchmarking vec-rare/btree-shared/100000: Collecting 50 samples in estimated 800.02 ms (7.9M iterations)
+Benchmarking vec-rare/btree-shared/100000: Analyzing
+vec-rare/btree-shared/100000
+                        time:   [100.48 ns 100.63 ns 100.81 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-rare/baseline/1000000
+Benchmarking vec-rare/baseline/1000000: Warming up for 200.00 ms
+Benchmarking vec-rare/baseline/1000000: Collecting 50 samples in estimated 1.0412 s (3825 iterations)
+Benchmarking vec-rare/baseline/1000000: Analyzing
+vec-rare/baseline/1000000
+                        time:   [268.14 µs 270.57 µs 273.26 µs]
+Found 7 outliers among 50 measurements (14.00%)
+  3 (6.00%) low severe
+  1 (2.00%) low mild
+  3 (6.00%) high severe
+Benchmarking vec-rare/delta/1000000
+Benchmarking vec-rare/delta/1000000: Warming up for 200.00 ms
+
+Warning: Unable to complete 50 samples in 800.0ms. You may wish to increase target time to 805.0ms, enable flat sampling, or reduce sample count to 30.
+Benchmarking vec-rare/delta/1000000: Collecting 50 samples in estimated 805.00 ms (1275 iterations)
+Benchmarking vec-rare/delta/1000000: Analyzing
+vec-rare/delta/1000000  time:   [600.50 µs 617.21 µs 634.97 µs]
+Found 5 outliers among 50 measurements (10.00%)
+  2 (4.00%) low mild
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-rare/rope/1000000
+Benchmarking vec-rare/rope/1000000: Warming up for 200.00 ms
+Benchmarking vec-rare/rope/1000000: Collecting 50 samples in estimated 800.02 ms (878k iterations)
+Benchmarking vec-rare/rope/1000000: Analyzing
+vec-rare/rope/1000000   time:   [922.72 ns 926.35 ns 929.92 ns]
+Benchmarking vec-rare/btree/1000000
+Benchmarking vec-rare/btree/1000000: Warming up for 200.00 ms
+Benchmarking vec-rare/btree/1000000: Collecting 50 samples in estimated 800.14 ms (3.6M iterations)
+Benchmarking vec-rare/btree/1000000: Analyzing
+vec-rare/btree/1000000  time:   [223.65 ns 224.03 ns 224.39 ns]
+Benchmarking vec-rare/btree-shared/1000000
+Benchmarking vec-rare/btree-shared/1000000: Warming up for 200.00 ms
+Benchmarking vec-rare/btree-shared/1000000: Collecting 50 samples in estimated 800.16 ms (6.4M iterations)
+Benchmarking vec-rare/btree-shared/1000000: Analyzing
+vec-rare/btree-shared/1000000
+                        time:   [126.61 ns 126.73 ns 126.86 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+
+Benchmarking vec-append/baseline/3
+Benchmarking vec-append/baseline/3: Warming up for 200.00 ms
+Benchmarking vec-append/baseline/3: Collecting 50 samples in estimated 800.00 ms (30M iterations)
+Benchmarking vec-append/baseline/3: Analyzing
+vec-append/baseline/3   time:   [27.068 ns 27.197 ns 27.336 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  4 (8.00%) high mild
+Benchmarking vec-append/delta/3
+Benchmarking vec-append/delta/3: Warming up for 200.00 ms
+Benchmarking vec-append/delta/3: Collecting 50 samples in estimated 800.01 ms (51M iterations)
+Benchmarking vec-append/delta/3: Analyzing
+vec-append/delta/3      time:   [15.892 ns 15.920 ns 15.952 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  2 (4.00%) high mild
+  2 (4.00%) high severe
+Benchmarking vec-append/rope/3
+Benchmarking vec-append/rope/3: Warming up for 200.00 ms
+Benchmarking vec-append/rope/3: Collecting 50 samples in estimated 800.02 ms (29M iterations)
+Benchmarking vec-append/rope/3: Analyzing
+vec-append/rope/3       time:   [27.085 ns 27.159 ns 27.227 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) low mild
+Benchmarking vec-append/btree/3
+Benchmarking vec-append/btree/3: Warming up for 200.00 ms
+Benchmarking vec-append/btree/3: Collecting 50 samples in estimated 800.00 ms (34M iterations)
+Benchmarking vec-append/btree/3: Analyzing
+vec-append/btree/3      time:   [23.916 ns 23.957 ns 23.997 ns]
+Benchmarking vec-append/btree-shared/3
+Benchmarking vec-append/btree-shared/3: Warming up for 200.00 ms
+Benchmarking vec-append/btree-shared/3: Collecting 50 samples in estimated 800.01 ms (48M iterations)
+Benchmarking vec-append/btree-shared/3: Analyzing
+vec-append/btree-shared/3
+                        time:   [16.692 ns 16.774 ns 16.853 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-append/baseline/10
+Benchmarking vec-append/baseline/10: Warming up for 200.00 ms
+Benchmarking vec-append/baseline/10: Collecting 50 samples in estimated 800.02 ms (23M iterations)
+Benchmarking vec-append/baseline/10: Analyzing
+vec-append/baseline/10  time:   [34.039 ns 34.741 ns 35.393 ns]
+Benchmarking vec-append/delta/10
+Benchmarking vec-append/delta/10: Warming up for 200.00 ms
+Benchmarking vec-append/delta/10: Collecting 50 samples in estimated 800.01 ms (51M iterations)
+Benchmarking vec-append/delta/10: Analyzing
+vec-append/delta/10     time:   [15.698 ns 15.725 ns 15.756 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-append/rope/10
+Benchmarking vec-append/rope/10: Warming up for 200.00 ms
+Benchmarking vec-append/rope/10: Collecting 50 samples in estimated 800.02 ms (30M iterations)
+Benchmarking vec-append/rope/10: Analyzing
+vec-append/rope/10      time:   [27.262 ns 27.306 ns 27.339 ns]
+Benchmarking vec-append/btree/10
+Benchmarking vec-append/btree/10: Warming up for 200.00 ms
+Benchmarking vec-append/btree/10: Collecting 50 samples in estimated 800.02 ms (34M iterations)
+Benchmarking vec-append/btree/10: Analyzing
+vec-append/btree/10     time:   [23.615 ns 23.673 ns 23.750 ns]
+Benchmarking vec-append/btree-shared/10
+Benchmarking vec-append/btree-shared/10: Warming up for 200.00 ms
+Benchmarking vec-append/btree-shared/10: Collecting 50 samples in estimated 800.01 ms (48M iterations)
+Benchmarking vec-append/btree-shared/10: Analyzing
+vec-append/btree-shared/10
+                        time:   [16.682 ns 16.722 ns 16.777 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking vec-append/baseline/30
+Benchmarking vec-append/baseline/30: Warming up for 200.00 ms
+Benchmarking vec-append/baseline/30: Collecting 50 samples in estimated 800.02 ms (18M iterations)
+Benchmarking vec-append/baseline/30: Analyzing
+vec-append/baseline/30  time:   [47.168 ns 47.555 ns 47.924 ns]
+Found 6 outliers among 50 measurements (12.00%)
+  4 (8.00%) low mild
+  2 (4.00%) high mild
+Benchmarking vec-append/delta/30
+Benchmarking vec-append/delta/30: Warming up for 200.00 ms
+Benchmarking vec-append/delta/30: Collecting 50 samples in estimated 800.01 ms (51M iterations)
+Benchmarking vec-append/delta/30: Analyzing
+vec-append/delta/30     time:   [15.952 ns 16.005 ns 16.070 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking vec-append/rope/30
+Benchmarking vec-append/rope/30: Warming up for 200.00 ms
+Benchmarking vec-append/rope/30: Collecting 50 samples in estimated 800.02 ms (28M iterations)
+Benchmarking vec-append/rope/30: Analyzing
+vec-append/rope/30      time:   [28.200 ns 28.254 ns 28.315 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking vec-append/btree/30
+Benchmarking vec-append/btree/30: Warming up for 200.00 ms
+Benchmarking vec-append/btree/30: Collecting 50 samples in estimated 800.01 ms (34M iterations)
+Benchmarking vec-append/btree/30: Analyzing
+vec-append/btree/30     time:   [23.998 ns 24.026 ns 24.051 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) low mild
+  1 (2.00%) high mild
+Benchmarking vec-append/btree-shared/30
+Benchmarking vec-append/btree-shared/30: Warming up for 200.00 ms
+Benchmarking vec-append/btree-shared/30: Collecting 50 samples in estimated 800.02 ms (48M iterations)
+Benchmarking vec-append/btree-shared/30: Analyzing
+vec-append/btree-shared/30
+                        time:   [16.969 ns 17.047 ns 17.137 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-append/baseline/100
+Benchmarking vec-append/baseline/100: Warming up for 200.00 ms
+Benchmarking vec-append/baseline/100: Collecting 50 samples in estimated 800.09 ms (9.2M iterations)
+Benchmarking vec-append/baseline/100: Analyzing
+vec-append/baseline/100 time:   [86.445 ns 86.732 ns 87.026 ns]
+Benchmarking vec-append/delta/100
+Benchmarking vec-append/delta/100: Warming up for 200.00 ms
+Benchmarking vec-append/delta/100: Collecting 50 samples in estimated 800.01 ms (51M iterations)
+Benchmarking vec-append/delta/100: Analyzing
+vec-append/delta/100    time:   [16.037 ns 16.110 ns 16.196 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) high mild
+Benchmarking vec-append/rope/100
+Benchmarking vec-append/rope/100: Warming up for 200.00 ms
+Benchmarking vec-append/rope/100: Collecting 50 samples in estimated 800.01 ms (26M iterations)
+Benchmarking vec-append/rope/100: Analyzing
+vec-append/rope/100     time:   [31.209 ns 31.301 ns 31.385 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-append/btree/100
+Benchmarking vec-append/btree/100: Warming up for 200.00 ms
+Benchmarking vec-append/btree/100: Collecting 50 samples in estimated 800.04 ms (21M iterations)
+Benchmarking vec-append/btree/100: Analyzing
+vec-append/btree/100    time:   [36.775 ns 37.021 ns 37.263 ns]
+Benchmarking vec-append/btree-shared/100
+Benchmarking vec-append/btree-shared/100: Warming up for 200.00 ms
+Benchmarking vec-append/btree-shared/100: Collecting 50 samples in estimated 800.03 ms (35M iterations)
+Benchmarking vec-append/btree-shared/100: Analyzing
+vec-append/btree-shared/100
+                        time:   [23.311 ns 23.366 ns 23.434 ns]
+Benchmarking vec-append/baseline/1000
+Benchmarking vec-append/baseline/1000: Warming up for 200.00 ms
+Benchmarking vec-append/baseline/1000: Collecting 50 samples in estimated 800.33 ms (1.3M iterations)
+Benchmarking vec-append/baseline/1000: Analyzing
+vec-append/baseline/1000
+                        time:   [609.79 ns 610.61 ns 611.47 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high severe
+Benchmarking vec-append/delta/1000
+Benchmarking vec-append/delta/1000: Warming up for 200.00 ms
+Benchmarking vec-append/delta/1000: Collecting 50 samples in estimated 800.02 ms (51M iterations)
+Benchmarking vec-append/delta/1000: Analyzing
+vec-append/delta/1000   time:   [15.823 ns 15.872 ns 15.933 ns]
+Found 9 outliers among 50 measurements (18.00%)
+  7 (14.00%) high mild
+  2 (4.00%) high severe
+Benchmarking vec-append/rope/1000
+Benchmarking vec-append/rope/1000: Warming up for 200.00 ms
+Benchmarking vec-append/rope/1000: Collecting 50 samples in estimated 800.04 ms (14M iterations)
+Benchmarking vec-append/rope/1000: Analyzing
+vec-append/rope/1000    time:   [57.914 ns 58.024 ns 58.137 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking vec-append/btree/1000
+Benchmarking vec-append/btree/1000: Warming up for 200.00 ms
+Benchmarking vec-append/btree/1000: Collecting 50 samples in estimated 800.05 ms (15M iterations)
+Benchmarking vec-append/btree/1000: Analyzing
+vec-append/btree/1000   time:   [53.136 ns 53.199 ns 53.255 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking vec-append/btree-shared/1000
+Benchmarking vec-append/btree-shared/1000: Warming up for 200.00 ms
+Benchmarking vec-append/btree-shared/1000: Collecting 50 samples in estimated 800.02 ms (22M iterations)
+Benchmarking vec-append/btree-shared/1000: Analyzing
+vec-append/btree-shared/1000
+                        time:   [36.302 ns 36.397 ns 36.496 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) low mild
+  1 (2.00%) high mild
+Benchmarking vec-append/baseline/10000
+Benchmarking vec-append/baseline/10000: Warming up for 200.00 ms
+Benchmarking vec-append/baseline/10000: Collecting 50 samples in estimated 805.36 ms (142k iterations)
+Benchmarking vec-append/baseline/10000: Analyzing
+vec-append/baseline/10000
+                        time:   [5.6872 µs 5.6932 µs 5.6981 µs]
+Benchmarking vec-append/delta/10000
+Benchmarking vec-append/delta/10000: Warming up for 200.00 ms
+Benchmarking vec-append/delta/10000: Collecting 50 samples in estimated 800.02 ms (51M iterations)
+Benchmarking vec-append/delta/10000: Analyzing
+vec-append/delta/10000  time:   [15.841 ns 15.882 ns 15.929 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-append/rope/10000
+Benchmarking vec-append/rope/10000: Warming up for 200.00 ms
+Benchmarking vec-append/rope/10000: Collecting 50 samples in estimated 800.09 ms (5.4M iterations)
+Benchmarking vec-append/rope/10000: Analyzing
+vec-append/rope/10000   time:   [148.09 ns 148.44 ns 148.76 ns]
+Benchmarking vec-append/btree/10000
+Benchmarking vec-append/btree/10000: Warming up for 200.00 ms
+Benchmarking vec-append/btree/10000: Collecting 50 samples in estimated 800.08 ms (13M iterations)
+Benchmarking vec-append/btree/10000: Analyzing
+vec-append/btree/10000  time:   [62.646 ns 62.731 ns 62.819 ns]
+Benchmarking vec-append/btree-shared/10000
+Benchmarking vec-append/btree-shared/10000: Warming up for 200.00 ms
+Benchmarking vec-append/btree-shared/10000: Collecting 50 samples in estimated 800.03 ms (20M iterations)
+Benchmarking vec-append/btree-shared/10000: Analyzing
+vec-append/btree-shared/10000
+                        time:   [39.495 ns 39.649 ns 39.813 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking vec-append/baseline/100000
+Benchmarking vec-append/baseline/100000: Warming up for 200.00 ms
+Benchmarking vec-append/baseline/100000: Collecting 50 samples in estimated 813.19 ms (14k iterations)
+Benchmarking vec-append/baseline/100000: Analyzing
+vec-append/baseline/100000
+                        time:   [57.400 µs 57.494 µs 57.624 µs]
+Found 9 outliers among 50 measurements (18.00%)
+  9 (18.00%) high mild
+Benchmarking vec-append/delta/100000
+Benchmarking vec-append/delta/100000: Warming up for 200.00 ms
+Benchmarking vec-append/delta/100000: Collecting 50 samples in estimated 800.02 ms (51M iterations)
+Benchmarking vec-append/delta/100000: Analyzing
+vec-append/delta/100000 time:   [15.954 ns 16.002 ns 16.065 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  1 (2.00%) high mild
+  4 (8.00%) high severe
+Benchmarking vec-append/rope/100000
+Benchmarking vec-append/rope/100000: Warming up for 200.00 ms
+Benchmarking vec-append/rope/100000: Collecting 50 samples in estimated 800.31 ms (2.1M iterations)
+Benchmarking vec-append/rope/100000: Analyzing
+vec-append/rope/100000  time:   [379.76 ns 380.10 ns 380.45 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high severe
+Benchmarking vec-append/btree/100000
+Benchmarking vec-append/btree/100000: Warming up for 200.00 ms
+Benchmarking vec-append/btree/100000: Collecting 50 samples in estimated 800.04 ms (10M iterations)
+Benchmarking vec-append/btree/100000: Analyzing
+vec-append/btree/100000 time:   [77.437 ns 77.675 ns 77.930 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking vec-append/btree-shared/100000
+Benchmarking vec-append/btree-shared/100000: Warming up for 200.00 ms
+Benchmarking vec-append/btree-shared/100000: Collecting 50 samples in estimated 800.01 ms (17M iterations)
+Benchmarking vec-append/btree-shared/100000: Analyzing
+vec-append/btree-shared/100000
+                        time:   [46.623 ns 46.684 ns 46.745 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking vec-append/baseline/1000000
+Benchmarking vec-append/baseline/1000000: Warming up for 200.00 ms
+Benchmarking vec-append/baseline/1000000: Collecting 50 samples in estimated 846.33 ms (550 iterations)
+Benchmarking vec-append/baseline/1000000: Analyzing
+vec-append/baseline/1000000
+                        time:   [1.4895 ms 1.4931 ms 1.4963 ms]
+Found 6 outliers among 50 measurements (12.00%)
+  4 (8.00%) low severe
+  1 (2.00%) low mild
+  1 (2.00%) high severe
+Benchmarking vec-append/delta/1000000
+Benchmarking vec-append/delta/1000000: Warming up for 200.00 ms
+Benchmarking vec-append/delta/1000000: Collecting 50 samples in estimated 800.02 ms (49M iterations)
+Benchmarking vec-append/delta/1000000: Analyzing
+vec-append/delta/1000000
+                        time:   [16.077 ns 16.225 ns 16.409 ns]
+Found 11 outliers among 50 measurements (22.00%)
+  9 (18.00%) low severe
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+Benchmarking vec-append/rope/1000000
+Benchmarking vec-append/rope/1000000: Warming up for 200.00 ms
+Benchmarking vec-append/rope/1000000: Collecting 50 samples in estimated 800.01 ms (717k iterations)
+Benchmarking vec-append/rope/1000000: Analyzing
+vec-append/rope/1000000 time:   [1.1182 µs 1.1187 µs 1.1191 µs]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+Benchmarking vec-append/btree/1000000
+Benchmarking vec-append/btree/1000000: Warming up for 200.00 ms
+Benchmarking vec-append/btree/1000000: Collecting 50 samples in estimated 800.12 ms (7.8M iterations)
+Benchmarking vec-append/btree/1000000: Analyzing
+vec-append/btree/1000000
+                        time:   [103.01 ns 103.53 ns 103.95 ns]
+Benchmarking vec-append/btree-shared/1000000
+Benchmarking vec-append/btree-shared/1000000: Warming up for 200.00 ms
+Benchmarking vec-append/btree-shared/1000000: Collecting 50 samples in estimated 800.05 ms (14M iterations)
+Benchmarking vec-append/btree-shared/1000000: Analyzing
+vec-append/btree-shared/1000000
+                        time:   [59.503 ns 59.672 ns 59.806 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) low mild
+
+Benchmarking map-one/baseline/3
+Benchmarking map-one/baseline/3: Warming up for 200.00 ms
+Benchmarking map-one/baseline/3: Collecting 50 samples in estimated 800.09 ms (9.0M iterations)
+Benchmarking map-one/baseline/3: Analyzing
+map-one/baseline/3      time:   [88.531 ns 88.578 ns 88.620 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-one/delta/3
+Benchmarking map-one/delta/3: Warming up for 200.00 ms
+Benchmarking map-one/delta/3: Collecting 50 samples in estimated 800.08 ms (9.3M iterations)
+Benchmarking map-one/delta/3: Analyzing
+map-one/delta/3         time:   [86.658 ns 86.686 ns 86.717 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking map-one/lazy/3
+Benchmarking map-one/lazy/3: Warming up for 200.00 ms
+Benchmarking map-one/lazy/3: Collecting 50 samples in estimated 800.09 ms (8.3M iterations)
+Benchmarking map-one/lazy/3: Analyzing
+map-one/lazy/3          time:   [96.926 ns 97.081 ns 97.305 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  2 (4.00%) high mild
+  2 (4.00%) high severe
+Benchmarking map-one/fullylazy/3
+Benchmarking map-one/fullylazy/3: Warming up for 200.00 ms
+Benchmarking map-one/fullylazy/3: Collecting 50 samples in estimated 800.04 ms (15M iterations)
+Benchmarking map-one/fullylazy/3: Analyzing
+map-one/fullylazy/3     time:   [52.562 ns 52.633 ns 52.702 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking map-one/fused/3
+Benchmarking map-one/fused/3: Warming up for 200.00 ms
+Benchmarking map-one/fused/3: Collecting 50 samples in estimated 800.04 ms (17M iterations)
+Benchmarking map-one/fused/3: Analyzing
+map-one/fused/3         time:   [46.562 ns 46.638 ns 46.731 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) high mild
+  6 (12.00%) high severe
+Benchmarking map-one/baseline/10
+Benchmarking map-one/baseline/10: Warming up for 200.00 ms
+Benchmarking map-one/baseline/10: Collecting 50 samples in estimated 800.14 ms (3.7M iterations)
+Benchmarking map-one/baseline/10: Analyzing
+map-one/baseline/10     time:   [217.29 ns 217.48 ns 217.63 ns]
+Benchmarking map-one/delta/10
+Benchmarking map-one/delta/10: Warming up for 200.00 ms
+Benchmarking map-one/delta/10: Collecting 50 samples in estimated 800.07 ms (9.2M iterations)
+Benchmarking map-one/delta/10: Analyzing
+map-one/delta/10        time:   [86.876 ns 86.901 ns 86.928 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-one/lazy/10
+Benchmarking map-one/lazy/10: Warming up for 200.00 ms
+Benchmarking map-one/lazy/10: Collecting 50 samples in estimated 800.02 ms (8.2M iterations)
+Benchmarking map-one/lazy/10: Analyzing
+map-one/lazy/10         time:   [97.140 ns 97.327 ns 97.503 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking map-one/fullylazy/10
+Benchmarking map-one/fullylazy/10: Warming up for 200.00 ms
+Benchmarking map-one/fullylazy/10: Collecting 50 samples in estimated 800.03 ms (15M iterations)
+Benchmarking map-one/fullylazy/10: Analyzing
+map-one/fullylazy/10    time:   [53.701 ns 53.770 ns 53.841 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  2 (4.00%) high mild
+  5 (10.00%) high severe
+Benchmarking map-one/fused/10
+Benchmarking map-one/fused/10: Warming up for 200.00 ms
+Benchmarking map-one/fused/10: Collecting 50 samples in estimated 800.01 ms (17M iterations)
+Benchmarking map-one/fused/10: Analyzing
+map-one/fused/10        time:   [48.345 ns 48.374 ns 48.400 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+Benchmarking map-one/baseline/30
+Benchmarking map-one/baseline/30: Warming up for 200.00 ms
+Benchmarking map-one/baseline/30: Collecting 50 samples in estimated 800.72 ms (1.3M iterations)
+Benchmarking map-one/baseline/30: Analyzing
+map-one/baseline/30     time:   [631.88 ns 632.05 ns 632.21 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-one/delta/30
+Benchmarking map-one/delta/30: Warming up for 200.00 ms
+Benchmarking map-one/delta/30: Collecting 50 samples in estimated 800.03 ms (9.1M iterations)
+Benchmarking map-one/delta/30: Analyzing
+map-one/delta/30        time:   [87.725 ns 87.769 ns 87.810 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking map-one/lazy/30
+Benchmarking map-one/lazy/30: Warming up for 200.00 ms
+Benchmarking map-one/lazy/30: Collecting 50 samples in estimated 800.12 ms (8.3M iterations)
+Benchmarking map-one/lazy/30: Analyzing
+map-one/lazy/30         time:   [96.687 ns 96.857 ns 97.052 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) high mild
+  6 (12.00%) high severe
+Benchmarking map-one/fullylazy/30
+Benchmarking map-one/fullylazy/30: Warming up for 200.00 ms
+Benchmarking map-one/fullylazy/30: Collecting 50 samples in estimated 800.01 ms (15M iterations)
+Benchmarking map-one/fullylazy/30: Analyzing
+map-one/fullylazy/30    time:   [53.825 ns 54.031 ns 54.384 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking map-one/fused/30
+Benchmarking map-one/fused/30: Warming up for 200.00 ms
+Benchmarking map-one/fused/30: Collecting 50 samples in estimated 800.02 ms (17M iterations)
+Benchmarking map-one/fused/30: Analyzing
+map-one/fused/30        time:   [47.821 ns 47.892 ns 47.943 ns]
+Benchmarking map-one/baseline/100
+Benchmarking map-one/baseline/100: Warming up for 200.00 ms
+Benchmarking map-one/baseline/100: Collecting 50 samples in estimated 801.69 ms (361k iterations)
+Benchmarking map-one/baseline/100: Analyzing
+map-one/baseline/100    time:   [2.2105 µs 2.2111 µs 2.2116 µs]
+Found 5 outliers among 50 measurements (10.00%)
+  1 (2.00%) low severe
+  2 (4.00%) low mild
+  2 (4.00%) high severe
+Benchmarking map-one/delta/100
+Benchmarking map-one/delta/100: Warming up for 200.00 ms
+Benchmarking map-one/delta/100: Collecting 50 samples in estimated 800.03 ms (8.2M iterations)
+Benchmarking map-one/delta/100: Analyzing
+map-one/delta/100       time:   [98.176 ns 98.416 ns 98.641 ns]
+Benchmarking map-one/lazy/100
+Benchmarking map-one/lazy/100: Warming up for 200.00 ms
+Benchmarking map-one/lazy/100: Collecting 50 samples in estimated 800.05 ms (7.1M iterations)
+Benchmarking map-one/lazy/100: Analyzing
+map-one/lazy/100        time:   [112.75 ns 112.80 ns 112.85 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  2 (4.00%) low mild
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-one/fullylazy/100
+Benchmarking map-one/fullylazy/100: Warming up for 200.00 ms
+Benchmarking map-one/fullylazy/100: Collecting 50 samples in estimated 800.07 ms (14M iterations)
+Benchmarking map-one/fullylazy/100: Analyzing
+map-one/fullylazy/100   time:   [56.347 ns 56.390 ns 56.435 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-one/fused/100
+Benchmarking map-one/fused/100: Warming up for 200.00 ms
+Benchmarking map-one/fused/100: Collecting 50 samples in estimated 800.03 ms (17M iterations)
+Benchmarking map-one/fused/100: Analyzing
+map-one/fused/100       time:   [48.010 ns 48.052 ns 48.091 ns]
+Benchmarking map-one/baseline/1000
+Benchmarking map-one/baseline/1000: Warming up for 200.00 ms
+Benchmarking map-one/baseline/1000: Collecting 50 samples in estimated 805.83 ms (36k iterations)
+Benchmarking map-one/baseline/1000: Analyzing
+map-one/baseline/1000   time:   [22.642 µs 22.706 µs 22.773 µs]
+Benchmarking map-one/delta/1000
+Benchmarking map-one/delta/1000: Warming up for 200.00 ms
+Benchmarking map-one/delta/1000: Collecting 50 samples in estimated 800.06 ms (9.2M iterations)
+Benchmarking map-one/delta/1000: Analyzing
+map-one/delta/1000      time:   [86.876 ns 86.940 ns 87.007 ns]
+Benchmarking map-one/lazy/1000
+Benchmarking map-one/lazy/1000: Warming up for 200.00 ms
+Benchmarking map-one/lazy/1000: Collecting 50 samples in estimated 800.12 ms (8.2M iterations)
+Benchmarking map-one/lazy/1000: Analyzing
+map-one/lazy/1000       time:   [96.594 ns 96.673 ns 96.751 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking map-one/fullylazy/1000
+Benchmarking map-one/fullylazy/1000: Warming up for 200.00 ms
+Benchmarking map-one/fullylazy/1000: Collecting 50 samples in estimated 800.04 ms (15M iterations)
+Benchmarking map-one/fullylazy/1000: Analyzing
+map-one/fullylazy/1000  time:   [55.181 ns 55.247 ns 55.306 ns]
+Benchmarking map-one/fused/1000
+Benchmarking map-one/fused/1000: Warming up for 200.00 ms
+Benchmarking map-one/fused/1000: Collecting 50 samples in estimated 800.03 ms (17M iterations)
+Benchmarking map-one/fused/1000: Analyzing
+map-one/fused/1000      time:   [47.501 ns 47.563 ns 47.629 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking map-one/baseline/10000
+Benchmarking map-one/baseline/10000: Warming up for 200.00 ms
+Benchmarking map-one/baseline/10000: Collecting 50 samples in estimated 917.41 ms (3825 iterations)
+Benchmarking map-one/baseline/10000: Analyzing
+map-one/baseline/10000  time:   [240.34 µs 240.90 µs 241.26 µs]
+Found 8 outliers among 50 measurements (16.00%)
+  2 (4.00%) low severe
+  3 (6.00%) low mild
+  1 (2.00%) high mild
+  2 (4.00%) high severe
+Benchmarking map-one/delta/10000
+Benchmarking map-one/delta/10000: Warming up for 200.00 ms
+Benchmarking map-one/delta/10000: Collecting 50 samples in estimated 800.09 ms (8.1M iterations)
+Benchmarking map-one/delta/10000: Analyzing
+map-one/delta/10000     time:   [97.954 ns 98.086 ns 98.226 ns]
+Benchmarking map-one/lazy/10000
+Benchmarking map-one/lazy/10000: Warming up for 200.00 ms
+Benchmarking map-one/lazy/10000: Collecting 50 samples in estimated 800.08 ms (7.4M iterations)
+Benchmarking map-one/lazy/10000: Analyzing
+map-one/lazy/10000      time:   [108.64 ns 108.72 ns 108.79 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  3 (6.00%) low mild
+  1 (2.00%) high mild
+Benchmarking map-one/fullylazy/10000
+Benchmarking map-one/fullylazy/10000: Warming up for 200.00 ms
+Benchmarking map-one/fullylazy/10000: Collecting 50 samples in estimated 800.05 ms (13M iterations)
+Benchmarking map-one/fullylazy/10000: Analyzing
+map-one/fullylazy/10000 time:   [63.736 ns 63.828 ns 63.937 ns]
+Found 6 outliers among 50 measurements (12.00%)
+  1 (2.00%) low mild
+  3 (6.00%) high mild
+  2 (4.00%) high severe
+Benchmarking map-one/fused/10000
+Benchmarking map-one/fused/10000: Warming up for 200.00 ms
+Benchmarking map-one/fused/10000: Collecting 50 samples in estimated 800.06 ms (14M iterations)
+Benchmarking map-one/fused/10000: Analyzing
+map-one/fused/10000     time:   [56.013 ns 56.081 ns 56.147 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking map-one/baseline/100000
+Benchmarking map-one/baseline/100000: Warming up for 200.00 ms
+Benchmarking map-one/baseline/100000: Collecting 50 samples in estimated 855.63 ms (350 iterations)
+Benchmarking map-one/baseline/100000: Analyzing
+map-one/baseline/100000 time:   [2.3422 ms 2.3711 ms 2.3981 ms]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) low mild
+Benchmarking map-one/delta/100000
+Benchmarking map-one/delta/100000: Warming up for 200.00 ms
+Benchmarking map-one/delta/100000: Collecting 50 samples in estimated 800.12 ms (7.4M iterations)
+Benchmarking map-one/delta/100000: Analyzing
+map-one/delta/100000    time:   [107.89 ns 107.96 ns 108.02 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking map-one/lazy/100000
+Benchmarking map-one/lazy/100000: Warming up for 200.00 ms
+Benchmarking map-one/lazy/100000: Collecting 50 samples in estimated 800.08 ms (6.4M iterations)
+Benchmarking map-one/lazy/100000: Analyzing
+map-one/lazy/100000     time:   [124.05 ns 124.40 ns 125.07 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-one/fullylazy/100000
+Benchmarking map-one/fullylazy/100000: Warming up for 200.00 ms
+Benchmarking map-one/fullylazy/100000: Collecting 50 samples in estimated 800.03 ms (11M iterations)
+Benchmarking map-one/fullylazy/100000: Analyzing
+map-one/fullylazy/100000
+                        time:   [69.900 ns 69.960 ns 70.036 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high severe
+Benchmarking map-one/fused/100000
+Benchmarking map-one/fused/100000: Warming up for 200.00 ms
+Benchmarking map-one/fused/100000: Collecting 50 samples in estimated 800.02 ms (13M iterations)
+Benchmarking map-one/fused/100000: Analyzing
+map-one/fused/100000    time:   [61.736 ns 61.807 ns 61.885 ns]
+
+Benchmarking map-two/baseline/3
+Benchmarking map-two/baseline/3: Warming up for 200.00 ms
+Benchmarking map-two/baseline/3: Collecting 50 samples in estimated 800.04 ms (7.8M iterations)
+Benchmarking map-two/baseline/3: Analyzing
+map-two/baseline/3      time:   [102.24 ns 102.53 ns 102.74 ns]
+Benchmarking map-two/delta/3
+Benchmarking map-two/delta/3: Warming up for 200.00 ms
+Benchmarking map-two/delta/3: Collecting 50 samples in estimated 800.04 ms (4.3M iterations)
+Benchmarking map-two/delta/3: Analyzing
+map-two/delta/3         time:   [186.15 ns 186.20 ns 186.25 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low severe
+  1 (2.00%) high mild
+Benchmarking map-two/lazy/3
+Benchmarking map-two/lazy/3: Warming up for 200.00 ms
+Benchmarking map-two/lazy/3: Collecting 50 samples in estimated 800.21 ms (3.9M iterations)
+Benchmarking map-two/lazy/3: Analyzing
+map-two/lazy/3          time:   [205.96 ns 206.00 ns 206.04 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) low severe
+  5 (10.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-two/fullylazy/3
+Benchmarking map-two/fullylazy/3: Warming up for 200.00 ms
+Benchmarking map-two/fullylazy/3: Collecting 50 samples in estimated 800.08 ms (8.4M iterations)
+Benchmarking map-two/fullylazy/3: Analyzing
+map-two/fullylazy/3     time:   [95.985 ns 96.110 ns 96.243 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking map-two/fused/3
+Benchmarking map-two/fused/3: Warming up for 200.00 ms
+Benchmarking map-two/fused/3: Collecting 50 samples in estimated 800.06 ms (10.0M iterations)
+Benchmarking map-two/fused/3: Analyzing
+map-two/fused/3         time:   [80.100 ns 80.312 ns 80.538 ns]
+Found 14 outliers among 50 measurements (28.00%)
+  3 (6.00%) low mild
+  1 (2.00%) high mild
+  10 (20.00%) high severe
+Benchmarking map-two/baseline/10
+Benchmarking map-two/baseline/10: Warming up for 200.00 ms
+Benchmarking map-two/baseline/10: Collecting 50 samples in estimated 800.21 ms (3.5M iterations)
+Benchmarking map-two/baseline/10: Analyzing
+map-two/baseline/10     time:   [228.32 ns 228.38 ns 228.47 ns]
+Found 6 outliers among 50 measurements (12.00%)
+  3 (6.00%) high mild
+  3 (6.00%) high severe
+Benchmarking map-two/delta/10
+Benchmarking map-two/delta/10: Warming up for 200.00 ms
+Benchmarking map-two/delta/10: Collecting 50 samples in estimated 800.22 ms (4.3M iterations)
+Benchmarking map-two/delta/10: Analyzing
+map-two/delta/10        time:   [184.01 ns 184.07 ns 184.13 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low severe
+Benchmarking map-two/lazy/10
+Benchmarking map-two/lazy/10: Warming up for 200.00 ms
+Benchmarking map-two/lazy/10: Collecting 50 samples in estimated 800.03 ms (4.0M iterations)
+Benchmarking map-two/lazy/10: Analyzing
+map-two/lazy/10         time:   [201.94 ns 202.47 ns 203.60 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  1 (2.00%) high mild
+  2 (4.00%) high severe
+Benchmarking map-two/fullylazy/10
+Benchmarking map-two/fullylazy/10: Warming up for 200.00 ms
+Benchmarking map-two/fullylazy/10: Collecting 50 samples in estimated 800.12 ms (8.2M iterations)
+Benchmarking map-two/fullylazy/10: Analyzing
+map-two/fullylazy/10    time:   [97.679 ns 97.733 ns 97.778 ns]
+Benchmarking map-two/fused/10
+Benchmarking map-two/fused/10: Warming up for 200.00 ms
+Benchmarking map-two/fused/10: Collecting 50 samples in estimated 800.03 ms (9.5M iterations)
+Benchmarking map-two/fused/10: Analyzing
+map-two/fused/10        time:   [83.885 ns 84.075 ns 84.284 ns]
+Found 10 outliers among 50 measurements (20.00%)
+  10 (20.00%) high mild
+Benchmarking map-two/baseline/30
+Benchmarking map-two/baseline/30: Warming up for 200.00 ms
+Benchmarking map-two/baseline/30: Collecting 50 samples in estimated 800.55 ms (1.1M iterations)
+Benchmarking map-two/baseline/30: Analyzing
+map-two/baseline/30     time:   [722.11 ns 724.68 ns 726.41 ns]
+Benchmarking map-two/delta/30
+Benchmarking map-two/delta/30: Warming up for 200.00 ms
+Benchmarking map-two/delta/30: Collecting 50 samples in estimated 800.22 ms (4.3M iterations)
+Benchmarking map-two/delta/30: Analyzing
+map-two/delta/30        time:   [185.77 ns 186.13 ns 186.53 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  7 (14.00%) high mild
+Benchmarking map-two/lazy/30
+Benchmarking map-two/lazy/30: Warming up for 200.00 ms
+Benchmarking map-two/lazy/30: Collecting 50 samples in estimated 800.12 ms (3.9M iterations)
+Benchmarking map-two/lazy/30: Analyzing
+map-two/lazy/30         time:   [202.62 ns 202.68 ns 202.74 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-two/fullylazy/30
+Benchmarking map-two/fullylazy/30: Warming up for 200.00 ms
+Benchmarking map-two/fullylazy/30: Collecting 50 samples in estimated 800.08 ms (8.3M iterations)
+Benchmarking map-two/fullylazy/30: Analyzing
+map-two/fullylazy/30    time:   [96.841 ns 96.906 ns 96.996 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-two/fused/30
+Benchmarking map-two/fused/30: Warming up for 200.00 ms
+Benchmarking map-two/fused/30: Collecting 50 samples in estimated 800.01 ms (9.6M iterations)
+Benchmarking map-two/fused/30: Analyzing
+map-two/fused/30        time:   [83.527 ns 83.577 ns 83.621 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking map-two/baseline/100
+Benchmarking map-two/baseline/100: Warming up for 200.00 ms
+Benchmarking map-two/baseline/100: Collecting 50 samples in estimated 800.70 ms (432k iterations)
+Benchmarking map-two/baseline/100: Analyzing
+map-two/baseline/100    time:   [1.8642 µs 1.8824 µs 1.8988 µs]
+Found 11 outliers among 50 measurements (22.00%)
+  1 (2.00%) low mild
+  2 (4.00%) high mild
+  8 (16.00%) high severe
+Benchmarking map-two/delta/100
+Benchmarking map-two/delta/100: Warming up for 200.00 ms
+Benchmarking map-two/delta/100: Collecting 50 samples in estimated 800.11 ms (4.0M iterations)
+Benchmarking map-two/delta/100: Analyzing
+map-two/delta/100       time:   [199.15 ns 199.25 ns 199.37 ns]
+Benchmarking map-two/lazy/100
+Benchmarking map-two/lazy/100: Warming up for 200.00 ms
+Benchmarking map-two/lazy/100: Collecting 50 samples in estimated 800.11 ms (3.7M iterations)
+Benchmarking map-two/lazy/100: Analyzing
+map-two/lazy/100        time:   [217.99 ns 218.63 ns 219.30 ns]
+Found 11 outliers among 50 measurements (22.00%)
+  7 (14.00%) low severe
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+  2 (4.00%) high severe
+Benchmarking map-two/fullylazy/100
+Benchmarking map-two/fullylazy/100: Warming up for 200.00 ms
+Benchmarking map-two/fullylazy/100: Collecting 50 samples in estimated 800.07 ms (8.2M iterations)
+Benchmarking map-two/fullylazy/100: Analyzing
+map-two/fullylazy/100   time:   [97.925 ns 98.134 ns 98.334 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  7 (14.00%) high mild
+Benchmarking map-two/fused/100
+Benchmarking map-two/fused/100: Warming up for 200.00 ms
+Benchmarking map-two/fused/100: Collecting 50 samples in estimated 800.04 ms (9.7M iterations)
+Benchmarking map-two/fused/100: Analyzing
+map-two/fused/100       time:   [83.007 ns 83.304 ns 83.714 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) low mild
+  2 (4.00%) high mild
+  4 (8.00%) high severe
+Benchmarking map-two/baseline/1000
+Benchmarking map-two/baseline/1000: Warming up for 200.00 ms
+Benchmarking map-two/baseline/1000: Collecting 50 samples in estimated 813.60 ms (32k iterations)
+Benchmarking map-two/baseline/1000: Analyzing
+map-two/baseline/1000   time:   [23.456 µs 23.491 µs 23.530 µs]
+Benchmarking map-two/delta/1000
+Benchmarking map-two/delta/1000: Warming up for 200.00 ms
+Benchmarking map-two/delta/1000: Collecting 50 samples in estimated 800.17 ms (4.3M iterations)
+Benchmarking map-two/delta/1000: Analyzing
+map-two/delta/1000      time:   [183.66 ns 184.06 ns 184.52 ns]
+Found 10 outliers among 50 measurements (20.00%)
+  1 (2.00%) high mild
+  9 (18.00%) high severe
+Benchmarking map-two/lazy/1000
+Benchmarking map-two/lazy/1000: Warming up for 200.00 ms
+Benchmarking map-two/lazy/1000: Collecting 50 samples in estimated 800.02 ms (4.0M iterations)
+Benchmarking map-two/lazy/1000: Analyzing
+map-two/lazy/1000       time:   [200.58 ns 200.76 ns 200.90 ns]
+Benchmarking map-two/fullylazy/1000
+Benchmarking map-two/fullylazy/1000: Warming up for 200.00 ms
+Benchmarking map-two/fullylazy/1000: Collecting 50 samples in estimated 800.10 ms (8.1M iterations)
+Benchmarking map-two/fullylazy/1000: Analyzing
+map-two/fullylazy/1000  time:   [98.159 ns 98.247 ns 98.324 ns]
+Benchmarking map-two/fused/1000
+Benchmarking map-two/fused/1000: Warming up for 200.00 ms
+Benchmarking map-two/fused/1000: Collecting 50 samples in estimated 800.06 ms (9.7M iterations)
+Benchmarking map-two/fused/1000: Analyzing
+map-two/fused/1000      time:   [83.413 ns 83.527 ns 83.619 ns]
+Benchmarking map-two/baseline/10000
+Benchmarking map-two/baseline/10000: Warming up for 200.00 ms
+Benchmarking map-two/baseline/10000: Collecting 50 samples in estimated 903.86 ms (3825 iterations)
+Benchmarking map-two/baseline/10000: Analyzing
+map-two/baseline/10000  time:   [238.06 µs 239.09 µs 239.95 µs]
+Found 8 outliers among 50 measurements (16.00%)
+  7 (14.00%) low severe
+  1 (2.00%) low mild
+Benchmarking map-two/delta/10000
+Benchmarking map-two/delta/10000: Warming up for 200.00 ms
+Benchmarking map-two/delta/10000: Collecting 50 samples in estimated 800.26 ms (3.9M iterations)
+Benchmarking map-two/delta/10000: Analyzing
+map-two/delta/10000     time:   [204.32 ns 204.84 ns 205.53 ns]
+Benchmarking map-two/lazy/10000
+Benchmarking map-two/lazy/10000: Warming up for 200.00 ms
+Benchmarking map-two/lazy/10000: Collecting 50 samples in estimated 800.19 ms (3.7M iterations)
+Benchmarking map-two/lazy/10000: Analyzing
+map-two/lazy/10000      time:   [220.39 ns 220.46 ns 220.53 ns]
+Found 12 outliers among 50 measurements (24.00%)
+  10 (20.00%) low severe
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+Benchmarking map-two/fullylazy/10000
+Benchmarking map-two/fullylazy/10000: Warming up for 200.00 ms
+Benchmarking map-two/fullylazy/10000: Collecting 50 samples in estimated 800.07 ms (6.9M iterations)
+Benchmarking map-two/fullylazy/10000: Analyzing
+map-two/fullylazy/10000 time:   [115.44 ns 115.56 ns 115.69 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-two/fused/10000
+Benchmarking map-two/fused/10000: Warming up for 200.00 ms
+Benchmarking map-two/fused/10000: Collecting 50 samples in estimated 800.09 ms (8.2M iterations)
+Benchmarking map-two/fused/10000: Analyzing
+map-two/fused/10000     time:   [98.066 ns 98.248 ns 98.419 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) high mild
+Benchmarking map-two/baseline/100000
+Benchmarking map-two/baseline/100000: Warming up for 200.00 ms
+Benchmarking map-two/baseline/100000: Collecting 50 samples in estimated 846.58 ms (350 iterations)
+Benchmarking map-two/baseline/100000: Analyzing
+map-two/baseline/100000 time:   [2.4914 ms 2.4927 ms 2.4939 ms]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) low mild
+Benchmarking map-two/delta/100000
+Benchmarking map-two/delta/100000: Warming up for 200.00 ms
+Benchmarking map-two/delta/100000: Collecting 50 samples in estimated 800.06 ms (3.5M iterations)
+Benchmarking map-two/delta/100000: Analyzing
+map-two/delta/100000    time:   [231.21 ns 231.25 ns 231.29 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-two/lazy/100000
+Benchmarking map-two/lazy/100000: Warming up for 200.00 ms
+Benchmarking map-two/lazy/100000: Collecting 50 samples in estimated 800.01 ms (3.3M iterations)
+Benchmarking map-two/lazy/100000: Analyzing
+map-two/lazy/100000     time:   [242.78 ns 242.84 ns 242.90 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-two/fullylazy/100000
+Benchmarking map-two/fullylazy/100000: Warming up for 200.00 ms
+Benchmarking map-two/fullylazy/100000: Collecting 50 samples in estimated 800.15 ms (6.2M iterations)
+Benchmarking map-two/fullylazy/100000: Analyzing
+map-two/fullylazy/100000
+                        time:   [128.86 ns 128.96 ns 129.05 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking map-two/fused/100000
+Benchmarking map-two/fused/100000: Warming up for 200.00 ms
+Benchmarking map-two/fused/100000: Collecting 50 samples in estimated 800.04 ms (7.3M iterations)
+Benchmarking map-two/fused/100000: Analyzing
+map-two/fused/100000    time:   [110.06 ns 110.18 ns 110.28 ns]
+
+Benchmarking map-rare/baseline/3
+Benchmarking map-rare/baseline/3: Warming up for 200.00 ms
+Benchmarking map-rare/baseline/3: Collecting 50 samples in estimated 800.01 ms (27M iterations)
+Benchmarking map-rare/baseline/3: Analyzing
+map-rare/baseline/3     time:   [28.997 ns 29.026 ns 29.059 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+Benchmarking map-rare/delta/3
+Benchmarking map-rare/delta/3: Warming up for 200.00 ms
+Benchmarking map-rare/delta/3: Collecting 50 samples in estimated 800.07 ms (9.2M iterations)
+Benchmarking map-rare/delta/3: Analyzing
+map-rare/delta/3        time:   [86.583 ns 87.127 ns 87.880 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  5 (10.00%) high severe
+Benchmarking map-rare/lazy/3
+Benchmarking map-rare/lazy/3: Warming up for 200.00 ms
+Benchmarking map-rare/lazy/3: Collecting 50 samples in estimated 800.00 ms (7.9M iterations)
+Benchmarking map-rare/lazy/3: Analyzing
+map-rare/lazy/3         time:   [101.07 ns 101.36 ns 101.61 ns]
+Benchmarking map-rare/fullylazy/3
+Benchmarking map-rare/fullylazy/3: Warming up for 200.00 ms
+Benchmarking map-rare/fullylazy/3: Collecting 50 samples in estimated 800.01 ms (34M iterations)
+Benchmarking map-rare/fullylazy/3: Analyzing
+map-rare/fullylazy/3    time:   [23.947 ns 24.085 ns 24.350 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) low mild
+  4 (8.00%) high mild
+  2 (4.00%) high severe
+Benchmarking map-rare/fused/3
+Benchmarking map-rare/fused/3: Warming up for 200.00 ms
+Benchmarking map-rare/fused/3: Collecting 50 samples in estimated 800.04 ms (17M iterations)
+Benchmarking map-rare/fused/3: Analyzing
+map-rare/fused/3        time:   [45.807 ns 45.838 ns 45.869 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  2 (4.00%) low mild
+  2 (4.00%) high mild
+Benchmarking map-rare/baseline/10
+Benchmarking map-rare/baseline/10: Warming up for 200.00 ms
+Benchmarking map-rare/baseline/10: Collecting 50 samples in estimated 800.01 ms (22M iterations)
+Benchmarking map-rare/baseline/10: Analyzing
+map-rare/baseline/10    time:   [36.405 ns 36.419 ns 36.434 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) low mild
+  1 (2.00%) high mild
+Benchmarking map-rare/delta/10
+Benchmarking map-rare/delta/10: Warming up for 200.00 ms
+Benchmarking map-rare/delta/10: Collecting 50 samples in estimated 800.09 ms (9.2M iterations)
+Benchmarking map-rare/delta/10: Analyzing
+map-rare/delta/10       time:   [87.198 ns 87.244 ns 87.304 ns]
+Benchmarking map-rare/lazy/10
+Benchmarking map-rare/lazy/10: Warming up for 200.00 ms
+Benchmarking map-rare/lazy/10: Collecting 50 samples in estimated 800.13 ms (7.6M iterations)
+Benchmarking map-rare/lazy/10: Analyzing
+map-rare/lazy/10        time:   [105.02 ns 105.45 ns 106.10 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high severe
+Benchmarking map-rare/fullylazy/10
+Benchmarking map-rare/fullylazy/10: Warming up for 200.00 ms
+Benchmarking map-rare/fullylazy/10: Collecting 50 samples in estimated 800.04 ms (23M iterations)
+Benchmarking map-rare/fullylazy/10: Analyzing
+map-rare/fullylazy/10   time:   [35.349 ns 35.459 ns 35.555 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  5 (10.00%) high mild
+Benchmarking map-rare/fused/10
+Benchmarking map-rare/fused/10: Warming up for 200.00 ms
+Benchmarking map-rare/fused/10: Collecting 50 samples in estimated 800.03 ms (17M iterations)
+Benchmarking map-rare/fused/10: Analyzing
+map-rare/fused/10       time:   [47.756 ns 47.793 ns 47.828 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking map-rare/baseline/30
+Benchmarking map-rare/baseline/30: Warming up for 200.00 ms
+Benchmarking map-rare/baseline/30: Collecting 50 samples in estimated 800.06 ms (13M iterations)
+Benchmarking map-rare/baseline/30: Analyzing
+map-rare/baseline/30    time:   [63.338 ns 63.483 ns 63.584 ns]
+Benchmarking map-rare/delta/30
+Benchmarking map-rare/delta/30: Warming up for 200.00 ms
+Benchmarking map-rare/delta/30: Collecting 50 samples in estimated 800.11 ms (9.1M iterations)
+Benchmarking map-rare/delta/30: Analyzing
+map-rare/delta/30       time:   [87.734 ns 87.787 ns 87.864 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  1 (2.00%) low mild
+  2 (4.00%) high severe
+Benchmarking map-rare/lazy/30
+Benchmarking map-rare/lazy/30: Warming up for 200.00 ms
+Benchmarking map-rare/lazy/30: Collecting 50 samples in estimated 800.11 ms (7.2M iterations)
+Benchmarking map-rare/lazy/30: Analyzing
+map-rare/lazy/30        time:   [111.48 ns 111.72 ns 112.03 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  2 (4.00%) low mild
+  1 (2.00%) high mild
+  4 (8.00%) high severe
+Benchmarking map-rare/fullylazy/30
+Benchmarking map-rare/fullylazy/30: Warming up for 200.00 ms
+Benchmarking map-rare/fullylazy/30: Collecting 50 samples in estimated 800.01 ms (19M iterations)
+Benchmarking map-rare/fullylazy/30: Analyzing
+map-rare/fullylazy/30   time:   [41.365 ns 41.388 ns 41.409 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking map-rare/fused/30
+Benchmarking map-rare/fused/30: Warming up for 200.00 ms
+Benchmarking map-rare/fused/30: Collecting 50 samples in estimated 800.04 ms (17M iterations)
+Benchmarking map-rare/fused/30: Analyzing
+map-rare/fused/30       time:   [47.239 ns 47.267 ns 47.291 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking map-rare/baseline/100
+Benchmarking map-rare/baseline/100: Warming up for 200.00 ms
+Benchmarking map-rare/baseline/100: Collecting 50 samples in estimated 800.04 ms (4.8M iterations)
+Benchmarking map-rare/baseline/100: Analyzing
+map-rare/baseline/100   time:   [162.47 ns 162.68 ns 162.84 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  2 (4.00%) low severe
+  2 (4.00%) low mild
+  1 (2.00%) high severe
+Benchmarking map-rare/delta/100
+Benchmarking map-rare/delta/100: Warming up for 200.00 ms
+Benchmarking map-rare/delta/100: Collecting 50 samples in estimated 800.01 ms (8.2M iterations)
+Benchmarking map-rare/delta/100: Analyzing
+map-rare/delta/100      time:   [97.070 ns 97.224 ns 97.432 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking map-rare/lazy/100
+Benchmarking map-rare/lazy/100: Warming up for 200.00 ms
+Benchmarking map-rare/lazy/100: Collecting 50 samples in estimated 800.15 ms (6.3M iterations)
+Benchmarking map-rare/lazy/100: Analyzing
+map-rare/lazy/100       time:   [128.30 ns 128.61 ns 128.94 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) high mild
+Benchmarking map-rare/fullylazy/100
+Benchmarking map-rare/fullylazy/100: Warming up for 200.00 ms
+Benchmarking map-rare/fullylazy/100: Collecting 50 samples in estimated 800.03 ms (17M iterations)
+Benchmarking map-rare/fullylazy/100: Analyzing
+map-rare/fullylazy/100  time:   [46.420 ns 46.535 ns 46.672 ns]
+Benchmarking map-rare/fused/100
+Benchmarking map-rare/fused/100: Warming up for 200.00 ms
+Benchmarking map-rare/fused/100: Collecting 50 samples in estimated 800.05 ms (17M iterations)
+Benchmarking map-rare/fused/100: Analyzing
+map-rare/fused/100      time:   [46.517 ns 46.560 ns 46.607 ns]
+Benchmarking map-rare/baseline/1000
+Benchmarking map-rare/baseline/1000: Warming up for 200.00 ms
+Benchmarking map-rare/baseline/1000: Collecting 50 samples in estimated 800.48 ms (555k iterations)
+Benchmarking map-rare/baseline/1000: Analyzing
+map-rare/baseline/1000  time:   [1.4411 µs 1.4415 µs 1.4419 µs]
+Found 6 outliers among 50 measurements (12.00%)
+  2 (4.00%) low severe
+  2 (4.00%) high mild
+  2 (4.00%) high severe
+Benchmarking map-rare/delta/1000
+Benchmarking map-rare/delta/1000: Warming up for 200.00 ms
+Benchmarking map-rare/delta/1000: Collecting 50 samples in estimated 800.04 ms (9.1M iterations)
+Benchmarking map-rare/delta/1000: Analyzing
+map-rare/delta/1000     time:   [87.195 ns 87.315 ns 87.454 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking map-rare/lazy/1000
+Benchmarking map-rare/lazy/1000: Warming up for 200.00 ms
+Benchmarking map-rare/lazy/1000: Collecting 50 samples in estimated 800.10 ms (6.7M iterations)
+Benchmarking map-rare/lazy/1000: Analyzing
+map-rare/lazy/1000      time:   [118.84 ns 118.89 ns 118.95 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking map-rare/fullylazy/1000
+Benchmarking map-rare/fullylazy/1000: Warming up for 200.00 ms
+Benchmarking map-rare/fullylazy/1000: Collecting 50 samples in estimated 800.05 ms (15M iterations)
+Benchmarking map-rare/fullylazy/1000: Analyzing
+map-rare/fullylazy/1000 time:   [52.156 ns 52.202 ns 52.260 ns]
+Benchmarking map-rare/fused/1000
+Benchmarking map-rare/fused/1000: Warming up for 200.00 ms
+Benchmarking map-rare/fused/1000: Collecting 50 samples in estimated 800.04 ms (16M iterations)
+Benchmarking map-rare/fused/1000: Analyzing
+map-rare/fused/1000     time:   [48.367 ns 48.486 ns 48.606 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  3 (6.00%) low mild
+  3 (6.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-rare/baseline/10000
+Benchmarking map-rare/baseline/10000: Warming up for 200.00 ms
+Benchmarking map-rare/baseline/10000: Collecting 50 samples in estimated 806.70 ms (54k iterations)
+Benchmarking map-rare/baseline/10000: Analyzing
+map-rare/baseline/10000 time:   [15.056 µs 15.104 µs 15.144 µs]
+Found 5 outliers among 50 measurements (10.00%)
+  1 (2.00%) low severe
+  2 (4.00%) low mild
+  2 (4.00%) high severe
+Benchmarking map-rare/delta/10000
+Benchmarking map-rare/delta/10000: Warming up for 200.00 ms
+Benchmarking map-rare/delta/10000: Collecting 50 samples in estimated 800.02 ms (8.3M iterations)
+Benchmarking map-rare/delta/10000: Analyzing
+map-rare/delta/10000    time:   [96.524 ns 96.607 ns 96.715 ns]
+Found 9 outliers among 50 measurements (18.00%)
+  9 (18.00%) high mild
+Benchmarking map-rare/lazy/10000
+Benchmarking map-rare/lazy/10000: Warming up for 200.00 ms
+Benchmarking map-rare/lazy/10000: Collecting 50 samples in estimated 800.06 ms (6.2M iterations)
+Benchmarking map-rare/lazy/10000: Analyzing
+map-rare/lazy/10000     time:   [127.54 ns 127.62 ns 127.71 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking map-rare/fullylazy/10000
+Benchmarking map-rare/fullylazy/10000: Warming up for 200.00 ms
+Benchmarking map-rare/fullylazy/10000: Collecting 50 samples in estimated 800.04 ms (14M iterations)
+Benchmarking map-rare/fullylazy/10000: Analyzing
+map-rare/fullylazy/10000
+                        time:   [57.934 ns 58.171 ns 58.413 ns]
+Benchmarking map-rare/fused/10000
+Benchmarking map-rare/fused/10000: Warming up for 200.00 ms
+Benchmarking map-rare/fused/10000: Collecting 50 samples in estimated 800.03 ms (14M iterations)
+Benchmarking map-rare/fused/10000: Analyzing
+map-rare/fused/10000    time:   [55.429 ns 55.576 ns 55.705 ns]
+Benchmarking map-rare/baseline/100000
+Benchmarking map-rare/baseline/100000: Warming up for 200.00 ms
+Benchmarking map-rare/baseline/100000: Collecting 50 samples in estimated 943.59 ms (6375 iterations)
+Benchmarking map-rare/baseline/100000: Analyzing
+map-rare/baseline/100000
+                        time:   [151.59 µs 154.04 µs 156.29 µs]
+Found 7 outliers among 50 measurements (14.00%)
+  2 (4.00%) low severe
+  2 (4.00%) low mild
+  1 (2.00%) high mild
+  2 (4.00%) high severe
+Benchmarking map-rare/delta/100000
+Benchmarking map-rare/delta/100000: Warming up for 200.00 ms
+Benchmarking map-rare/delta/100000: Collecting 50 samples in estimated 800.14 ms (7.3M iterations)
+Benchmarking map-rare/delta/100000: Analyzing
+map-rare/delta/100000   time:   [109.43 ns 109.50 ns 109.58 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking map-rare/lazy/100000
+Benchmarking map-rare/lazy/100000: Warming up for 200.00 ms
+Benchmarking map-rare/lazy/100000: Collecting 50 samples in estimated 800.08 ms (5.6M iterations)
+Benchmarking map-rare/lazy/100000: Analyzing
+map-rare/lazy/100000    time:   [141.66 ns 141.84 ns 141.99 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking map-rare/fullylazy/100000
+Benchmarking map-rare/fullylazy/100000: Warming up for 200.00 ms
+Benchmarking map-rare/fullylazy/100000: Collecting 50 samples in estimated 800.04 ms (13M iterations)
+Benchmarking map-rare/fullylazy/100000: Analyzing
+map-rare/fullylazy/100000
+                        time:   [60.718 ns 60.777 ns 60.841 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking map-rare/fused/100000
+Benchmarking map-rare/fused/100000: Warming up for 200.00 ms
+Benchmarking map-rare/fused/100000: Collecting 50 samples in estimated 800.02 ms (13M iterations)
+Benchmarking map-rare/fused/100000: Analyzing
+map-rare/fused/100000   time:   [60.389 ns 60.580 ns 60.808 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) high severe
+
+Benchmarking compose/baseline/1
+Benchmarking compose/baseline/1: Warming up for 200.00 ms
+Benchmarking compose/baseline/1: Collecting 50 samples in estimated 800.00 ms (141M iterations)
+Benchmarking compose/baseline/1: Analyzing
+compose/baseline/1      time:   [5.6904 ns 5.7064 ns 5.7336 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking compose/delta/1
+Benchmarking compose/delta/1: Warming up for 200.00 ms
+Benchmarking compose/delta/1: Collecting 50 samples in estimated 800.00 ms (144M iterations)
+Benchmarking compose/delta/1: Analyzing
+compose/delta/1         time:   [5.5616 ns 5.6072 ns 5.6823 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking compose/baseline/2
+Benchmarking compose/baseline/2: Warming up for 200.00 ms
+Benchmarking compose/baseline/2: Collecting 50 samples in estimated 800.00 ms (110M iterations)
+Benchmarking compose/baseline/2: Analyzing
+compose/baseline/2      time:   [7.1965 ns 7.2056 ns 7.2172 ns]
+Benchmarking compose/delta/2
+Benchmarking compose/delta/2: Warming up for 200.00 ms
+Benchmarking compose/delta/2: Collecting 50 samples in estimated 800.02 ms (25M iterations)
+Benchmarking compose/delta/2: Analyzing
+compose/delta/2         time:   [32.028 ns 32.100 ns 32.174 ns]
+Benchmarking compose/baseline/4
+Benchmarking compose/baseline/4: Warming up for 200.00 ms
+Benchmarking compose/baseline/4: Collecting 50 samples in estimated 800.01 ms (111M iterations)
+Benchmarking compose/baseline/4: Analyzing
+compose/baseline/4      time:   [7.1676 ns 7.1800 ns 7.1967 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  1 (2.00%) low severe
+  1 (2.00%) low mild
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking compose/delta/4
+Benchmarking compose/delta/4: Warming up for 200.00 ms
+Benchmarking compose/delta/4: Collecting 50 samples in estimated 800.02 ms (12M iterations)
+Benchmarking compose/delta/4: Analyzing
+compose/delta/4         time:   [65.726 ns 65.869 ns 66.016 ns]
+Benchmarking compose/baseline/16
+Benchmarking compose/baseline/16: Warming up for 200.00 ms
+Benchmarking compose/baseline/16: Collecting 50 samples in estimated 800.00 ms (62M iterations)
+Benchmarking compose/baseline/16: Analyzing
+compose/baseline/16     time:   [12.830 ns 12.839 ns 12.850 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  1 (2.00%) high mild
+  4 (8.00%) high severe
+Benchmarking compose/delta/16
+Benchmarking compose/delta/16: Warming up for 200.00 ms
+Benchmarking compose/delta/16: Collecting 50 samples in estimated 800.35 ms (1.9M iterations)
+Benchmarking compose/delta/16: Analyzing
+compose/delta/16        time:   [415.28 ns 416.05 ns 417.06 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  1 (2.00%) high mild
+  2 (4.00%) high severe
+Benchmarking compose/baseline/64
+Benchmarking compose/baseline/64: Warming up for 200.00 ms
+Benchmarking compose/baseline/64: Collecting 50 samples in estimated 800.04 ms (26M iterations)
+Benchmarking compose/baseline/64: Analyzing
+compose/baseline/64     time:   [30.899 ns 30.938 ns 31.004 ns]
+Found 8 outliers among 50 measurements (16.00%)
+  7 (14.00%) high mild
+  1 (2.00%) high severe
+Benchmarking compose/delta/64
+Benchmarking compose/delta/64: Warming up for 200.00 ms
+Benchmarking compose/delta/64: Collecting 50 samples in estimated 802.66 ms (346k iterations)
+Benchmarking compose/delta/64: Analyzing
+compose/delta/64        time:   [2.3194 µs 2.3221 µs 2.3247 µs]
+
+
+$ python3 scripts/ratios.py vec- map- compose
+
+benchmark                        ratio   95% interval       baseline mean
+compose/delta/1                   0.982  [ 0.977,  0.988]           5.7 ns
+compose/delta/16                 32.404  [32.351, 32.457]          12.8 ns
+compose/delta/2                   4.424  [ 4.411,  4.437]           7.2 ns
+compose/delta/4                   9.187  [ 9.168,  9.205]           7.2 ns
+compose/delta/64                 74.902  [74.758, 75.034]          31.0 ns
+map-one/delta/10                  0.402  [ 0.401,  0.403]         216.4 ns
+map-one/delta/100                 0.044  [ 0.044,  0.044]        2211.2 ns
+map-one/delta/1000                0.004  [ 0.004,  0.004]       22664.1 ns
+map-one/delta/10000               0.000  [ 0.000,  0.000]      241122.7 ns
+map-one/delta/100000              0.000  [ 0.000,  0.000]     2371142.3 ns
+map-one/delta/3                   0.979  [ 0.977,  0.980]          88.6 ns
+map-one/delta/30                  0.139  [ 0.139,  0.139]         632.1 ns
+map-one/fullylazy/10              0.249  [ 0.248,  0.250]         216.4 ns
+map-one/fullylazy/100             0.026  [ 0.025,  0.026]        2211.2 ns
+map-one/fullylazy/1000            0.002  [ 0.002,  0.002]       22664.1 ns
+map-one/fullylazy/10000           0.000  [ 0.000,  0.000]      241122.7 ns
+map-one/fullylazy/100000          0.000  [ 0.000,  0.000]     2371142.3 ns
+map-one/fullylazy/3               0.593  [ 0.592,  0.594]          88.6 ns
+map-one/fullylazy/30              0.085  [ 0.085,  0.086]         632.1 ns
+map-one/fused/10                  0.223  [ 0.223,  0.224]         216.4 ns
+map-one/fused/100                 0.022  [ 0.022,  0.022]        2211.2 ns
+map-one/fused/1000                0.002  [ 0.002,  0.002]       22664.1 ns
+map-one/fused/10000               0.000  [ 0.000,  0.000]      241122.7 ns
+map-one/fused/100000              0.000  [ 0.000,  0.000]     2371142.3 ns
+map-one/fused/3                   0.526  [ 0.525,  0.527]          88.6 ns
+map-one/fused/30                  0.075  [ 0.075,  0.076]         632.1 ns
+map-one/lazy/10                   0.449  [ 0.448,  0.450]         216.4 ns
+map-one/lazy/100                  0.051  [ 0.051,  0.051]        2211.2 ns
+map-one/lazy/1000                 0.004  [ 0.004,  0.004]       22664.1 ns
+map-one/lazy/10000                0.000  [ 0.000,  0.000]      241122.7 ns
+map-one/lazy/100000               0.000  [ 0.000,  0.000]     2371142.3 ns
+map-one/lazy/3                    1.094  [ 1.092,  1.096]          88.6 ns
+map-one/lazy/30                   0.153  [ 0.153,  0.153]         632.1 ns
+map-rare/delta/10                 2.399  [ 2.397,  2.401]          36.4 ns
+map-rare/delta/100                0.599  [ 0.597,  0.600]         162.7 ns
+map-rare/delta/1000               0.061  [ 0.061,  0.061]        1442.3 ns
+map-rare/delta/10000              0.006  [ 0.006,  0.006]       15164.7 ns
+map-rare/delta/100000             0.001  [ 0.001,  0.001]      155554.5 ns
+map-rare/delta/3                  2.998  [ 2.987,  3.016]          29.0 ns
+map-rare/delta/30                 1.390  [ 1.386,  1.393]          63.2 ns
+map-rare/fullylazy/10             0.968  [ 0.966,  0.971]          36.4 ns
+map-rare/fullylazy/100            0.287  [ 0.287,  0.288]         162.7 ns
+map-rare/fullylazy/1000           0.036  [ 0.036,  0.036]        1442.3 ns
+map-rare/fullylazy/10000          0.004  [ 0.004,  0.004]       15164.7 ns
+map-rare/fullylazy/100000         0.000  [ 0.000,  0.000]      155554.5 ns
+map-rare/fullylazy/3              0.829  [ 0.826,  0.834]          29.0 ns
+map-rare/fullylazy/30             0.655  [ 0.654,  0.657]          63.2 ns
+map-rare/fused/10                 1.314  [ 1.313,  1.315]          36.4 ns
+map-rare/fused/100                0.286  [ 0.286,  0.286]         162.7 ns
+map-rare/fused/1000               0.034  [ 0.034,  0.034]        1442.3 ns
+map-rare/fused/10000              0.004  [ 0.004,  0.004]       15164.7 ns
+map-rare/fused/100000             0.000  [ 0.000,  0.000]      155554.5 ns
+map-rare/fused/3                  1.580  [ 1.578,  1.581]          29.0 ns
+map-rare/fused/30                 0.748  [ 0.746,  0.750]          63.2 ns
+map-rare/lazy/10                  2.886  [ 2.881,  2.896]          36.4 ns
+map-rare/lazy/100                 0.788  [ 0.786,  0.789]         162.7 ns
+map-rare/lazy/1000                0.082  [ 0.082,  0.083]        1442.3 ns
+map-rare/lazy/10000               0.008  [ 0.008,  0.008]       15164.7 ns
+map-rare/lazy/100000              0.001  [ 0.001,  0.001]      155554.5 ns
+map-rare/lazy/3                   3.485  [ 3.478,  3.492]          29.0 ns
+map-rare/lazy/30                  1.772  [ 1.761,  1.792]          63.2 ns
+map-two/delta/10                  0.804  [ 0.802,  0.805]         228.8 ns
+map-two/delta/100                 0.107  [ 0.107,  0.108]        1864.6 ns
+map-two/delta/1000                0.008  [ 0.008,  0.008]       23420.0 ns
+map-two/delta/10000               0.001  [ 0.001,  0.001]      239326.5 ns
+map-two/delta/100000              0.000  [ 0.000,  0.000]     2492680.0 ns
+map-two/delta/3                   1.821  [ 1.817,  1.824]         102.2 ns
+map-two/delta/30                  0.260  [ 0.259,  0.262]         714.1 ns
+map-two/fullylazy/10              0.427  [ 0.426,  0.427]         228.8 ns
+map-two/fullylazy/100             0.052  [ 0.052,  0.053]        1864.6 ns
+map-two/fullylazy/1000            0.004  [ 0.004,  0.004]       23420.0 ns
+map-two/fullylazy/10000           0.000  [ 0.000,  0.000]      239326.5 ns
+map-two/fullylazy/100000          0.000  [ 0.000,  0.000]     2492680.0 ns
+map-two/fullylazy/3               0.938  [ 0.936,  0.940]         102.2 ns
+map-two/fullylazy/30              0.136  [ 0.135,  0.136]         714.1 ns
+map-two/fused/10                  0.367  [ 0.366,  0.368]         228.8 ns
+map-two/fused/100                 0.045  [ 0.044,  0.045]        1864.6 ns
+map-two/fused/1000                0.004  [ 0.004,  0.004]       23420.0 ns
+map-two/fused/10000               0.000  [ 0.000,  0.000]      239326.5 ns
+map-two/fused/100000              0.000  [ 0.000,  0.000]     2492680.0 ns
+map-two/fused/3                   0.785  [ 0.783,  0.787]         102.2 ns
+map-two/fused/30                  0.117  [ 0.116,  0.118]         714.1 ns
+map-two/lazy/10                   0.884  [ 0.881,  0.886]         228.8 ns
+map-two/lazy/100                  0.118  [ 0.117,  0.118]        1864.6 ns
+map-two/lazy/1000                 0.009  [ 0.009,  0.009]       23420.0 ns
+map-two/lazy/10000                0.001  [ 0.001,  0.001]      239326.5 ns
+map-two/lazy/100000               0.000  [ 0.000,  0.000]     2492680.0 ns
+map-two/lazy/3                    2.016  [ 2.012,  2.020]         102.2 ns
+map-two/lazy/30                   0.284  [ 0.282,  0.285]         714.1 ns
+vec-append/btree-shared/10        0.481  [ 0.473,  0.489]          35.0 ns
+vec-append/btree-shared/100       0.270  [ 0.269,  0.271]          86.7 ns
+vec-append/btree-shared/1000      0.059  [ 0.059,  0.060]         612.9 ns
+vec-append/btree-shared/10000     0.007  [ 0.007,  0.007]        5677.8 ns
+vec-append/btree-shared/100000    0.001  [ 0.001,  0.001]       57666.3 ns
+vec-append/btree-shared/1000000   0.000  [ 0.000,  0.000]     1493125.9 ns
+vec-append/btree-shared/3         0.614  [ 0.611,  0.618]          27.2 ns
+vec-append/btree-shared/30        0.361  [ 0.358,  0.365]          47.3 ns
+vec-append/btree/10               0.679  [ 0.668,  0.690]          35.0 ns
+vec-append/btree/100              0.426  [ 0.423,  0.429]          86.7 ns
+vec-append/btree/1000             0.087  [ 0.086,  0.087]         612.9 ns
+vec-append/btree/10000            0.011  [ 0.011,  0.011]        5677.8 ns
+vec-append/btree/100000           0.001  [ 0.001,  0.001]       57666.3 ns
+vec-append/btree/1000000          0.000  [ 0.000,  0.000]     1493125.9 ns
+vec-append/btree/3                0.879  [ 0.874,  0.884]          27.2 ns
+vec-append/btree/30               0.508  [ 0.503,  0.512]          47.3 ns
+vec-append/delta/10               0.452  [ 0.445,  0.460]          35.0 ns
+vec-append/delta/100              0.190  [ 0.188,  0.193]          86.7 ns
+vec-append/delta/1000             0.026  [ 0.026,  0.026]         612.9 ns
+vec-append/delta/10000            0.003  [ 0.003,  0.003]        5677.8 ns
+vec-append/delta/100000           0.000  [ 0.000,  0.000]       57666.3 ns
+vec-append/delta/1000000          0.000  [ 0.000,  0.000]     1493125.9 ns
+vec-append/delta/3                0.585  [ 0.582,  0.588]          27.2 ns
+vec-append/delta/30               0.342  [ 0.339,  0.346]          47.3 ns
+vec-append/rope/10                0.777  [ 0.766,  0.790]          35.0 ns
+vec-append/rope/100               0.360  [ 0.358,  0.362]          86.7 ns
+vec-append/rope/1000              0.095  [ 0.094,  0.095]         612.9 ns
+vec-append/rope/10000             0.026  [ 0.026,  0.026]        5677.8 ns
+vec-append/rope/100000            0.007  [ 0.007,  0.007]       57666.3 ns
+vec-append/rope/1000000           0.001  [ 0.001,  0.001]     1493125.9 ns
+vec-append/rope/3                 0.999  [ 0.993,  1.004]          27.2 ns
+vec-append/rope/30                0.596  [ 0.591,  0.602]          47.3 ns
+vec-one/btree-shared/10           0.600  [ 0.596,  0.604]          41.5 ns
+vec-one/btree-shared/100          0.341  [ 0.340,  0.342]         110.8 ns
+vec-one/btree-shared/1000         0.078  [ 0.078,  0.079]         725.1 ns
+vec-one/btree-shared/10000        0.011  [ 0.011,  0.012]        6940.5 ns
+vec-one/btree-shared/100000       0.001  [ 0.001,  0.001]       71833.4 ns
+vec-one/btree-shared/1000000      0.000  [ 0.000,  0.000]     1897999.8 ns
+vec-one/btree-shared/3            0.707  [ 0.705,  0.709]          32.0 ns
+vec-one/btree-shared/30           0.505  [ 0.504,  0.507]          60.8 ns
+vec-one/btree/10                  0.777  [ 0.772,  0.781]          41.5 ns
+vec-one/btree/100                 0.476  [ 0.475,  0.478]         110.8 ns
+vec-one/btree/1000                0.113  [ 0.112,  0.116]         725.1 ns
+vec-one/btree/10000               0.019  [ 0.019,  0.019]        6940.5 ns
+vec-one/btree/100000              0.003  [ 0.003,  0.003]       71833.4 ns
+vec-one/btree/1000000             0.000  [ 0.000,  0.000]     1897999.8 ns
+vec-one/btree/3                   0.917  [ 0.915,  0.919]          32.0 ns
+vec-one/btree/30                  0.609  [ 0.608,  0.611]          60.8 ns
+vec-one/delta/10                  0.608  [ 0.603,  0.611]          41.5 ns
+vec-one/delta/100                 0.428  [ 0.427,  0.429]         110.8 ns
+vec-one/delta/1000                0.329  [ 0.326,  0.331]         725.1 ns
+vec-one/delta/10000               0.371  [ 0.370,  0.372]        6940.5 ns
+vec-one/delta/100000              0.386  [ 0.384,  0.388]       71833.4 ns
+vec-one/delta/1000000             0.326  [ 0.310,  0.345]     1897999.8 ns
+vec-one/delta/3                   0.671  [ 0.670,  0.673]          32.0 ns
+vec-one/delta/30                  0.484  [ 0.483,  0.486]          60.8 ns
+vec-one/rope/10                   0.861  [ 0.855,  0.866]          41.5 ns
+vec-one/rope/100                  0.407  [ 0.406,  0.408]         110.8 ns
+vec-one/rope/1000                 0.103  [ 0.102,  0.104]         725.1 ns
+vec-one/rope/10000                0.020  [ 0.020,  0.020]        6940.5 ns
+vec-one/rope/100000               0.004  [ 0.004,  0.004]       71833.4 ns
+vec-one/rope/1000000              0.000  [ 0.000,  0.000]     1897999.8 ns
+vec-one/rope/3                    0.999  [ 0.997,  1.001]          32.0 ns
+vec-one/rope/30                   0.683  [ 0.681,  0.684]          60.8 ns
+vec-rare/btree-shared/10          1.069  [ 1.066,  1.072]          22.7 ns
+vec-rare/btree-shared/100         1.043  [ 1.041,  1.045]          36.0 ns
+vec-rare/btree-shared/1000        0.355  [ 0.354,  0.355]         160.4 ns
+vec-rare/btree-shared/10000       0.049  [ 0.049,  0.050]        1605.2 ns
+vec-rare/btree-shared/100000      0.006  [ 0.006,  0.006]       17466.1 ns
+vec-rare/btree-shared/1000000     0.000  [ 0.000,  0.000]      279876.0 ns
+vec-rare/btree-shared/3           1.117  [ 1.113,  1.120]          20.0 ns
+vec-rare/btree-shared/30          1.161  [ 1.158,  1.164]          25.7 ns
+vec-rare/btree/10                 1.402  [ 1.397,  1.406]          22.7 ns
+vec-rare/btree/100                1.443  [ 1.441,  1.446]          36.0 ns
+vec-rare/btree/1000               0.520  [ 0.519,  0.521]         160.4 ns
+vec-rare/btree/10000              0.082  [ 0.082,  0.082]        1605.2 ns
+vec-rare/btree/100000             0.010  [ 0.010,  0.010]       17466.1 ns
+vec-rare/btree/1000000            0.001  [ 0.001,  0.001]      279876.0 ns
+vec-rare/btree/3                  1.476  [ 1.473,  1.479]          20.0 ns
+vec-rare/btree/30                 1.417  [ 1.414,  1.420]          25.7 ns
+vec-rare/delta/10                 1.057  [ 1.054,  1.059]          22.7 ns
+vec-rare/delta/100                1.332  [ 1.328,  1.337]          36.0 ns
+vec-rare/delta/1000               1.481  [ 1.479,  1.483]         160.4 ns
+vec-rare/delta/10000              1.616  [ 1.613,  1.619]        1605.2 ns
+vec-rare/delta/100000             1.602  [ 1.593,  1.609]       17466.1 ns
+vec-rare/delta/1000000            2.288  [ 2.055,  2.519]      279876.0 ns
+vec-rare/delta/3                  1.028  [ 1.026,  1.031]          20.0 ns
+vec-rare/delta/30                 1.132  [ 1.129,  1.136]          25.7 ns
+vec-rare/rope/10                  1.507  [ 1.504,  1.511]          22.7 ns
+vec-rare/rope/100                 1.213  [ 1.211,  1.216]          36.0 ns
+vec-rare/rope/1000                0.469  [ 0.468,  0.470]         160.4 ns
+vec-rare/rope/10000               0.088  [ 0.087,  0.088]        1605.2 ns
+vec-rare/rope/100000              0.018  [ 0.017,  0.018]       17466.1 ns
+vec-rare/rope/1000000             0.003  [ 0.003,  0.004]      279876.0 ns
+vec-rare/rope/3                   1.537  [ 1.534,  1.540]          20.0 ns
+vec-rare/rope/30                  1.591  [ 1.587,  1.595]          25.7 ns
+vec-two/btree-shared/10           0.734  [ 0.730,  0.741]          49.5 ns
+vec-two/btree-shared/100          0.521  [ 0.519,  0.523]         129.4 ns
+vec-two/btree-shared/1000         0.123  [ 0.123,  0.124]         867.7 ns
+vec-two/btree-shared/10000        0.020  [ 0.020,  0.020]        8070.4 ns
+vec-two/btree-shared/100000       0.003  [ 0.003,  0.003]       83095.6 ns
+vec-two/btree-shared/1000000      0.000  [ 0.000,  0.000]     2099764.1 ns
+vec-two/btree-shared/3            0.754  [ 0.750,  0.758]          43.7 ns
+vec-two/btree-shared/30           0.673  [ 0.672,  0.674]          66.8 ns
+vec-two/btree/10                  1.057  [ 1.054,  1.059]          49.5 ns
+vec-two/btree/100                 0.812  [ 0.809,  0.814]         129.4 ns
+vec-two/btree/1000                0.196  [ 0.195,  0.196]         867.7 ns
+vec-two/btree/10000               0.034  [ 0.034,  0.034]        8070.4 ns
+vec-two/btree/100000              0.005  [ 0.005,  0.005]       83095.6 ns
+vec-two/btree/1000000             0.000  [ 0.000,  0.000]     2099764.1 ns
+vec-two/btree/3                   1.149  [ 1.143,  1.155]          43.7 ns
+vec-two/btree/30                  0.967  [ 0.965,  0.969]          66.8 ns
+vec-two/delta/10                  0.690  [ 0.688,  0.692]          49.5 ns
+vec-two/delta/100                 0.641  [ 0.639,  0.644]         129.4 ns
+vec-two/delta/1000                0.533  [ 0.532,  0.534]         867.7 ns
+vec-two/delta/10000               0.584  [ 0.583,  0.585]        8070.4 ns
+vec-two/delta/100000              0.597  [ 0.592,  0.602]       83095.6 ns
+vec-two/delta/1000000             0.534  [ 0.514,  0.563]     2099764.1 ns
+vec-two/delta/3                   0.738  [ 0.733,  0.743]          43.7 ns
+vec-two/delta/30                  0.686  [ 0.685,  0.687]          66.8 ns
+vec-two/rope/10                   1.174  [ 1.171,  1.176]          49.5 ns
+vec-two/rope/100                  0.618  [ 0.615,  0.620]         129.4 ns
+vec-two/rope/1000                 0.171  [ 0.170,  0.171]         867.7 ns
+vec-two/rope/10000                0.035  [ 0.035,  0.035]        8070.4 ns
+vec-two/rope/100000               0.008  [ 0.008,  0.008]       83095.6 ns
+vec-two/rope/1000000              0.001  [ 0.001,  0.001]     2099764.1 ns
+vec-two/rope/3                    1.218  [ 1.212,  1.225]          43.7 ns
+vec-two/rope/30                   1.096  [ 1.095,  1.097]          66.8 ns
+
