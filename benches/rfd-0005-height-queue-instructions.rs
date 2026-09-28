@@ -15,6 +15,15 @@
 //! events, for the small-side order and the heights: what the check and its
 //! upkeep cost apart from evaluation.
 //!
+//! `instant::*` runs the same transactions with the two cases RFD 5 names
+//! evaluated in the instant: the nodes a transaction builds run in it, and
+//! a `switch_cell` that moves reads its new inner's post-instant value.
+//! `instant_baseline` is the mark and flat loop with RFD 5's memoized pull
+//! for both; `instant_reseat` and `instant_pull` are the heights, raised
+//! mid-evaluation for the new inners, with built nodes below the cursor
+//! re-seating it or evaluated at once. Their counts are in the `-counts-pull`
+//! results.
+//!
 //! The fixture, the graph and the checker's initial order or heights are
 //! built in setup, and everything is handed back so its drop isn't counted.
 
@@ -23,7 +32,9 @@ use std::hint::black_box;
 use gungraun::{library_benchmark, library_benchmark_group, main};
 
 use bough_experiments::rfd_0005_bounded_relink_check::{Checker, Run};
-use bough_experiments::rfd_0005_height_queue::{HeightQueue, Heights};
+use bough_experiments::rfd_0005_height_queue::{
+    HeightQueue, Heights, HeightsPull, HeightsReseat, MarkPull,
+};
 use bough_experiments::rfd_0005_maintained_rank_queue::{
     Engine, Fixture, HeapQueue, MarkOm, Schedule,
 };
@@ -116,6 +127,51 @@ fn upkeep_height(input: (Run<Heights>, Fixture)) -> (Run<Heights>, Fixture, usiz
     black_box(checks(input))
 }
 
+fn mark_pull(name: &str, pass: u32) -> (MarkPull, Fixture) {
+    let f = Fixture::new(name, pass);
+    (MarkPull::new(&f), f)
+}
+
+fn heights_reseat(name: &str, pass: u32) -> (HeightsReseat, Fixture) {
+    let f = Fixture::new(name, pass);
+    (HeightsReseat::new(&f), f)
+}
+
+fn heights_pull(name: &str, pass: u32) -> (HeightsPull, Fixture) {
+    let f = Fixture::new(name, pass);
+    (HeightsPull::new(&f), f)
+}
+
+#[library_benchmark]
+#[benches::settled(args = [("settled", 100), ("settled", 50), ("settled", 30), ("settled", 20), ("settled", 5)], setup = mark_pull)]
+#[benches::mixed(args = [("mixed", 100), ("mixed", 50), ("mixed", 30), ("mixed", 20), ("mixed", 5)], setup = mark_pull)]
+#[benches::churn(args = [("churn", 100), ("churn", 50), ("churn", 30), ("churn", 20), ("churn", 5)], setup = mark_pull)]
+#[benches::lazy(args = [("lazy", 100), ("lazy", 50), ("lazy", 30), ("lazy", 20), ("lazy", 5)], setup = mark_pull)]
+fn instant_baseline((mut e, f): (MarkPull, Fixture)) -> (MarkPull, Fixture, u64) {
+    let digest = e.all(black_box(&f.txs), black_box(&f.events));
+    black_box((e, f, digest))
+}
+
+#[library_benchmark]
+#[benches::settled(args = [("settled", 100), ("settled", 50), ("settled", 30), ("settled", 20), ("settled", 5)], setup = heights_reseat)]
+#[benches::mixed(args = [("mixed", 100), ("mixed", 50), ("mixed", 30), ("mixed", 20), ("mixed", 5)], setup = heights_reseat)]
+#[benches::churn(args = [("churn", 100), ("churn", 50), ("churn", 30), ("churn", 20), ("churn", 5)], setup = heights_reseat)]
+#[benches::lazy(args = [("lazy", 100), ("lazy", 50), ("lazy", 30), ("lazy", 20), ("lazy", 5)], setup = heights_reseat)]
+fn instant_reseat((mut e, f): (HeightsReseat, Fixture)) -> (HeightsReseat, Fixture, u64) {
+    let digest = e.all(black_box(&f.txs), black_box(&f.events));
+    black_box((e, f, digest))
+}
+
+#[library_benchmark]
+#[benches::settled(args = [("settled", 100), ("settled", 50), ("settled", 30), ("settled", 20), ("settled", 5)], setup = heights_pull)]
+#[benches::mixed(args = [("mixed", 100), ("mixed", 50), ("mixed", 30), ("mixed", 20), ("mixed", 5)], setup = heights_pull)]
+#[benches::churn(args = [("churn", 100), ("churn", 50), ("churn", 30), ("churn", 20), ("churn", 5)], setup = heights_pull)]
+#[benches::lazy(args = [("lazy", 100), ("lazy", 50), ("lazy", 30), ("lazy", 20), ("lazy", 5)], setup = heights_pull)]
+fn instant_pull((mut e, f): (HeightsPull, Fixture)) -> (HeightsPull, Fixture, u64) {
+    let digest = e.all(black_box(&f.txs), black_box(&f.events));
+    black_box((e, f, digest))
+}
+
 library_benchmark_group!(
     name = transactions;
     benchmarks = baseline, heights, heap
@@ -126,4 +182,9 @@ library_benchmark_group!(
     benchmarks = upkeep_baseline, upkeep_height
 );
 
-main!(library_benchmark_groups = transactions, upkeep);
+library_benchmark_group!(
+    name = instant;
+    benchmarks = instant_baseline, instant_reseat, instant_pull
+);
+
+main!(library_benchmark_groups = transactions, upkeep, instant);

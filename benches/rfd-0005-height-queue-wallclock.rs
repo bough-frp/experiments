@@ -12,6 +12,13 @@
 //! builds and commits, for the small-side order (`baseline`) and the
 //! heights (`heights`).
 //!
+//! `<workload>-instant/<variant>/<pass>` runs the same transactions with
+//! the nodes they build evaluated in the instant and each moving
+//! `switch_cell` reading its new inner then: `baseline` is the mark and flat
+//! loop with RFD 5's memoized pull for both cases; `reseat` and `pull` are
+//! the heights, raised mid-evaluation, with built nodes below the cursor
+//! re-seating it or evaluated at once.
+//!
 //! Each fixture is first checked to give the same results through every
 //! engine. Each iteration runs on a clone of one prepared engine, made in
 //! `iter_batched`'s setup and handed back so its drop is not timed.
@@ -24,7 +31,10 @@ use criterion::{BatchSize, BenchmarkGroup, BenchmarkId, Criterion, SamplingMode}
 use criterion::{criterion_group, criterion_main};
 
 use bough_experiments::rfd_0005_bounded_relink_check::{Checker, Run};
-use bough_experiments::rfd_0005_height_queue::{HeightQueue, Heights, PASS, WORKLOADS, agree};
+use bough_experiments::rfd_0005_height_queue::{
+    HeightQueue, Heights, HeightsPull, HeightsReseat, MarkPull, PASS, WORKLOADS, agree,
+    agree_instant,
+};
 use bough_experiments::rfd_0005_maintained_rank_queue::{
     Engine, Fixture, HeapQueue, MarkOm, Schedule,
 };
@@ -41,6 +51,27 @@ fn one<C: Checker, S: Schedule<C>>(
             || fresh.clone(),
             |mut e| {
                 black_box(e.all(black_box(&f.txs), black_box(&f.events)));
+                e
+            },
+            BatchSize::LargeInput,
+        )
+    });
+}
+
+/// An instant engine: anything cloneable that runs the fixture's
+/// transactions.
+fn instant_one<E: Clone>(
+    g: &mut BenchmarkGroup<'_, WallTime>,
+    variant: &str,
+    fresh: E,
+    f: &Fixture,
+    all: fn(&mut E, &Fixture) -> u64,
+) {
+    g.bench_function(BenchmarkId::new(variant, f.pass), |b| {
+        b.iter_batched(
+            || fresh.clone(),
+            |mut e| {
+                black_box(all(&mut e, black_box(f)));
                 e
             },
             BatchSize::LargeInput,
@@ -95,6 +126,24 @@ fn height_queue(c: &mut Criterion) {
         upkeep_one::<Heights>(&mut g, "heights", name);
     }
     g.finish();
+    for name in WORKLOADS {
+        let mut g = c.benchmark_group(format!("{name}-instant"));
+        setup(&mut g);
+        for pass in PASS {
+            let f = Fixture::new(name, pass);
+            agree_instant(&f);
+            instant_one(&mut g, "baseline", MarkPull::new(&f), &f, |e, f| {
+                e.all(&f.txs, &f.events)
+            });
+            instant_one(&mut g, "reseat", HeightsReseat::new(&f), &f, |e, f| {
+                e.all(&f.txs, &f.events)
+            });
+            instant_one(&mut g, "pull", HeightsPull::new(&f), &f, |e, f| {
+                e.all(&f.txs, &f.events)
+            });
+        }
+        g.finish();
+    }
 }
 
 criterion_group!(benches, height_queue);

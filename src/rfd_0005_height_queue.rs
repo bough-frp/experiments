@@ -48,11 +48,42 @@
 //! (`GUARD = false`), where the only thing that stops a cycle's raises going
 //! round forever is the height cap. The counts use it to say what that
 //! detector costs and whether it refuses exactly what the walk refuses.
+//!
+//! All of that leaves out the two cases RFD 5 names as why rank-ordered
+//! push was rejected: nodes built during the instant run in it, after what
+//! they depend on, and a `switch_cell` at a switch instant emits its new
+//! inner's post-instant value, a dependency found mid-transaction. The
+//! second half of the file puts them in. A transaction's closure runs, and
+//! its moves become known, when its construct point is evaluated: the root
+//! event stream's forward token, which the selectors read, forced into the
+//! region (visited, firing only if its dependency did); for F46's pair,
+//! whose selector is off the tree, the start. A `switch_cell` that moves
+//! fires whatever its inner did, with the new inner's post-instant value; a
+//! `switch_stream` keeps its old inner for the instant and moves at commit.
+//! A refused transaction poisons: none of its values commit.
+//!
+//! - [`MarkPull`]: RFD 5 with its fallback. The mark runs from the input
+//!   and the construct point; built nodes are pulled once the closure
+//!   returns, and a moving `switch_cell` pulls its new inner when the loop
+//!   reaches it, so the loop checks a memo stamp before each node, and a
+//!   pull that comes back to the switch is a cycle.
+//! - [`HeightsAt`]: at the construct point the built nodes get heights,
+//!   and the moving `switch_cell`s are relinked with Incremental's raise,
+//!   which finds a cycle as at commit. A switch always comes after its
+//!   selector, so a raise never reaches below the cursor; a built node can
+//!   land there (an event reading an input), and then either the cursor is
+//!   re-seated down to it (`RESEAT`) or it is evaluated at once, out of the
+//!   height order.
+//! - [`Recompute`]: every node evaluated in a fresh topological order,
+//!   the reference [`agree_instant`] holds the others to.
 
-use crate::rfd_0005_bounded_relink_check::{Checker, Counts, Graph, Id, Move, Run};
-use crate::rfd_0005_maintained_rank_queue::{
-    Engine, Fixture, HeapQueue, MarkOm, RadixQueue, Schedule, State, Walked,
+use crate::rfd_0005_bounded_relink_check::{
+    Baseline, Checker, Counts, Graph, Id, Kind, Move, Run, Tx,
 };
+use crate::rfd_0005_maintained_rank_queue::{
+    Engine, Fixture, HeapQueue, MarkOm, Outcome, RadixQueue, Schedule, State, Walked,
+};
+use crate::rfd_0005_small_side_order::TwoWay;
 
 pub use crate::rfd_0005_maintained_rank_queue::{PASS, WORKLOADS};
 
@@ -404,6 +435,772 @@ pub fn agree(f: &Fixture) {
     );
 }
 
+// The instant with its two dynamic cases.
+
+/// The root event stream's forward token: the relink probe's generator
+/// builds 64 inputs and then it. The state holds read it and every
+/// component's lifts read the state, so it is upstream of every view and
+/// every switch over views, and below all of them in height.
+pub const FORWARD: Id = 64;
+
+/// A few multiply-xors, as the maintained-rank probe's `mix`.
+#[inline]
+fn mix(a: u64, b: u64) -> u64 {
+    let mut x = a ^ b.wrapping_mul(0x9E37_79B9_7F4A_7C15);
+    x ^= x >> 32;
+    x = x.wrapping_mul(0xD6E8_FEB8_6659_FD93);
+    x ^ (x >> 32)
+}
+
+/// Where a transaction's builds happen and its moves become known: when
+/// the root event stream is evaluated, for navigations and local switches,
+/// whose selectors read it; at the start for F46's pair, whose selector is
+/// off the component tree. `None` is the start.
+#[inline]
+fn construct_point(t: &Tx) -> Option<Id> {
+    if t.moves.iter().any(|m| m.kind == Kind::F46) {
+        None
+    } else {
+        Some(FORWARD)
+    }
+}
+
+/// A `switch_cell`'s move, as opposed to a `switch_stream`'s: at the switch
+/// instant it reads its new inner's post-instant value.
+#[inline]
+fn is_cell(m: &Move) -> bool {
+    m.kind != Kind::Event
+}
+
+/// What the instant engines did, summed over their transactions.
+#[derive(Clone, Default, Debug)]
+pub struct InstantStats {
+    /// Nodes marked (mark and pull), or popped (heights).
+    pub visited: u64,
+    /// Nodes built during the transactions.
+    pub built: u64,
+    /// Mark and pull: built nodes evaluated by pull once the closure
+    /// returned.
+    pub pulled: u64,
+    /// Mark and pull: existing nodes pulled ahead of the flat loop, by a
+    /// built node or a `switch_cell`'s new inner.
+    pub pulled_early: u64,
+    /// Heights: built nodes at or below the cursor when they were built.
+    pub below: u64,
+    /// Heights, pulling: of those, the ones with a fired dependency,
+    /// evaluated out of order as they were built.
+    pub out_of_order: u64,
+    /// Heights, re-seating: times the cursor went back down to a built node.
+    pub reseats: u64,
+    /// Heights: empty buckets the cursor stepped over.
+    pub stepped: u64,
+    /// Heights: queued nodes a raise moved up, popped at the old height
+    /// and pushed again at the new one.
+    pub stale: u64,
+    /// Heights: `switch_cell` links made mid-evaluation that needed a raise,
+    /// and the nodes those raises touched.
+    pub raises: u64,
+    pub touched: u64,
+    /// Transactions found to close a same-instant cycle during evaluation.
+    pub poisoned: u64,
+}
+
+/// The nodes' slots for the instant engines: the maintained-rank probe's
+/// `State`, whose fields are private to it, with what a switching
+/// `switch_cell` reads.
+#[derive(Clone)]
+pub struct Slots {
+    value: Vec<u64>,
+    stamp: Vec<u32>,
+    current: Vec<u64>,
+    /// A `switch_cell` switching at `switching[n] == tx` reads `to[n]`.
+    switching: Vec<u32>,
+    to: Vec<Id>,
+    tx: u32,
+    fired: Vec<Id>,
+    digest: u64,
+    threshold: u32,
+}
+
+impl Slots {
+    fn new(len: usize, pass: u32) -> Slots {
+        let mut me = Slots {
+            value: Vec::new(),
+            stamp: Vec::new(),
+            current: Vec::new(),
+            switching: Vec::new(),
+            to: Vec::new(),
+            tx: 0,
+            fired: Vec::new(),
+            digest: 0,
+            threshold: pass * 1024 / 100,
+        };
+        me.grow(len);
+        me
+    }
+
+    /// Slots for nodes built since, with a committed value each.
+    fn grow(&mut self, len: usize) {
+        let old = self.current.len();
+        self.value.resize(len, 0);
+        self.stamp.resize(len, 0);
+        self.switching.resize(len, 0);
+        self.to.resize(len, 0);
+        self.current.extend((old..len).map(|n| mix(n as u64, 0)));
+    }
+
+    fn begin(&mut self, input: Id, value: u64) {
+        self.tx += 1;
+        self.fired.clear();
+        self.digest = 0;
+        self.value[input as usize] = value;
+        self.fire(input);
+    }
+
+    #[inline]
+    fn has_fired(&self, n: Id) -> bool {
+        self.stamp[n as usize] == self.tx
+    }
+
+    #[inline]
+    fn fire(&mut self, n: Id) {
+        let i = n as usize;
+        self.stamp[i] = self.tx;
+        self.fired.push(n);
+        self.digest = self.digest.wrapping_add(mix(self.value[i], n as u64));
+    }
+
+    #[inline]
+    fn switch_to(&mut self, switch: Id, to: Id) {
+        self.switching[switch as usize] = self.tx;
+        self.to[switch as usize] = to;
+    }
+
+    #[inline]
+    fn is_switching(&self, n: Id) -> bool {
+        self.switching[n as usize] == self.tx
+    }
+
+    /// The maintained-rank probe's evaluation, except that a `switch_cell`
+    /// switching now fires whatever its inner did, with its new inner's
+    /// post-instant value: the value the generic code gives a node whose
+    /// one dependency is that inner and fired.
+    #[inline]
+    pub fn eval(&mut self, g: &Graph, n: Id) -> bool {
+        if self.is_switching(n) {
+            let d = self.to[n as usize];
+            let v = if self.has_fired(d) {
+                self.value[d as usize]
+            } else {
+                self.current[d as usize]
+            };
+            self.value[n as usize] = mix(mix(v, d as u64), n as u64);
+            self.fire(n);
+            return true;
+        }
+        let deps = &g.deps[n as usize];
+        if !deps.iter().any(|&d| self.has_fired(d)) {
+            return deps.is_empty() && self.has_fired(n);
+        }
+        let mut acc = 0u64;
+        let mut filter = false;
+        for &d in deps {
+            let v = if self.has_fired(d) {
+                self.value[d as usize]
+            } else {
+                self.current[d as usize]
+            };
+            acc = acc.wrapping_add(mix(v, d as u64));
+            filter |= d <= FORWARD;
+        }
+        let v = mix(acc, n as u64);
+        if filter && (v >> 54) as u32 >= self.threshold {
+            return false;
+        }
+        self.value[n as usize] = v;
+        self.fire(n);
+        true
+    }
+
+    /// Commits the fired values if the transaction was accepted. A refused
+    /// one poisons in the engine; here it commits nothing and reports
+    /// nothing fired, whatever it had evaluated when it stopped.
+    fn finish(&mut self, accepted: bool) -> Outcome {
+        if !accepted {
+            return Outcome {
+                fired: 0,
+                digest: 0,
+                accepted,
+            };
+        }
+        for &n in &self.fired {
+            self.current[n as usize] = self.value[n as usize];
+        }
+        Outcome {
+            fired: self.fired.len() as u32,
+            digest: self.digest,
+            accepted,
+        }
+    }
+
+    /// The committed values, to compare engines after a run.
+    pub fn values(&self) -> &[u64] {
+        &self.current
+    }
+}
+
+/// A pull reached a node already being pulled: the new inner closes a
+/// same-instant cycle.
+struct Cycle;
+
+/// RFD 5 with its fallback: the mark and flat loop, the two-way small-side
+/// check at commit, and memoized pull for the two dynamic cases. The nodes
+/// a closure built are pulled once it returns, each after what it depends
+/// on; a `switch_cell` switching now pulls its new inner when the loop
+/// reaches it. A pull evaluates marked nodes ahead of the loop, so the loop
+/// checks a memo stamp before each node.
+#[derive(Clone)]
+pub struct MarkPull {
+    pub run: Run<TwoWay>,
+    pub slots: Slots,
+    mark: Vec<u32>,
+    done: Vec<u32>,
+    busy: Vec<u32>,
+    order: Vec<Id>,
+    stack: Vec<(Id, u32)>,
+    /// The first node built this transaction.
+    first: Id,
+    pub stats: InstantStats,
+}
+
+impl MarkPull {
+    pub fn new(f: &Fixture) -> Self {
+        let n = f.graph.len();
+        MarkPull {
+            run: Run {
+                graph: f.graph.clone(),
+                checker: TwoWay::new(&f.graph),
+            },
+            slots: Slots::new(n, f.pass),
+            mark: vec![0; n],
+            done: vec![0; n],
+            busy: vec![0; n],
+            order: Vec::new(),
+            stack: Vec::new(),
+            first: 0,
+            stats: InstantStats::default(),
+        }
+    }
+
+    fn resize(&mut self) {
+        let n = self.run.graph.len();
+        self.mark.resize(n, 0);
+        self.done.resize(n, 0);
+        self.busy.resize(n, 0);
+    }
+
+    /// RFD 5's depth-first mark from one more root; the reverse of the
+    /// concatenated post-orders is a topological order of the union.
+    fn mark_from(&mut self, root: Id) {
+        let g = &self.run.graph;
+        let tx = self.slots.tx;
+        if self.mark[root as usize] == tx {
+            return;
+        }
+        self.mark[root as usize] = tx;
+        self.stack.push((root, 0));
+        while let Some(top) = self.stack.last_mut() {
+            let (n, k) = *top;
+            if let Some(&d) = g.dependents[n as usize].get(k as usize) {
+                top.1 += 1;
+                if self.mark[d as usize] != tx {
+                    self.mark[d as usize] = tx;
+                    self.stack.push((d, 0));
+                }
+            } else {
+                self.order.push(n);
+                self.stack.pop();
+            }
+        }
+    }
+
+    /// Whether `d` still has to be evaluated this transaction: marked or
+    /// built, and not yet done. Anything else is quiet.
+    #[inline]
+    fn pending(&self, d: Id) -> bool {
+        let i = d as usize;
+        self.done[i] != self.slots.tx && (self.mark[i] == self.slots.tx || d >= self.first)
+    }
+
+    fn pull(&mut self, n: Id) -> Result<(), Cycle> {
+        let tx = self.slots.tx;
+        let i = n as usize;
+        if self.busy[i] == tx {
+            return Err(Cycle);
+        }
+        self.busy[i] = tx;
+        if self.slots.is_switching(n) {
+            let d = self.slots.to[i];
+            if self.pending(d) {
+                self.pull(d)?;
+            }
+        } else {
+            for k in 0..self.run.graph.deps[i].len() {
+                let d = self.run.graph.deps[i][k];
+                if self.pending(d) {
+                    self.pull(d)?;
+                }
+            }
+        }
+        self.slots.eval(&self.run.graph, n);
+        self.done[i] = tx;
+        if n >= self.first {
+            self.stats.pulled += 1;
+        } else {
+            self.stats.pulled_early += 1;
+        }
+        Ok(())
+    }
+
+    /// The loop's step: a `switch_cell` switching now pulls its new inner
+    /// first, and is busy while it does, so a pull that comes back to it
+    /// has gone round a cycle.
+    #[inline]
+    fn step(&mut self, n: Id) -> Result<(), Cycle> {
+        if self.slots.is_switching(n) {
+            self.busy[n as usize] = self.slots.tx;
+            let d = self.slots.to[n as usize];
+            if self.pending(d) {
+                self.pull(d)?;
+            }
+        }
+        self.slots.eval(&self.run.graph, n);
+        self.done[n as usize] = self.slots.tx;
+        Ok(())
+    }
+
+    /// The closure runs: its subgraphs are built and linked, and the
+    /// switches learn where they move.
+    fn announce(&mut self, t: &Tx) {
+        for b in &t.builds {
+            self.run.build(b);
+        }
+        let len = self.run.graph.len();
+        self.slots.grow(len);
+        self.resize();
+        self.stats.built += (len - self.first as usize) as u64;
+        for m in t.moves.iter().filter(|m| is_cell(m)) {
+            // Marked from the construct point, or built just now: the
+            // generator may move a local switch in the instant it was built.
+            debug_assert!(self.pending(m.switch), "{m:?}");
+            self.slots.switch_to(m.switch, m.to);
+        }
+    }
+
+    fn pull_built(&mut self) -> Result<(), Cycle> {
+        for n in self.first..self.run.graph.len() as Id {
+            if self.done[n as usize] != self.slots.tx {
+                self.pull(n)?;
+            }
+        }
+        Ok(())
+    }
+
+    /// One transaction: the mark from the input and the construct point,
+    /// the loop, the closure and its pulls where the point is evaluated,
+    /// then the commit, whose values stand only if it is accepted.
+    pub fn tx(&mut self, t: &Tx, (input, value): (Id, u64)) -> Outcome {
+        self.slots.begin(input, value);
+        self.first = self.run.graph.len() as Id;
+        self.order.clear();
+        let at = construct_point(t);
+        self.mark_from(input);
+        match at {
+            Some(point) => self.mark_from(point),
+            None => {
+                for m in t.moves.iter().filter(|m| is_cell(m)) {
+                    self.mark_from(m.switch);
+                }
+            }
+        }
+        self.stats.visited += self.order.len() as u64;
+        let mut poisoned = false;
+        if at.is_none() {
+            self.announce(t);
+            poisoned = self.pull_built().is_err();
+        }
+        let order = std::mem::take(&mut self.order);
+        for &n in order.iter().rev() {
+            if poisoned {
+                break;
+            }
+            if self.done[n as usize] == self.slots.tx {
+                continue;
+            }
+            poisoned = self.step(n).is_err();
+            if !poisoned && Some(n) == at {
+                self.announce(t);
+                poisoned = self.pull_built().is_err();
+            }
+        }
+        self.order = order;
+        self.stats.poisoned += poisoned as u64;
+        let accepted = self.run.checker.commit(&mut self.run.graph, &t.moves) && !poisoned;
+        self.slots.finish(accepted)
+    }
+
+    /// Every transaction with its event; the sum of the digests.
+    pub fn all(&mut self, txs: &[Tx], events: &[(Id, u64)]) -> u64 {
+        txs.iter()
+            .zip(events)
+            .fold(0, |acc, (t, &e)| acc.wrapping_add(self.tx(t, e).digest))
+    }
+}
+
+/// Pushes `n` into the bucket of its height now.
+#[inline]
+fn push(buckets: &mut Vec<Vec<Id>>, height: &[u32], n: Id, top: &mut usize) {
+    let h = height[n as usize] as usize;
+    if buckets.len() <= h {
+        buckets.resize(h + 1, Vec::new());
+    }
+    buckets[h].push(n);
+    *top = (*top).max(h);
+}
+
+/// Pushes `n`'s dependents above `floor` not queued yet this transaction.
+#[inline]
+#[allow(clippy::too_many_arguments)]
+fn push_dependents(
+    g: &Graph,
+    height: &[u32],
+    buckets: &mut Vec<Vec<Id>>,
+    queued: &mut [u32],
+    tx: u32,
+    n: Id,
+    floor: u32,
+    top: &mut usize,
+) {
+    for &d in &g.dependents[n as usize] {
+        if queued[d as usize] != tx && height[d as usize] > floor {
+            queued[d as usize] = tx;
+            push(buckets, height, d, top);
+        }
+    }
+}
+
+/// Heights and a bucket queue, with the two dynamic cases. When the
+/// closure runs, its nodes get heights as they are built, and each with a
+/// fired dependency is queued; one at or below the cursor either sends the
+/// cursor back down to it (`RESEAT`) or is evaluated at once, in creation
+/// order, out of the height order (`!RESEAT`, what RFD 5's pull does here,
+/// since creation order is a topological order of what a closure builds).
+/// Then the `switch_cell`s that move are relinked to their new inners,
+/// each raised above its inner if it isn't; a raise that comes back to the
+/// inner is a cycle, and poisons. A queued node a raise moved up is found
+/// at its old height and pushed again at its new one. The
+/// `switch_stream`s move at commit.
+#[derive(Clone)]
+pub struct HeightsAt<const RESEAT: bool> {
+    pub run: Run<Heights>,
+    pub slots: Slots,
+    buckets: Vec<Vec<Id>>,
+    queued: Vec<u32>,
+    cells: Vec<Move>,
+    streams: Vec<Move>,
+    pub stats: InstantStats,
+}
+
+/// Heights re-seating the cursor for built nodes below it.
+pub type HeightsReseat = HeightsAt<true>;
+/// Heights evaluating built nodes below the cursor at once.
+pub type HeightsPull = HeightsAt<false>;
+
+impl<const RESEAT: bool> HeightsAt<RESEAT> {
+    pub fn new(f: &Fixture) -> Self {
+        let checker = <Heights as Checker>::new(&f.graph);
+        HeightsAt {
+            buckets: vec![Vec::new(); checker.max as usize + 1],
+            queued: vec![0; f.graph.len()],
+            run: Run {
+                graph: f.graph.clone(),
+                checker,
+            },
+            slots: Slots::new(f.graph.len(), f.pass),
+            cells: Vec::new(),
+            streams: Vec::new(),
+            stats: InstantStats::default(),
+        }
+    }
+
+    /// The closure runs with the cursor at `cursor`; `h` is the cursor to
+    /// go on from. Err on a cycle. Kept out of line: inlined, it moved the
+    /// two variants 10% apart on `settled`, where they do the same work.
+    #[inline(never)]
+    fn announce(
+        &mut self,
+        t: &Tx,
+        cursor: usize,
+        h: &mut usize,
+        top: &mut usize,
+    ) -> Result<(), Cycle> {
+        let tx = self.slots.tx;
+        let first = self.run.graph.len();
+        for b in &t.builds {
+            self.run.build(b);
+        }
+        let len = self.run.graph.len();
+        self.slots.grow(len);
+        self.queued.resize(len, 0);
+        self.stats.built += (len - first) as u64;
+        let g = &self.run.graph;
+        let height = &self.run.checker.height;
+        for n in first as Id..len as Id {
+            let hn = height[n as usize] as usize;
+            let below = hn <= cursor;
+            self.stats.below += below as u64;
+            if self.queued[n as usize] == tx
+                || !g.deps[n as usize].iter().any(|&d| self.slots.has_fired(d))
+            {
+                // Queued by a node evaluated out of order just now; or
+                // quiet, or a dependency above the cursor queues it when it
+                // fires.
+                continue;
+            }
+            self.queued[n as usize] = tx;
+            if !below {
+                push(&mut self.buckets, height, n, top);
+            } else if RESEAT {
+                push(&mut self.buckets, height, n, top);
+                if hn < *h {
+                    *h = hn;
+                    self.stats.reseats += 1;
+                }
+            } else {
+                // Its dependencies are all below the cursor and done, or
+                // built before it. Those of its dependents at or below the
+                // cursor were built after it and come to this loop.
+                self.stats.out_of_order += 1;
+                if self.slots.eval(g, n) {
+                    let (b, q) = (&mut self.buckets, &mut self.queued);
+                    push_dependents(g, height, b, q, tx, n, cursor as u32, top);
+                }
+            }
+        }
+
+        self.cells.clear();
+        self.cells
+            .extend(t.moves.iter().filter(|m| is_cell(m)).copied());
+        let s = &self.run.checker.stats;
+        let (raises, touched) = (s.raises, s.touched);
+        let ok = self.run.checker.commit(&mut self.run.graph, &self.cells);
+        let s = &self.run.checker.stats;
+        self.stats.raises += s.raises - raises;
+        self.stats.touched += s.touched - touched;
+        if !ok {
+            return Err(Cycle);
+        }
+        let height = &self.run.checker.height;
+        for m in &self.cells {
+            self.slots.switch_to(m.switch, m.to);
+            let s = m.switch as usize;
+            debug_assert!(
+                height[s] as usize > cursor,
+                "a switch at or below the cursor"
+            );
+            if self.queued[s] != tx {
+                self.queued[s] = tx;
+                push(&mut self.buckets, height, m.switch, top);
+            }
+        }
+        Ok(())
+    }
+
+    /// One transaction: the input's dependents and the construct point
+    /// queued, the climb, the closure and the raises where the point is
+    /// evaluated, then the `switch_stream`s' commit, whose values stand
+    /// only if it is accepted.
+    pub fn tx(&mut self, t: &Tx, (input, value): (Id, u64)) -> Outcome {
+        self.slots.begin(input, value);
+        let tx = self.slots.tx;
+        self.queued.resize(self.run.graph.len(), 0);
+        let at = construct_point(t);
+        let start = self.run.checker.height[input as usize];
+        let mut h = start as usize + 1;
+        let mut top = 0;
+        {
+            let (g, height) = (&self.run.graph, &self.run.checker.height);
+            let (b, q) = (&mut self.buckets, &mut self.queued);
+            push_dependents(g, height, b, q, tx, input, start, &mut top);
+        }
+        let mut poisoned = false;
+        match at {
+            Some(point) => {
+                if self.queued[point as usize] != tx {
+                    self.queued[point as usize] = tx;
+                    push(&mut self.buckets, &self.run.checker.height, point, &mut top);
+                }
+            }
+            None => poisoned = self.announce(t, start as usize, &mut h, &mut top).is_err(),
+        }
+        while !poisoned && h <= top {
+            let Some(n) = self.buckets[h].pop() else {
+                h += 1;
+                self.stats.stepped += 1;
+                continue;
+            };
+            let height = &self.run.checker.height;
+            if height[n as usize] as usize != h {
+                self.stats.stale += 1;
+                push(&mut self.buckets, height, n, &mut top);
+                continue;
+            }
+            self.stats.visited += 1;
+            if self.slots.eval(&self.run.graph, n) {
+                let (g, b, q) = (&self.run.graph, &mut self.buckets, &mut self.queued);
+                push_dependents(g, height, b, q, tx, n, h as u32, &mut top);
+            }
+            if Some(n) == at {
+                let cursor = h;
+                poisoned = self.announce(t, cursor, &mut h, &mut top).is_err();
+            }
+        }
+        if poisoned {
+            self.stats.poisoned += 1;
+            for b in self.buckets.iter_mut().take(top + 1) {
+                b.clear();
+            }
+        }
+        let accepted = !poisoned && {
+            self.streams.clear();
+            self.streams
+                .extend(t.moves.iter().filter(|m| !is_cell(m)).copied());
+            let ok = self.run.checker.commit(&mut self.run.graph, &self.streams);
+            if !ok {
+                // Put the switch_cells back where the instant found them.
+                let back: Vec<Move> = self
+                    .cells
+                    .iter()
+                    .map(|m| Move {
+                        from: m.to,
+                        to: m.from,
+                        ..*m
+                    })
+                    .collect();
+                assert!(self.run.checker.commit(&mut self.run.graph, &back));
+            }
+            ok
+        };
+        self.slots.finish(accepted)
+    }
+
+    /// Every transaction with its event; the sum of the digests.
+    pub fn all(&mut self, txs: &[Tx], events: &[(Id, u64)]) -> u64 {
+        txs.iter()
+            .zip(events)
+            .fold(0, |acc, (t, &e)| acc.wrapping_add(self.tx(t, e).digest))
+    }
+}
+
+/// The reference for the instant engines: everything built first, the
+/// `switch_cell`s relinked, and every node evaluated in a topological
+/// order of the whole graph, found afresh by Kahn's algorithm; the walk at
+/// commit. It asserts that the instant's graph has a cycle exactly when the
+/// walk refuses the final one: here they differ only in the
+/// `switch_stream`s' inners, and nothing downstream of a view is an event.
+#[derive(Clone)]
+pub struct Recompute {
+    pub run: Run<Baseline>,
+    pub slots: Slots,
+    indeg: Vec<u32>,
+    order: Vec<Id>,
+}
+
+impl Recompute {
+    pub fn new(f: &Fixture) -> Self {
+        Recompute {
+            run: Run {
+                graph: f.graph.clone(),
+                checker: Baseline::new(&f.graph),
+            },
+            slots: Slots::new(f.graph.len(), f.pass),
+            indeg: Vec::new(),
+            order: Vec::new(),
+        }
+    }
+
+    pub fn tx(&mut self, t: &Tx, (input, value): (Id, u64)) -> Outcome {
+        self.slots.begin(input, value);
+        for b in &t.builds {
+            self.run.build(b);
+        }
+        let g = &mut self.run.graph;
+        self.slots.grow(g.len());
+        let cells: Vec<Move> = t.moves.iter().filter(|m| is_cell(m)).copied().collect();
+        for m in &cells {
+            g.unlink(m.from, m.switch);
+        }
+        for m in &cells {
+            g.link(m.to, m.switch);
+            self.slots.switch_to(m.switch, m.to);
+        }
+        self.indeg.clear();
+        self.indeg.extend(g.deps.iter().map(|d| d.len() as u32));
+        self.order.clear();
+        self.order
+            .extend((0..g.len() as Id).filter(|&n| g.deps[n as usize].is_empty()));
+        let mut k = 0;
+        while k < self.order.len() {
+            let n = self.order[k];
+            k += 1;
+            for &d in &g.dependents[n as usize] {
+                self.indeg[d as usize] -= 1;
+                if self.indeg[d as usize] == 0 {
+                    self.order.push(d);
+                }
+            }
+        }
+        let acyclic = self.order.len() == g.len();
+        if acyclic {
+            for &n in &self.order {
+                self.slots.eval(g, n);
+            }
+        }
+        for m in &cells {
+            g.unlink(m.to, m.switch);
+        }
+        for m in &cells {
+            g.link(m.from, m.switch);
+        }
+        let accepted = self.run.checker.commit(&mut self.run.graph, &t.moves);
+        assert_eq!(
+            acyclic, accepted,
+            "the instant's cycles are the final graph's"
+        );
+        self.slots.finish(accepted)
+    }
+}
+
+/// Runs the instant engines over the fixture against [`Recompute`], and
+/// panics unless each transaction fired the same nodes with the same
+/// values and got the same verdict, the heights hold every edge after each
+/// (in debug builds), and the committed values end the same.
+pub fn agree_instant(f: &Fixture) {
+    let mut reference = Recompute::new(f);
+    let mut mark = MarkPull::new(f);
+    let mut reseat = HeightsReseat::new(f);
+    let mut pull = HeightsPull::new(f);
+    for (k, (t, &e)) in f.txs.iter().zip(&f.events).enumerate() {
+        let o = reference.tx(t, e);
+        let others = [mark.tx(t, e), reseat.tx(t, e), pull.tx(t, e)];
+        assert!(others.iter().all(|x| *x == o), "tx {k}: {o:?} {others:?}");
+        debug_assert!(reseat.run.checker.valid(&reseat.run.graph), "tx {k}");
+        debug_assert!(pull.run.checker.valid(&pull.run.graph), "tx {k}");
+    }
+    let v = reference.slots.values();
+    assert!(mark.slots.values() == v && reseat.slots.values() == v && pull.slots.values() == v);
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -429,6 +1226,115 @@ mod tests {
                 agree(&Fixture::new(name, pass));
             }
         }
+    }
+
+    #[test]
+    fn instant_engines_agree() {
+        for name in WORKLOADS {
+            for pass in [100, 20, 0] {
+                agree_instant(&Fixture::new(name, pass));
+            }
+        }
+    }
+
+    /// The instant engines per transaction, per workload and pass rate.
+    /// Run with `--nocapture`.
+    #[test]
+    fn counts_instant() {
+        println!(
+            "{:<8} {:>4} {:>7} {:>7} {:>6} {:>6} {:>6} {:>6} {:>7} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6}",
+            "workload",
+            "pass",
+            "marked",
+            "fired",
+            "quiet%",
+            "built",
+            "pulled",
+            "early",
+            "popped",
+            "below",
+            "ooo",
+            "reseat",
+            "step-r",
+            "step-p",
+            "raises",
+            "touch",
+            "stale",
+        );
+        let mut txs = 0;
+        for name in WORKLOADS {
+            for pass in PASS {
+                let f = Fixture::new(name, pass);
+                agree_instant(&f);
+                txs = f.txs.len();
+                let mut mark = MarkPull::new(&f);
+                let mut reseat = HeightsReseat::new(&f);
+                let mut pull = HeightsPull::new(&f);
+                let mut fired = 0u64;
+                for (t, &e) in f.txs.iter().zip(&f.events) {
+                    fired += mark.tx(t, e).fired as u64;
+                    reseat.tx(t, e);
+                    pull.tx(t, e);
+                }
+                let (m, r, p) = (&mark.stats, &reseat.stats, &pull.stats);
+                assert_eq!(r.visited, p.visited + p.out_of_order);
+                assert_eq!((r.raises, r.touched), (p.raises, p.touched));
+                assert_eq!(m.poisoned, r.poisoned);
+                let n = f.txs.len() as f64;
+                let per = |x: u64| x as f64 / n;
+                println!(
+                    "{:<8} {:>4} {:>7.1} {:>7.1} {:>6.1} {:>6.1} {:>6.1} {:>6.1} {:>7.1} {:>6.1} {:>6.1} {:>6.2} {:>6.1} {:>6.1} {:>6.2} {:>6.1} {:>6.2}",
+                    name,
+                    pass,
+                    per(m.visited),
+                    per(fired),
+                    100.0 * (1.0 - fired as f64 / m.visited as f64),
+                    per(m.built),
+                    per(m.pulled),
+                    per(m.pulled_early),
+                    per(p.visited),
+                    per(p.below),
+                    per(p.out_of_order),
+                    per(r.reseats),
+                    per(r.stepped),
+                    per(p.stepped),
+                    per(p.raises),
+                    per(p.touched),
+                    per(p.stale),
+                );
+            }
+        }
+        println!();
+        println!("per transaction, over each workload's {txs} transactions, with nodes built");
+        println!("during the instant evaluated in it and each switch_cell reading its new");
+        println!("inner at the switch instant. Mark and pull: nodes marked, fired (refused");
+        println!("transactions count none), the quiet share of the marked region, nodes");
+        println!("built, built nodes pulled once the closure returned, and existing nodes");
+        println!("pulled ahead of the flat loop. Heights: nodes popped by the pulling");
+        println!("variant (the re-seating one pops these plus ooo), built nodes at or below");
+        println!("the cursor when built, those of them evaluated out of order (ooo) by the");
+        println!("pulling variant, times the re-seating variant sent its cursor back down,");
+        println!("empty buckets stepped over by each (r, p), switch_cell links made");
+        println!("mid-evaluation that needed a raise, nodes those raises touched, and queued");
+        println!("nodes a raise moved and the cursor found at their old height. pass is the");
+        println!("filters' pass rate in percent.");
+
+        println!();
+        println!("{:<8} {:>6} {:>6}", "workload", "refus", "poison");
+        for name in WORKLOADS {
+            let f = Fixture::new(name, 20);
+            let mut mark = MarkPull::new(&f);
+            let mut refused = 0;
+            for (t, &e) in f.txs.iter().zip(&f.events) {
+                refused += !mark.tx(t, e).accepted as u32;
+            }
+            println!("{:<8} {:>6} {:>6}", name, refused, mark.stats.poisoned);
+        }
+        println!();
+        println!("transactions refused, and of them found to close a cycle during");
+        println!("evaluation (by a pull coming back to the switch_cell, or by a raise");
+        println!("coming back to the new inner; the two engines agree), whatever the pass");
+        println!("rate.");
     }
 
     /// Through the checker alone: the heights refuse exactly what the walk
