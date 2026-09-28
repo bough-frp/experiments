@@ -1,0 +1,1259 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-maintained-rank-queue-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0005-maintained-rank-queue-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.10s
+     Running benches/rfd-0005-maintained-rank-queue-wallclock.rs (target/release/deps/rfd_0005_maintained_rank_queue_wallclock-f77f101d046ca93d)
+Gnuplot not found, using plotters backend
+Benchmarking settled/baseline/100
+Benchmarking settled/baseline/100: Warming up for 500.00 ms
+Benchmarking settled/baseline/100: Collecting 10 samples in estimated 2.7111 s (30 iterations)
+Benchmarking settled/baseline/100: Analyzing
+settled/baseline/100    time:   [89.751 ms 90.052 ms 90.335 ms]
+Benchmarking settled/mark-om/100
+Benchmarking settled/mark-om/100: Warming up for 500.00 ms
+Benchmarking settled/mark-om/100: Collecting 10 samples in estimated 2.5409 s (30 iterations)
+Benchmarking settled/mark-om/100: Analyzing
+settled/mark-om/100     time:   [83.692 ms 83.806 ms 83.945 ms]
+Benchmarking settled/radix/100
+Benchmarking settled/radix/100: Warming up for 500.00 ms
+
+Warning: Unable to complete 10 samples in 2.0s. You may wish to increase target time to 2.1s.
+Benchmarking settled/radix/100: Collecting 10 samples in estimated 2.0595 s (10 iterations)
+Benchmarking settled/radix/100: Analyzing
+settled/radix/100       time:   [203.31 ms 203.42 ms 203.58 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking settled/heap/100
+Benchmarking settled/heap/100: Warming up for 500.00 ms
+
+Warning: Unable to complete 10 samples in 2.0s. You may wish to increase target time to 2.2s.
+Benchmarking settled/heap/100: Collecting 10 samples in estimated 2.1654 s (10 iterations)
+Benchmarking settled/heap/100: Analyzing
+settled/heap/100        time:   [215.20 ms 215.29 ms 215.38 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking settled/baseline/50
+Benchmarking settled/baseline/50: Warming up for 500.00 ms
+Benchmarking settled/baseline/50: Collecting 10 samples in estimated 2.5918 s (30 iterations)
+Benchmarking settled/baseline/50: Analyzing
+settled/baseline/50     time:   [85.428 ms 85.518 ms 85.645 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking settled/mark-om/50
+Benchmarking settled/mark-om/50: Warming up for 500.00 ms
+Benchmarking settled/mark-om/50: Collecting 10 samples in estimated 2.4491 s (30 iterations)
+Benchmarking settled/mark-om/50: Analyzing
+settled/mark-om/50      time:   [80.964 ms 81.237 ms 81.525 ms]
+Benchmarking settled/radix/50
+Benchmarking settled/radix/50: Warming up for 500.00 ms
+Benchmarking settled/radix/50: Collecting 10 samples in estimated 2.9981 s (20 iterations)
+Benchmarking settled/radix/50: Analyzing
+settled/radix/50        time:   [147.64 ms 147.69 ms 147.75 ms]
+Benchmarking settled/heap/50
+Benchmarking settled/heap/50: Warming up for 500.00 ms
+Benchmarking settled/heap/50: Collecting 10 samples in estimated 3.1195 s (20 iterations)
+Benchmarking settled/heap/50: Analyzing
+settled/heap/50         time:   [153.16 ms 153.52 ms 153.95 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking settled/baseline/30
+Benchmarking settled/baseline/30: Warming up for 500.00 ms
+Benchmarking settled/baseline/30: Collecting 10 samples in estimated 2.4691 s (30 iterations)
+Benchmarking settled/baseline/30: Analyzing
+settled/baseline/30     time:   [79.718 ms 79.975 ms 80.266 ms]
+Benchmarking settled/mark-om/30
+Benchmarking settled/mark-om/30: Warming up for 500.00 ms
+Benchmarking settled/mark-om/30: Collecting 10 samples in estimated 2.2753 s (30 iterations)
+Benchmarking settled/mark-om/30: Analyzing
+settled/mark-om/30      time:   [74.704 ms 74.776 ms 74.886 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking settled/radix/30
+Benchmarking settled/radix/30: Warming up for 500.00 ms
+Benchmarking settled/radix/30: Collecting 10 samples in estimated 2.8395 s (30 iterations)
+Benchmarking settled/radix/30: Analyzing
+settled/radix/30        time:   [93.463 ms 93.931 ms 94.417 ms]
+Benchmarking settled/heap/30
+Benchmarking settled/heap/30: Warming up for 500.00 ms
+Benchmarking settled/heap/30: Collecting 10 samples in estimated 2.8630 s (30 iterations)
+Benchmarking settled/heap/30: Analyzing
+settled/heap/30         time:   [94.038 ms 94.175 ms 94.323 ms]
+Benchmarking settled/baseline/20
+Benchmarking settled/baseline/20: Warming up for 500.00 ms
+Benchmarking settled/baseline/20: Collecting 10 samples in estimated 2.3300 s (30 iterations)
+Benchmarking settled/baseline/20: Analyzing
+settled/baseline/20     time:   [76.276 ms 76.803 ms 77.316 ms]
+Benchmarking settled/mark-om/20
+Benchmarking settled/mark-om/20: Warming up for 500.00 ms
+Benchmarking settled/mark-om/20: Collecting 10 samples in estimated 2.1822 s (30 iterations)
+Benchmarking settled/mark-om/20: Analyzing
+settled/mark-om/20      time:   [71.049 ms 71.297 ms 71.580 ms]
+Benchmarking settled/radix/20
+Benchmarking settled/radix/20: Warming up for 500.00 ms
+Benchmarking settled/radix/20: Collecting 10 samples in estimated 2.5022 s (40 iterations)
+Benchmarking settled/radix/20: Analyzing
+settled/radix/20        time:   [61.857 ms 61.900 ms 61.938 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking settled/heap/20
+Benchmarking settled/heap/20: Warming up for 500.00 ms
+Benchmarking settled/heap/20: Collecting 10 samples in estimated 2.4681 s (40 iterations)
+Benchmarking settled/heap/20: Analyzing
+settled/heap/20         time:   [60.812 ms 61.089 ms 61.367 ms]
+Benchmarking settled/baseline/5
+Benchmarking settled/baseline/5: Warming up for 500.00 ms
+Benchmarking settled/baseline/5: Collecting 10 samples in estimated 2.0761 s (30 iterations)
+Benchmarking settled/baseline/5: Analyzing
+settled/baseline/5      time:   [67.875 ms 67.956 ms 68.095 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking settled/mark-om/5
+Benchmarking settled/mark-om/5: Warming up for 500.00 ms
+Benchmarking settled/mark-om/5: Collecting 10 samples in estimated 2.5722 s (40 iterations)
+Benchmarking settled/mark-om/5: Analyzing
+settled/mark-om/5       time:   [63.447 ms 63.607 ms 63.755 ms]
+Benchmarking settled/radix/5
+Benchmarking settled/radix/5: Warming up for 500.00 ms
+Benchmarking settled/radix/5: Collecting 10 samples in estimated 2.0766 s (180 iterations)
+Benchmarking settled/radix/5: Analyzing
+settled/radix/5         time:   [10.459 ms 10.499 ms 10.540 ms]
+Benchmarking settled/heap/5
+Benchmarking settled/heap/5: Warming up for 500.00 ms
+Benchmarking settled/heap/5: Collecting 10 samples in estimated 2.0167 s (190 iterations)
+Benchmarking settled/heap/5: Analyzing
+settled/heap/5          time:   [9.6615 ms 9.6666 ms 9.6719 ms]
+
+Benchmarking mixed/baseline/100
+Benchmarking mixed/baseline/100: Warming up for 500.00 ms
+Benchmarking mixed/baseline/100: Collecting 10 samples in estimated 2.4648 s (30 iterations)
+Benchmarking mixed/baseline/100: Analyzing
+mixed/baseline/100      time:   [80.774 ms 81.197 ms 81.626 ms]
+Benchmarking mixed/mark-om/100
+Benchmarking mixed/mark-om/100: Warming up for 500.00 ms
+Benchmarking mixed/mark-om/100: Collecting 10 samples in estimated 2.3550 s (30 iterations)
+Benchmarking mixed/mark-om/100: Analyzing
+mixed/mark-om/100       time:   [77.705 ms 77.919 ms 78.172 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking mixed/radix/100
+Benchmarking mixed/radix/100: Warming up for 500.00 ms
+Benchmarking mixed/radix/100: Collecting 10 samples in estimated 3.6906 s (20 iterations)
+Benchmarking mixed/radix/100: Analyzing
+mixed/radix/100         time:   [183.13 ms 184.15 ms 185.43 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking mixed/heap/100
+Benchmarking mixed/heap/100: Warming up for 500.00 ms
+Benchmarking mixed/heap/100: Collecting 10 samples in estimated 3.9743 s (20 iterations)
+Benchmarking mixed/heap/100: Analyzing
+mixed/heap/100          time:   [196.80 ms 197.04 ms 197.33 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/baseline/50
+Benchmarking mixed/baseline/50: Warming up for 500.00 ms
+Benchmarking mixed/baseline/50: Collecting 10 samples in estimated 2.3457 s (30 iterations)
+Benchmarking mixed/baseline/50: Analyzing
+mixed/baseline/50       time:   [76.847 ms 77.026 ms 77.274 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking mixed/mark-om/50
+Benchmarking mixed/mark-om/50: Warming up for 500.00 ms
+Benchmarking mixed/mark-om/50: Collecting 10 samples in estimated 2.2354 s (30 iterations)
+Benchmarking mixed/mark-om/50: Analyzing
+mixed/mark-om/50        time:   [73.760 ms 74.041 ms 74.360 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/radix/50
+Benchmarking mixed/radix/50: Warming up for 500.00 ms
+Benchmarking mixed/radix/50: Collecting 10 samples in estimated 2.4634 s (20 iterations)
+Benchmarking mixed/radix/50: Analyzing
+mixed/radix/50          time:   [122.64 ms 123.18 ms 123.99 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking mixed/heap/50
+Benchmarking mixed/heap/50: Warming up for 500.00 ms
+Benchmarking mixed/heap/50: Collecting 10 samples in estimated 2.5523 s (20 iterations)
+Benchmarking mixed/heap/50: Analyzing
+mixed/heap/50           time:   [126.27 ms 126.49 ms 126.83 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking mixed/baseline/30
+Benchmarking mixed/baseline/30: Warming up for 500.00 ms
+Benchmarking mixed/baseline/30: Collecting 10 samples in estimated 2.1453 s (30 iterations)
+Benchmarking mixed/baseline/30: Analyzing
+mixed/baseline/30       time:   [70.177 ms 70.241 ms 70.323 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking mixed/mark-om/30
+Benchmarking mixed/mark-om/30: Warming up for 500.00 ms
+Benchmarking mixed/mark-om/30: Collecting 10 samples in estimated 2.0510 s (30 iterations)
+Benchmarking mixed/mark-om/30: Analyzing
+mixed/mark-om/30        time:   [67.512 ms 67.711 ms 67.919 ms]
+Benchmarking mixed/radix/30
+Benchmarking mixed/radix/30: Warming up for 500.00 ms
+Benchmarking mixed/radix/30: Collecting 10 samples in estimated 2.1045 s (30 iterations)
+Benchmarking mixed/radix/30: Analyzing
+mixed/radix/30          time:   [69.220 ms 69.495 ms 69.804 ms]
+Benchmarking mixed/heap/30
+Benchmarking mixed/heap/30: Warming up for 500.00 ms
+Benchmarking mixed/heap/30: Collecting 10 samples in estimated 2.1325 s (30 iterations)
+Benchmarking mixed/heap/30: Analyzing
+mixed/heap/30           time:   [70.111 ms 70.270 ms 70.496 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking mixed/baseline/20
+Benchmarking mixed/baseline/20: Warming up for 500.00 ms
+Benchmarking mixed/baseline/20: Collecting 10 samples in estimated 2.0426 s (30 iterations)
+Benchmarking mixed/baseline/20: Analyzing
+mixed/baseline/20       time:   [67.043 ms 67.074 ms 67.110 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/mark-om/20
+Benchmarking mixed/mark-om/20: Warming up for 500.00 ms
+Benchmarking mixed/mark-om/20: Collecting 10 samples in estimated 2.6418 s (40 iterations)
+Benchmarking mixed/mark-om/20: Analyzing
+mixed/mark-om/20        time:   [64.500 ms 64.686 ms 64.856 ms]
+Benchmarking mixed/radix/20
+Benchmarking mixed/radix/20: Warming up for 500.00 ms
+Benchmarking mixed/radix/20: Collecting 10 samples in estimated 2.3810 s (50 iterations)
+Benchmarking mixed/radix/20: Analyzing
+mixed/radix/20          time:   [46.327 ms 46.396 ms 46.489 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking mixed/heap/20
+Benchmarking mixed/heap/20: Warming up for 500.00 ms
+Benchmarking mixed/heap/20: Collecting 10 samples in estimated 2.3818 s (50 iterations)
+Benchmarking mixed/heap/20: Analyzing
+mixed/heap/20           time:   [46.636 ms 46.825 ms 46.992 ms]
+Benchmarking mixed/baseline/5
+Benchmarking mixed/baseline/5: Warming up for 500.00 ms
+Benchmarking mixed/baseline/5: Collecting 10 samples in estimated 2.4845 s (40 iterations)
+Benchmarking mixed/baseline/5: Analyzing
+mixed/baseline/5        time:   [60.704 ms 60.740 ms 60.781 ms]
+Benchmarking mixed/mark-om/5
+Benchmarking mixed/mark-om/5: Warming up for 500.00 ms
+Benchmarking mixed/mark-om/5: Collecting 10 samples in estimated 2.3728 s (40 iterations)
+Benchmarking mixed/mark-om/5: Analyzing
+mixed/mark-om/5         time:   [57.936 ms 57.969 ms 57.998 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low mild
+Benchmarking mixed/radix/5
+Benchmarking mixed/radix/5: Warming up for 500.00 ms
+Benchmarking mixed/radix/5: Collecting 10 samples in estimated 2.0302 s (340 iterations)
+Benchmarking mixed/radix/5: Analyzing
+mixed/radix/5           time:   [4.9264 ms 4.9443 ms 4.9639 ms]
+Benchmarking mixed/heap/5
+Benchmarking mixed/heap/5: Warming up for 500.00 ms
+Benchmarking mixed/heap/5: Collecting 10 samples in estimated 2.0046 s (360 iterations)
+Benchmarking mixed/heap/5: Analyzing
+mixed/heap/5            time:   [4.5420 ms 4.5614 ms 4.5825 ms]
+
+Benchmarking churn/baseline/100
+Benchmarking churn/baseline/100: Warming up for 500.00 ms
+Benchmarking churn/baseline/100: Collecting 10 samples in estimated 2.1929 s (30 iterations)
+Benchmarking churn/baseline/100: Analyzing
+churn/baseline/100      time:   [72.346 ms 72.512 ms 72.679 ms]
+Benchmarking churn/mark-om/100
+Benchmarking churn/mark-om/100: Warming up for 500.00 ms
+Benchmarking churn/mark-om/100: Collecting 10 samples in estimated 2.1497 s (30 iterations)
+Benchmarking churn/mark-om/100: Analyzing
+churn/mark-om/100       time:   [70.472 ms 70.612 ms 70.787 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking churn/radix/100
+Benchmarking churn/radix/100: Warming up for 500.00 ms
+Benchmarking churn/radix/100: Collecting 10 samples in estimated 3.2797 s (20 iterations)
+Benchmarking churn/radix/100: Analyzing
+churn/radix/100         time:   [163.52 ms 164.39 ms 165.30 ms]
+Benchmarking churn/heap/100
+Benchmarking churn/heap/100: Warming up for 500.00 ms
+Benchmarking churn/heap/100: Collecting 10 samples in estimated 3.5155 s (20 iterations)
+Benchmarking churn/heap/100: Analyzing
+churn/heap/100          time:   [174.79 ms 175.35 ms 176.02 ms]
+Benchmarking churn/baseline/50
+Benchmarking churn/baseline/50: Warming up for 500.00 ms
+Benchmarking churn/baseline/50: Collecting 10 samples in estimated 2.0120 s (30 iterations)
+Benchmarking churn/baseline/50: Analyzing
+churn/baseline/50       time:   [65.615 ms 65.651 ms 65.685 ms]
+Benchmarking churn/mark-om/50
+Benchmarking churn/mark-om/50: Warming up for 500.00 ms
+Benchmarking churn/mark-om/50: Collecting 10 samples in estimated 2.6269 s (40 iterations)
+Benchmarking churn/mark-om/50: Analyzing
+churn/mark-om/50        time:   [64.251 ms 64.410 ms 64.569 ms]
+Benchmarking churn/radix/50
+Benchmarking churn/radix/50: Warming up for 500.00 ms
+Benchmarking churn/radix/50: Collecting 10 samples in estimated 2.6968 s (30 iterations)
+Benchmarking churn/radix/50: Analyzing
+churn/radix/50          time:   [88.758 ms 88.898 ms 89.051 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking churn/heap/50
+Benchmarking churn/heap/50: Warming up for 500.00 ms
+Benchmarking churn/heap/50: Collecting 10 samples in estimated 2.8373 s (30 iterations)
+Benchmarking churn/heap/50: Analyzing
+churn/heap/50           time:   [92.578 ms 92.841 ms 93.147 ms]
+Benchmarking churn/baseline/30
+Benchmarking churn/baseline/30: Warming up for 500.00 ms
+Benchmarking churn/baseline/30: Collecting 10 samples in estimated 2.5353 s (40 iterations)
+Benchmarking churn/baseline/30: Analyzing
+churn/baseline/30       time:   [61.693 ms 61.758 ms 61.840 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking churn/mark-om/30
+Benchmarking churn/mark-om/30: Warming up for 500.00 ms
+Benchmarking churn/mark-om/30: Collecting 10 samples in estimated 2.4826 s (40 iterations)
+Benchmarking churn/mark-om/30: Analyzing
+churn/mark-om/30        time:   [60.727 ms 60.776 ms 60.835 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking churn/radix/30
+Benchmarking churn/radix/30: Warming up for 500.00 ms
+Benchmarking churn/radix/30: Collecting 10 samples in estimated 2.2078 s (40 iterations)
+Benchmarking churn/radix/30: Analyzing
+churn/radix/30          time:   [53.996 ms 54.234 ms 54.486 ms]
+Benchmarking churn/heap/30
+Benchmarking churn/heap/30: Warming up for 500.00 ms
+Benchmarking churn/heap/30: Collecting 10 samples in estimated 2.2799 s (40 iterations)
+Benchmarking churn/heap/30: Analyzing
+churn/heap/30           time:   [55.048 ms 55.147 ms 55.274 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking churn/baseline/20
+Benchmarking churn/baseline/20: Warming up for 500.00 ms
+Benchmarking churn/baseline/20: Collecting 10 samples in estimated 2.4791 s (40 iterations)
+Benchmarking churn/baseline/20: Analyzing
+churn/baseline/20       time:   [60.907 ms 61.219 ms 61.549 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low mild
+  1 (10.00%) high severe
+Benchmarking churn/mark-om/20
+Benchmarking churn/mark-om/20: Warming up for 500.00 ms
+Benchmarking churn/mark-om/20: Collecting 10 samples in estimated 2.4544 s (40 iterations)
+Benchmarking churn/mark-om/20: Analyzing
+churn/mark-om/20        time:   [59.929 ms 60.178 ms 60.407 ms]
+Benchmarking churn/radix/20
+Benchmarking churn/radix/20: Warming up for 500.00 ms
+Benchmarking churn/radix/20: Collecting 10 samples in estimated 2.1116 s (60 iterations)
+Benchmarking churn/radix/20: Analyzing
+churn/radix/20          time:   [33.577 ms 33.707 ms 33.847 ms]
+Benchmarking churn/heap/20
+Benchmarking churn/heap/20: Warming up for 500.00 ms
+Benchmarking churn/heap/20: Collecting 10 samples in estimated 2.0866 s (60 iterations)
+Benchmarking churn/heap/20: Analyzing
+churn/heap/20           time:   [33.542 ms 33.614 ms 33.686 ms]
+Benchmarking churn/baseline/5
+Benchmarking churn/baseline/5: Warming up for 500.00 ms
+Benchmarking churn/baseline/5: Collecting 10 samples in estimated 2.3341 s (40 iterations)
+Benchmarking churn/baseline/5: Analyzing
+churn/baseline/5        time:   [56.406 ms 56.578 ms 56.711 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low severe
+Benchmarking churn/mark-om/5
+Benchmarking churn/mark-om/5: Warming up for 500.00 ms
+Benchmarking churn/mark-om/5: Collecting 10 samples in estimated 2.2687 s (40 iterations)
+Benchmarking churn/mark-om/5: Analyzing
+churn/mark-om/5         time:   [55.121 ms 55.277 ms 55.429 ms]
+Benchmarking churn/radix/5
+Benchmarking churn/radix/5: Warming up for 500.00 ms
+Benchmarking churn/radix/5: Collecting 10 samples in estimated 2.0424 s (320 iterations)
+Benchmarking churn/radix/5: Analyzing
+churn/radix/5           time:   [5.1945 ms 5.2143 ms 5.2351 ms]
+Benchmarking churn/heap/5
+Benchmarking churn/heap/5: Warming up for 500.00 ms
+Benchmarking churn/heap/5: Collecting 10 samples in estimated 2.0421 s (340 iterations)
+Benchmarking churn/heap/5: Analyzing
+churn/heap/5            time:   [4.8417 ms 4.8508 ms 4.8664 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+
+Benchmarking lazy/baseline/100
+Benchmarking lazy/baseline/100: Warming up for 500.00 ms
+Benchmarking lazy/baseline/100: Collecting 10 samples in estimated 2.2380 s (30 iterations)
+Benchmarking lazy/baseline/100: Analyzing
+lazy/baseline/100       time:   [73.625 ms 73.904 ms 74.164 ms]
+Benchmarking lazy/mark-om/100
+Benchmarking lazy/mark-om/100: Warming up for 500.00 ms
+Benchmarking lazy/mark-om/100: Collecting 10 samples in estimated 2.2245 s (30 iterations)
+Benchmarking lazy/mark-om/100: Analyzing
+lazy/mark-om/100        time:   [72.683 ms 72.799 ms 72.928 ms]
+Benchmarking lazy/radix/100
+Benchmarking lazy/radix/100: Warming up for 500.00 ms
+Benchmarking lazy/radix/100: Collecting 10 samples in estimated 3.2353 s (20 iterations)
+Benchmarking lazy/radix/100: Analyzing
+lazy/radix/100          time:   [160.17 ms 160.76 ms 161.36 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking lazy/heap/100
+Benchmarking lazy/heap/100: Warming up for 500.00 ms
+Benchmarking lazy/heap/100: Collecting 10 samples in estimated 3.4820 s (20 iterations)
+Benchmarking lazy/heap/100: Analyzing
+lazy/heap/100           time:   [172.75 ms 173.61 ms 174.60 ms]
+Benchmarking lazy/baseline/50
+Benchmarking lazy/baseline/50: Warming up for 500.00 ms
+Benchmarking lazy/baseline/50: Collecting 10 samples in estimated 2.0165 s (30 iterations)
+Benchmarking lazy/baseline/50: Analyzing
+lazy/baseline/50        time:   [65.923 ms 65.989 ms 66.069 ms]
+Benchmarking lazy/mark-om/50
+Benchmarking lazy/mark-om/50: Warming up for 500.00 ms
+Benchmarking lazy/mark-om/50: Collecting 10 samples in estimated 2.6656 s (40 iterations)
+Benchmarking lazy/mark-om/50: Analyzing
+lazy/mark-om/50         time:   [64.920 ms 65.124 ms 65.379 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking lazy/radix/50
+Benchmarking lazy/radix/50: Warming up for 500.00 ms
+Benchmarking lazy/radix/50: Collecting 10 samples in estimated 2.3670 s (30 iterations)
+Benchmarking lazy/radix/50: Analyzing
+lazy/radix/50           time:   [77.726 ms 77.916 ms 78.114 ms]
+Benchmarking lazy/heap/50
+Benchmarking lazy/heap/50: Warming up for 500.00 ms
+Benchmarking lazy/heap/50: Collecting 10 samples in estimated 2.5217 s (30 iterations)
+Benchmarking lazy/heap/50: Analyzing
+lazy/heap/50            time:   [82.740 ms 82.833 ms 82.932 ms]
+Benchmarking lazy/baseline/30
+Benchmarking lazy/baseline/30: Warming up for 500.00 ms
+Benchmarking lazy/baseline/30: Collecting 10 samples in estimated 2.5238 s (40 iterations)
+Benchmarking lazy/baseline/30: Analyzing
+lazy/baseline/30        time:   [61.279 ms 61.417 ms 61.590 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking lazy/mark-om/30
+Benchmarking lazy/mark-om/30: Warming up for 500.00 ms
+Benchmarking lazy/mark-om/30: Collecting 10 samples in estimated 2.4882 s (40 iterations)
+Benchmarking lazy/mark-om/30: Analyzing
+lazy/mark-om/30         time:   [60.961 ms 61.249 ms 61.559 ms]
+Benchmarking lazy/radix/30
+Benchmarking lazy/radix/30: Warming up for 500.00 ms
+Benchmarking lazy/radix/30: Collecting 10 samples in estimated 2.3027 s (50 iterations)
+Benchmarking lazy/radix/30: Analyzing
+lazy/radix/30           time:   [44.186 ms 44.281 ms 44.393 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking lazy/heap/30
+Benchmarking lazy/heap/30: Warming up for 500.00 ms
+Benchmarking lazy/heap/30: Collecting 10 samples in estimated 2.3756 s (50 iterations)
+Benchmarking lazy/heap/30: Analyzing
+lazy/heap/30            time:   [45.954 ms 45.984 ms 46.015 ms]
+Benchmarking lazy/baseline/20
+Benchmarking lazy/baseline/20: Warming up for 500.00 ms
+Benchmarking lazy/baseline/20: Collecting 10 samples in estimated 2.4326 s (40 iterations)
+Benchmarking lazy/baseline/20: Analyzing
+lazy/baseline/20        time:   [58.735 ms 58.955 ms 59.238 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking lazy/mark-om/20
+Benchmarking lazy/mark-om/20: Warming up for 500.00 ms
+Benchmarking lazy/mark-om/20: Collecting 10 samples in estimated 2.3996 s (40 iterations)
+Benchmarking lazy/mark-om/20: Analyzing
+lazy/mark-om/20         time:   [58.648 ms 58.664 ms 58.682 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking lazy/radix/20
+Benchmarking lazy/radix/20: Warming up for 500.00 ms
+Benchmarking lazy/radix/20: Collecting 10 samples in estimated 2.1959 s (80 iterations)
+Benchmarking lazy/radix/20: Analyzing
+lazy/radix/20           time:   [26.052 ms 26.135 ms 26.216 ms]
+Benchmarking lazy/heap/20
+Benchmarking lazy/heap/20: Warming up for 500.00 ms
+Benchmarking lazy/heap/20: Collecting 10 samples in estimated 2.0001 s (70 iterations)
+Benchmarking lazy/heap/20: Analyzing
+lazy/heap/20            time:   [26.913 ms 27.014 ms 27.111 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking lazy/baseline/5
+Benchmarking lazy/baseline/5: Warming up for 500.00 ms
+Benchmarking lazy/baseline/5: Collecting 10 samples in estimated 2.2576 s (40 iterations)
+Benchmarking lazy/baseline/5: Analyzing
+lazy/baseline/5         time:   [55.136 ms 55.307 ms 55.492 ms]
+Benchmarking lazy/mark-om/5
+Benchmarking lazy/mark-om/5: Warming up for 500.00 ms
+Benchmarking lazy/mark-om/5: Collecting 10 samples in estimated 2.2520 s (40 iterations)
+Benchmarking lazy/mark-om/5: Analyzing
+lazy/mark-om/5          time:   [54.475 ms 54.513 ms 54.548 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking lazy/radix/5
+Benchmarking lazy/radix/5: Warming up for 500.00 ms
+Benchmarking lazy/radix/5: Collecting 10 samples in estimated 2.0199 s (340 iterations)
+Benchmarking lazy/radix/5: Analyzing
+lazy/radix/5            time:   [4.5708 ms 4.5896 ms 4.6106 ms]
+Benchmarking lazy/heap/5
+Benchmarking lazy/heap/5: Warming up for 500.00 ms
+Benchmarking lazy/heap/5: Collecting 10 samples in estimated 2.0134 s (360 iterations)
+Benchmarking lazy/heap/5: Analyzing
+lazy/heap/5             time:   [4.2268 ms 4.2288 ms 4.2309 ms]
+
+Benchmarking upkeep/baseline/settled
+Benchmarking upkeep/baseline/settled: Warming up for 500.00 ms
+Benchmarking upkeep/baseline/settled: Collecting 10 samples in estimated 2.0005 s (450 iterations)
+Benchmarking upkeep/baseline/settled: Analyzing
+upkeep/baseline/settled time:   [3.5048 ms 3.5138 ms 3.5232 ms]
+Benchmarking upkeep/om/settled
+Benchmarking upkeep/om/settled: Warming up for 500.00 ms
+Benchmarking upkeep/om/settled: Collecting 10 samples in estimated 2.0078 s (1990 iterations)
+Benchmarking upkeep/om/settled: Analyzing
+upkeep/om/settled       time:   [58.126 µs 58.400 µs 58.690 µs]
+Benchmarking upkeep/baseline/mixed
+Benchmarking upkeep/baseline/mixed: Warming up for 500.00 ms
+Benchmarking upkeep/baseline/mixed: Collecting 10 samples in estimated 2.0287 s (570 iterations)
+Benchmarking upkeep/baseline/mixed: Analyzing
+upkeep/baseline/mixed   time:   [2.5207 ms 2.5218 ms 2.5228 ms]
+Benchmarking upkeep/om/mixed
+Benchmarking upkeep/om/mixed: Warming up for 500.00 ms
+Benchmarking upkeep/om/mixed: Collecting 10 samples in estimated 2.0115 s (1550 iterations)
+Benchmarking upkeep/om/mixed: Analyzing
+upkeep/om/mixed         time:   [256.52 µs 256.97 µs 257.56 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking upkeep/baseline/churn
+Benchmarking upkeep/baseline/churn: Warming up for 500.00 ms
+Benchmarking upkeep/baseline/churn: Collecting 10 samples in estimated 2.0184 s (700 iterations)
+Benchmarking upkeep/baseline/churn: Analyzing
+upkeep/baseline/churn   time:   [1.7524 ms 1.7568 ms 1.7618 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking upkeep/om/churn
+Benchmarking upkeep/om/churn: Warming up for 500.00 ms
+Benchmarking upkeep/om/churn: Collecting 10 samples in estimated 2.0005 s (1210 iterations)
+Benchmarking upkeep/om/churn: Analyzing
+upkeep/om/churn         time:   [503.45 µs 503.86 µs 504.33 µs]
+Benchmarking upkeep/baseline/lazy
+Benchmarking upkeep/baseline/lazy: Warming up for 500.00 ms
+Benchmarking upkeep/baseline/lazy: Collecting 10 samples in estimated 2.0106 s (720 iterations)
+Benchmarking upkeep/baseline/lazy: Analyzing
+upkeep/baseline/lazy    time:   [1.4861 ms 1.4905 ms 1.4953 ms]
+Benchmarking upkeep/om/lazy
+Benchmarking upkeep/om/lazy: Warming up for 500.00 ms
+Benchmarking upkeep/om/lazy: Collecting 10 samples in estimated 2.0112 s (890 iterations)
+Benchmarking upkeep/om/lazy: Analyzing
+upkeep/om/lazy          time:   [911.33 µs 912.23 µs 913.67 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking upkeep/flat-om/settled
+Benchmarking upkeep/flat-om/settled: Warming up for 500.00 ms
+Benchmarking upkeep/flat-om/settled: Collecting 10 samples in estimated 2.0083 s (1880 iterations)
+Benchmarking upkeep/flat-om/settled: Analyzing
+upkeep/flat-om/settled  time:   [104.20 µs 104.66 µs 105.12 µs]
+Benchmarking upkeep/heights/settled
+Benchmarking upkeep/heights/settled: Warming up for 500.00 ms
+Benchmarking upkeep/heights/settled: Collecting 10 samples in estimated 2.0016 s (1660 iterations)
+Benchmarking upkeep/heights/settled: Analyzing
+upkeep/heights/settled  time:   [255.07 µs 256.02 µs 257.06 µs]
+Benchmarking upkeep/flat-heights/settled
+Benchmarking upkeep/flat-heights/settled: Warming up for 500.00 ms
+Benchmarking upkeep/flat-heights/settled: Collecting 10 samples in estimated 2.0060 s (1580 iterations)
+Benchmarking upkeep/flat-heights/settled: Analyzing
+upkeep/flat-heights/settled
+                        time:   [304.29 µs 305.21 µs 306.15 µs]
+Benchmarking upkeep/flat-om/mixed
+Benchmarking upkeep/flat-om/mixed: Warming up for 500.00 ms
+Benchmarking upkeep/flat-om/mixed: Collecting 10 samples in estimated 2.0052 s (1390 iterations)
+Benchmarking upkeep/flat-om/mixed: Analyzing
+upkeep/flat-om/mixed    time:   [368.39 µs 370.42 µs 372.63 µs]
+Benchmarking upkeep/heights/mixed
+Benchmarking upkeep/heights/mixed: Warming up for 500.00 ms
+Benchmarking upkeep/heights/mixed: Collecting 10 samples in estimated 2.0027 s (1390 iterations)
+Benchmarking upkeep/heights/mixed: Analyzing
+upkeep/heights/mixed    time:   [405.40 µs 407.35 µs 409.28 µs]
+Benchmarking upkeep/flat-heights/mixed
+Benchmarking upkeep/flat-heights/mixed: Warming up for 500.00 ms
+Benchmarking upkeep/flat-heights/mixed: Collecting 10 samples in estimated 2.0128 s (1270 iterations)
+Benchmarking upkeep/flat-heights/mixed: Analyzing
+upkeep/flat-heights/mixed
+                        time:   [524.38 µs 525.58 µs 526.92 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking upkeep/flat-om/churn
+Benchmarking upkeep/flat-om/churn: Warming up for 500.00 ms
+Benchmarking upkeep/flat-om/churn: Collecting 10 samples in estimated 2.0155 s (1070 iterations)
+Benchmarking upkeep/flat-om/churn: Analyzing
+upkeep/flat-om/churn    time:   [707.33 µs 709.71 µs 712.87 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking upkeep/heights/churn
+Benchmarking upkeep/heights/churn: Warming up for 500.00 ms
+Benchmarking upkeep/heights/churn: Collecting 10 samples in estimated 2.0105 s (1040 iterations)
+Benchmarking upkeep/heights/churn: Analyzing
+upkeep/heights/churn    time:   [788.31 µs 789.81 µs 792.16 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking upkeep/flat-heights/churn
+Benchmarking upkeep/flat-heights/churn: Warming up for 500.00 ms
+Benchmarking upkeep/flat-heights/churn: Collecting 10 samples in estimated 2.0201 s (930 iterations)
+Benchmarking upkeep/flat-heights/churn: Analyzing
+upkeep/flat-heights/churn
+                        time:   [999.36 µs 1.0023 ms 1.0056 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking upkeep/flat-om/lazy
+Benchmarking upkeep/flat-om/lazy: Warming up for 500.00 ms
+Benchmarking upkeep/flat-om/lazy: Collecting 10 samples in estimated 2.0044 s (760 iterations)
+Benchmarking upkeep/flat-om/lazy: Analyzing
+upkeep/flat-om/lazy     time:   [1.2371 ms 1.2383 ms 1.2396 ms]
+Benchmarking upkeep/heights/lazy
+Benchmarking upkeep/heights/lazy: Warming up for 500.00 ms
+Benchmarking upkeep/heights/lazy: Collecting 10 samples in estimated 2.0172 s (930 iterations)
+Benchmarking upkeep/heights/lazy: Analyzing
+upkeep/heights/lazy     time:   [841.94 µs 843.73 µs 846.02 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking upkeep/flat-heights/lazy
+Benchmarking upkeep/flat-heights/lazy: Warming up for 500.00 ms
+Benchmarking upkeep/flat-heights/lazy: Collecting 10 samples in estimated 2.0141 s (790 iterations)
+Benchmarking upkeep/flat-heights/lazy: Analyzing
+upkeep/flat-heights/lazy
+                        time:   [1.1704 ms 1.1721 ms 1.1739 ms]
+
+Benchmarking flat-settled/baseline/100
+Benchmarking flat-settled/baseline/100: Warming up for 500.00 ms
+Benchmarking flat-settled/baseline/100: Collecting 10 samples in estimated 2.2614 s (30 iterations)
+Benchmarking flat-settled/baseline/100: Analyzing
+flat-settled/baseline/100
+                        time:   [74.284 ms 74.514 ms 74.773 ms]
+Benchmarking flat-settled/nested-mark-om/100
+Benchmarking flat-settled/nested-mark-om/100: Warming up for 500.00 ms
+Benchmarking flat-settled/nested-mark-om/100: Collecting 10 samples in estimated 2.5964 s (30 iterations)
+Benchmarking flat-settled/nested-mark-om/100: Analyzing
+flat-settled/nested-mark-om/100
+                        time:   [85.032 ms 85.381 ms 85.736 ms]
+Benchmarking flat-settled/heap/100
+Benchmarking flat-settled/heap/100: Warming up for 500.00 ms
+
+Warning: Unable to complete 10 samples in 2.0s. You may wish to increase target time to 2.0s.
+Benchmarking flat-settled/heap/100: Collecting 10 samples in estimated 2.0005 s (10 iterations)
+Benchmarking flat-settled/heap/100: Analyzing
+flat-settled/heap/100   time:   [198.91 ms 199.24 ms 199.80 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking flat-settled/heights/100
+Benchmarking flat-settled/heights/100: Warming up for 500.00 ms
+Benchmarking flat-settled/heights/100: Collecting 10 samples in estimated 2.9662 s (30 iterations)
+Benchmarking flat-settled/heights/100: Analyzing
+flat-settled/heights/100
+                        time:   [97.864 ms 98.407 ms 99.006 ms]
+Benchmarking flat-settled/baseline/50
+Benchmarking flat-settled/baseline/50: Warming up for 500.00 ms
+Benchmarking flat-settled/baseline/50: Collecting 10 samples in estimated 2.2103 s (30 iterations)
+Benchmarking flat-settled/baseline/50: Analyzing
+flat-settled/baseline/50
+                        time:   [72.558 ms 72.690 ms 72.802 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low severe
+  1 (10.00%) high mild
+Benchmarking flat-settled/nested-mark-om/50
+Benchmarking flat-settled/nested-mark-om/50: Warming up for 500.00 ms
+Benchmarking flat-settled/nested-mark-om/50: Collecting 10 samples in estimated 2.4978 s (30 iterations)
+Benchmarking flat-settled/nested-mark-om/50: Analyzing
+flat-settled/nested-mark-om/50
+                        time:   [82.467 ms 82.846 ms 83.235 ms]
+Benchmarking flat-settled/heap/50
+Benchmarking flat-settled/heap/50: Warming up for 500.00 ms
+Benchmarking flat-settled/heap/50: Collecting 10 samples in estimated 2.8302 s (20 iterations)
+Benchmarking flat-settled/heap/50: Analyzing
+flat-settled/heap/50    time:   [140.43 ms 140.76 ms 141.37 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking flat-settled/heights/50
+Benchmarking flat-settled/heights/50: Warming up for 500.00 ms
+Benchmarking flat-settled/heights/50: Collecting 10 samples in estimated 2.2195 s (30 iterations)
+Benchmarking flat-settled/heights/50: Analyzing
+flat-settled/heights/50 time:   [73.054 ms 73.299 ms 73.540 ms]
+Benchmarking flat-settled/baseline/30
+Benchmarking flat-settled/baseline/30: Warming up for 500.00 ms
+Benchmarking flat-settled/baseline/30: Collecting 10 samples in estimated 2.0050 s (30 iterations)
+Benchmarking flat-settled/baseline/30: Analyzing
+flat-settled/baseline/30
+                        time:   [66.345 ms 66.365 ms 66.388 ms]
+Benchmarking flat-settled/nested-mark-om/30
+Benchmarking flat-settled/nested-mark-om/30: Warming up for 500.00 ms
+Benchmarking flat-settled/nested-mark-om/30: Collecting 10 samples in estimated 2.2904 s (30 iterations)
+Benchmarking flat-settled/nested-mark-om/30: Analyzing
+flat-settled/nested-mark-om/30
+                        time:   [76.105 ms 76.207 ms 76.351 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking flat-settled/heap/30
+Benchmarking flat-settled/heap/30: Warming up for 500.00 ms
+Benchmarking flat-settled/heap/30: Collecting 10 samples in estimated 2.6525 s (30 iterations)
+Benchmarking flat-settled/heap/30: Analyzing
+flat-settled/heap/30    time:   [86.545 ms 86.996 ms 87.523 ms]
+Benchmarking flat-settled/heights/30
+Benchmarking flat-settled/heights/30: Warming up for 500.00 ms
+Benchmarking flat-settled/heights/30: Collecting 10 samples in estimated 2.4281 s (50 iterations)
+Benchmarking flat-settled/heights/30: Analyzing
+flat-settled/heights/30 time:   [46.767 ms 46.990 ms 47.234 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking flat-settled/baseline/20
+Benchmarking flat-settled/baseline/20: Warming up for 500.00 ms
+Benchmarking flat-settled/baseline/20: Collecting 10 samples in estimated 2.5176 s (40 iterations)
+Benchmarking flat-settled/baseline/20: Analyzing
+flat-settled/baseline/20
+                        time:   [62.117 ms 62.159 ms 62.204 ms]
+Benchmarking flat-settled/nested-mark-om/20
+Benchmarking flat-settled/nested-mark-om/20: Warming up for 500.00 ms
+Benchmarking flat-settled/nested-mark-om/20: Collecting 10 samples in estimated 2.1735 s (30 iterations)
+Benchmarking flat-settled/nested-mark-om/20: Analyzing
+flat-settled/nested-mark-om/20
+                        time:   [71.456 ms 71.618 ms 71.793 ms]
+Benchmarking flat-settled/heap/20
+Benchmarking flat-settled/heap/20: Warming up for 500.00 ms
+Benchmarking flat-settled/heap/20: Collecting 10 samples in estimated 2.2650 s (40 iterations)
+Benchmarking flat-settled/heap/20: Analyzing
+flat-settled/heap/20    time:   [55.957 ms 56.236 ms 56.507 ms]
+Benchmarking flat-settled/heights/20
+Benchmarking flat-settled/heights/20: Warming up for 500.00 ms
+Benchmarking flat-settled/heights/20: Collecting 10 samples in estimated 2.2648 s (70 iterations)
+Benchmarking flat-settled/heights/20: Analyzing
+flat-settled/heights/20 time:   [30.902 ms 31.058 ms 31.228 ms]
+Benchmarking flat-settled/baseline/5
+Benchmarking flat-settled/baseline/5: Warming up for 500.00 ms
+Benchmarking flat-settled/baseline/5: Collecting 10 samples in estimated 2.2198 s (40 iterations)
+Benchmarking flat-settled/baseline/5: Analyzing
+flat-settled/baseline/5 time:   [54.834 ms 55.071 ms 55.344 ms]
+Benchmarking flat-settled/nested-mark-om/5
+Benchmarking flat-settled/nested-mark-om/5: Warming up for 500.00 ms
+Benchmarking flat-settled/nested-mark-om/5: Collecting 10 samples in estimated 2.5993 s (40 iterations)
+Benchmarking flat-settled/nested-mark-om/5: Analyzing
+flat-settled/nested-mark-om/5
+                        time:   [63.502 ms 63.520 ms 63.545 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking flat-settled/heap/5
+Benchmarking flat-settled/heap/5: Warming up for 500.00 ms
+Benchmarking flat-settled/heap/5: Collecting 10 samples in estimated 2.0799 s (210 iterations)
+Benchmarking flat-settled/heap/5: Analyzing
+flat-settled/heap/5     time:   [8.8920 ms 8.8952 ms 8.8985 ms]
+Benchmarking flat-settled/heights/5
+Benchmarking flat-settled/heights/5: Warming up for 500.00 ms
+Benchmarking flat-settled/heights/5: Collecting 10 samples in estimated 2.0128 s (310 iterations)
+Benchmarking flat-settled/heights/5: Analyzing
+flat-settled/heights/5  time:   [5.4649 ms 5.5014 ms 5.5454 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+Benchmarking flat-mixed/baseline/100
+Benchmarking flat-mixed/baseline/100: Warming up for 500.00 ms
+Benchmarking flat-mixed/baseline/100: Collecting 10 samples in estimated 2.0711 s (30 iterations)
+Benchmarking flat-mixed/baseline/100: Analyzing
+flat-mixed/baseline/100 time:   [67.826 ms 68.057 ms 68.273 ms]
+Benchmarking flat-mixed/nested-mark-om/100
+Benchmarking flat-mixed/nested-mark-om/100: Warming up for 500.00 ms
+Benchmarking flat-mixed/nested-mark-om/100: Collecting 10 samples in estimated 2.3788 s (30 iterations)
+Benchmarking flat-mixed/nested-mark-om/100: Analyzing
+flat-mixed/nested-mark-om/100
+                        time:   [78.314 ms 78.517 ms 78.752 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking flat-mixed/heap/100
+Benchmarking flat-mixed/heap/100: Warming up for 500.00 ms
+Benchmarking flat-mixed/heap/100: Collecting 10 samples in estimated 3.6419 s (20 iterations)
+Benchmarking flat-mixed/heap/100: Analyzing
+flat-mixed/heap/100     time:   [181.16 ms 181.72 ms 182.28 ms]
+Benchmarking flat-mixed/heights/100
+Benchmarking flat-mixed/heights/100: Warming up for 500.00 ms
+Benchmarking flat-mixed/heights/100: Collecting 10 samples in estimated 2.6888 s (30 iterations)
+Benchmarking flat-mixed/heights/100: Analyzing
+flat-mixed/heights/100  time:   [88.717 ms 89.018 ms 89.316 ms]
+Benchmarking flat-mixed/baseline/50
+Benchmarking flat-mixed/baseline/50: Warming up for 500.00 ms
+Benchmarking flat-mixed/baseline/50: Collecting 10 samples in estimated 2.6285 s (40 iterations)
+Benchmarking flat-mixed/baseline/50: Analyzing
+flat-mixed/baseline/50  time:   [63.874 ms 64.040 ms 64.253 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking flat-mixed/nested-mark-om/50
+Benchmarking flat-mixed/nested-mark-om/50: Warming up for 500.00 ms
+Benchmarking flat-mixed/nested-mark-om/50: Collecting 10 samples in estimated 2.2557 s (30 iterations)
+Benchmarking flat-mixed/nested-mark-om/50: Analyzing
+flat-mixed/nested-mark-om/50
+                        time:   [74.002 ms 74.329 ms 74.711 ms]
+Benchmarking flat-mixed/heap/50
+Benchmarking flat-mixed/heap/50: Warming up for 500.00 ms
+Benchmarking flat-mixed/heap/50: Collecting 10 samples in estimated 2.3847 s (20 iterations)
+Benchmarking flat-mixed/heap/50: Analyzing
+flat-mixed/heap/50      time:   [117.59 ms 117.85 ms 118.15 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking flat-mixed/heights/50
+Benchmarking flat-mixed/heights/50: Warming up for 500.00 ms
+Benchmarking flat-mixed/heights/50: Collecting 10 samples in estimated 2.4970 s (40 iterations)
+Benchmarking flat-mixed/heights/50: Analyzing
+flat-mixed/heights/50   time:   [61.631 ms 61.856 ms 62.115 ms]
+Benchmarking flat-mixed/baseline/30
+Benchmarking flat-mixed/baseline/30: Warming up for 500.00 ms
+Benchmarking flat-mixed/baseline/30: Collecting 10 samples in estimated 2.4079 s (40 iterations)
+Benchmarking flat-mixed/baseline/30: Analyzing
+flat-mixed/baseline/30  time:   [58.624 ms 58.819 ms 59.028 ms]
+Benchmarking flat-mixed/nested-mark-om/30
+Benchmarking flat-mixed/nested-mark-om/30: Warming up for 500.00 ms
+Benchmarking flat-mixed/nested-mark-om/30: Collecting 10 samples in estimated 2.0582 s (30 iterations)
+Benchmarking flat-mixed/nested-mark-om/30: Analyzing
+flat-mixed/nested-mark-om/30
+                        time:   [67.379 ms 67.589 ms 67.838 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking flat-mixed/heap/30
+Benchmarking flat-mixed/heap/30: Warming up for 500.00 ms
+Benchmarking flat-mixed/heap/30: Collecting 10 samples in estimated 2.6408 s (40 iterations)
+Benchmarking flat-mixed/heap/30: Analyzing
+flat-mixed/heap/30      time:   [64.755 ms 64.785 ms 64.815 ms]
+Benchmarking flat-mixed/heights/30
+Benchmarking flat-mixed/heights/30: Warming up for 500.00 ms
+Benchmarking flat-mixed/heights/30: Collecting 10 samples in estimated 2.2192 s (60 iterations)
+Benchmarking flat-mixed/heights/30: Analyzing
+flat-mixed/heights/30   time:   [35.665 ms 35.810 ms 35.957 ms]
+Benchmarking flat-mixed/baseline/20
+Benchmarking flat-mixed/baseline/20: Warming up for 500.00 ms
+Benchmarking flat-mixed/baseline/20: Collecting 10 samples in estimated 2.2898 s (40 iterations)
+Benchmarking flat-mixed/baseline/20: Analyzing
+flat-mixed/baseline/20  time:   [55.256 ms 55.429 ms 55.685 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking flat-mixed/nested-mark-om/20
+Benchmarking flat-mixed/nested-mark-om/20: Warming up for 500.00 ms
+Benchmarking flat-mixed/nested-mark-om/20: Collecting 10 samples in estimated 2.6337 s (40 iterations)
+Benchmarking flat-mixed/nested-mark-om/20: Analyzing
+flat-mixed/nested-mark-om/20
+                        time:   [64.489 ms 64.652 ms 64.891 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking flat-mixed/heap/20
+Benchmarking flat-mixed/heap/20: Warming up for 500.00 ms
+Benchmarking flat-mixed/heap/20: Collecting 10 samples in estimated 2.2090 s (50 iterations)
+Benchmarking flat-mixed/heap/20: Analyzing
+flat-mixed/heap/20      time:   [42.990 ms 43.035 ms 43.069 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking flat-mixed/heights/20
+Benchmarking flat-mixed/heights/20: Warming up for 500.00 ms
+Benchmarking flat-mixed/heights/20: Collecting 10 samples in estimated 2.0352 s (80 iterations)
+Benchmarking flat-mixed/heights/20: Analyzing
+flat-mixed/heights/20   time:   [24.250 ms 24.365 ms 24.489 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking flat-mixed/baseline/5
+Benchmarking flat-mixed/baseline/5: Warming up for 500.00 ms
+Benchmarking flat-mixed/baseline/5: Collecting 10 samples in estimated 2.0089 s (40 iterations)
+Benchmarking flat-mixed/baseline/5: Analyzing
+flat-mixed/baseline/5   time:   [49.108 ms 49.298 ms 49.614 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking flat-mixed/nested-mark-om/5
+Benchmarking flat-mixed/nested-mark-om/5: Warming up for 500.00 ms
+Benchmarking flat-mixed/nested-mark-om/5: Collecting 10 samples in estimated 2.3642 s (40 iterations)
+Benchmarking flat-mixed/nested-mark-om/5: Analyzing
+flat-mixed/nested-mark-om/5
+                        time:   [58.187 ms 58.511 ms 58.843 ms]
+Benchmarking flat-mixed/heap/5
+Benchmarking flat-mixed/heap/5: Warming up for 500.00 ms
+Benchmarking flat-mixed/heap/5: Collecting 10 samples in estimated 2.0098 s (370 iterations)
+Benchmarking flat-mixed/heap/5: Analyzing
+flat-mixed/heap/5       time:   [4.3010 ms 4.3032 ms 4.3061 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking flat-mixed/heights/5
+Benchmarking flat-mixed/heights/5: Warming up for 500.00 ms
+Benchmarking flat-mixed/heights/5: Collecting 10 samples in estimated 2.0010 s (510 iterations)
+Benchmarking flat-mixed/heights/5: Analyzing
+flat-mixed/heights/5    time:   [2.8502 ms 2.8607 ms 2.8703 ms]
+
+Benchmarking flat-churn/baseline/100
+Benchmarking flat-churn/baseline/100: Warming up for 500.00 ms
+Benchmarking flat-churn/baseline/100: Collecting 10 samples in estimated 2.5267 s (40 iterations)
+Benchmarking flat-churn/baseline/100: Analyzing
+flat-churn/baseline/100 time:   [61.448 ms 61.510 ms 61.576 ms]
+Benchmarking flat-churn/nested-mark-om/100
+Benchmarking flat-churn/nested-mark-om/100: Warming up for 500.00 ms
+Benchmarking flat-churn/nested-mark-om/100: Collecting 10 samples in estimated 2.1964 s (30 iterations)
+Benchmarking flat-churn/nested-mark-om/100: Analyzing
+flat-churn/nested-mark-om/100
+                        time:   [70.669 ms 70.892 ms 71.125 ms]
+Benchmarking flat-churn/heap/100
+Benchmarking flat-churn/heap/100: Warming up for 500.00 ms
+Benchmarking flat-churn/heap/100: Collecting 10 samples in estimated 3.2954 s (20 iterations)
+Benchmarking flat-churn/heap/100: Analyzing
+flat-churn/heap/100     time:   [163.61 ms 164.16 ms 164.67 ms]
+Benchmarking flat-churn/heights/100
+Benchmarking flat-churn/heights/100: Warming up for 500.00 ms
+Benchmarking flat-churn/heights/100: Collecting 10 samples in estimated 2.4973 s (30 iterations)
+Benchmarking flat-churn/heights/100: Analyzing
+flat-churn/heights/100  time:   [80.931 ms 81.362 ms 81.923 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking flat-churn/baseline/50
+Benchmarking flat-churn/baseline/50: Warming up for 500.00 ms
+Benchmarking flat-churn/baseline/50: Collecting 10 samples in estimated 2.3132 s (40 iterations)
+Benchmarking flat-churn/baseline/50: Analyzing
+flat-churn/baseline/50  time:   [55.901 ms 56.117 ms 56.357 ms]
+Benchmarking flat-churn/nested-mark-om/50
+Benchmarking flat-churn/nested-mark-om/50: Warming up for 500.00 ms
+Benchmarking flat-churn/nested-mark-om/50: Collecting 10 samples in estimated 2.6378 s (40 iterations)
+Benchmarking flat-churn/nested-mark-om/50: Analyzing
+flat-churn/nested-mark-om/50
+                        time:   [64.438 ms 64.950 ms 65.567 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking flat-churn/heap/50
+Benchmarking flat-churn/heap/50: Warming up for 500.00 ms
+Benchmarking flat-churn/heap/50: Collecting 10 samples in estimated 2.6292 s (30 iterations)
+Benchmarking flat-churn/heap/50: Analyzing
+flat-churn/heap/50      time:   [86.572 ms 86.912 ms 87.319 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking flat-churn/heights/50
+Benchmarking flat-churn/heights/50: Warming up for 500.00 ms
+Benchmarking flat-churn/heights/50: Collecting 10 samples in estimated 2.4029 s (50 iterations)
+Benchmarking flat-churn/heights/50: Analyzing
+flat-churn/heights/50   time:   [46.466 ms 46.633 ms 46.801 ms]
+Benchmarking flat-churn/baseline/30
+Benchmarking flat-churn/baseline/30: Warming up for 500.00 ms
+Benchmarking flat-churn/baseline/30: Collecting 10 samples in estimated 2.1212 s (40 iterations)
+Benchmarking flat-churn/baseline/30: Analyzing
+flat-churn/baseline/30  time:   [52.101 ms 52.326 ms 52.543 ms]
+Benchmarking flat-churn/nested-mark-om/30
+Benchmarking flat-churn/nested-mark-om/30: Warming up for 500.00 ms
+Benchmarking flat-churn/nested-mark-om/30: Collecting 10 samples in estimated 2.4785 s (40 iterations)
+Benchmarking flat-churn/nested-mark-om/30: Analyzing
+flat-churn/nested-mark-om/30
+                        time:   [60.198 ms 60.637 ms 61.261 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking flat-churn/heap/30
+Benchmarking flat-churn/heap/30: Warming up for 500.00 ms
+Benchmarking flat-churn/heap/30: Collecting 10 samples in estimated 2.1058 s (40 iterations)
+Benchmarking flat-churn/heap/30: Analyzing
+flat-churn/heap/30      time:   [51.341 ms 51.395 ms 51.457 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking flat-churn/heights/30
+Benchmarking flat-churn/heights/30: Warming up for 500.00 ms
+Benchmarking flat-churn/heights/30: Collecting 10 samples in estimated 2.0797 s (70 iterations)
+Benchmarking flat-churn/heights/30: Analyzing
+flat-churn/heights/30   time:   [28.445 ms 28.546 ms 28.639 ms]
+Benchmarking flat-churn/baseline/20
+Benchmarking flat-churn/baseline/20: Warming up for 500.00 ms
+Benchmarking flat-churn/baseline/20: Collecting 10 samples in estimated 2.0147 s (40 iterations)
+Benchmarking flat-churn/baseline/20: Analyzing
+flat-churn/baseline/20  time:   [49.128 ms 49.410 ms 49.704 ms]
+Benchmarking flat-churn/nested-mark-om/20
+Benchmarking flat-churn/nested-mark-om/20: Warming up for 500.00 ms
+Benchmarking flat-churn/nested-mark-om/20: Collecting 10 samples in estimated 2.3446 s (40 iterations)
+Benchmarking flat-churn/nested-mark-om/20: Analyzing
+flat-churn/nested-mark-om/20
+                        time:   [57.372 ms 57.555 ms 57.717 ms]
+Benchmarking flat-churn/heap/20
+Benchmarking flat-churn/heap/20: Warming up for 500.00 ms
+Benchmarking flat-churn/heap/20: Collecting 10 samples in estimated 2.2840 s (70 iterations)
+Benchmarking flat-churn/heap/20: Analyzing
+flat-churn/heap/20      time:   [31.322 ms 31.353 ms 31.393 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking flat-churn/heights/20
+Benchmarking flat-churn/heights/20: Warming up for 500.00 ms
+Benchmarking flat-churn/heights/20: Collecting 10 samples in estimated 2.1095 s (110 iterations)
+Benchmarking flat-churn/heights/20: Analyzing
+flat-churn/heights/20   time:   [17.901 ms 17.952 ms 18.019 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking flat-churn/baseline/5
+Benchmarking flat-churn/baseline/5: Warming up for 500.00 ms
+Benchmarking flat-churn/baseline/5: Collecting 10 samples in estimated 2.3309 s (50 iterations)
+Benchmarking flat-churn/baseline/5: Analyzing
+flat-churn/baseline/5   time:   [44.887 ms 45.016 ms 45.160 ms]
+Benchmarking flat-churn/nested-mark-om/5
+Benchmarking flat-churn/nested-mark-om/5: Warming up for 500.00 ms
+Benchmarking flat-churn/nested-mark-om/5: Collecting 10 samples in estimated 2.1609 s (40 iterations)
+Benchmarking flat-churn/nested-mark-om/5: Analyzing
+flat-churn/nested-mark-om/5
+                        time:   [52.779 ms 52.809 ms 52.833 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking flat-churn/heap/5
+Benchmarking flat-churn/heap/5: Warming up for 500.00 ms
+Benchmarking flat-churn/heap/5: Collecting 10 samples in estimated 2.0282 s (340 iterations)
+Benchmarking flat-churn/heap/5: Analyzing
+flat-churn/heap/5       time:   [4.7411 ms 4.7488 ms 4.7575 ms]
+Benchmarking flat-churn/heights/5
+Benchmarking flat-churn/heights/5: Warming up for 500.00 ms
+Benchmarking flat-churn/heights/5: Collecting 10 samples in estimated 2.0132 s (440 iterations)
+Benchmarking flat-churn/heights/5: Analyzing
+flat-churn/heights/5    time:   [3.3699 ms 3.3881 ms 3.4086 ms]
+
+Benchmarking flat-lazy/baseline/100
+Benchmarking flat-lazy/baseline/100: Warming up for 500.00 ms
+Benchmarking flat-lazy/baseline/100: Collecting 10 samples in estimated 2.6408 s (40 iterations)
+Benchmarking flat-lazy/baseline/100: Analyzing
+flat-lazy/baseline/100  time:   [63.304 ms 63.630 ms 64.086 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking flat-lazy/nested-mark-om/100
+Benchmarking flat-lazy/nested-mark-om/100: Warming up for 500.00 ms
+Benchmarking flat-lazy/nested-mark-om/100: Collecting 10 samples in estimated 2.2405 s (30 iterations)
+Benchmarking flat-lazy/nested-mark-om/100: Analyzing
+flat-lazy/nested-mark-om/100
+                        time:   [72.941 ms 73.192 ms 73.443 ms]
+Benchmarking flat-lazy/heap/100
+Benchmarking flat-lazy/heap/100: Warming up for 500.00 ms
+Benchmarking flat-lazy/heap/100: Collecting 10 samples in estimated 3.2749 s (20 iterations)
+Benchmarking flat-lazy/heap/100: Analyzing
+flat-lazy/heap/100      time:   [162.03 ms 162.44 ms 162.84 ms]
+Benchmarking flat-lazy/heights/100
+Benchmarking flat-lazy/heights/100: Warming up for 500.00 ms
+Benchmarking flat-lazy/heights/100: Collecting 10 samples in estimated 2.5347 s (30 iterations)
+Benchmarking flat-lazy/heights/100: Analyzing
+flat-lazy/heights/100   time:   [83.050 ms 83.496 ms 84.007 ms]
+Benchmarking flat-lazy/baseline/50
+Benchmarking flat-lazy/baseline/50: Warming up for 500.00 ms
+Benchmarking flat-lazy/baseline/50: Collecting 10 samples in estimated 2.3010 s (40 iterations)
+Benchmarking flat-lazy/baseline/50: Analyzing
+flat-lazy/baseline/50   time:   [55.872 ms 55.991 ms 56.115 ms]
+Benchmarking flat-lazy/nested-mark-om/50
+Benchmarking flat-lazy/nested-mark-om/50: Warming up for 500.00 ms
+Benchmarking flat-lazy/nested-mark-om/50: Collecting 10 samples in estimated 2.0037 s (30 iterations)
+Benchmarking flat-lazy/nested-mark-om/50: Analyzing
+flat-lazy/nested-mark-om/50
+                        time:   [64.900 ms 64.941 ms 64.985 ms]
+Benchmarking flat-lazy/heap/50
+Benchmarking flat-lazy/heap/50: Warming up for 500.00 ms
+Benchmarking flat-lazy/heap/50: Collecting 10 samples in estimated 2.3607 s (30 iterations)
+Benchmarking flat-lazy/heap/50: Analyzing
+flat-lazy/heap/50       time:   [77.146 ms 77.288 ms 77.498 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking flat-lazy/heights/50
+Benchmarking flat-lazy/heights/50: Warming up for 500.00 ms
+Benchmarking flat-lazy/heights/50: Collecting 10 samples in estimated 2.2135 s (50 iterations)
+Benchmarking flat-lazy/heights/50: Analyzing
+flat-lazy/heights/50    time:   [42.132 ms 42.253 ms 42.383 ms]
+Benchmarking flat-lazy/baseline/30
+Benchmarking flat-lazy/baseline/30: Warming up for 500.00 ms
+Benchmarking flat-lazy/baseline/30: Collecting 10 samples in estimated 2.1606 s (40 iterations)
+Benchmarking flat-lazy/baseline/30: Analyzing
+flat-lazy/baseline/30   time:   [52.254 ms 52.357 ms 52.507 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking flat-lazy/nested-mark-om/30
+Benchmarking flat-lazy/nested-mark-om/30: Warming up for 500.00 ms
+Benchmarking flat-lazy/nested-mark-om/30: Collecting 10 samples in estimated 2.4809 s (40 iterations)
+Benchmarking flat-lazy/nested-mark-om/30: Analyzing
+flat-lazy/nested-mark-om/30
+                        time:   [60.772 ms 61.052 ms 61.363 ms]
+Benchmarking flat-lazy/heap/30
+Benchmarking flat-lazy/heap/30: Warming up for 500.00 ms
+Benchmarking flat-lazy/heap/30: Collecting 10 samples in estimated 2.2458 s (50 iterations)
+Benchmarking flat-lazy/heap/30: Analyzing
+flat-lazy/heap/30       time:   [43.546 ms 43.777 ms 44.046 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking flat-lazy/heights/30
+Benchmarking flat-lazy/heights/30: Warming up for 500.00 ms
+Benchmarking flat-lazy/heights/30: Collecting 10 samples in estimated 2.1090 s (80 iterations)
+Benchmarking flat-lazy/heights/30: Analyzing
+flat-lazy/heights/30    time:   [24.629 ms 24.746 ms 24.858 ms]
+Benchmarking flat-lazy/baseline/20
+Benchmarking flat-lazy/baseline/20: Warming up for 500.00 ms
+Benchmarking flat-lazy/baseline/20: Collecting 10 samples in estimated 2.0580 s (40 iterations)
+Benchmarking flat-lazy/baseline/20: Analyzing
+flat-lazy/baseline/20   time:   [49.611 ms 49.637 ms 49.666 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking flat-lazy/nested-mark-om/20
+Benchmarking flat-lazy/nested-mark-om/20: Warming up for 500.00 ms
+Benchmarking flat-lazy/nested-mark-om/20: Collecting 10 samples in estimated 2.3973 s (40 iterations)
+Benchmarking flat-lazy/nested-mark-om/20: Analyzing
+flat-lazy/nested-mark-om/20
+                        time:   [58.152 ms 58.230 ms 58.312 ms]
+Benchmarking flat-lazy/heap/20
+Benchmarking flat-lazy/heap/20: Warming up for 500.00 ms
+Benchmarking flat-lazy/heap/20: Collecting 10 samples in estimated 2.1618 s (80 iterations)
+Benchmarking flat-lazy/heap/20: Analyzing
+flat-lazy/heap/20       time:   [25.572 ms 25.586 ms 25.598 ms]
+Benchmarking flat-lazy/heights/20
+Benchmarking flat-lazy/heights/20: Warming up for 500.00 ms
+Benchmarking flat-lazy/heights/20: Collecting 10 samples in estimated 2.1071 s (130 iterations)
+Benchmarking flat-lazy/heights/20: Analyzing
+flat-lazy/heights/20    time:   [14.787 ms 14.860 ms 14.938 ms]
+Benchmarking flat-lazy/baseline/5
+Benchmarking flat-lazy/baseline/5: Warming up for 500.00 ms
+Benchmarking flat-lazy/baseline/5: Collecting 10 samples in estimated 2.4033 s (50 iterations)
+Benchmarking flat-lazy/baseline/5: Analyzing
+flat-lazy/baseline/5    time:   [46.361 ms 46.509 ms 46.686 ms]
+Benchmarking flat-lazy/nested-mark-om/5
+Benchmarking flat-lazy/nested-mark-om/5: Warming up for 500.00 ms
+Benchmarking flat-lazy/nested-mark-om/5: Collecting 10 samples in estimated 2.2572 s (40 iterations)
+Benchmarking flat-lazy/nested-mark-om/5: Analyzing
+flat-lazy/nested-mark-om/5
+                        time:   [54.517 ms 54.567 ms 54.616 ms]
+Benchmarking flat-lazy/heap/5
+Benchmarking flat-lazy/heap/5: Warming up for 500.00 ms
+Benchmarking flat-lazy/heap/5: Collecting 10 samples in estimated 2.0328 s (350 iterations)
+Benchmarking flat-lazy/heap/5: Analyzing
+flat-lazy/heap/5        time:   [4.3951 ms 4.3994 ms 4.4039 ms]
+Benchmarking flat-lazy/heights/5
+Benchmarking flat-lazy/heights/5: Warming up for 500.00 ms
+Benchmarking flat-lazy/heights/5: Collecting 10 samples in estimated 2.0022 s (450 iterations)
+Benchmarking flat-lazy/heights/5: Analyzing
+flat-lazy/heights/5     time:   [3.0663 ms 3.0783 ms 3.0897 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high severe
+
+
+$ python3 scripts/ratios.py settled mixed churn lazy upkeep flat-settled flat-mixed flat-churn flat-lazy
+
+benchmark                        ratio   95% interval       baseline mean
+churn/heap/100                    2.418  [ 2.408,  2.429]    72512015.2 ns
+churn/heap/20                     0.549  [ 0.546,  0.552]    61218815.1 ns
+churn/heap/30                     0.893  [ 0.891,  0.895]    61758306.8 ns
+churn/heap/5                      0.086  [ 0.085,  0.086]    56577651.8 ns
+churn/heap/50                     1.414  [ 1.410,  1.419]    65650963.2 ns
+churn/mark-om/100                 0.974  [ 0.971,  0.977]    72512015.2 ns
+churn/mark-om/20                  0.983  [ 0.976,  0.989]    61218815.1 ns
+churn/mark-om/30                  0.984  [ 0.983,  0.986]    61758306.8 ns
+churn/mark-om/5                   0.977  [ 0.973,  0.981]    56577651.8 ns
+churn/mark-om/50                  0.981  [ 0.979,  0.984]    65650963.2 ns
+churn/radix/100                   2.267  [ 2.254,  2.281]    72512015.2 ns
+churn/radix/20                    0.551  [ 0.547,  0.554]    61218815.1 ns
+churn/radix/30                    0.878  [ 0.874,  0.882]    61758306.8 ns
+churn/radix/5                     0.092  [ 0.092,  0.093]    56577651.8 ns
+churn/radix/50                    1.354  [ 1.352,  1.357]    65650963.2 ns
+flat-churn/heap/100               2.669  [ 2.660,  2.678]    61509570.8 ns
+flat-churn/heap/20                0.635  [ 0.631,  0.638]    49409817.6 ns
+flat-churn/heap/30                0.982  [ 0.978,  0.987]    52325613.5 ns
+flat-churn/heap/5                 0.105  [ 0.105,  0.106]    45016484.0 ns
+flat-churn/heap/50                1.549  [ 1.540,  1.558]    56117030.1 ns
+flat-churn/heights/100            1.322  [ 1.316,  1.332]    61509570.8 ns
+flat-churn/heights/20             0.363  [ 0.361,  0.366]    49409817.6 ns
+flat-churn/heights/30             0.546  [ 0.543,  0.549]    52325613.5 ns
+flat-churn/heights/5              0.075  [ 0.075,  0.076]    45016484.0 ns
+flat-churn/heights/50             0.831  [ 0.826,  0.835]    56117030.1 ns
+flat-churn/nested-mark-om/100     1.153  [ 1.149,  1.157]    61509570.8 ns
+flat-churn/nested-mark-om/20      1.165  [ 1.157,  1.172]    49409817.6 ns
+flat-churn/nested-mark-om/30      1.158  [ 1.149,  1.171]    52325613.5 ns
+flat-churn/nested-mark-om/5       1.173  [ 1.169,  1.177]    45016484.0 ns
+flat-churn/nested-mark-om/50      1.157  [ 1.147,  1.169]    56117030.1 ns
+flat-lazy/heap/100                2.553  [ 2.534,  2.568]    63630154.9 ns
+flat-lazy/heap/20                 0.515  [ 0.515,  0.516]    49636887.7 ns
+flat-lazy/heap/30                 0.836  [ 0.831,  0.842]    52357236.8 ns
+flat-lazy/heap/5                  0.095  [ 0.094,  0.095]    46509152.9 ns
+flat-lazy/heap/50                 1.380  [ 1.376,  1.385]    55991451.8 ns
+flat-lazy/heights/100             1.312  [ 1.301,  1.323]    63630154.9 ns
+flat-lazy/heights/20              0.299  [ 0.298,  0.301]    49636887.7 ns
+flat-lazy/heights/30              0.473  [ 0.470,  0.475]    52357236.8 ns
+flat-lazy/heights/5               0.066  [ 0.066,  0.067]    46509152.9 ns
+flat-lazy/heights/50              0.755  [ 0.752,  0.757]    55991451.8 ns
+flat-lazy/nested-mark-om/100      1.151  [ 1.141,  1.158]    63630154.9 ns
+flat-lazy/nested-mark-om/20       1.173  [ 1.171,  1.175]    49636887.7 ns
+flat-lazy/nested-mark-om/30       1.166  [ 1.160,  1.173]    52357236.8 ns
+flat-lazy/nested-mark-om/5        1.173  [ 1.169,  1.177]    46509152.9 ns
+flat-lazy/nested-mark-om/50       1.160  [ 1.157,  1.162]    55991451.8 ns
+flat-mixed/heap/100               2.670  [ 2.658,  2.683]    68057420.5 ns
+flat-mixed/heap/20                0.777  [ 0.773,  0.779]    55429387.3 ns
+flat-mixed/heap/30                1.101  [ 1.098,  1.105]    58819148.2 ns
+flat-mixed/heap/5                 0.087  [ 0.087,  0.088]    49298276.2 ns
+flat-mixed/heap/50                1.840  [ 1.833,  1.847]    64040057.6 ns
+flat-mixed/heights/100            1.308  [ 1.302,  1.314]    68057420.5 ns
+flat-mixed/heights/20             0.440  [ 0.437,  0.442]    55429387.3 ns
+flat-mixed/heights/30             0.609  [ 0.605,  0.612]    58819148.2 ns
+flat-mixed/heights/5              0.058  [ 0.058,  0.058]    49298276.2 ns
+flat-mixed/heights/50             0.966  [ 0.961,  0.971]    64040057.6 ns
+flat-mixed/nested-mark-om/100     1.154  [ 1.149,  1.159]    68057420.5 ns
+flat-mixed/nested-mark-om/20      1.166  [ 1.160,  1.172]    55429387.3 ns
+flat-mixed/nested-mark-om/30      1.149  [ 1.144,  1.155]    58819148.2 ns
+flat-mixed/nested-mark-om/5       1.187  [ 1.177,  1.196]    49298276.2 ns
+flat-mixed/nested-mark-om/50      1.161  [ 1.154,  1.167]    64040057.6 ns
+flat-settled/heap/100             2.674  [ 2.663,  2.685]    74513910.4 ns
+flat-settled/heap/20              0.905  [ 0.900,  0.909]    62159091.7 ns
+flat-settled/heap/30              1.311  [ 1.304,  1.319]    66365476.5 ns
+flat-settled/heap/5               0.162  [ 0.161,  0.162]    55070761.0 ns
+flat-settled/heap/50              1.936  [ 1.930,  1.946]    72689818.2 ns
+flat-settled/heights/100          1.321  [ 1.312,  1.330]    74513910.4 ns
+flat-settled/heights/20           0.500  [ 0.497,  0.502]    62159091.7 ns
+flat-settled/heights/30           0.708  [ 0.705,  0.712]    66365476.5 ns
+flat-settled/heights/5            0.100  [ 0.099,  0.101]    55070761.0 ns
+flat-settled/heights/50           1.008  [ 1.005,  1.012]    72689818.2 ns
+flat-settled/nested-mark-om/100   1.146  [ 1.140,  1.152]    74513910.4 ns
+flat-settled/nested-mark-om/20    1.152  [ 1.149,  1.155]    62159091.7 ns
+flat-settled/nested-mark-om/30    1.148  [ 1.147,  1.150]    66365476.5 ns
+flat-settled/nested-mark-om/5     1.154  [ 1.148,  1.158]    55070761.0 ns
+flat-settled/nested-mark-om/50    1.140  [ 1.134,  1.145]    72689818.2 ns
+lazy/heap/100                     2.349  [ 2.335,  2.364]    73903617.1 ns
+lazy/heap/20                      0.458  [ 0.455,  0.461]    58955203.4 ns
+lazy/heap/30                      0.749  [ 0.747,  0.750]    61416885.4 ns
+lazy/heap/5                       0.076  [ 0.076,  0.077]    55306696.0 ns
+lazy/heap/50                      1.255  [ 1.253,  1.257]    65989462.2 ns
+lazy/mark-om/100                  0.985  [ 0.981,  0.989]    73903617.1 ns
+lazy/mark-om/20                   0.995  [ 0.990,  0.999]    58955203.4 ns
+lazy/mark-om/30                   0.997  [ 0.992,  1.003]    61416885.4 ns
+lazy/mark-om/5                    0.986  [ 0.982,  0.989]    55306696.0 ns
+lazy/mark-om/50                   0.987  [ 0.984,  0.991]    65989462.2 ns
+lazy/radix/100                    2.175  [ 2.164,  2.187]    73903617.1 ns
+lazy/radix/20                     0.443  [ 0.441,  0.445]    58955203.4 ns
+lazy/radix/30                     0.721  [ 0.718,  0.723]    61416885.4 ns
+lazy/radix/5                      0.083  [ 0.083,  0.083]    55306696.0 ns
+lazy/radix/50                     1.181  [ 1.178,  1.184]    65989462.2 ns
+mixed/heap/100                    2.427  [ 2.413,  2.440]    81197238.4 ns
+mixed/heap/20                     0.698  [ 0.695,  0.701]    67073935.2 ns
+mixed/heap/30                     1.000  [ 0.998,  1.004]    70241481.3 ns
+mixed/heap/5                      0.075  [ 0.075,  0.075]    60740145.6 ns
+mixed/heap/50                     1.642  [ 1.636,  1.648]    77026005.4 ns
+mixed/mark-om/100                 0.960  [ 0.954,  0.966]    81197238.4 ns
+mixed/mark-om/20                  0.964  [ 0.962,  0.967]    67073935.2 ns
+mixed/mark-om/30                  0.964  [ 0.961,  0.967]    70241481.3 ns
+mixed/mark-om/5                   0.954  [ 0.954,  0.955]    60740145.6 ns
+mixed/mark-om/50                  0.961  [ 0.956,  0.966]    77026005.4 ns
+mixed/radix/100                   2.268  [ 2.250,  2.288]    81197238.4 ns
+mixed/radix/20                    0.692  [ 0.691,  0.693]    67073935.2 ns
+mixed/radix/30                    0.989  [ 0.985,  0.994]    70241481.3 ns
+mixed/radix/5                     0.081  [ 0.081,  0.082]    60740145.6 ns
+mixed/radix/50                    1.599  [ 1.590,  1.610]    77026005.4 ns
+settled/heap/100                  2.391  [ 2.383,  2.399]    90052369.2 ns
+settled/heap/20                   0.795  [ 0.789,  0.802]    76802949.7 ns
+settled/heap/30                   1.178  [ 1.173,  1.182]    79974537.3 ns
+settled/heap/5                    0.142  [ 0.142,  0.142]    67955952.6 ns
+settled/heap/50                   1.795  [ 1.790,  1.801]    85518060.8 ns
+settled/mark-om/100               0.931  [ 0.927,  0.934]    90052369.2 ns
+settled/mark-om/20                0.928  [ 0.921,  0.936]    76802949.7 ns
+settled/mark-om/30                0.935  [ 0.932,  0.938]    79974537.3 ns
+settled/mark-om/5                 0.936  [ 0.933,  0.939]    67955952.6 ns
+settled/mark-om/50                0.950  [ 0.947,  0.953]    85518060.8 ns
+settled/radix/100                 2.259  [ 2.252,  2.267]    90052369.2 ns
+settled/radix/20                  0.806  [ 0.801,  0.812]    76802949.7 ns
+settled/radix/30                  1.175  [ 1.167,  1.182]    79974537.3 ns
+settled/radix/5                   0.155  [ 0.154,  0.155]    67955952.6 ns
+settled/radix/50                  1.727  [ 1.724,  1.729]    85518060.8 ns
+upkeep/flat-heights/churn         0.571  [ 0.568,  0.573]     1756823.6 ns
+upkeep/flat-heights/lazy          0.786  [ 0.784,  0.789]     1490542.5 ns
+upkeep/flat-heights/mixed         0.208  [ 0.208,  0.209]     2521751.3 ns
+upkeep/flat-heights/settled       0.087  [ 0.087,  0.087]     3513761.0 ns
+upkeep/flat-om/churn              0.404  [ 0.402,  0.406]     1756823.6 ns
+upkeep/flat-om/lazy               0.831  [ 0.828,  0.833]     1490542.5 ns
+upkeep/flat-om/mixed              0.147  [ 0.146,  0.148]     2521751.3 ns
+upkeep/flat-om/settled            0.030  [ 0.030,  0.030]     3513761.0 ns
+upkeep/heights/churn              0.450  [ 0.448,  0.451]     1756823.6 ns
+upkeep/heights/lazy               0.566  [ 0.564,  0.568]     1490542.5 ns
+upkeep/heights/mixed              0.162  [ 0.161,  0.162]     2521751.3 ns
+upkeep/heights/settled            0.073  [ 0.073,  0.073]     3513761.0 ns
+upkeep/om/churn                   0.287  [ 0.286,  0.288]     1756823.6 ns
+upkeep/om/lazy                    0.612  [ 0.610,  0.614]     1490542.5 ns
+upkeep/om/mixed                   0.102  [ 0.102,  0.102]     2521751.3 ns
+upkeep/om/settled                 0.017  [ 0.017,  0.017]     3513761.0 ns
+
