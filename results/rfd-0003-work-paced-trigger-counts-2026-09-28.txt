@@ -1,0 +1,26 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-work-paced-trigger-counts at experiments@408a6fe - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0003_work_paced_trigger::tests::counts -- --nocapture
+
+    Finished `release` profile [optimized] target(s) in 0.06s
+     Running unittests src/lib.rs (target/release/deps/bough_experiments-7908e5454028b438)
+
+running 1 test
+30000 units from each policy's first collection, every third a navigation, the rest a click
+
+nav: 28 live after a collection, the screen on show 22 nodes
+  policy    collections  navs between  region/click  freed/collect  largest freed  max slots
+  baseline        10000           1.0          25.5           23.5             30         65
+  rfd3             5157           1.9          37.1           45.5             59         93
+  excess           6891           1.5          40.9           34.1             58         93
+  total           10619           0.9          36.6           22.1             30         65
+
+app: 10089 live after a collection, the screen on show 22 nodes
+  policy    collections  navs between  region/click  freed/collect  largest freed  max slots
+  baseline        10000           1.0          25.5           23.5             30      10126
+  rfd3               23         434.8        5031.8        10104.9          10124      20212
+  excess            471          21.2         279.6          497.8            542      10634
+  total             507          19.7         262.4          462.6            486      10581
+test rfd_0003_work_paced_trigger::tests::counts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 21 filtered out; finished in 3.59s
+
