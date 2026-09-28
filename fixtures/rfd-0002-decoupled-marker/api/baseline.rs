@@ -36,6 +36,8 @@ impl Cx {
 pub struct Build {
     pulls: Vec<Option<Pull>>,
     cells: Vec<Option<Box<dyn Any>>>,
+    /// `depends` declarations: what each node keeps alive (RFD 3).
+    reach: Vec<(usize, usize)>,
 }
 
 impl Build {
@@ -51,6 +53,23 @@ impl Build {
 
     fn materialize<S: Source>(&mut self, mut chain: S) -> Pull {
         Box::new(move |cx| chain.pull(cx).map(|event| Box::new(event) as Box<dyn Any>))
+    }
+
+    /// A `split` or `defer`: two nodes, one that takes the chain's event at
+    /// t, and one that emits in t's children. The second has no pull, so
+    /// it depends on nothing in the instant it fires in.
+    fn child_instant<S: Source>(&mut self, chain: S) -> usize {
+        let take = self.materialize(chain);
+        self.node(Some(take), None);
+        self.node(None, None)
+    }
+
+    /// Declares that `node` keeps `on` alive, as for the tokens a
+    /// `construct` closure captures. A reach declaration for collection
+    /// (RFD 3), not a dependency.
+    pub fn depends(&mut self, node: &dyn Trace, on: &[&dyn Trace]) {
+        let node = node.node();
+        self.reach.extend(on.iter().map(|value| (node, value.node())));
     }
 
     pub fn input<A: 'static>(&mut self) -> Stream<A> {
@@ -129,6 +148,16 @@ impl<A: 'static> Cell<A> {
         Stream::new(self.id)
     }
 
+    /// Reads the value from before the instant. Sampling a loop's
+    /// forward before it closes is a build-time panic in Bough, so this is
+    /// for `construct` closures, which run later.
+    pub fn sample(self, b: &Build) -> &A {
+        b.cells[self.id]
+            .as_ref()
+            .and_then(|value| value.downcast_ref())
+            .expect("a closed loop's cell has a value")
+    }
+
     /// A read-through cell.
     pub fn map_cell<B: 'static>(self, b: &mut Build, f: impl Fn(&A) -> B + 'static) -> Cell<B> {
         let pull: Pull = Box::new(move |cx| Some(Box::new(f(cx.cell::<A>(self.id)))));
@@ -149,6 +178,23 @@ impl<A: 'static> Cell<A> {
 impl<A: 'static> Cell<Stream<A>> {
     pub fn switch_stream(self, b: &mut Build) -> Stream<A> {
         Stream::new(b.node(None, None))
+    }
+}
+
+/// A token `depends` can name.
+pub trait Trace {
+    fn node(&self) -> usize;
+}
+
+impl<A> Trace for Stream<A> {
+    fn node(&self) -> usize {
+        self.id
+    }
+}
+
+impl<A> Trace for Cell<A> {
+    fn node(&self) -> usize {
+        self.id
     }
 }
 
@@ -180,6 +226,40 @@ pub trait Source: Sized + 'static {
             value: PhantomData,
             f,
         }
+    }
+
+    /// Keeps the events during which the cell was `true`.
+    fn gate(self, cell: Cell<bool>) -> Gate<Self> {
+        Gate {
+            source: self,
+            cell: cell.id,
+        }
+    }
+
+    /// The semantics' `Execute`: runs `f` at each event with a build
+    /// context. Bough's `construct` on a stream.
+    fn construct<B, F>(self, b: &mut Build, f: F) -> Stream<B>
+    where
+        B: 'static,
+        F: FnMut(&mut Build, Self::Event) -> B + 'static,
+    {
+        let _ = f;
+        let pull = b.materialize(self);
+        Stream::new(b.node(Some(pull), None))
+    }
+
+    /// Emits each item of each event in a child instant of its own.
+    fn split(self, b: &mut Build) -> Stream<<Self::Event as IntoIterator>::Item>
+    where
+        Self::Event: IntoIterator,
+        <Self::Event as IntoIterator>::Item: 'static,
+    {
+        Stream::new(b.child_instant(self))
+    }
+
+    /// Emits each event again in the first child instant.
+    fn defer(self, b: &mut Build) -> Stream<Self::Event> {
+        Stream::new(b.child_instant(self))
     }
 
     fn hold(self, b: &mut Build, init: Self::Event) -> Cell<Self::Event> {
@@ -254,6 +334,20 @@ where
     fn pull(&mut self, cx: &Cx) -> Option<B> {
         let event = self.source.pull(cx)?;
         Some((self.f)(event, cx.cell::<C>(self.cell)))
+    }
+}
+
+pub struct Gate<S> {
+    source: S,
+    cell: usize,
+}
+
+impl<S: Source> Source for Gate<S> {
+    type Event = S::Event;
+
+    fn pull(&mut self, cx: &Cx) -> Option<S::Event> {
+        let event = self.source.pull(cx)?;
+        cx.cell::<bool>(self.cell).then_some(event)
     }
 }
 

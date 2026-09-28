@@ -6,10 +6,13 @@
 //! reference in the same instant. The forward reference is
 //! `Instantaneous`; everything else starts `Decoupled`. Adapters and
 //! materializers pass the mark on, `merge` joins two marks, and a read of a
-//! cell from before the instant (`snapshot`, and a `switch_stream`'s
-//! selection) ignores the cell's mark. A hold's mark is its input's: a hold
-//! delays reads made before the instant, not its steps view, so `steps`
-//! gives the mark back. `close` requires a `Decoupled` definition.
+//! cell from before the instant (`snapshot`, `gate`, `sample`, and a
+//! `switch_stream`'s selection) ignores the cell's mark. `split` and
+//! `defer` emit in child instants, so their output starts `Decoupled`
+//! whatever their input's mark. `depends` is a reach declaration and
+//! touches no mark. A hold's mark is its input's: a hold delays reads made
+//! before the instant, not its steps view, so `steps` gives the mark back.
+//! `close` requires a `Decoupled` definition.
 //!
 //! Streams are fused chains as in RFD 4: `map`, `filter` and `snapshot` are
 //! adapter types, and the mark is an associated type of `Source`, so it
@@ -50,7 +53,7 @@ impl Mark for Instantaneous {
 #[diagnostic::on_unimplemented(
     message = "this loop's definition depends on a loop's forward reference in the same instant",
     label = "reaches a forward reference without a read from before the instant",
-    note = "only `snapshot` of a cell and a `switch_stream`'s selection read from before the instant; a hold delays those reads, not its `steps`"
+    note = "only `snapshot`, `gate` and `sample` of a cell and a `switch_stream`'s selection read from before the instant, and only `split` and `defer` move to a child instant; a hold delays those reads, not its `steps`"
 )]
 pub trait IsDecoupled: Mark {}
 
@@ -84,6 +87,8 @@ impl Cx {
 pub struct Build {
     pulls: Vec<Option<Pull>>,
     cells: Vec<Option<Box<dyn Any>>>,
+    /// `depends` declarations: what each node keeps alive (RFD 3).
+    reach: Vec<(usize, usize)>,
 }
 
 impl Build {
@@ -99,6 +104,24 @@ impl Build {
 
     fn materialize<S: Source>(&mut self, mut chain: S) -> Pull {
         Box::new(move |cx| chain.pull(cx).map(|event| Box::new(event) as Box<dyn Any>))
+    }
+
+    /// A `split` or `defer`: two nodes, one that takes the chain's event at
+    /// t, and one that emits in t's children. The second has no pull, so
+    /// it depends on nothing in the instant it fires in.
+    fn child_instant<S: Source>(&mut self, chain: S) -> usize {
+        let take = self.materialize(chain);
+        self.node(Some(take), None);
+        self.node(None, None)
+    }
+
+    /// Declares that `node` keeps `on` alive, as for the tokens a
+    /// `construct` closure captures. A reach declaration for collection
+    /// (RFD 3), not a dependency, so it reads no mark and changes none:
+    /// it returns nothing and takes its tokens by reference.
+    pub fn depends(&mut self, node: &dyn Trace, on: &[&dyn Trace]) {
+        let node = node.node();
+        self.reach.extend(on.iter().map(|value| (node, value.node())));
     }
 
     pub fn input<A: 'static>(&mut self) -> Stream<A> {
@@ -180,6 +203,17 @@ impl<A: 'static, M: Mark> Cell<A, M> {
         Stream::new(self.id)
     }
 
+    /// Reads the value from before the instant, as a value: nothing
+    /// carries the mark into what is built from it, as `snapshot` drops it.
+    /// Sampling a loop's forward before it closes is a build-time panic in
+    /// Bough, so this is for `construct` closures, which run later.
+    pub fn sample(self, b: &Build) -> &A {
+        b.cells[self.id]
+            .as_ref()
+            .and_then(|value| value.downcast_ref())
+            .expect("a closed loop's cell has a value")
+    }
+
     /// A read-through cell, computed this instant, so it keeps the mark.
     pub fn map_cell<B: 'static>(self, b: &mut Build, f: impl Fn(&A) -> B + 'static) -> Cell<B, M> {
         let pull: Pull = Box::new(move |cx| Some(Box::new(f(cx.cell::<A>(self.id)))));
@@ -204,6 +238,23 @@ impl<A: 'static, MI: Mark, MO: Mark> Cell<Stream<A, MI>, MO> {
     /// carries the same static mark.
     pub fn switch_stream(self, b: &mut Build) -> Stream<A, MI> {
         Stream::new(b.node(None, None))
+    }
+}
+
+/// A token `depends` can name.
+pub trait Trace {
+    fn node(&self) -> usize;
+}
+
+impl<A, M> Trace for Stream<A, M> {
+    fn node(&self) -> usize {
+        self.id
+    }
+}
+
+impl<A, M> Trace for Cell<A, M> {
+    fn node(&self) -> usize {
+        self.id
     }
 }
 
@@ -237,6 +288,48 @@ pub trait Source: Sized + 'static {
             value: PhantomData,
             f,
         }
+    }
+
+    /// Keeps the events during which the cell was `true`. Reads the cell
+    /// from before the instant, as `snapshot` does, so the cell's mark
+    /// doesn't matter; the stream's passes through.
+    fn gate<CM>(self, cell: Cell<bool, CM>) -> Gate<Self> {
+        Gate {
+            source: self,
+            cell: cell.id,
+        }
+    }
+
+    /// The semantics' `Execute`: runs `f` at each event with a build
+    /// context. Bough's `construct` on a stream. The output fires in the
+    /// instant the input does, so it keeps the input's mark; what `f`
+    /// builds and captures is not in its type.
+    fn construct<B, F>(self, b: &mut Build, f: F) -> Stream<B, Self::Mark>
+    where
+        B: 'static,
+        F: FnMut(&mut Build, Self::Event) -> B + 'static,
+    {
+        let _ = f;
+        let pull = b.materialize(self);
+        Stream::new(b.node(Some(pull), None))
+    }
+
+    /// Emits each item of each event in a child instant of its own,
+    /// `t ++ [n]`. The output depends on nothing in the instant it fires
+    /// in, the parent's or a child's, so it starts with no mark: the
+    /// input's is dropped.
+    fn split(self, b: &mut Build) -> Stream<<Self::Event as IntoIterator>::Item>
+    where
+        Self::Event: IntoIterator,
+        <Self::Event as IntoIterator>::Item: 'static,
+    {
+        Stream::new(b.child_instant(self))
+    }
+
+    /// Emits each event again in t's first child instant, `t ++ [0]`, a
+    /// split of one. Its output starts with no mark, as `split`'s does.
+    fn defer(self, b: &mut Build) -> Stream<Self::Event> {
+        Stream::new(b.child_instant(self))
     }
 
     fn hold(self, b: &mut Build, init: Self::Event) -> Cell<Self::Event, Self::Mark> {
@@ -319,6 +412,21 @@ where
     fn pull(&mut self, cx: &Cx) -> Option<B> {
         let event = self.source.pull(cx)?;
         Some((self.f)(event, cx.cell::<C>(self.cell)))
+    }
+}
+
+pub struct Gate<S> {
+    source: S,
+    cell: usize,
+}
+
+impl<S: Source> Source for Gate<S> {
+    type Event = S::Event;
+    type Mark = S::Mark;
+
+    fn pull(&mut self, cx: &Cx) -> Option<S::Event> {
+        let event = self.source.pull(cx)?;
+        cx.cell::<bool>(self.cell).then_some(event)
     }
 }
 

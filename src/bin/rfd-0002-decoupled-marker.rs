@@ -18,6 +18,13 @@
 //! - `rows`: Cuoq and Pouzet's presence rows as a four-slot type-level
 //!   bitset, the fallback for what the bit is too coarse for.
 //!
+//! All three model `gate`, `sample`, `split`, `defer` and `depends` as
+//! RFDs 2 and 5 rule them: `gate` and `sample` read a cell from before the
+//! instant, so they drop its mark as `snapshot` does (`sample` returns a
+//! plain value, which carries none); `split` and `defer` emit in child
+//! instants, so their output starts unmarked; `depends` is a reach
+//! declaration, which takes its tokens by reference and marks nothing.
+//!
 //! Each fixture is a program with a `//@ legal yes|no` line, whether
 //! Bough's run-time rule accepts it, and a `//@ designs` line. The
 //! baseline and marker share their programs: a fixture picks the API with
@@ -210,14 +217,32 @@ fn version(root: &Path) -> String {
 // ----- fixtures mode -----
 
 /// The fixtures whose full first diagnostic is printed: F3 as the user
-/// meets it, a stream loop, the two helper signatures, and the rows'
-/// declaration refusal.
-const SHOWN: [(&str, Design); 5] = [
+/// meets it, a stream loop, the two helper signatures, the rows'
+/// declaration refusal, and the loop closed through a defer whose forward
+/// the bit can't clear.
+const SHOWN: [(&str, Design); 6] = [
     ("f3-steps-cycle", Design::Marker),
     ("map-only", Design::Marker),
     ("helper-opaque", Design::Marker),
     ("helper-token", Design::Marker),
     ("rows-two-loops-undeclared", Design::Rows),
+    ("defer-forward-feeds-loop", Design::Marker),
+];
+
+/// The fixtures that loop through `gate`, `sample`, `split`, `defer` or
+/// `depends`, for their own line in the verdict.
+const EXTENDED: [&str; 11] = [
+    "gate-counter",
+    "gate-of-steps",
+    "sample-in-construct",
+    "split-fed-by-children",
+    "split-bypass",
+    "defer-countdown",
+    "defer-no-filter",
+    "defer-forward-feeds-loop",
+    "defer-backward-feeds-loop",
+    "depends-on-forward",
+    "depends-illegal",
 ];
 
 /// What one checked design got wrong against the run-time rule.
@@ -235,13 +260,14 @@ fn run_fixtures(root: &Path) {
     println!("       marker and rows must build exactly the legal loops");
     println!();
     println!(
-        "{:<27} {:<6} {:<9} {:<9} {:<9} first error (marker, else rows)",
+        "{:<30} {:<6} {:<9} {:<9} {:<9} first error (marker, else rows)",
         "fixture", "legal", "baseline", "marker", "rows"
     );
 
     let mut shown = Vec::new();
     let mut marker = Tally::default();
     let mut rows = Tally::default();
+    let mut extended = Tally::default();
     let mut baseline_broken = Vec::new();
     let (mut f1_built, mut f3_refused) = (false, false);
     for fixture in fixtures(root) {
@@ -284,6 +310,19 @@ fn run_fixtures(root: &Path) {
                     headline = outcome.headline();
                 }
             }
+            if design == Design::Marker && EXTENDED.contains(&fixture.name.as_str()) {
+                if fixture.legal {
+                    extended.legal += 1;
+                    if !outcome.built {
+                        extended.false_refusals.push(fixture.name.clone());
+                    }
+                } else {
+                    extended.illegal += 1;
+                    if outcome.built {
+                        extended.false_acceptances.push(fixture.name.clone());
+                    }
+                }
+            }
             if design == Design::Marker {
                 match fixture.name.as_str() {
                     "f1-counter" => f1_built = outcome.built,
@@ -296,7 +335,7 @@ fn run_fixtures(root: &Path) {
             }
         }
         println!(
-            "{:<27} {:<6} {:<9} {:<9} {:<9} {headline}",
+            "{:<30} {:<6} {:<9} {:<9} {:<9} {headline}",
             fixture.name,
             if fixture.legal { "yes" } else { "no" },
             cells[0],
@@ -335,6 +374,15 @@ fn run_fixtures(root: &Path) {
             tally.false_refusals, tally.false_acceptances
         );
     }
+    println!(
+        "marker through gate, sample, split, defer and depends: built {} of {} legal loops, \
+         refused {} of {} illegal ones; false refusals {:?}",
+        extended.legal - extended.false_refusals.len(),
+        extended.legal,
+        extended.illegal - extended.false_acceptances.len(),
+        extended.illegal,
+        extended.false_refusals,
+    );
     println!(
         "verdict: the marker {} F3 and {} F1's counter",
         if f3_refused { "refused" } else { "built" },
