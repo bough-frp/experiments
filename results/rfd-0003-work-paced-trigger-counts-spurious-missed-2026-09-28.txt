@@ -1,0 +1,95 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-work-paced-trigger-counts-spurious-missed at experiments@000e929 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0003_work_paced_trigger::tests::spurious_missed_counts -- --nocapture
+
+   Compiling bough-experiments v0.1.0 (/home/zefs/prog/bough/experiments)
+    Finished `release` profile [optimized] target(s) in 4.11s
+     Running unittests src/lib.rs (target/release/deps/bough_experiments-546a1df3524d36be)
+
+running 1 test
+each row: the shape's window of 3 periods (900 navigating units, every third a navigation, then `quiet` quiet ones) after 2 periods of warm-up, audited
+grow = the rate screens are kept at, against the first run's one per 30 units; +b = 30 screens kept off the tenth input through each navigating stretch, their guards released evenly through the quiet one
+spur = collections freeing < 18; sp/1ku per 1,000 units, sp/1kq spurious after a quiet unit per 1,000 quiet units; spur c/u = survivors marked + slots swept by spurious collections per unit; ref/u = region nodes `marked` passed over for its references per unit; visits/u = region nodes + collection visits + ref/u per unit; /orcl = that over oracle's; /o-ref = the same without ref/u, the pass fused into the transaction's own
+missed = units after which the dead work since the last collection exceeded its survivors, uncollected; long = the longest run of them; peak = the largest dead work/survivors after a unit; rel = guards released; below = transactions whose region was under their input's reference
+
+spurious: navigation off every, tenth and hundredth in turn (spread)
+  quiet     grow   mix policy  colls spur sp/1ku sp/1kq spur c/u  ref/u visits/u  /orcl /o-ref missed  long  peak  rel below
+  100       0.5x spread excess     36    0   0.00   0.00     0.0    0.0   1835.8  0.999  0.999     43     7  1.17    0    42
+  100       0.5x spread marked     37    0   0.00   0.00     0.0   50.6   1891.3  1.029  1.002     18     4  1.14    0    27
+  100       0.5x spread oracle     36    0   0.00   0.00     0.0    0.0   1837.5  1.000  1.000      0     0  1.05    0     0
+  100         1x spread excess     35    0   0.00   0.00     0.0    0.0   2540.9  1.001  1.001     18     4  1.11    0    21
+  100         1x spread marked     35    0   0.00   0.00     0.0   68.4   2608.3  1.027  1.001     12     3  1.09    0    36
+  100         1x spread oracle     34    0   0.00   0.00     0.0    0.0   2538.5  1.000  1.000      0     0  1.04    0     0
+  100         4x spread excess     32    0   0.00   0.00     0.0    0.0   6747.4  1.004  1.004      0     0  0.84    0    11
+  100         4x spread marked     33    0   0.00   0.00     0.0  184.0   6938.5  1.033  1.005      0     0  0.84    0    11
+  100         4x spread oracle     28    0   0.00   0.00     0.0    0.0   6717.9  1.000  1.000      0     0  1.04    0     0
+  300       0.5x spread excess     38    0   0.00   0.00     0.0    0.0   1915.7  1.008  1.008     81     8  1.21    0    48
+  300       0.5x spread marked     39    0   0.00   0.00     0.0   48.7   1963.4  1.033  1.008     14     4  1.13    0    27
+  300       0.5x spread oracle     36    0   0.00   0.00     0.0    0.0   1899.9  1.000  1.000      0     0  1.04    0     0
+  300         1x spread excess     37    1   0.28   1.11     7.3    0.0   2775.8  1.007  1.007     14     3  1.08    0    33
+  300         1x spread marked     37    1   0.28   1.11     7.3   67.9   2839.6  1.030  1.005      7     2  1.06    0    15
+  300         1x spread oracle     34    0   0.00   0.00     0.0    0.0   2757.5  1.000  1.000      0     0  1.04    0     0
+  300         4x spread excess     35    3   0.83   3.33    41.6    0.0   7786.3  1.010  1.010      0     0  0.83    0    14
+  300         4x spread marked     35    2   0.56   2.22    29.7  187.2   7969.4  1.033  1.009      0     0  0.79    0     5
+  300         4x spread oracle     27    0   0.00   0.00     0.0    0.0   7712.2  1.000  1.000      0     0  1.02    0     0
+  900       0.5x spread excess     41    5   0.93   1.85    23.8    0.0   2234.5  1.013  1.013     60     8  1.15    0    36
+  900       0.5x spread marked     43    6   1.11   2.22    28.9   46.5   2290.0  1.038  1.017     31     4  1.11    0    39
+  900       0.5x spread oracle     35    0   0.00   0.00     0.0    0.0   2205.1  1.000  1.000      0     0  1.03    0     0
+  900         1x spread excess     42    8   1.48   2.96    45.6    0.0   3491.0  1.016  1.016     18     3  1.09    0    33
+  900         1x spread marked     42    8   1.48   2.96    45.6   70.8   3560.9  1.036  1.016      5     2  1.08    0    30
+  900         1x spread oracle     32    0   0.00   0.00     0.0    0.0   3435.9  1.000  1.000      0     0  1.04    0     0
+  900         4x spread excess     40   10   1.85   3.70   115.1    0.0  11027.2  1.015  1.015      0     0  0.84    0    18
+  900         4x spread marked     40   10   1.85   3.70   115.2  214.7  11240.2  1.034  1.014      0     0  0.78    0    15
+  900         4x spread oracle     24    0   0.00   0.00     0.0    0.0  10869.2  1.000  1.000      0     0  1.02    0     0
+  3000      0.5x spread excess     55   21   1.79   2.33    56.5    0.0   3583.1  1.017  1.017     35     6  1.18    0    33
+  3000      0.5x spread marked     56   21   1.79   2.33    56.5   49.0   3633.2  1.031  1.017     18     3  1.08    0    15
+  3000      0.5x spread oracle     33    0   0.00   0.00     0.0    0.0   3524.8  1.000  1.000      0     0  1.03    0     0
+  3000        1x spread excess     55   24   2.05   2.67    85.7    0.0   6267.1  1.014  1.014     10     3  1.10    0    18
+  3000        1x spread marked     57   25   2.14   2.78    89.9   82.7   6356.7  1.029  1.016      0     0  1.02    0    30
+  3000        1x spread oracle     29    0   0.00   0.00     0.0    0.0   6178.0  1.000  1.000      0     0  1.04    0     0
+  3000        4x spread excess     55   33   2.82   3.67   304.5    0.0  22554.5  1.014  1.014      0     0  0.81    0    12
+  3000        4x spread marked     55   32   2.74   3.56   293.6  285.3  22837.4  1.027  1.014      0     0  0.79    0     0
+  3000        4x spread oracle     19    0   0.00   0.00     0.0    0.0  22241.7  1.000  1.000      0     0  1.02    0     0
+  100+b       1x spread excess     35    0   0.00   0.00     0.0    0.0   2588.6  1.002  1.002     32    11  1.27   90    24
+  100+b       1x spread marked     35    0   0.00   0.00     0.0   73.5   2660.9  1.030  1.001     27    13  1.29   90    36
+  100+b       1x spread oracle     34    0   0.00   0.00     0.0    0.0   2583.8  1.000  1.000      0     0  1.03   90     0
+  300+b       1x spread excess     36    0   0.00   0.00     0.0    0.0   2825.4  1.002  1.002     16     4  1.09   90    33
+  300+b       1x spread marked     37    0   0.00   0.00     0.0   71.1   2900.9  1.028  1.003      1     1  1.04   90    18
+  300+b       1x spread oracle     35    0   0.00   0.00     0.0    0.0   2821.0  1.000  1.000      0     0  1.04   90     0
+  900+b       1x spread excess     41    0   0.00   0.00     0.0    0.0   3558.9  1.008  1.008     17     5  1.11   90    15
+  900+b       1x spread marked     42    0   0.00   0.00     0.0   74.9   3637.5  1.030  1.009      1     1  1.03   90    30
+  900+b       1x spread oracle     35    0   0.00   0.00     0.0    0.0   3530.9  1.000  1.000      0     0  1.03   90     0
+  3000+b      1x spread excess     55    0   0.00   0.00     0.0    0.0   6302.1  1.011  1.011      6     3  1.09   90    18
+  3000+b      1x spread marked     56    0   0.00   0.00     0.0   84.8   6390.5  1.025  1.011      0     0  1.00   90    21
+  3000+b      1x spread oracle     34    0   0.00   0.00     0.0    0.0   6236.3  1.000  1.000      0     0  1.03   90     0
+
+missed: navigation off the hundredth alone (lagging); breathing with no live growth; and the first run's two mixes
+  quiet     grow   mix policy  colls spur sp/1ku sp/1kq spur c/u  ref/u visits/u  /orcl /o-ref missed  long  peak  rel below
+  300          0 lagging excess      5    0   0.00   0.00     0.0    0.0    753.0  0.998  0.998    600   200  1.87    0     0
+  300          0 lagging marked      6    0   0.00   0.00     0.0    9.6    764.1  1.013  1.000      0     0  1.42    0     0
+  300          0 lagging oracle      6    0   0.00   0.00     0.0    0.0    754.5  1.000  1.000      0     0  1.42    0     0
+  300         1x lagging excess     14    0   0.00   0.00     0.0    0.0   2477.8  1.021  1.021      0     0  0.28    0     0
+  300         1x lagging marked     15    0   0.00   0.00     0.0   33.0   2518.3  1.038  1.025      0     0  0.22    0     0
+  300         1x lagging oracle      5    0   0.00   0.00     0.0    0.0   2425.8  1.000  1.000      0     0  1.31    0     0
+  3000         0 lagging excess      6    0   0.00   0.00     0.0    0.0    715.5  1.002  1.002    500   300  1.96    0     0
+  3000         0 lagging marked      6    0   0.00   0.00     0.0    4.5    718.7  1.006  1.000      0     0  1.43    0     0
+  3000         0 lagging oracle      6    0   0.00   0.00     0.0    0.0    714.2  1.000  1.000      0     0  1.43    0     0
+test rfd_0003_work_paced_trigger::tests::spurious_missed_counts has been running for over 60 seconds
+  3000        1x lagging excess     37   25   2.14   2.78    91.7    0.0   6146.2  1.017  1.017      0     0  0.29    0     0
+  3000        1x lagging marked     38   24   2.05   2.67    88.6   59.9   6209.1  1.027  1.018      0     0  0.19    0     0
+  3000        1x lagging oracle      6    0   0.00   0.00     0.0    0.0   6043.2  1.000  1.000      0     0  1.26    0     0
+  300+b        0 spread excess     38    0   0.00   0.00     0.0    0.0   1096.3  0.985  0.985    174    56  2.27   90    24
+  300+b        0 spread marked     39    0   0.00   0.00     0.0   29.7   1129.7  1.015  0.989    127    41  2.06   90    12
+  300+b        0 spread oracle     41    0   0.00   0.00     0.0    0.0   1112.7  1.000  1.000      0     0  1.06   90     0
+  3000+b       0 spread excess     39    0   0.00   0.00     0.0    0.0    887.1  1.001  1.001   5956  2079 11.12   90    24
+  3000+b       0 spread marked     39    0   0.00   0.00     0.0   11.6    899.3  1.014  1.001   6187  2079 11.12   90    12
+  3000+b       0 spread oracle     48    0   0.00   0.00     0.0    0.0    886.6  1.000  1.000      0     0  1.04   90     0
+  300         1x spread excess     37    1   0.28   1.11     7.3    0.0   2775.8  1.007  1.007     14     3  1.08    0    33
+  300         1x spread marked     37    1   0.28   1.11     7.3   67.9   2839.6  1.030  1.005      7     2  1.06    0    15
+  300         1x spread oracle     34    0   0.00   0.00     0.0    0.0   2757.5  1.000  1.000      0     0  1.04    0     0
+  300         1x sparse excess     18    0   0.00   0.00     0.0    0.0   2541.3  1.006  1.006      0     0  0.78    0     0
+  300         1x sparse marked     20    1   0.28   1.11     8.5   41.9   2596.3  1.028  1.012      0     0  0.74    0     0
+  300         1x sparse oracle     14    0   0.00   0.00     0.0    0.0   2525.1  1.000  1.000      0     0  1.08    0     0
+test rfd_0003_work_paced_trigger::tests::spurious_missed_counts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 52 filtered out; finished in 67.08s
+

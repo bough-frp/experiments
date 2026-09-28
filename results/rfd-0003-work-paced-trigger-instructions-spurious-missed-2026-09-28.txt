@@ -1,0 +1,29 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-work-paced-trigger-instructions-spurious-missed at experiments@000e929 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0003-work-paced-trigger-instructions -- '*::spurious_missed::*'
+
+   Compiling bough-experiments v0.1.0 (/home/zefs/prog/bough/experiments)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 1.05s
+     Running benches/rfd-0003-work-paced-trigger-instructions.rs (target/release/deps/rfd_0003_work_paced_trigger_instructions-88cd5696e1559be9)
+rfd_0003_work_paced_trigger_instructions::spurious_missed::lagging_run lagging_0:(uneven_warmed(Mix :: Lagging, Policy :: Baseline)...
+  Instructions:                  2297434354|N/A                  (*********)
+  L1 Hits:                       3229261135|N/A                  (*********)
+  LL Hits:                         80530844|N/A                  (*********)
+  RAM Hits:                            6677|N/A                  (*********)
+  Total read+write:              3309798656|N/A                  (*********)
+  Estimated Cycles:              3632149050|N/A                  (*********)
+rfd_0003_work_paced_trigger_instructions::spurious_missed::lagging_run lagging_1:(uneven_warmed(Mix :: Lagging, Policy :: Excess))
+  Instructions:                   914131791|N/A                  (*********)
+  L1 Hits:                       1287351735|N/A                  (*********)
+  LL Hits:                         36679302|N/A                  (*********)
+  RAM Hits:                           26986|N/A                  (*********)
+  Total read+write:              1324058023|N/A                  (*********)
+  Estimated Cycles:              1471692755|N/A                  (*********)
+rfd_0003_work_paced_trigger_instructions::spurious_missed::lagging_run lagging_2:(uneven_warmed(Mix :: Lagging, Policy :: Marked))
+  Instructions:                   917008740|N/A                  (*********)
+  L1 Hits:                       1291238796|N/A                  (*********)
+  LL Hits:                         36634395|N/A                  (*********)
+  RAM Hits:                           27126|N/A                  (*********)
+  Total read+write:              1327900317|N/A                  (*********)
+  Estimated Cycles:              1475360181|N/A                  (*********)
+
+Gungraun result: Ok. 3 without regressions; 0 regressed; 43 filtered; 3 benchmarks finished in 89.1638s
