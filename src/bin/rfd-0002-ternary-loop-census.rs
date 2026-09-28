@@ -91,8 +91,16 @@
 //! The quiet-instant argument above holds in every reachable state (the
 //! quiet instant leaves the cells alone), so under `any` class (c) is
 //! empty too.
+//!
+//! **Enumerated mode** (`--enumerate`, in `enumerate.rs` beside this file):
+//! one drawn binding per program can miss a rare one, so every program of 2
+//! to 4 nodes is tried with every binding of its cells. The default run
+//! doesn't do it, and its output is unchanged.
 
 use std::fmt::Write as _;
+
+#[path = "rfd-0002-ternary-loop-census/enumerate.rs"]
+mod enumerate;
 
 const VALUES: u8 = 4;
 const CELLS: usize = 2;
@@ -629,30 +637,9 @@ fn judge_reach(p: &Program, bind: &Bind, combos: &[Vec<V>]) -> RVerdict {
     let reached: Vec<u8> = (0..1u8 << CELLS)
         .filter(|s| r.states >> s & 1 == 1)
         .collect();
-    let gates_ok = reached.iter().all(|&s| !has_cycle(p, &gate_cut(p, s)));
-    v.class = Some(if gates_ok {
-        let never_open: Vec<bool> = p
-            .nodes
-            .iter()
-            .map(|op| matches!(op, Op::Gate(lit, _) if reached.iter().all(|&s| !lit.open(s))))
-            .collect();
-        if (0..1u8 << CELLS).all(|s| {
-            let g = gate_cut(p, s);
-            !has_cycle(p, &|k, pos| never_open[k] || g(k, pos))
-        }) {
-            RClass::DeadGate
-        } else {
-            RClass::Invariant
-        }
-    } else if reached.iter().all(|&s| {
-        let g = gate_cut(p, s);
-        let dead = &r.left_always[s as usize];
-        !has_cycle(p, &|k, pos| g(k, pos) || (pos == 1 && dead[k]))
-    }) {
-        RClass::DeadBranch
-    } else {
-        RClass::PerInstant
-    });
+    let class = classify_reached(p, &reached, &r.left_always);
+    let gates_ok = matches!(class, RClass::DeadGate | RClass::Invariant);
+    v.class = Some(class);
     v.fixed_gates = !gates_ok
         && p.nodes.iter().all(|op| match op {
             Op::Gate(lit, _) => {
@@ -670,6 +657,37 @@ fn judge_reach(p: &Program, bind: &Bind, combos: &[Vec<V>]) -> RVerdict {
         !(0..1u32 << filters).all(|bits| explore(p, bind, combos, Filters::Free(bits)).constructive)
     };
     v
+}
+
+/// The class of a program that settles in every instant of the cell states
+/// `reached`; `left_always` is per cell state, per node, as in `Reach`. It
+/// depends on the reached states and nothing else about the cells, which the
+/// enumerated mode relies on to classify once per reached set.
+fn classify_reached(p: &Program, reached: &[u8], left_always: &[Vec<bool>]) -> RClass {
+    let gates_ok = reached.iter().all(|&s| !has_cycle(p, &gate_cut(p, s)));
+    if gates_ok {
+        let never_open: Vec<bool> = p
+            .nodes
+            .iter()
+            .map(|op| matches!(op, Op::Gate(lit, _) if reached.iter().all(|&s| !lit.open(s))))
+            .collect();
+        if (0..1u8 << CELLS).all(|s| {
+            let g = gate_cut(p, s);
+            !has_cycle(p, &|k, pos| never_open[k] || g(k, pos))
+        }) {
+            RClass::DeadGate
+        } else {
+            RClass::Invariant
+        }
+    } else if reached.iter().all(|&s| {
+        let g = gate_cut(p, s);
+        let dead = &left_always[s as usize];
+        !has_cycle(p, &|k, pos| g(k, pos) || (pos == 1 && dead[k]))
+    }) {
+        RClass::DeadBranch
+    } else {
+        RClass::PerInstant
+    }
 }
 
 /// As `prune`, but also keeps the source of every cell a kept gate reads,
@@ -1174,6 +1192,10 @@ fn row_line(label: &str, r: &Row) -> String {
 }
 
 fn main() {
+    if std::env::args().any(|a| a == "--enumerate") {
+        enumerate::run();
+        return;
+    }
     println!(
         "ternary-loop-census: constructive cycles among those RFD 2's acyclicity rule refuses\n"
     );
