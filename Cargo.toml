@@ -2,5 +2,78 @@
 name = "bough-experiments"
 version = "0.1.0"
 edition = "2024"
+publish = false
+
+# Members join only when a probe is incompatible with every existing crate;
+# see the README.
+[workspace]
+resolver = "3"
 
 [dependencies]
+
+[dev-dependencies]
+criterion = "0.8"
+gungraun = "=0.19.4"
+
+[profile.bench]
+debug = true
+
+[[bench]]
+name = "rfd-0003-sweep-cost-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0003-sweep-cost-wallclock"
+harness = false
+
+[[bench]]
+name = "rfd-0004-erased-materializer-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0004-erased-materializer-wallclock"
+harness = false
+
+[[bench]]
+name = "rfd-0004-patch-cell-crossover-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0004-patch-cell-crossover-wallclock"
+harness = false
+
+[[bench]]
+name = "rfd-0005-bounded-relink-check-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0005-bounded-relink-check-wallclock"
+harness = false
+
+[[bench]]
+name = "rfd-0005-cycle-in-mark-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0005-demand-bounded-push-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0005-demand-bounded-push-wallclock"
+harness = false
+
+[[bench]]
+name = "rfd-0005-heap-vs-mark-on-quiet-regions-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0005-heap-vs-mark-on-quiet-regions-wallclock"
+harness = false
+
+[[bench]]
+name = "rfd-0006-lock-vs-queue-cost-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0006-lock-vs-queue-cost-wallclock"
+harness = false
