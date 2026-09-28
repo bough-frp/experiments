@@ -93,3 +93,11 @@ harness = false
 [[bench]]
 name = "rfd-0003-work-paced-trigger-wallclock"
 harness = false
+
+[[bench]]
+name = "rfd-0005-maintained-rank-queue-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0005-maintained-rank-queue-wallclock"
+harness = false
