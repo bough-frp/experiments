@@ -25,6 +25,15 @@
 //! the case is reset, its two moved edges put back and its checker cloned
 //! from a fresh one, which costs far less than cloning the graph when the
 //! moves are cheap and the graph is large.
+//!
+//! `back-fresh` and `twoway-fresh`, in `moves` and `adversarial`, are the
+//! lists with fresh spacing: a moved set takes half its gap, away from where
+//! the next set to that spot goes. Their ratio to `back` and `twoway` is what
+//! the spacing saves. (The cyclic adversary never reorders, so they are left
+//! out of it.) `mixed/<variant>/s<shared>-n<new>` runs the mixed adversary:
+//! 16 moves, each to a new inner that reads a shared upstream of `shared`
+//! nodes before the switch in the order and `new` nodes of its own after
+//! it, with 1,000 nodes downstream of the switch, timed like the adversary.
 
 use std::hint::black_box;
 use std::time::{Duration, Instant};
@@ -34,7 +43,9 @@ use criterion::{BatchSize, BenchmarkId, Criterion, criterion_group, criterion_ma
 use bough_experiments::rfd_0005_bounded_relink_check::{
     Baseline, Checker, Pk, Run, Workload, workload,
 };
-use bough_experiments::rfd_0005_small_side_order::{Adversary, Back, SIDES, TwoWay};
+use bough_experiments::rfd_0005_small_side_order::{
+    Adversary, Back, BackFresh, MIXED_DOWN, NEW, SHARED, SIDES, TwoWay, TwoWayFresh,
+};
 
 const WORKLOADS: [&str; 4] = ["settled", "mixed", "churn", "lazy"];
 
@@ -85,9 +96,28 @@ fn adversary_one<C: Checker>(
     down: usize,
     cyclic: bool,
 ) {
-    let mut case = Adversary::<C>::new(up, down, cyclic);
+    let case = Adversary::<C>::new(up, down, cyclic);
+    time_case(g, variant, format!("u{up}-d{down}"), case);
+}
+
+fn mixed_one<C: Checker>(
+    g: &mut criterion::BenchmarkGroup<'_, criterion::measurement::WallTime>,
+    variant: &str,
+    shared: usize,
+    new: usize,
+) {
+    let case = Adversary::<C>::mixed(shared, new, MIXED_DOWN);
+    time_case(g, variant, format!("s{shared}-n{new}"), case);
+}
+
+fn time_case<C: Checker>(
+    g: &mut criterion::BenchmarkGroup<'_, criterion::measurement::WallTime>,
+    variant: &str,
+    param: String,
+    mut case: Adversary<C>,
+) {
     let fresh = case.run.checker.clone();
-    g.bench_function(BenchmarkId::new(variant, format!("u{up}-d{down}")), |b| {
+    g.bench_function(BenchmarkId::new(variant, param), |b| {
         b.iter_custom(|iters| {
             let mut total = Duration::ZERO;
             for _ in 0..iters {
@@ -113,10 +143,31 @@ fn adversarial(c: &mut Criterion) {
                 adversary_one::<Pk>(&mut g, "pk", up, down, cyclic);
                 adversary_one::<Back>(&mut g, "back", up, down, cyclic);
                 adversary_one::<TwoWay>(&mut g, "twoway", up, down, cyclic);
+                if !cyclic {
+                    adversary_one::<BackFresh>(&mut g, "back-fresh", up, down, cyclic);
+                    adversary_one::<TwoWayFresh>(&mut g, "twoway-fresh", up, down, cyclic);
+                }
             }
         }
         g.finish();
     }
+}
+
+fn mixed(c: &mut Criterion) {
+    let mut g = c.benchmark_group("mixed");
+    g.sample_size(10)
+        .warm_up_time(Duration::from_millis(200))
+        .measurement_time(Duration::from_millis(500));
+    for shared in SHARED {
+        for new in NEW {
+            mixed_one::<Baseline>(&mut g, "baseline", shared, new);
+            mixed_one::<Back>(&mut g, "back", shared, new);
+            mixed_one::<TwoWay>(&mut g, "twoway", shared, new);
+            mixed_one::<BackFresh>(&mut g, "back-fresh", shared, new);
+            mixed_one::<TwoWayFresh>(&mut g, "twoway-fresh", shared, new);
+        }
+    }
+    g.finish();
 }
 
 fn order(c: &mut Criterion) {
@@ -128,6 +179,8 @@ fn order(c: &mut Criterion) {
         moves_one::<Pk>(&mut g, "pk", name, &w);
         moves_one::<Back>(&mut g, "back", name, &w);
         moves_one::<TwoWay>(&mut g, "twoway", name, &w);
+        moves_one::<BackFresh>(&mut g, "back-fresh", name, &w);
+        moves_one::<TwoWayFresh>(&mut g, "twoway-fresh", name, &w);
     }
     g.finish();
 
@@ -140,5 +193,5 @@ fn order(c: &mut Criterion) {
     g.finish();
 }
 
-criterion_group!(benches, order, adversarial);
+criterion_group!(benches, order, adversarial, mixed);
 criterion_main!(benches);

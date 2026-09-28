@@ -22,6 +22,16 @@
 //! graph, every new inner and the checker are built in `setup`; only the
 //! moves are measured, so divide by 16 for a cost per move. `adv_baseline`
 //! and `cyc_baseline` are the walk.
+//!
+//! `spacing::*_fresh` runs the lists with fresh spacing (a moved set takes
+//! half its gap, away from where the next set to that spot goes) on the
+//! workloads (`moves_*`) and the acyclic adversary (`adv_*`), to set against
+//! `moves_back`, `moves_twoway`, `adv_back` and `adv_twoway`; the cyclic
+//! adversary never reorders, so it is left out. `spacing_mixed::mix_*` runs
+//! the mixed adversary: 16 moves, each to a new inner that reads a shared
+//! upstream of `s` nodes before the switch in the order and `n` nodes of
+//! its own after it, with 1,000 nodes downstream of the switch
+//! (`s<s>_n<n>`); `mix_baseline` is the walk. Setup as for the adversary.
 
 use std::hint::black_box;
 
@@ -30,7 +40,9 @@ use gungraun::{library_benchmark, library_benchmark_group, main};
 use bough_experiments::rfd_0005_bounded_relink_check::{
     Baseline, Build, Checker, Pk, Run, Tx, workload,
 };
-use bough_experiments::rfd_0005_small_side_order::{Adversary, Back, TwoWay};
+use bough_experiments::rfd_0005_small_side_order::{
+    Adversary, Back, BackFresh, MIXED_DOWN, TwoWay, TwoWayFresh,
+};
 
 fn transactions<C: Checker>(name: &str) -> (Run<C>, Vec<Tx>) {
     let w = workload(name);
@@ -55,6 +67,14 @@ fn txs_back(name: &str) -> (Run<Back>, Vec<Tx>) {
 }
 
 fn txs_twoway(name: &str) -> (Run<TwoWay>, Vec<Tx>) {
+    transactions(name)
+}
+
+fn txs_back_fresh(name: &str) -> (Run<BackFresh>, Vec<Tx>) {
+    transactions(name)
+}
+
+fn txs_twoway_fresh(name: &str) -> (Run<TwoWayFresh>, Vec<Tx>) {
     transactions(name)
 }
 
@@ -119,6 +139,24 @@ fn moves_twoway(input: (Run<TwoWay>, Vec<Tx>)) -> (Run<TwoWay>, Vec<Tx>, usize) 
 }
 
 #[library_benchmark]
+#[bench::settled(args = ("settled"), setup = txs_back_fresh)]
+#[bench::mixed(args = ("mixed"), setup = txs_back_fresh)]
+#[bench::churn(args = ("churn"), setup = txs_back_fresh)]
+#[bench::lazy(args = ("lazy"), setup = txs_back_fresh)]
+fn moves_back_fresh(input: (Run<BackFresh>, Vec<Tx>)) -> (Run<BackFresh>, Vec<Tx>, usize) {
+    black_box(run(input))
+}
+
+#[library_benchmark]
+#[bench::settled(args = ("settled"), setup = txs_twoway_fresh)]
+#[bench::mixed(args = ("mixed"), setup = txs_twoway_fresh)]
+#[bench::churn(args = ("churn"), setup = txs_twoway_fresh)]
+#[bench::lazy(args = ("lazy"), setup = txs_twoway_fresh)]
+fn moves_twoway_fresh(input: (Run<TwoWayFresh>, Vec<Tx>)) -> (Run<TwoWayFresh>, Vec<Tx>, usize) {
+    black_box(run(input))
+}
+
+#[library_benchmark]
 #[bench::lazy(args = ("lazy"), setup = builds_baseline)]
 fn build_baseline(input: (Run<Baseline>, Vec<Build>)) -> (Run<Baseline>, Vec<Build>) {
     black_box(build(input))
@@ -154,6 +192,34 @@ fn adv_setup_back(up: usize, down: usize) -> Adversary<Back> {
 
 fn adv_setup_twoway(up: usize, down: usize) -> Adversary<TwoWay> {
     adversary(up, down, false)
+}
+
+fn adv_setup_back_fresh(up: usize, down: usize) -> Adversary<BackFresh> {
+    adversary(up, down, false)
+}
+
+fn adv_setup_twoway_fresh(up: usize, down: usize) -> Adversary<TwoWayFresh> {
+    adversary(up, down, false)
+}
+
+fn mix_setup_baseline(shared: usize, new: usize) -> Adversary<Baseline> {
+    Adversary::mixed(shared, new, MIXED_DOWN)
+}
+
+fn mix_setup_back(shared: usize, new: usize) -> Adversary<Back> {
+    Adversary::mixed(shared, new, MIXED_DOWN)
+}
+
+fn mix_setup_twoway(shared: usize, new: usize) -> Adversary<TwoWay> {
+    Adversary::mixed(shared, new, MIXED_DOWN)
+}
+
+fn mix_setup_back_fresh(shared: usize, new: usize) -> Adversary<BackFresh> {
+    Adversary::mixed(shared, new, MIXED_DOWN)
+}
+
+fn mix_setup_twoway_fresh(shared: usize, new: usize) -> Adversary<TwoWayFresh> {
+    Adversary::mixed(shared, new, MIXED_DOWN)
 }
 
 fn cyc_setup_baseline(up: usize, down: usize) -> Adversary<Baseline> {
@@ -203,10 +269,49 @@ grid!(adv_baseline, adv_setup_baseline, Baseline);
 grid!(adv_pk, adv_setup_pk, Pk);
 grid!(adv_back, adv_setup_back, Back);
 grid!(adv_twoway, adv_setup_twoway, TwoWay);
+grid!(adv_back_fresh, adv_setup_back_fresh, BackFresh);
+grid!(adv_twoway_fresh, adv_setup_twoway_fresh, TwoWayFresh);
 grid!(cyc_baseline, cyc_setup_baseline, Baseline);
 grid!(cyc_pk, cyc_setup_pk, Pk);
 grid!(cyc_back, cyc_setup_back, Back);
 grid!(cyc_twoway, cyc_setup_twoway, TwoWay);
+
+/// One benchmark function over every pair of sizes in `SHARED` and `NEW`.
+macro_rules! mixed_grid {
+    ($name:ident, $setup:ident, $checker:ty) => {
+        #[library_benchmark]
+        #[bench::s10_n10(args = (10, 10), setup = $setup)]
+        #[bench::s10_n100(args = (10, 100), setup = $setup)]
+        #[bench::s10_n1000(args = (10, 1_000), setup = $setup)]
+        #[bench::s10_n10000(args = (10, 10_000), setup = $setup)]
+        #[bench::s100_n10(args = (100, 10), setup = $setup)]
+        #[bench::s100_n100(args = (100, 100), setup = $setup)]
+        #[bench::s100_n1000(args = (100, 1_000), setup = $setup)]
+        #[bench::s100_n10000(args = (100, 10_000), setup = $setup)]
+        #[bench::s1000_n10(args = (1_000, 10), setup = $setup)]
+        #[bench::s1000_n100(args = (1_000, 100), setup = $setup)]
+        #[bench::s1000_n1000(args = (1_000, 1_000), setup = $setup)]
+        #[bench::s1000_n10000(args = (1_000, 10_000), setup = $setup)]
+        #[bench::s10000_n10(args = (10_000, 10), setup = $setup)]
+        #[bench::s10000_n100(args = (10_000, 100), setup = $setup)]
+        #[bench::s10000_n1000(args = (10_000, 1_000), setup = $setup)]
+        #[bench::s10000_n10000(args = (10_000, 10_000), setup = $setup)]
+        #[bench::s100000_n10(args = (100_000, 10), setup = $setup)]
+        #[bench::s100000_n100(args = (100_000, 100), setup = $setup)]
+        #[bench::s100000_n1000(args = (100_000, 1_000), setup = $setup)]
+        #[bench::s100000_n10000(args = (100_000, 10_000), setup = $setup)]
+        fn $name(mut input: Adversary<$checker>) -> (Adversary<$checker>, usize) {
+            let refused = input.all();
+            black_box((input, refused))
+        }
+    };
+}
+
+mixed_grid!(mix_baseline, mix_setup_baseline, Baseline);
+mixed_grid!(mix_back, mix_setup_back, Back);
+mixed_grid!(mix_twoway, mix_setup_twoway, TwoWay);
+mixed_grid!(mix_back_fresh, mix_setup_back_fresh, BackFresh);
+mixed_grid!(mix_twoway_fresh, mix_setup_twoway_fresh, TwoWayFresh);
 
 library_benchmark_group!(
     name = moves;
@@ -224,4 +329,20 @@ library_benchmark_group!(
         cyc_baseline, cyc_pk, cyc_back, cyc_twoway
 );
 
-main!(library_benchmark_groups = moves, build, adversarial);
+library_benchmark_group!(
+    name = spacing;
+    benchmarks = moves_back_fresh, moves_twoway_fresh, adv_back_fresh, adv_twoway_fresh
+);
+
+library_benchmark_group!(
+    name = spacing_mixed;
+    benchmarks = mix_baseline, mix_back, mix_twoway, mix_back_fresh, mix_twoway_fresh
+);
+
+main!(
+    library_benchmark_groups = moves,
+    build,
+    adversarial,
+    spacing,
+    spacing_mixed
+);

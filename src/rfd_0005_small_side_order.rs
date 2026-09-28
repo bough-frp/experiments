@@ -48,6 +48,17 @@
 //! `back` has to cover the first and PK both, while two-way should cover
 //! about twice the smaller; and a cyclic form, where both sides lie on the
 //! cycle.
+//!
+//! Two follow-ups. [`Adversary::mixed`] gives the new inner a large old
+//! upstream as well, built before the switch so it sits before it in the
+//! order, where the UI graph gave the list its advantage: the walk covers
+//! it and `back` doesn't, so sweeping it against the new side finds where
+//! the two cost the same. And the moved set always goes into the same gap,
+//! just before the switch, which the even spacing fills at once, so the
+//! next move relabels. [`BackFresh`] and [`TwoWayFresh`] place a moved set
+//! in the half of its gap away from where the next one will go, and when
+//! the gap is too small, relabel a neighbourhood once so that half of it is
+//! left open there: see [`Order::insert_after`].
 
 use crate::rfd_0005_bounded_relink_check::{Checker, Counts, Graph, Id, Kind, Move, Run};
 
@@ -59,6 +70,15 @@ const LIMIT: u64 = 1 << 62;
 
 /// The spacing of a fresh label: at the start, and after the tail.
 const GAP: u64 = 1 << 32;
+
+/// Which side of a moved set the next set moved to the same spot will go:
+/// between it and the node after (`After`, a move before a switch) or
+/// between the node before and it (`Before`, a move after a new inner).
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Room {
+    Before,
+    After,
+}
 
 /// An order-maintenance list over node ids.
 #[derive(Clone, Default)]
@@ -73,6 +93,10 @@ pub struct Order {
     pub relabeled: u64,
     /// Scratch for a relabelling.
     run: Vec<Id>,
+    /// Places a moved set in half its gap, leaving the other half open
+    /// where the next set to that spot goes, instead of spreading it over
+    /// the whole gap.
+    fresh: bool,
 }
 
 impl Order {
@@ -107,7 +131,7 @@ impl Order {
     fn push(&mut self, n: Id) {
         if self.tail == NONE || self.label(self.tail) >= LIMIT - GAP {
             let tail = (self.tail != NONE).then_some(self.tail);
-            self.insert_after(tail, &[n]);
+            self.insert_after(tail, &[n], Room::After);
             return;
         }
         // The usual case, a fresh label after the tail's.
@@ -135,7 +159,13 @@ impl Order {
 
     /// Links `nodes`, in order, just after `a` (or at the head), and labels
     /// them, relabelling a range around `a` if the gap is too small.
-    fn insert_after(&mut self, a: Option<Id>, nodes: &[Id]) {
+    ///
+    /// Evenly, the set is spread over the whole gap, so a second set moved
+    /// to the same spot finds a gap `k + 1` times smaller, and a third
+    /// usually none. Fresh, the set takes the half of the gap away from
+    /// `room`, where the next set will go, so the gap there only halves; and
+    /// a relabelling leaves half its range open at that spot.
+    fn insert_after(&mut self, a: Option<Id>, nodes: &[Id], room: Room) {
         let lo = a.map_or(0, |a| self.label(a));
         let after = a.map_or(self.head, |a| self.next[a as usize]);
         let hi = if after == NONE {
@@ -160,7 +190,23 @@ impl Order {
             self.prev[after as usize] = p;
         }
         let k = nodes.len() as u64;
-        if hi - lo > k {
+        // After the tail, the room belongs to the nodes appended next.
+        let room = if after == NONE { Room::After } else { room };
+        if self.fresh {
+            // At most half the gap, and no wider than a fresh label.
+            let step = ((hi - lo) / (2 * (k + 1))).min(GAP);
+            if step == 0 {
+                self.relabel(a, nodes, room);
+                return;
+            }
+            for (j, &n) in nodes.iter().enumerate() {
+                let j = j as u64;
+                self.label[n as usize] = match room {
+                    Room::After => lo + step * (j + 1),
+                    Room::Before => hi - step * (k - j),
+                };
+            }
+        } else if hi - lo > k {
             // Spaced no wider than a fresh label, so appends at the tail
             // don't halve the space left each time.
             let step = ((hi - lo) / (k + 1)).min(GAP);
@@ -168,7 +214,7 @@ impl Order {
                 self.label[n as usize] = lo + step * (j as u64 + 1);
             }
         } else {
-            self.relabel(a, nodes);
+            self.relabel(a, nodes, room);
         }
     }
 
@@ -176,7 +222,11 @@ impl Order {
     /// after it. Finds the smallest aligned label range around `a` that
     /// doesn't overflow with them counted in, and spreads everything in it
     /// evenly over it.
-    fn relabel(&mut self, a: Option<Id>, nodes: &[Id]) {
+    ///
+    /// Fresh, the range must not overflow with the set counted twice, for
+    /// the room left beside it, and everything in it is spread evenly over
+    /// its two ends, leaving half of it open on the set's `room` side.
+    fn relabel(&mut self, a: Option<Id>, nodes: &[Id], room: Room) {
         let base = a.map_or(0, |a| self.label(a));
         let k = nodes.len() as u64;
         // The labelled nodes inside the range run from `first` (or the
@@ -206,7 +256,12 @@ impl Order {
                 count += 1;
                 c = self.next[c as usize];
             }
-            if ((count + k) as f64) < capacity || i == 62 {
+            let need = if self.fresh {
+                2 * (count + k)
+            } else {
+                count + k
+            };
+            if (need as f64) < capacity || i == 62 {
                 self.run.clear();
                 let mut n = if first == NONE { self.head } else { first };
                 loop {
@@ -216,12 +271,35 @@ impl Order {
                     }
                     n = self.next[n as usize];
                 }
-                // Labels in `start.max(1)..end`, evenly.
+                // Labels in `start.max(1)..end`.
                 let lo = start.max(1) - 1;
-                let step = (end - lo) / (self.run.len() as u64 + 1);
-                assert!(step > 0, "the order-maintenance list is full");
-                for (j, &n) in self.run.iter().enumerate() {
-                    self.label[n as usize] = lo + step * (j as u64 + 1);
+                let len = self.run.len() as u64;
+                if self.fresh {
+                    // The nodes up to the set's end on the open side go at
+                    // the bottom of the range, the rest at the top, all a
+                    // step apart, with the rest of the range between. The
+                    // run holds the set, so `at` always finds it.
+                    let at = |m: Id| self.run.iter().position(|&n| n == m).unwrap() as u64;
+                    let below = match room {
+                        Room::After => at(nodes[nodes.len() - 1]) + 1,
+                        Room::Before => at(nodes[0]),
+                    };
+                    let step = (end - lo) / (2 * (len + 1));
+                    assert!(step > 0, "the order-maintenance list is full");
+                    for (j, &n) in self.run.iter().enumerate() {
+                        let j = j as u64;
+                        self.label[n as usize] = if j < below {
+                            lo + step * (j + 1)
+                        } else {
+                            end - step * (len - j)
+                        };
+                    }
+                } else {
+                    let step = (end - lo) / (len + 1);
+                    assert!(step > 0, "the order-maintenance list is full");
+                    for (j, &n) in self.run.iter().enumerate() {
+                        self.label[n as usize] = lo + step * (j as u64 + 1);
+                    }
                 }
                 self.relabeled += count;
                 return;
@@ -235,7 +313,7 @@ impl Order {
         for &n in side {
             self.remove(n);
         }
-        self.insert_after(Some(anchor), side);
+        self.insert_after(Some(anchor), side, Room::Before);
     }
 
     /// Moves `side`, sorted by label, just before `anchor`, which isn't in
@@ -245,7 +323,7 @@ impl Order {
             self.remove(n);
         }
         let p = self.prev[anchor as usize];
-        self.insert_after((p != NONE).then_some(p), side);
+        self.insert_after((p != NONE).then_some(p), side, Room::After);
     }
 
     /// Whether the list holds `len` nodes, linked both ways, in increasing
@@ -310,9 +388,10 @@ enum Outcome {
     Cycle,
 }
 
-/// The order-maintenance checker; `TWO_WAY` picks the search.
+/// The order-maintenance checker; `TWO_WAY` picks the search, and `FRESH`
+/// the spacing a moved set is given.
 #[derive(Clone, Default)]
-pub struct Om<const TWO_WAY: bool> {
+pub struct Om<const TWO_WAY: bool, const FRESH: bool = false> {
     pub order: Order,
     forward: Search,
     backward: Search,
@@ -325,7 +404,13 @@ pub type Back = Om<false>;
 /// Both ways at once; the side that finishes first moves.
 pub type TwoWay = Om<true>;
 
-impl<const TWO_WAY: bool> Om<TWO_WAY> {
+/// [`Back`], leaving room where the next moved set goes.
+pub type BackFresh = Om<false, true>;
+
+/// [`TwoWay`], leaving room where the next moved set goes.
+pub type TwoWayFresh = Om<true, true>;
+
+impl<const TWO_WAY: bool, const FRESH: bool> Om<TWO_WAY, FRESH> {
     /// Expands one node of the forward search from `y`, among nodes before
     /// `x`. Reaching `x`, or a node the backward search found, is a cycle.
     fn forward_step(&mut self, g: &Graph, x: Id) -> Step {
@@ -413,7 +498,7 @@ impl<const TWO_WAY: bool> Om<TWO_WAY> {
     }
 }
 
-impl<const TWO_WAY: bool> Checker for Om<TWO_WAY> {
+impl<const TWO_WAY: bool, const FRESH: bool> Checker for Om<TWO_WAY, FRESH> {
     fn new(g: &Graph) -> Self {
         // Kahn's algorithm over the whole graph.
         let mut indeg: Vec<u32> = g.deps.iter().map(|d| d.len() as u32).collect();
@@ -432,8 +517,10 @@ impl<const TWO_WAY: bool> Checker for Om<TWO_WAY> {
             }
         }
         assert_eq!(order.len(), g.len(), "the build is acyclic");
+        let mut order = Order::new(&order, g.len());
+        order.fresh = FRESH;
         Om {
-            order: Order::new(&order, g.len()),
+            order,
             ..Om::default()
         }
     }
@@ -488,6 +575,18 @@ impl<const TWO_WAY: bool> Checker for Om<TWO_WAY> {
 /// The sizes the adversarial cases take for each side: the new inner's
 /// upstream after the switch, and the switch's downstream.
 pub const SIDES: [usize; 4] = [10, 100, 1_000, 10_000];
+
+/// The mixed adversary's sizes for the upstream every new inner shares,
+/// before the switch in the order.
+pub const SHARED: [usize; 5] = [10, 100, 1_000, 10_000, 100_000];
+
+/// The mixed adversary's sizes for each new inner's own upstream, after the
+/// switch in the order.
+pub const NEW: [usize; 4] = [10, 100, 1_000, 10_000];
+
+/// The mixed adversary's switch downstream, about what PK's forward search
+/// covered on the earlier probe's UI graph.
+pub const MIXED_DOWN: usize = 1_000;
 
 /// Moves in an adversarial case, each to a new inner of its own.
 pub const ADVERSARY_MOVES: usize = 16;
@@ -556,10 +655,31 @@ pub struct Adversary<C> {
 
 impl<C: Checker> Adversary<C> {
     pub fn new(up: usize, down: usize, cyclic: bool) -> Self {
+        Self::build(0, up, down, cyclic)
+    }
+
+    /// The acyclic adversary, with every new inner also reading one shared
+    /// upstream of `shared` nodes, a model, say, that the old inner reads
+    /// too. It is built before the switch, and upstream of it, so it sits
+    /// before the switch in any order: the walk covers it on every move, and
+    /// neither list search goes into it. Each new inner's own upstream, `up`
+    /// nodes after the switch, hangs off the shared upstream's last node.
+    pub fn mixed(shared: usize, up: usize, down: usize) -> Self {
+        assert!(shared > 0);
+        Self::build(shared, up, down, false)
+    }
+
+    fn build(shared: usize, up: usize, down: usize, cyclic: bool) -> Self {
         assert!(up > 0 && down > 0);
         let mut g = Graph::default();
         let input = add(&mut g, &[]);
-        let old = add(&mut g, &[]);
+        // With no shared upstream, the graph is the one `new` always built.
+        let (old, model) = if shared == 0 {
+            (add(&mut g, &[]), input)
+        } else {
+            let (_, model) = web(&mut g, input, shared);
+            (add(&mut g, &[model]), model)
+        };
         let switch = add(&mut g, &[old]);
         let (_, last_down) = web(&mut g, switch, down);
         // A second switch, moved once below to warm up.
@@ -573,7 +693,7 @@ impl<C: Checker> Adversary<C> {
         let (mut moves, mut cuts) = (Vec::new(), Vec::new());
         let mut from = old;
         for _ in 0..ADVERSARY_MOVES {
-            let root = if cyclic { last_down } else { input };
+            let root = if cyclic { last_down } else { model };
             let (first_up, last_up) = web(&mut run.graph, root, up);
             let to = add(&mut run.graph, &[last_up]);
             let kind = if cyclic { Kind::Bad } else { Kind::View };
@@ -660,7 +780,7 @@ mod tests {
     };
 
     /// Every edge goes forward in the order, and the list is sound.
-    fn is_topological<const T: bool>(g: &Graph, c: &Om<T>) -> bool {
+    fn is_topological<const T: bool, const F: bool>(g: &Graph, c: &Om<T, F>) -> bool {
         c.order.is_consistent(g.len())
             && (0..g.len()).all(|n| {
                 g.deps[n]
@@ -672,12 +792,12 @@ mod tests {
     /// F46, in the workload's own gadget: B from p to c and A from x to y
     /// together is legal; B back to p alone then closes a cycle; both back
     /// together is legal again.
-    fn f46_accepted<const T: bool>() {
+    fn f46_accepted<const T: bool, const F: bool>() {
         let w = generate(&workloads(4)[0].1);
         // Transaction 2 is F46's reversal, and 3 undoes it.
         let (there, back) = (&w.txs[2].moves, &w.txs[3].moves);
         assert!(there.iter().chain(back).all(|m| m.kind == Kind::F46));
-        let mut run = Run::<Om<T>>::new(&w);
+        let mut run = Run::<Om<T, F>>::new(&w);
         assert!(run.checker.commit(&mut run.graph, there), "F46 refused");
         assert!(is_topological(&run.graph, &run.checker));
         let b = there[0];
@@ -700,8 +820,10 @@ mod tests {
 
     #[test]
     fn f46_is_accepted_by_every_variant() {
-        f46_accepted::<false>();
-        f46_accepted::<true>();
+        f46_accepted::<false, false>();
+        f46_accepted::<true, false>();
+        f46_accepted::<false, true>();
+        f46_accepted::<true, true>();
     }
 
     /// Runs `w` through `C`, asserting `check` after every transaction and
@@ -729,20 +851,35 @@ mod tests {
                 assert!(bad < 0.3 || w.refused.iter().any(|&r| r));
                 agrees::<Back>(&w, is_topological);
                 agrees::<TwoWay>(&w, is_topological);
+                agrees::<BackFresh>(&w, is_topological);
+                agrees::<TwoWayFresh>(&w, is_topological);
             }
         }
     }
 
-    /// Relabelling keeps the list in order when a gap runs out.
+    /// Relabelling keeps the list in order when a gap runs out, with either
+    /// spacing, moving nodes one at a time before node 1 or after node 0.
     #[test]
     fn relabelling_keeps_the_order() {
+        for fresh in [false, true] {
+            relabelling_keeps_the_order_with(fresh, false);
+            relabelling_keeps_the_order_with(fresh, true);
+        }
+    }
+
+    fn relabelling_keeps_the_order_with(fresh: bool, after: bool) {
         let mut o = Order::new(&[0, 1], 2);
+        o.fresh = fresh;
         // Each node goes just before node 1, which halves the gap there
         // until it is gone.
         for n in 2..3002 {
             o.grow(n as usize + 1);
             o.push(n);
-            o.move_before(1, &[n]);
+            if after {
+                o.move_after(0, &[n]);
+            } else {
+                o.move_before(1, &[n]);
+            }
             assert!(o.is_consistent(n as usize + 1));
         }
         assert!(o.relabeled > 0);
@@ -753,9 +890,43 @@ mod tests {
             n = o.next[n as usize];
         }
         let mut want = vec![0];
-        want.extend(2..3002);
+        if after {
+            want.extend((2..3002).rev());
+        } else {
+            want.extend(2..3002);
+        }
         want.push(1);
         assert_eq!(seq, want);
+    }
+
+    /// Moving sets of many nodes into one gap, over and over, keeps the list
+    /// in order with either spacing, and fresh spacing relabels less.
+    #[test]
+    fn fresh_spacing_keeps_the_order_and_relabels_less() {
+        let mut relabeled = [0; 2];
+        for (fresh, r) in [false, true].into_iter().zip(&mut relabeled) {
+            for after in [false, true] {
+                let mut o = Order::new(&[0, 1], 2);
+                o.fresh = fresh;
+                let mut len = 2;
+                for k in (1..200).map(|i| 1 + i * 37 % 500) {
+                    o.grow(len + k);
+                    let set: Vec<Id> = (len as Id..(len + k) as Id).collect();
+                    for &n in &set {
+                        o.push(n);
+                    }
+                    if after {
+                        o.move_after(0, &set);
+                    } else {
+                        o.move_before(1, &set);
+                    }
+                    len += k;
+                    assert!(o.is_consistent(len));
+                }
+                *r += o.relabeled;
+            }
+        }
+        assert!(relabeled[1] < relabeled[0], "{relabeled:?}");
     }
 
     /// The counts the note quotes: per workload and kind of move, nodes
@@ -847,7 +1018,14 @@ mod tests {
         cyclic: bool,
         check: impl Fn(&Graph, &C) -> bool,
     ) -> (Adversary<C>, Vec<bool>) {
-        let mut a = Adversary::<C>::new(up, down, cyclic);
+        moves(Adversary::<C>::new(up, down, cyclic), check)
+    }
+
+    /// Runs every move of `a`, asserting `check` before and after each.
+    fn moves<C: Checker>(
+        mut a: Adversary<C>,
+        check: impl Fn(&Graph, &C) -> bool,
+    ) -> (Adversary<C>, Vec<bool>) {
         assert!(check(&a.run.graph, &a.run.checker), "the order broke");
         let refused = (0..a.moves.len())
             .map(|k| {
@@ -875,6 +1053,10 @@ mod tests {
                 assert_eq!(back, walk, "back differs from the walk");
                 let (_, two) = adversary::<TwoWay>(up, down, cyclic, is_topological);
                 assert_eq!(two, walk, "twoway differs from the walk");
+                let (_, bf) = adversary::<BackFresh>(up, down, cyclic, is_topological);
+                assert_eq!(bf, walk, "back fresh differs from the walk");
+                let (_, tf) = adversary::<TwoWayFresh>(up, down, cyclic, is_topological);
+                assert_eq!(tf, walk, "twoway fresh differs from the walk");
 
                 let mut a = Adversary::<TwoWay>::new(up, down, cyclic);
                 let fresh = a.run.checker.clone();
@@ -961,5 +1143,205 @@ mod tests {
         println!(
             "acyclic: back visited at most {worst_back:.2} times up + 1; twoway at most {worst_two:.2} times 2min+3"
         );
+    }
+
+    /// Sets moved into one gap in the list-alone rows.
+    const LONG: usize = 1_000;
+
+    /// Moves [`LONG`] sets of `k` new nodes each into the gap before node 1
+    /// (or after node 0), checking the list after every move; returns the
+    /// nodes relabelled.
+    fn long_run(k: usize, after: bool, fresh: bool) -> u64 {
+        let mut o = Order::new(&[0, 1], 2);
+        o.fresh = fresh;
+        let mut len = 2;
+        let mut set = Vec::with_capacity(k);
+        for _ in 0..LONG {
+            o.grow(len + k);
+            set.clear();
+            set.extend(len as Id..(len + k) as Id);
+            for &n in &set {
+                o.push(n);
+            }
+            if after {
+                o.move_after(0, &set);
+            } else {
+                o.move_before(1, &set);
+            }
+            len += k;
+            assert!(o.is_consistent(len));
+        }
+        o.relabeled
+    }
+
+    /// Relabelled nodes per move, apart from those moved.
+    fn relabels<const T: bool, const F: bool>(c: &Om<T, F>, moves: u64) -> f64 {
+        c.order.relabeled as f64 / moves as f64
+    }
+
+    /// Mixed adversarial and fresh-spacing counts: what fresh spacing
+    /// relabels against the even spacing, on the earlier probe's workloads
+    /// and on the adversary, and the nodes each checker visits on the mixed
+    /// adversary. Every list's order is checked after every transaction or
+    /// move. Run with `--nocapture`.
+    #[test]
+    fn mixed_spacing_counts() {
+        println!("fresh spacing: a moved set takes half its gap, away from where the next set");
+        println!("to that spot goes, and a relabelling leaves half its range open there");
+        println!();
+        println!("{TXS} transactions per workload, 2 slots each; per move:");
+        println!(
+            "  {:<8} {:>6} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8}",
+            "workload",
+            "moves",
+            "bk vis",
+            "bf vis",
+            "tw vis",
+            "tf vis",
+            "bk relab",
+            "bf relab",
+            "tw relab",
+            "tf relab"
+        );
+        for (name, p) in workloads(TXS) {
+            let w = generate(&p);
+            let back = agrees::<Back>(&w, is_topological);
+            let bf = agrees::<BackFresh>(&w, is_topological);
+            let two = agrees::<TwoWay>(&w, is_topological);
+            let tf = agrees::<TwoWayFresh>(&w, is_topological);
+            let moves: u64 = back.checker.counts().moves.iter().sum();
+            let vis = |c: &Counts| c.visited.iter().sum::<u64>() as f64 / moves as f64;
+            println!(
+                "  {name:<8} {moves:>6} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {:>8.1}",
+                vis(back.checker.counts()),
+                vis(bf.checker.counts()),
+                vis(two.checker.counts()),
+                vis(tf.checker.counts()),
+                relabels(&back.checker, moves),
+                relabels(&bf.checker, moves),
+                relabels(&two.checker, moves),
+                relabels(&tf.checker, moves),
+            );
+        }
+
+        println!();
+        println!(
+            "the adversary, acyclic ({ADVERSARY_MOVES} moves, all accepted; no cyclic move is \
+             reordered, so none relabels); per move:"
+        );
+        println!(
+            "  {:>6} {:>6} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8}",
+            "up", "down", "back", "twoway", "bk relab", "bf relab", "tw relab", "tf relab"
+        );
+        let per = |v: u64| v as f64 / ADVERSARY_MOVES as f64;
+        for up in SIDES {
+            for down in SIDES {
+                let (back, rb) = adversary::<Back>(up, down, false, is_topological);
+                let (bf, rbf) = adversary::<BackFresh>(up, down, false, is_topological);
+                let (two, rt) = adversary::<TwoWay>(up, down, false, is_topological);
+                let (tf, rtf) = adversary::<TwoWayFresh>(up, down, false, is_topological);
+                assert!([rb, rbf, rt, rtf].iter().flatten().all(|&r| !r));
+                assert_eq!(back.visited(), bf.visited(), "back's search changed");
+                assert_eq!(two.visited(), tf.visited(), "twoway's search changed");
+                let relab = |o: &Order| per(o.relabeled);
+                println!(
+                    "  {up:>6} {down:>6} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {:>8.1}",
+                    per(back.visited()),
+                    per(two.visited()),
+                    relab(&back.run.checker.order),
+                    relab(&bf.run.checker.order),
+                    relab(&two.run.checker.order),
+                    relab(&tf.run.checker.order),
+                );
+            }
+        }
+
+        println!();
+        println!(
+            "mixed adversary: {ADVERSARY_MOVES} moves, all accepted, each to a new inner reading \
+             `shared` nodes before the switch in the order and `new` nodes of its own after it; \
+             the switch's downstream is {MIXED_DOWN}; per move:"
+        );
+        println!(
+            "  {:>6} {:>6} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8}",
+            "shared",
+            "new",
+            "walk",
+            "back",
+            "twoway",
+            "bk relab",
+            "bf relab",
+            "tw relab",
+            "tf relab"
+        );
+        for shared in SHARED {
+            for new in NEW {
+                let (walk, rw) = moves(
+                    Adversary::<Baseline>::mixed(shared, new, MIXED_DOWN),
+                    |_, _| true,
+                );
+                let (back, rb) = moves(
+                    Adversary::<Back>::mixed(shared, new, MIXED_DOWN),
+                    is_topological,
+                );
+                let (bf, rbf) = moves(
+                    Adversary::<BackFresh>::mixed(shared, new, MIXED_DOWN),
+                    is_topological,
+                );
+                let (two, rt) = moves(
+                    Adversary::<TwoWay>::mixed(shared, new, MIXED_DOWN),
+                    is_topological,
+                );
+                let (tf, rtf) = moves(
+                    Adversary::<TwoWayFresh>::mixed(shared, new, MIXED_DOWN),
+                    is_topological,
+                );
+                assert!([rw, rb, rbf, rt, rtf].iter().flatten().all(|&r| !r));
+                assert_eq!(back.visited(), bf.visited(), "back's search changed");
+                assert_eq!(two.visited(), tf.visited(), "twoway's search changed");
+                let relab = |o: &Order| per(o.relabeled);
+                println!(
+                    "  {shared:>6} {new:>6} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {:>8.1}",
+                    per(walk.visited()),
+                    per(back.visited()),
+                    per(two.visited()),
+                    relab(&back.run.checker.order),
+                    relab(&bf.run.checker.order),
+                    relab(&two.run.checker.order),
+                    relab(&tf.run.checker.order),
+                );
+            }
+        }
+        println!();
+        println!(
+            "the list alone: {LONG} sets of k new nodes, each moved just before one node \
+             (as back does) or just after one (as twoway's forward side does); per move:"
+        );
+        println!(
+            "  {:>6} {:>12} {:>12} {:>12} {:>12}",
+            "k", "before even", "before fresh", "after even", "after fresh"
+        );
+        for k in [1, 10, 100, 1_000] {
+            let mut row = [0.0; 4];
+            for (j, (after, fresh)) in [(false, false), (false, true), (true, false), (true, true)]
+                .into_iter()
+                .enumerate()
+            {
+                row[j] = long_run(k, after, fresh) as f64 / LONG as f64;
+            }
+            println!(
+                "  {k:>6} {:>12.1} {:>12.1} {:>12.1} {:>12.1}",
+                row[0], row[1], row[2], row[3]
+            );
+        }
+        println!();
+        println!("vis and walk/back/twoway: nodes visited per move, walked upstream from the new");
+        println!("inner (walk), searched back only (back, bk, bf) or both ways (twoway, tw, tf).");
+        println!(
+            "bf and tf are back and twoway with fresh spacing. relab: nodes the list gave new"
+        );
+        println!("labels to make room, per move, apart from those moved. On the adversaries the");
+        println!("searches visit the same nodes with either spacing; on the workloads the orders");
+        println!("differ, so the searches can too.");
     }
 }
