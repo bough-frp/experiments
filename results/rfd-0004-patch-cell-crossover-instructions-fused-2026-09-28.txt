@@ -1,0 +1,1930 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0004-patch-cell-crossover-instructions at experiments@af0dc85 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0004-patch-cell-crossover-instructions
+
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline one_0:(vec_one(3))
+  Instructions:                       18906|19144                (-1.24321%) [-1.01259x]
+  L1 Hits:                            25627|26044                (-1.60114%) [-1.01627x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                   25630|26046                (-1.59717%) [-1.01623x]
+  Estimated Cycles:                   25702|26084                (-1.46450%) [-1.01486x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline one_1:(vec_one(10))
+  Instructions:                       23331|23573                (-1.02660%) [-1.01037x]
+  L1 Hits:                            30958|31381                (-1.34795%) [-1.01366x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               1|1                    (No change)
+  Total read+write:                   30960|31384                (-1.35101%) [-1.01370x]
+  Estimated Cycles:                   30998|31426                (-1.36193%) [-1.01381x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline one_2:(vec_one(30))
+  Instructions:                       32884|33128                (-0.73654%) [-1.00742x]
+  L1 Hits:                            42858|43287                (-0.99106%) [-1.01001x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                   42861|43289                (-0.98870%) [-1.00999x]
+  Estimated Cycles:                   42933|43327                (-0.90936%) [-1.00918x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline one_3:(vec_one(100))
+  Instructions:                       65833|66077                (-0.36927%) [-1.00371x]
+  L1 Hits:                            83528|83959                (-0.51335%) [-1.00516x]
+  LL Hits:                                7|5                    (+40.0000%) [+1.40000x]
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                   83537|83965                (-0.50974%) [-1.00512x]
+  Estimated Cycles:                   83633|84019                (-0.45942%) [-1.00462x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline one_4:(vec_one(1_000))
+  Instructions:                      503218|503346               (-0.02543%) [-1.00025x]
+  L1 Hits:                           626046|626008               (+0.00607%) [+1.00006x]
+  LL Hits:                              306|611                  (-49.9182%) [-1.99673x]
+  RAM Hits:                               1|1                    (No change)
+  Total read+write:                  626353|626620               (-0.04261%) [-1.00043x]
+  Estimated Cycles:                  627611|629098               (-0.23637%) [-1.00237x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline one_5:(vec_one(10_000))
+  Instructions:                     6095087|6096503              (-0.02323%) [-1.00023x]
+  L1 Hits:                          9796371|9798575              (-0.02249%) [-1.00022x]
+  LL Hits:                           283845|283662               (+0.06451%) [+1.00065x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                10080218|10082239             (-0.02005%) [-1.00020x]
+  Estimated Cycles:                11215666|11216955             (-0.01149%) [-1.00011x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline one_6:(vec_one(100_000))
+  Instructions:                    58801820|58802384             (-0.00096%) [-1.00001x]
+  L1 Hits:                         91610481|91611443             (-0.00105%) [-1.00001x]
+  LL Hits:                          2836695|2836548              (+0.00518%) [+1.00005x]
+  RAM Hits:                              10|7                    (+42.8571%) [+1.42857x]
+  Total read+write:                94447186|94447998             (-0.00086%) [-1.00001x]
+  Estimated Cycles:               105794306|105794428            (-0.00012%) [-1.00000x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline one_7:(vec_one(1_000_000))
+  Instructions:                   473576540|473576784            (-0.00005%) [-1.00000x]
+  L1 Hits:                        560094104|560094693            (-0.00011%) [-1.00000x]
+  LL Hits:                          1226625|1335860              (-8.17713%) [-1.08905x]
+  RAM Hits:                        26857143|26747747             (+0.40899%) [+1.00409x]
+  Total read+write:               588177872|588178300            (-0.00007%) [-1.00000x]
+  Estimated Cycles:              1506227234|1502945138           (+0.21838%) [+1.00218x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline two_0:(vec_two(3))
+  Instructions:                       21904|22140                (-1.06594%) [-1.01077x]
+  L1 Hits:                            29627|30040                (-1.37483%) [-1.01394x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                   29630|30042                (-1.37141%) [-1.01390x]
+  Estimated Cycles:                   29702|30080                (-1.25665%) [-1.01273x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline two_1:(vec_two(10))
+  Instructions:                       25297|25535                (-0.93205%) [-1.00941x]
+  L1 Hits:                            33826|34241                (-1.21200%) [-1.01227x]
+  LL Hits:                                1|3                    (-66.6667%) [-3.00000x]
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                   33829|34245                (-1.21478%) [-1.01230x]
+  Estimated Cycles:                   33901|34291                (-1.13732%) [-1.01150x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline two_2:(vec_two(30))
+  Instructions:                       35311|35553                (-0.68067%) [-1.00685x]
+  L1 Hits:                            46483|46903                (-0.89547%) [-1.00904x]
+  LL Hits:                                1|5                    (-80.0000%) [-5.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   46486|46910                (-0.90386%) [-1.00912x]
+  Estimated Cycles:                   46558|46998                (-0.93621%) [-1.00945x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline two_3:(vec_two(100))
+  Instructions:                       71722|71966                (-0.33905%) [-1.00340x]
+  L1 Hits:                            92246|92680                (-0.46828%) [-1.00470x]
+  LL Hits:                               10|5                    (+100.000%) [+2.00000x]
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                   92258|92686                (-0.46177%) [-1.00464x]
+  Estimated Cycles:                   92366|92740                (-0.40328%) [-1.00405x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline two_4:(vec_two(1_000))
+  Instructions:                      541113|535151               (+1.11408%) [+1.01114x]
+  L1 Hits:                           684123|675928               (+1.21241%) [+1.01212x]
+  LL Hits:                              943|585                  (+61.1966%) [+1.61197x]
+  RAM Hits:                               6|135                  (-95.5556%) [-22.5000x]
+  Total read+write:                  685072|676648               (+1.24496%) [+1.01245x]
+  Estimated Cycles:                  689048|683578               (+0.80020%) [+1.00800x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline two_5:(vec_two(10_000))
+  Instructions:                     6836656|6837971              (-0.01923%) [-1.00019x]
+  L1 Hits:                         11778862|11780914             (-0.01742%) [-1.00017x]
+  LL Hits:                           310683|311928               (-0.39913%) [-1.00401x]
+  RAM Hits:                            1259|8                    (+15637.5%) [+157.375x]
+  Total read+write:                12090804|12092850             (-0.01692%) [-1.00017x]
+  Estimated Cycles:                13376342|13340834             (+0.26616%) [+1.00266x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline two_6:(vec_two(100_000))
+  Instructions:                    70723888|70724452             (-0.00080%) [-1.00001x]
+  L1 Hits:                        125612831|125613774            (-0.00075%) [-1.00001x]
+  LL Hits:                          3183062|3182933              (+0.00405%) [+1.00004x]
+  RAM Hits:                               9|7                    (+28.5714%) [+1.28571x]
+  Total read+write:               128795902|128796714            (-0.00063%) [-1.00001x]
+  Estimated Cycles:               141528456|141528684            (-0.00016%) [-1.00000x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline two_7:(vec_two(1_000_000))
+  Instructions:                   495926340|495926584            (-0.00005%) [-1.00000x]
+  L1 Hits:                        596995507|596996065            (-0.00009%) [-1.00000x]
+  LL Hits:                          3874190|4001169              (-3.17355%) [-1.03278x]
+  RAM Hits:                        27590831|27463722             (+0.46283%) [+1.00463x]
+  Total read+write:               628460528|628460956            (-0.00007%) [-1.00000x]
+  Estimated Cycles:              1582045542|1578232180           (+0.24162%) [+1.00242x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline rare_0:(vec_rare(3))
+  Instructions:                        9458|9576                 (-1.23225%) [-1.01248x]
+  L1 Hits:                            13355|13532                (-1.30801%) [-1.01325x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                   13358|13534                (-1.30043%) [-1.01318x]
+  Estimated Cycles:                   13430|13572                (-1.04627%) [-1.01057x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline rare_1:(vec_rare(10))
+  Instructions:                        9943|10065                (-1.21212%) [-1.01227x]
+  L1 Hits:                            14005|14188                (-1.28982%) [-1.01307x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   14008|14192                (-1.29651%) [-1.01314x]
+  Estimated Cycles:                   14080|14268                (-1.31763%) [-1.01335x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline rare_2:(vec_rare(30))
+  Instructions:                       11096|11220                (-1.10517%) [-1.01118x]
+  L1 Hits:                            15706|15895                (-1.18905%) [-1.01203x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                   15709|15897                (-1.18261%) [-1.01197x]
+  Estimated Cycles:                   15781|15935                (-0.96643%) [-1.00976x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline rare_3:(vec_rare(100))
+  Instructions:                       15445|15569                (-0.79645%) [-1.00803x]
+  L1 Hits:                            21656|21847                (-0.87426%) [-1.00882x]
+  LL Hits:                                7|5                    (+40.0000%) [+1.40000x]
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                   21665|21853                (-0.86029%) [-1.00868x]
+  Estimated Cycles:                   21761|21907                (-0.66645%) [-1.00671x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline rare_4:(vec_rare(1_000))
+  Instructions:                       63314|63438                (-0.19547%) [-1.00196x]
+  L1 Hits:                            89358|89535                (-0.19769%) [-1.00198x]
+  LL Hits:                              300|311                  (-3.53698%) [-1.03667x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   89660|89848                (-0.20924%) [-1.00210x]
+  Estimated Cycles:                   90928|91160                (-0.25450%) [-1.00255x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline rare_5:(vec_rare(10_000))
+  Instructions:                     1873799|1873975              (-0.00939%) [-1.00009x]
+  L1 Hits:                          4910769|4911265              (-0.01010%) [-1.00010x]
+  LL Hits:                            41115|40932                (+0.44708%) [+1.00447x]
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                 4951886|4952198              (-0.00630%) [-1.00006x]
+  Estimated Cycles:                 5116414|5115960              (+0.00887%) [+1.00009x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline rare_6:(vec_rare(100_000))
+  Instructions:                    16781912|16782056             (-0.00086%) [-1.00001x]
+  L1 Hits:                         42852063|42852370             (-0.00072%) [-1.00001x]
+  LL Hits:                           569482|569388               (+0.01651%) [+1.00017x]
+  RAM Hits:                               9|8                    (+12.5000%) [+1.12500x]
+  Total read+write:                43421554|43421766             (-0.00049%) [-1.00000x]
+  Estimated Cycles:                45699788|45699590             (+0.00043%) [+1.00000x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline rare_7:(vec_rare(1_000_000))
+  Instructions:                    53556512|53556636             (-0.00023%) [-1.00000x]
+  L1 Hits:                         72585035|72585321             (-0.00039%) [-1.00000x]
+  LL Hits:                          3623965|3632525              (-0.23565%) [-1.00236x]
+  RAM Hits:                         1943060|1934402              (+0.44758%) [+1.00448x]
+  Total read+write:                78152060|78152248             (-0.00024%) [-1.00000x]
+  Estimated Cycles:               158711960|158452016            (+0.16405%) [+1.00164x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline append_0:(vec_append(3))
+  Instructions:                       18500|18712                (-1.13296%) [-1.01146x]
+  L1 Hits:                            24936|25300                (-1.43874%) [-1.01460x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               1|1                    (No change)
+  Total read+write:                   24938|25302                (-1.43862%) [-1.01460x]
+  Estimated Cycles:                   24976|25340                (-1.43646%) [-1.01457x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline append_1:(vec_append(10))
+  Instructions:                       22724|22936                (-0.92431%) [-1.00933x]
+  L1 Hits:                            29959|30323                (-1.20041%) [-1.01215x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                   29962|30326                (-1.20029%) [-1.01215x]
+  Estimated Cycles:                   30034|30368                (-1.09984%) [-1.01112x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline append_2:(vec_append(30))
+  Instructions:                       31684|31896                (-0.66466%) [-1.00669x]
+  L1 Hits:                            40839|41204                (-0.88584%) [-1.00894x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                   40842|41206                (-0.88337%) [-1.00891x]
+  Estimated Cycles:                   40914|41244                (-0.80012%) [-1.00807x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline append_3:(vec_append(100))
+  Instructions:                       62212|62424                (-0.33961%) [-1.00341x]
+  L1 Hits:                            77892|78256                (-0.46514%) [-1.00467x]
+  LL Hits:                                4|5                    (-20.0000%) [-1.25000x]
+  RAM Hits:                               2|1                    (+100.000%) [+2.00000x]
+  Total read+write:                   77898|78262                (-0.46510%) [-1.00467x]
+  Estimated Cycles:                   77982|78316                (-0.42648%) [-1.00428x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline append_4:(vec_append(1_000))
+  Instructions:                      477688|477784               (-0.02009%) [-1.00020x]
+  L1 Hits:                           584191|584104               (+0.01489%) [+1.00015x]
+  LL Hits:                              170|460                  (-63.0435%) [-2.70588x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                  584363|584566               (-0.03473%) [-1.00035x]
+  Estimated Cycles:                  585111|586474               (-0.23241%) [-1.00233x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline append_5:(vec_append(10_000))
+  Instructions:                     4511172|4512580              (-0.03120%) [-1.00031x]
+  L1 Hits:                          5239593|5241650              (-0.03924%) [-1.00039x]
+  LL Hits:                           242527|242403               (+0.05115%) [+1.00051x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                 5482122|5484055              (-0.03525%) [-1.00035x]
+  Estimated Cycles:                 6452298|6453735              (-0.02227%) [-1.00022x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline append_6:(vec_append(100_000))
+  Instructions:                    44829870|44830402             (-0.00119%) [-1.00001x]
+  L1 Hits:                         52037211|52038059             (-0.00163%) [-1.00002x]
+  LL Hits:                          2402238|2402142              (+0.00400%) [+1.00004x]
+  RAM Hits:                              13|9                    (+44.4444%) [+1.44444x]
+  Total read+write:                54439462|54440210             (-0.00137%) [-1.00001x]
+  Estimated Cycles:                64048856|64049084             (-0.00036%) [-1.00000x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_baseline append_7:(vec_append(1_000_000))
+  Instructions:                   448029828|448030040            (-0.00005%) [-1.00000x]
+  L1 Hits:                        520037118|520037611            (-0.00009%) [-1.00000x]
+  LL Hits:                          1298704|1298965              (-0.02009%) [-1.00020x]
+  RAM Hits:                        22703612|22703222             (+0.00172%) [+1.00002x]
+  Total read+write:               544039434|544039798            (-0.00007%) [-1.00000x]
+  Estimated Cycles:              1321157058|1321145206           (+0.00090%) [+1.00001x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta one_0:(vec_one(3))
+  Instructions:                       11062|11070                (-0.07227%) [-1.00072x]
+  L1 Hits:                            15803|15849                (-0.29024%) [-1.00291x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   15806|15852                (-0.29018%) [-1.00291x]
+  Estimated Cycles:                   15878|15924                (-0.28887%) [-1.00290x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta one_1:(vec_one(10))
+  Instructions:                       11460|11476                (-0.13942%) [-1.00140x]
+  L1 Hits:                            16407|16472                (-0.39461%) [-1.00396x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   16410|16476                (-0.40058%) [-1.00402x]
+  Estimated Cycles:                   16482|16552                (-0.42291%) [-1.00425x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta one_2:(vec_one(30))
+  Instructions:                       12644|12664                (-0.15793%) [-1.00158x]
+  L1 Hits:                            18445|18520                (-0.40497%) [-1.00407x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   18448|18524                (-0.41028%) [-1.00412x]
+  Estimated Cycles:                   18520|18600                (-0.43011%) [-1.00432x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta one_3:(vec_one(100))
+  Instructions:                       17438|17458                (-0.11456%) [-1.00115x]
+  L1 Hits:                            25602|25677                (-0.29209%) [-1.00293x]
+  LL Hits:                                4|5                    (-20.0000%) [-1.25000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   25608|25684                (-0.29590%) [-1.00297x]
+  Estimated Cycles:                   25692|25772                (-0.31041%) [-1.00311x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta one_4:(vec_one(1_000))
+  Instructions:                       61304|61324                (-0.03261%) [-1.00033x]
+  L1 Hits:                            98119|98225                (-0.10792%) [-1.00108x]
+  LL Hits:                              269|239                  (+12.5523%) [+1.12552x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   98390|98466                (-0.07718%) [-1.00077x]
+  Estimated Cycles:                   99534|99490                (+0.04423%) [+1.00044x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta one_5:(vec_one(10_000))
+  Instructions:                     3177858|3178046              (-0.00592%) [-1.00006x]
+  L1 Hits:                          9128958|9129720              (-0.00835%) [-1.00008x]
+  LL Hits:                            81090|81004                (+0.10617%) [+1.00106x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                 9210050|9210726              (-0.00734%) [-1.00007x]
+  Estimated Cycles:                 9534478|9534810              (-0.00348%) [-1.00003x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta one_6:(vec_one(100_000))
+  Instructions:                    27954484|27954504             (-0.00007%) [-1.00000x]
+  L1 Hits:                         79160087|79160259             (-0.00022%) [-1.00000x]
+  LL Hits:                           870201|870107               (+0.01080%) [+1.00011x]
+  RAM Hits:                              10|8                    (+25.0000%) [+1.25000x]
+  Total read+write:                80030298|80030374             (-0.00009%) [-1.00000x]
+  Estimated Cycles:                83511442|83511074             (+0.00044%) [+1.00000x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta one_7:(vec_one(1_000_000))
+  Instructions:                    51103668|51103688             (-0.00004%) [-1.00000x]
+  L1 Hits:                         80127852|80128025             (-0.00022%) [-1.00000x]
+  LL Hits:                          3740364|3741926              (-0.04174%) [-1.00042x]
+  RAM Hits:                         4423070|4421411              (+0.03752%) [+1.00038x]
+  Total read+write:                88291286|88291362             (-0.00009%) [-1.00000x]
+  Estimated Cycles:               253637122|253587040            (+0.01975%) [+1.00020x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta two_0:(vec_two(3))
+  Instructions:                       15780|15688                (+0.58644%) [+1.00586x]
+  L1 Hits:                            22399|22339                (+0.26859%) [+1.00269x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   22402|22342                (+0.26855%) [+1.00269x]
+  Estimated Cycles:                   22474|22414                (+0.26769%) [+1.00268x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta two_1:(vec_two(10))
+  Instructions:                       16420|16332                (+0.53882%) [+1.00539x]
+  L1 Hits:                            23433|23382                (+0.21812%) [+1.00218x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   23436|23386                (+0.21380%) [+1.00214x]
+  Estimated Cycles:                   23508|23462                (+0.19606%) [+1.00196x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta two_2:(vec_two(30))
+  Instructions:                       18524|18444                (+0.43375%) [+1.00434x]
+  L1 Hits:                            26979|26946                (+0.12247%) [+1.00122x]
+  LL Hits:                                1|4                    (-75.0000%) [-4.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   26982|26952                (+0.11131%) [+1.00111x]
+  Estimated Cycles:                   27054|27036                (+0.06658%) [+1.00067x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta two_3:(vec_two(100))
+  Instructions:                       28576|28500                (+0.26667%) [+1.00267x]
+  L1 Hits:                            42275|42256                (+0.04496%) [+1.00045x]
+  LL Hits:                                5|4                    (+25.0000%) [+1.25000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   42282|42262                (+0.04732%) [+1.00047x]
+  Estimated Cycles:                   42370|42346                (+0.05668%) [+1.00057x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta two_4:(vec_two(1_000))
+  Instructions:                      115970|115894               (+0.06558%) [+1.00066x]
+  L1 Hits:                           186872|186861               (+0.00589%) [+1.00006x]
+  LL Hits:                              318|309                  (+2.91262%) [+1.02913x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                  187192|187172               (+0.01069%) [+1.00011x]
+  Estimated Cycles:                  188532|188476               (+0.02971%) [+1.00030x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta two_5:(vec_two(10_000))
+  Instructions:                     4653694|4653462              (+0.00499%) [+1.00005x]
+  L1 Hits:                         13076384|13076148             (+0.00180%) [+1.00002x]
+  LL Hits:                           146786|146678               (+0.07363%) [+1.00074x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                13223172|13222828             (+0.00260%) [+1.00003x]
+  Estimated Cycles:                13810384|13809608             (+0.00562%) [+1.00006x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta two_6:(vec_two(100_000))
+  Instructions:                    51797980|51797904             (+0.00015%) [+1.00000x]
+  L1 Hits:                        147163177|147163297            (-0.00008%) [-1.00000x]
+  LL Hits:                          1563775|1563637              (+0.00883%) [+1.00009x]
+  RAM Hits:                              10|8                    (+25.0000%) [+1.25000x]
+  Total read+write:               148726962|148726942            (+0.00001%) [+1.00000x]
+  Estimated Cycles:               154982402|154981762            (+0.00041%) [+1.00000x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta two_7:(vec_two(1_000_000))
+  Instructions:                    95802628|95802552             (+0.00008%) [+1.00000x]
+  L1 Hits:                        153929680|153929789            (-0.00007%) [-1.00000x]
+  LL Hits:                          6076295|6078814              (-0.04144%) [-1.00041x]
+  RAM Hits:                         8849855|8847207              (+0.02993%) [+1.00030x]
+  Total read+write:               168855830|168855810            (+0.00001%) [+1.00000x]
+  Estimated Cycles:               494056080|493976104            (+0.01619%) [+1.00016x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta rare_0:(vec_rare(3))
+  Instructions:                       11002|11010                (-0.07266%) [-1.00073x]
+  L1 Hits:                            15683|15729                (-0.29245%) [-1.00293x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   15686|15732                (-0.29240%) [-1.00293x]
+  Estimated Cycles:                   15758|15804                (-0.29107%) [-1.00292x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta rare_1:(vec_rare(10))
+  Instructions:                       11400|11416                (-0.14015%) [-1.00140x]
+  L1 Hits:                            16287|16352                (-0.39750%) [-1.00399x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   16290|16356                (-0.40352%) [-1.00405x]
+  Estimated Cycles:                   16362|16432                (-0.42600%) [-1.00428x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta rare_2:(vec_rare(30))
+  Instructions:                       12584|12604                (-0.15868%) [-1.00159x]
+  L1 Hits:                            18325|18400                (-0.40761%) [-1.00409x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   18328|18404                (-0.41295%) [-1.00415x]
+  Estimated Cycles:                   18400|18480                (-0.43290%) [-1.00435x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta rare_3:(vec_rare(100))
+  Instructions:                       17378|17398                (-0.11496%) [-1.00115x]
+  L1 Hits:                            25482|25557                (-0.29346%) [-1.00294x]
+  LL Hits:                                4|5                    (-20.0000%) [-1.25000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   25488|25564                (-0.29729%) [-1.00298x]
+  Estimated Cycles:                   25572|25652                (-0.31187%) [-1.00313x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta rare_4:(vec_rare(1_000))
+  Instructions:                       61244|61264                (-0.03265%) [-1.00033x]
+  L1 Hits:                            97998|98109                (-0.11314%) [-1.00113x]
+  LL Hits:                              270|235                  (+14.8936%) [+1.14894x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   98270|98346                (-0.07728%) [-1.00077x]
+  Estimated Cycles:                   99418|99354                (+0.06442%) [+1.00064x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta rare_5:(vec_rare(10_000))
+  Instructions:                     3178086|3177986              (+0.00315%) [+1.00003x]
+  L1 Hits:                          9129711|9129600              (+0.00122%) [+1.00001x]
+  LL Hits:                            81081|81004                (+0.09506%) [+1.00095x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                 9210794|9210606              (+0.00204%) [+1.00002x]
+  Estimated Cycles:                 9535186|9534690              (+0.00520%) [+1.00005x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta rare_6:(vec_rare(100_000))
+  Instructions:                    27954424|27954444             (-0.00007%) [-1.00000x]
+  L1 Hits:                         79159967|79160139             (-0.00022%) [-1.00000x]
+  LL Hits:                           870201|870107               (+0.01080%) [+1.00011x]
+  RAM Hits:                              10|8                    (+25.0000%) [+1.25000x]
+  Total read+write:                80030178|80030254             (-0.00009%) [-1.00000x]
+  Estimated Cycles:                83511322|83510954             (+0.00044%) [+1.00000x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta rare_7:(vec_rare(1_000_000))
+  Instructions:                    51103608|51103628             (-0.00004%) [-1.00000x]
+  L1 Hits:                         80127732|80127905             (-0.00022%) [-1.00000x]
+  LL Hits:                          3740364|3741927              (-0.04177%) [-1.00042x]
+  RAM Hits:                         4423070|4421410              (+0.03754%) [+1.00038x]
+  Total read+write:                88291166|88291242             (-0.00009%) [-1.00000x]
+  Estimated Cycles:               253637002|253586890            (+0.01976%) [+1.00020x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta append_0:(vec_append(3))
+  Instructions:                       10276|10232                (+0.43002%) [+1.00430x]
+  L1 Hits:                            14471|14387                (+0.58386%) [+1.00584x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   14474|14390                (+0.58374%) [+1.00584x]
+  Estimated Cycles:                   14546|14462                (+0.58083%) [+1.00581x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta append_1:(vec_append(10))
+  Instructions:                       10276|10232                (+0.43002%) [+1.00430x]
+  L1 Hits:                            14471|14386                (+0.59085%) [+1.00591x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   14474|14390                (+0.58374%) [+1.00584x]
+  Estimated Cycles:                   14546|14466                (+0.55302%) [+1.00553x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta append_2:(vec_append(30))
+  Instructions:                       10276|10232                (+0.43002%) [+1.00430x]
+  L1 Hits:                            14471|14386                (+0.59085%) [+1.00591x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   14474|14390                (+0.58374%) [+1.00584x]
+  Estimated Cycles:                   14546|14466                (+0.55302%) [+1.00553x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta append_3:(vec_append(100))
+  Instructions:                       10276|10232                (+0.43002%) [+1.00430x]
+  L1 Hits:                            14468|14383                (+0.59098%) [+1.00591x]
+  LL Hits:                                4|5                    (-20.0000%) [-1.25000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   14474|14390                (+0.58374%) [+1.00584x]
+  Estimated Cycles:                   14558|14478                (+0.55256%) [+1.00553x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta append_4:(vec_append(1_000))
+  Instructions:                       10276|10232                (+0.43002%) [+1.00430x]
+  L1 Hits:                            14464|14381                (+0.57715%) [+1.00577x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   14474|14390                (+0.58374%) [+1.00584x]
+  Estimated Cycles:                   14574|14486                (+0.60748%) [+1.00607x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta append_5:(vec_append(10_000))
+  Instructions:                       10276|10232                (+0.43002%) [+1.00430x]
+  L1 Hits:                            14464|14381                (+0.57715%) [+1.00577x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   14474|14390                (+0.58374%) [+1.00584x]
+  Estimated Cycles:                   14574|14486                (+0.60748%) [+1.00607x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta append_6:(vec_append(100_000))
+  Instructions:                       10276|10232                (+0.43002%) [+1.00430x]
+  L1 Hits:                            14464|14381                (+0.57715%) [+1.00577x]
+  LL Hits:                                0|2                    (-100.000%) [---inf---]
+  RAM Hits:                              10|7                    (+42.8571%) [+1.42857x]
+  Total read+write:                   14474|14390                (+0.58374%) [+1.00584x]
+  Estimated Cycles:                   14814|14636                (+1.21618%) [+1.01216x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_delta append_7:(vec_append(1_000_000))
+  Instructions:                       10276|10232                (+0.43002%) [+1.00430x]
+  L1 Hits:                            14462|14379                (+0.57723%) [+1.00577x]
+  LL Hits:                                2|2                    (No change)
+  RAM Hits:                              10|9                    (+11.1111%) [+1.11111x]
+  Total read+write:                   14474|14390                (+0.58374%) [+1.00584x]
+  Estimated Cycles:                   14822|14704                (+0.80250%) [+1.00803x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope one_0:(vec_one(3))
+  Instructions:                       18956|18880                (+0.40254%) [+1.00403x]
+  L1 Hits:                            28139|27991                (+0.52874%) [+1.00529x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   28142|27994                (+0.52868%) [+1.00529x]
+  Estimated Cycles:                   28214|28066                (+0.52733%) [+1.00527x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope one_1:(vec_one(10))
+  Instructions:                       19190|19114                (+0.39761%) [+1.00398x]
+  L1 Hits:                            28583|28433                (+0.52756%) [+1.00528x]
+  LL Hits:                                1|3                    (-66.6667%) [-3.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   28586|28438                (+0.52043%) [+1.00520x]
+  Estimated Cycles:                   28658|28518                (+0.49092%) [+1.00491x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope one_2:(vec_one(30))
+  Instructions:                       20388|20312                (+0.37416%) [+1.00374x]
+  L1 Hits:                            30637|30489                (+0.48542%) [+1.00485x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   30640|30492                (+0.48537%) [+1.00485x]
+  Estimated Cycles:                   30712|30564                (+0.48423%) [+1.00484x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope one_3:(vec_one(100))
+  Instructions:                       22500|22424                (+0.33892%) [+1.00339x]
+  L1 Hits:                            32636|32486                (+0.46174%) [+1.00462x]
+  LL Hits:                                4|6                    (-33.3333%) [-1.50000x]
+  RAM Hits:                               4|4                    (No change)
+  Total read+write:                   32644|32496                (+0.45544%) [+1.00455x]
+  Estimated Cycles:                   32796|32656                (+0.42871%) [+1.00429x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope one_4:(vec_one(1_000))
+  Instructions:                       34574|34498                (+0.22030%) [+1.00220x]
+  L1 Hits:                            46645|46531                (+0.24500%) [+1.00245x]
+  LL Hits:                              256|222                  (+15.3153%) [+1.15315x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   46904|46756                (+0.31654%) [+1.00317x]
+  Estimated Cycles:                   48030|47746                (+0.59481%) [+1.00595x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope one_5:(vec_one(10_000))
+  Instructions:                       67616|67540                (+0.11253%) [+1.00113x]
+  L1 Hits:                            85424|85278                (+0.17120%) [+1.00171x]
+  LL Hits:                              889|887                  (+0.22548%) [+1.00225x]
+  RAM Hits:                               5|5                    (No change)
+  Total read+write:                   86318|86170                (+0.17175%) [+1.00172x]
+  Estimated Cycles:                   90044|89888                (+0.17355%) [+1.00174x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope one_6:(vec_one(100_000))
+  Instructions:                      163930|163854               (+0.04638%) [+1.00046x]
+  L1 Hits:                           198639|198491               (+0.07456%) [+1.00075x]
+  LL Hits:                             2539|2571                 (-1.24465%) [-1.01260x]
+  RAM Hits:                              62|30                   (+106.667%) [+2.06667x]
+  Total read+write:                  201240|201092               (+0.07360%) [+1.00074x]
+  Estimated Cycles:                  213504|212396               (+0.52167%) [+1.00522x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope one_7:(vec_one(1_000_000))
+  Instructions:                      503976|503900               (+0.01508%) [+1.00015x]
+  L1 Hits:                           596887|596739               (+0.02480%) [+1.00025x]
+  LL Hits:                             8846|8847                 (-0.01130%) [-1.00011x]
+  RAM Hits:                              17|16                   (+6.25000%) [+1.06250x]
+  Total read+write:                  605750|605602               (+0.02444%) [+1.00024x]
+  Estimated Cycles:                  641712|641534               (+0.02775%) [+1.00028x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope two_0:(vec_two(3))
+  Instructions:                       31404|31328                (+0.24259%) [+1.00243x]
+  L1 Hits:                            46783|46635                (+0.31736%) [+1.00317x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   46786|46638                (+0.31734%) [+1.00317x]
+  Estimated Cycles:                   46858|46710                (+0.31685%) [+1.00317x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope two_1:(vec_two(10))
+  Instructions:                       31674|31598                (+0.24052%) [+1.00241x]
+  L1 Hits:                            47449|47300                (+0.31501%) [+1.00315x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   47452|47304                (+0.31287%) [+1.00313x]
+  Estimated Cycles:                   47524|47380                (+0.30393%) [+1.00304x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope two_2:(vec_two(30))
+  Instructions:                       33806|33730                (+0.22532%) [+1.00225x]
+  L1 Hits:                            51027|50876                (+0.29680%) [+1.00297x]
+  LL Hits:                                1|4                    (-75.0000%) [-4.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   51030|50882                (+0.29087%) [+1.00291x]
+  Estimated Cycles:                   51102|50966                (+0.26684%) [+1.00267x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope two_3:(vec_two(100))
+  Instructions:                       36770|36694                (+0.20712%) [+1.00207x]
+  L1 Hits:                            53735|53586                (+0.27806%) [+1.00278x]
+  LL Hits:                                4|5                    (-20.0000%) [-1.25000x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   53742|53594                (+0.27615%) [+1.00276x]
+  Estimated Cycles:                   53860|53716                (+0.26808%) [+1.00268x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope two_4:(vec_two(1_000))
+  Instructions:                       62358|62282                (+0.12203%) [+1.00122x]
+  L1 Hits:                            83386|83265                (+0.14532%) [+1.00145x]
+  LL Hits:                              340|313                  (+8.62620%) [+1.08626x]
+  RAM Hits:                               6|6                    (No change)
+  Total read+write:                   83732|83584                (+0.17707%) [+1.00177x]
+  Estimated Cycles:                   85296|85040                (+0.30103%) [+1.00301x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope two_5:(vec_two(10_000))
+  Instructions:                      136754|136678               (+0.05561%) [+1.00056x]
+  L1 Hits:                           170697|170548               (+0.08737%) [+1.00087x]
+  LL Hits:                             1755|1756                 (-0.05695%) [-1.00057x]
+  RAM Hits:                               8|8                    (No change)
+  Total read+write:                  172460|172312               (+0.08589%) [+1.00086x]
+  Estimated Cycles:                  179752|179608               (+0.08017%) [+1.00080x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope two_6:(vec_two(100_000))
+  Instructions:                      355678|355602               (+0.02137%) [+1.00021x]
+  L1 Hits:                           427932|427794               (+0.03226%) [+1.00032x]
+  LL Hits:                             5626|5673                 (-0.82849%) [-1.00835x]
+  RAM Hits:                             112|55                   (+103.636%) [+2.03636x]
+  Total read+write:                  433670|433522               (+0.03414%) [+1.00034x]
+  Estimated Cycles:                  459982|458084               (+0.41433%) [+1.00414x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope two_7:(vec_two(1_000_000))
+  Instructions:                     1089396|1089320              (+0.00698%) [+1.00007x]
+  L1 Hits:                          1287443|1287360              (+0.00645%) [+1.00006x]
+  LL Hits:                            19935|19871                (+0.32208%) [+1.00322x]
+  RAM Hits:                             216|215                  (+0.46512%) [+1.00465x]
+  Total read+write:                 1307594|1307446              (+0.01132%) [+1.00011x]
+  Estimated Cycles:                 1394678|1394240              (+0.03141%) [+1.00031x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope rare_0:(vec_rare(3))
+  Instructions:                       18836|18820                (+0.08502%) [+1.00085x]
+  L1 Hits:                            27899|27871                (+0.10046%) [+1.00100x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   27902|27874                (+0.10045%) [+1.00100x]
+  Estimated Cycles:                   27974|27946                (+0.10019%) [+1.00100x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope rare_1:(vec_rare(10))
+  Instructions:                       19070|19054                (+0.08397%) [+1.00084x]
+  L1 Hits:                            28343|28314                (+0.10242%) [+1.00102x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   28346|28318                (+0.09888%) [+1.00099x]
+  Estimated Cycles:                   28418|28394                (+0.08452%) [+1.00085x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope rare_2:(vec_rare(30))
+  Instructions:                       20268|20252                (+0.07900%) [+1.00079x]
+  L1 Hits:                            30397|30369                (+0.09220%) [+1.00092x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   30400|30372                (+0.09219%) [+1.00092x]
+  Estimated Cycles:                   30472|30444                (+0.09197%) [+1.00092x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope rare_3:(vec_rare(100))
+  Instructions:                       22380|22364                (+0.07154%) [+1.00072x]
+  L1 Hits:                            32396|32367                (+0.08960%) [+1.00090x]
+  LL Hits:                                4|5                    (-20.0000%) [-1.25000x]
+  RAM Hits:                               4|4                    (No change)
+  Total read+write:                   32404|32376                (+0.08648%) [+1.00086x]
+  Estimated Cycles:                   32556|32532                (+0.07377%) [+1.00074x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope rare_4:(vec_rare(1_000))
+  Instructions:                       34454|34438                (+0.04646%) [+1.00046x]
+  L1 Hits:                            46405|46411                (-0.01293%) [-1.00013x]
+  LL Hits:                              256|222                  (+15.3153%) [+1.15315x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   46664|46636                (+0.06004%) [+1.00060x]
+  Estimated Cycles:                   47790|47626                (+0.34435%) [+1.00344x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope rare_5:(vec_rare(10_000))
+  Instructions:                       67496|67480                (+0.02371%) [+1.00024x]
+  L1 Hits:                            85184|85158                (+0.03053%) [+1.00031x]
+  LL Hits:                              889|887                  (+0.22548%) [+1.00225x]
+  RAM Hits:                               5|5                    (No change)
+  Total read+write:                   86078|86050                (+0.03254%) [+1.00033x]
+  Estimated Cycles:                   89804|89768                (+0.04010%) [+1.00040x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope rare_6:(vec_rare(100_000))
+  Instructions:                      163810|163794               (+0.00977%) [+1.00010x]
+  L1 Hits:                           198399|198371               (+0.01411%) [+1.00014x]
+  LL Hits:                             2539|2571                 (-1.24465%) [-1.01260x]
+  RAM Hits:                              62|30                   (+106.667%) [+2.06667x]
+  Total read+write:                  201000|200972               (+0.01393%) [+1.00014x]
+  Estimated Cycles:                  213264|212276               (+0.46543%) [+1.00465x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope rare_7:(vec_rare(1_000_000))
+  Instructions:                      503856|503840               (+0.00318%) [+1.00003x]
+  L1 Hits:                           596647|596619               (+0.00469%) [+1.00005x]
+  LL Hits:                             8846|8847                 (-0.01130%) [-1.00011x]
+  RAM Hits:                              17|16                   (+6.25000%) [+1.06250x]
+  Total read+write:                  605510|605482               (+0.00462%) [+1.00005x]
+  Estimated Cycles:                  641472|641414               (+0.00904%) [+1.00009x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope append_0:(vec_append(3))
+  Instructions:                       17988|17912                (+0.42430%) [+1.00424x]
+  L1 Hits:                            26599|26451                (+0.55953%) [+1.00560x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   26602|26454                (+0.55946%) [+1.00559x]
+  Estimated Cycles:                   26674|26526                (+0.55794%) [+1.00558x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope append_1:(vec_append(10))
+  Instructions:                       17796|17720                (+0.42889%) [+1.00429x]
+  L1 Hits:                            26407|26258                (+0.56745%) [+1.00567x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   26410|26262                (+0.56355%) [+1.00564x]
+  Estimated Cycles:                   26482|26338                (+0.54674%) [+1.00547x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope append_2:(vec_append(30))
+  Instructions:                       18692|18616                (+0.40825%) [+1.00408x]
+  L1 Hits:                            27431|27283                (+0.54246%) [+1.00542x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   27434|27286                (+0.54240%) [+1.00542x]
+  Estimated Cycles:                   27506|27358                (+0.54098%) [+1.00541x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope append_3:(vec_append(100))
+  Instructions:                       22276|22200                (+0.34234%) [+1.00342x]
+  L1 Hits:                            31524|31375                (+0.47490%) [+1.00475x]
+  LL Hits:                                4|5                    (-20.0000%) [-1.25000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   31530|31382                (+0.47161%) [+1.00472x]
+  Estimated Cycles:                   31614|31470                (+0.45758%) [+1.00458x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope append_4:(vec_append(1_000))
+  Instructions:                       45572|45496                (+0.16705%) [+1.00167x]
+  L1 Hits:                            58144|57997                (+0.25346%) [+1.00253x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   58154|58006                (+0.25515%) [+1.00255x]
+  Estimated Cycles:                   58254|58102                (+0.26161%) [+1.00262x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope append_5:(vec_append(10_000))
+  Instructions:                      106500|106424               (+0.07141%) [+1.00071x]
+  L1 Hits:                           127776|127629               (+0.11518%) [+1.00115x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                  127786|127638               (+0.11595%) [+1.00116x]
+  Estimated Cycles:                  127886|127734               (+0.11900%) [+1.00119x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope append_6:(vec_append(100_000))
+  Instructions:                      300036|299960               (+0.02534%) [+1.00025x]
+  L1 Hits:                           348960|348813               (+0.04214%) [+1.00042x]
+  LL Hits:                                0|2                    (-100.000%) [---inf---]
+  RAM Hits:                              10|7                    (+42.8571%) [+1.42857x]
+  Total read+write:                  348970|348822               (+0.04243%) [+1.00042x]
+  Estimated Cycles:                  349310|349068               (+0.06933%) [+1.00069x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_rope append_7:(vec_append(1_000_000))
+  Instructions:                      912900|912824               (+0.00833%) [+1.00008x]
+  L1 Hits:                          1049305|1049180              (+0.01191%) [+1.00012x]
+  LL Hits:                               71|49                   (+44.8980%) [+1.44898x]
+  RAM Hits:                              10|9                    (+11.1111%) [+1.11111x]
+  Total read+write:                 1049386|1049238              (+0.01411%) [+1.00014x]
+  Estimated Cycles:                 1050010|1049740              (+0.02572%) [+1.00026x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline one_0:(map_one(3))
+  Instructions:                       45948|45296                (+1.43942%) [+1.01439x]
+  L1 Hits:                            59525|58482                (+1.78345%) [+1.01783x]
+  LL Hits:                                7|5                    (+40.0000%) [+1.40000x]
+  RAM Hits:                               2|3                    (-33.3333%) [-1.50000x]
+  Total read+write:                   59534|58490                (+1.78492%) [+1.01785x]
+  Estimated Cycles:                   59630|58612                (+1.73685%) [+1.01737x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline one_1:(map_one(10))
+  Instructions:                      125757|124653               (+0.88566%) [+1.00886x]
+  L1 Hits:                           153802|151852               (+1.28415%) [+1.01284x]
+  LL Hits:                                9|6                    (+50.0000%) [+1.50000x]
+  RAM Hits:                               7|6                    (+16.6667%) [+1.16667x]
+  Total read+write:                  153818|151864               (+1.28668%) [+1.01287x]
+  Estimated Cycles:                  154092|152092               (+1.31499%) [+1.01315x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline one_2:(map_one(30))
+  Instructions:                      333581|330441               (+0.95025%) [+1.00950x]
+  L1 Hits:                           394517|388707               (+1.49470%) [+1.01495x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               4|3                    (+33.3333%) [+1.33333x]
+  Total read+write:                  394530|388718               (+1.49517%) [+1.01495x]
+  Estimated Cycles:                  394702|388852               (+1.50443%) [+1.01504x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline one_3:(map_one(100))
+  Instructions:                     1273088|1264665              (+0.66603%) [+1.00666x]
+  L1 Hits:                          1474219|1457920              (+1.11796%) [+1.01118x]
+  LL Hits:                               71|29                   (+144.828%) [+2.44828x]
+  RAM Hits:                               7|6                    (+16.6667%) [+1.16667x]
+  Total read+write:                 1474297|1457955              (+1.12089%) [+1.01121x]
+  Estimated Cycles:                 1474819|1458275              (+1.13449%) [+1.01134x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline one_4:(map_one(1_000))
+  Instructions:                    12354994|12257030             (+0.79925%) [+1.00799x]
+  L1 Hits:                         13997851|13810684             (+1.35523%) [+1.01355x]
+  LL Hits:                            66891|67448                (-0.82582%) [-1.00833x]
+  RAM Hits:                               3|2                    (+50.0000%) [+1.50000x]
+  Total read+write:                14064745|13878134             (+1.34464%) [+1.01345x]
+  Estimated Cycles:                14332411|14147994             (+1.30349%) [+1.01303x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline one_5:(map_one(10_000))
+  Instructions:                   112890069|111991014            (+0.80279%) [+1.00803x]
+  L1 Hits:                        128494676|126763365            (+1.36578%) [+1.01366x]
+  LL Hits:                           880245|876058               (+0.47794%) [+1.00478x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:               129374923|127639425            (+1.35969%) [+1.01360x]
+  Estimated Cycles:               132895971|131143725            (+1.33613%) [+1.01336x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline one_6:(map_one(100_000))
+  Instructions:                  1017093920|1008554835           (+0.84667%) [+1.00847x]
+  L1 Hits:                       1157613641|1141093035           (+1.44779%) [+1.01448x]
+  LL Hits:                         10579600|10585919             (-0.05969%) [-1.00060x]
+  RAM Hits:                              12|11                   (+9.09091%) [+1.09091x]
+  Total read+write:              1168193253|1151678965           (+1.43393%) [+1.01434x]
+  Estimated Cycles:              1210512061|1194023015           (+1.38097%) [+1.01381x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline two_0:(map_two(3))
+  Instructions:                       58538|57873                (+1.14907%) [+1.01149x]
+  L1 Hits:                            74303|73247                (+1.44170%) [+1.01442x]
+  LL Hits:                                8|6                    (+33.3333%) [+1.33333x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   74314|73256                (+1.44425%) [+1.01444x]
+  Estimated Cycles:                   74448|73382                (+1.45267%) [+1.01453x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline two_1:(map_two(10))
+  Instructions:                      150868|149747               (+0.74860%) [+1.00749x]
+  L1 Hits:                           183152|181191               (+1.08228%) [+1.01082x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                               7|8                    (-12.5000%) [-1.14286x]
+  Total read+write:                  183167|181206               (+1.08219%) [+1.01082x]
+  Estimated Cycles:                  183437|181506               (+1.06388%) [+1.01064x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline two_2:(map_two(30))
+  Instructions:                      423031|419956               (+0.73222%) [+1.00732x]
+  L1 Hits:                           497109|491354               (+1.17125%) [+1.01171x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               2|3                    (-33.3333%) [-1.50000x]
+  Total read+write:                  497120|491365               (+1.17123%) [+1.01171x]
+  Estimated Cycles:                  497224|491499               (+1.16480%) [+1.01165x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline two_3:(map_two(100))
+  Instructions:                      986258|977726               (+0.87264%) [+1.00873x]
+  L1 Hits:                          1145523|1129096              (+1.45488%) [+1.01455x]
+  LL Hits:                               46|22                   (+109.091%) [+2.09091x]
+  RAM Hits:                               4|3                    (+33.3333%) [+1.33333x]
+  Total read+write:                 1145573|1129121              (+1.45706%) [+1.01457x]
+  Estimated Cycles:                 1145893|1129311              (+1.46833%) [+1.01468x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline two_4:(map_two(1_000))
+  Instructions:                    12819239|12717185             (+0.80249%) [+1.00802x]
+  L1 Hits:                         14540246|14350423             (+1.32277%) [+1.01323x]
+  LL Hits:                            69047|67874                (+1.72820%) [+1.01728x]
+  RAM Hits:                               3|2                    (+50.0000%) [+1.50000x]
+  Total read+write:                14609296|14418299             (+1.32468%) [+1.01325x]
+  Estimated Cycles:                14885586|14689863             (+1.33237%) [+1.01332x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline two_5:(map_two(10_000))
+  Instructions:                   112783100|111865962            (+0.81985%) [+1.00820x]
+  L1 Hits:                        128374607|126618246            (+1.38713%) [+1.01387x]
+  LL Hits:                           875753|877514               (-0.20068%) [-1.00201x]
+  RAM Hits:                               3|2                    (+50.0000%) [+1.50000x]
+  Total read+write:               129250363|127495762            (+1.37620%) [+1.01376x]
+  Estimated Cycles:               132753477|131005886            (+1.33398%) [+1.01334x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline two_6:(map_two(100_000))
+  Instructions:                  1016526922|1008067667           (+0.83916%) [+1.00839x]
+  L1 Hits:                       1156955453|1140527574           (+1.44038%) [+1.01440x]
+  LL Hits:                         10576641|10574969             (+0.01581%) [+1.00016x]
+  RAM Hits:                              13|11                   (+18.1818%) [+1.18182x]
+  Total read+write:              1167532107|1151102554           (+1.42729%) [+1.01427x]
+  Estimated Cycles:              1209839113|1193402804           (+1.37726%) [+1.01377x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline rare_0:(map_rare(3))
+  Instructions:                       17332|17280                (+0.30093%) [+1.00301x]
+  L1 Hits:                            22072|21990                (+0.37290%) [+1.00373x]
+  LL Hits:                                7|5                    (+40.0000%) [+1.40000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   22081|21997                (+0.38187%) [+1.00382x]
+  Estimated Cycles:                   22177|22085                (+0.41657%) [+1.00417x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline rare_1:(map_rare(10))
+  Instructions:                       21756|21686                (+0.32279%) [+1.00323x]
+  L1 Hits:                            27278|27154                (+0.45665%) [+1.00457x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               3|2                    (+50.0000%) [+1.50000x]
+  Total read+write:                   27290|27164                (+0.46385%) [+1.00464x]
+  Estimated Cycles:                   27428|27264                (+0.60153%) [+1.00602x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline rare_2:(map_rare(30))
+  Instructions:                       37250|37089                (+0.43409%) [+1.00434x]
+  L1 Hits:                            45211|44876                (+0.74650%) [+1.00747x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               3|4                    (-25.0000%) [-1.33333x]
+  Total read+write:                   45223|44888                (+0.74630%) [+1.00746x]
+  Estimated Cycles:                   45361|45056                (+0.67694%) [+1.00677x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline rare_3:(map_rare(100))
+  Instructions:                       97959|97319                (+0.65763%) [+1.00658x]
+  L1 Hits:                           114695|113590               (+0.97280%) [+1.00973x]
+  LL Hits:                               47|12                   (+291.667%) [+3.91667x]
+  RAM Hits:                              37|37                   (No change)
+  Total read+write:                  114779|113639               (+1.00318%) [+1.01003x]
+  Estimated Cycles:                  116225|114945               (+1.11358%) [+1.01114x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline rare_4:(map_rare(1_000))
+  Instructions:                      785203|781341               (+0.49428%) [+1.00494x]
+  L1 Hits:                           891585|882326               (+1.04939%) [+1.01049x]
+  LL Hits:                             4305|4296                 (+0.20950%) [+1.00209x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                  895892|886624               (+1.04531%) [+1.01045x]
+  Estimated Cycles:                  913180|903876               (+1.02934%) [+1.01029x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline rare_5:(map_rare(10_000))
+  Instructions:                     7072682|7011058              (+0.87895%) [+1.00879x]
+  L1 Hits:                          8051986|7937773              (+1.43885%) [+1.01439x]
+  LL Hits:                            55054|55040                (+0.02544%) [+1.00025x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                 8107042|7992815              (+1.42912%) [+1.01429x]
+  Estimated Cycles:                 8327326|8213043              (+1.39148%) [+1.01391x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_baseline rare_6:(map_rare(100_000))
+  Instructions:                    63577457|63051936             (+0.83347%) [+1.00833x]
+  L1 Hits:                         72363246|71340332             (+1.43385%) [+1.01434x]
+  LL Hits:                           661455|660905               (+0.08322%) [+1.00083x]
+  RAM Hits:                              13|13                   (No change)
+  Total read+write:                73024714|72001250             (+1.42145%) [+1.01421x]
+  Estimated Cycles:                75670976|74645312             (+1.37405%) [+1.01374x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta one_0:(map_one(3))
+  Instructions:                       49309|49297                (+0.02434%) [+1.00024x]
+  L1 Hits:                            60435|60417                (+0.02979%) [+1.00030x]
+  LL Hits:                                7|5                    (+40.0000%) [+1.40000x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   60445|60425                (+0.03310%) [+1.00033x]
+  Estimated Cycles:                   60575|60547                (+0.04625%) [+1.00046x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta one_1:(map_one(10))
+  Instructions:                       50358|50281                (+0.15314%) [+1.00153x]
+  L1 Hits:                            61631|61544                (+0.14136%) [+1.00141x]
+  LL Hits:                                9|6                    (+50.0000%) [+1.50000x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   61643|61553                (+0.14622%) [+1.00146x]
+  Estimated Cycles:                   61781|61679                (+0.16537%) [+1.00165x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta one_2:(map_one(30))
+  Instructions:                       49604|49605                (-0.00202%) [-1.00002x]
+  L1 Hits:                            60766|60761                (+0.00823%) [+1.00008x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   60778|60772                (+0.00987%) [+1.00010x]
+  Estimated Cycles:                   60916|60906                (+0.01642%) [+1.00016x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta one_3:(map_one(100))
+  Instructions:                       49813|49605                (+0.41931%) [+1.00419x]
+  L1 Hits:                            60933|60725                (+0.34253%) [+1.00343x]
+  LL Hits:                               13|9                    (+44.4444%) [+1.44444x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   60949|60737                (+0.34905%) [+1.00349x]
+  Estimated Cycles:                   61103|60875                (+0.37454%) [+1.00375x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta one_4:(map_one(1_000))
+  Instructions:                       49956|49923                (+0.06610%) [+1.00066x]
+  L1 Hits:                            61017|61029                (-0.01966%) [-1.00020x]
+  LL Hits:                              160|107                  (+49.5327%) [+1.49533x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   61180|61139                (+0.06706%) [+1.00067x]
+  Estimated Cycles:                   61922|61669                (+0.41025%) [+1.00410x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta one_5:(map_one(10_000))
+  Instructions:                       49944|49915                (+0.05810%) [+1.00058x]
+  L1 Hits:                            60885|60865                (+0.03286%) [+1.00033x]
+  LL Hits:                              268|258                  (+3.87597%) [+1.03876x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   61156|61126                (+0.04908%) [+1.00049x]
+  Estimated Cycles:                   62330|62260                (+0.11243%) [+1.00112x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta one_6:(map_one(100_000))
+  Instructions:                       50671|50813                (-0.27946%) [-1.00280x]
+  L1 Hits:                            61551|61717                (-0.26897%) [-1.00270x]
+  LL Hits:                              286|271                  (+5.53506%) [+1.05535x]
+  RAM Hits:                              51|47                   (+8.51064%) [+1.08511x]
+  Total read+write:                   61888|62035                (-0.23696%) [-1.00238x]
+  Estimated Cycles:                   64766|64717                (+0.07571%) [+1.00076x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta two_0:(map_two(3))
+  Instructions:                      104788|104776               (+0.01145%) [+1.00011x]
+  L1 Hits:                           127454|127437               (+0.01334%) [+1.00013x]
+  LL Hits:                                9|6                    (+50.0000%) [+1.50000x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                  127466|127446               (+0.01569%) [+1.00016x]
+  Estimated Cycles:                  127604|127572               (+0.02508%) [+1.00025x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta two_1:(map_two(10))
+  Instructions:                      110930|110058               (+0.79231%) [+1.00792x]
+  L1 Hits:                           134580|133635               (+0.70715%) [+1.00707x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                               8|8                    (No change)
+  Total read+write:                  134596|133650               (+0.70782%) [+1.00708x]
+  Estimated Cycles:                  134900|133950               (+0.70922%) [+1.00709x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta two_2:(map_two(30))
+  Instructions:                      107733|107162               (+0.53284%) [+1.00533x]
+  L1 Hits:                           130888|130266               (+0.47748%) [+1.00477x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                  130900|130277               (+0.47821%) [+1.00478x]
+  Estimated Cycles:                  131038|130411               (+0.48079%) [+1.00481x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta two_3:(map_two(100))
+  Instructions:                      106160|107344               (-1.10300%) [-1.01115x]
+  L1 Hits:                           129017|130232               (-0.93295%) [-1.00942x]
+  LL Hits:                               15|12                   (+25.0000%) [+1.25000x]
+  RAM Hits:                               6|5                    (+20.0000%) [+1.20000x]
+  Total read+write:                  129038|130249               (-0.92976%) [-1.00938x]
+  Estimated Cycles:                  129302|130467               (-0.89295%) [-1.00901x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta two_4:(map_two(1_000))
+  Instructions:                      106193|106159               (+0.03203%) [+1.00032x]
+  L1 Hits:                           128775|128745               (+0.02330%) [+1.00023x]
+  LL Hits:                              286|271                  (+5.53506%) [+1.05535x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                  129064|129019               (+0.03488%) [+1.00035x]
+  Estimated Cycles:                  130310|130205               (+0.08064%) [+1.00081x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta two_5:(map_two(10_000))
+  Instructions:                      106141|105942               (+0.18784%) [+1.00188x]
+  L1 Hits:                           128616|128399               (+0.16900%) [+1.00169x]
+  LL Hits:                              525|540                  (-2.77778%) [-1.02857x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                  129144|128942               (+0.15666%) [+1.00157x]
+  Estimated Cycles:                  131346|131204               (+0.10823%) [+1.00108x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta two_6:(map_two(100_000))
+  Instructions:                      108085|107834               (+0.23277%) [+1.00233x]
+  L1 Hits:                           130643|130395               (+0.19019%) [+1.00190x]
+  LL Hits:                              580|584                  (-0.68493%) [-1.00690x]
+  RAM Hits:                              94|72                   (+30.5556%) [+1.30556x]
+  Total read+write:                  131317|131051               (+0.20297%) [+1.00203x]
+  Estimated Cycles:                  136833|135835               (+0.73471%) [+1.00735x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta rare_0:(map_rare(3))
+  Instructions:                       49249|49237                (+0.02437%) [+1.00024x]
+  L1 Hits:                            60315|60297                (+0.02985%) [+1.00030x]
+  LL Hits:                                7|5                    (+40.0000%) [+1.40000x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   60325|60305                (+0.03316%) [+1.00033x]
+  Estimated Cycles:                   60455|60427                (+0.04634%) [+1.00046x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta rare_1:(map_rare(10))
+  Instructions:                       50025|50013                (+0.02399%) [+1.00024x]
+  L1 Hits:                            61217|61198                (+0.03105%) [+1.00031x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   61229|61209                (+0.03267%) [+1.00033x]
+  Estimated Cycles:                   61367|61343                (+0.03912%) [+1.00039x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta rare_2:(map_rare(30))
+  Instructions:                       49583|49701                (-0.23742%) [-1.00238x]
+  L1 Hits:                            60688|60809                (-0.19898%) [-1.00199x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   60700|60820                (-0.19730%) [-1.00198x]
+  Estimated Cycles:                   60838|60954                (-0.19031%) [-1.00191x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta rare_3:(map_rare(100))
+  Instructions:                       50000|50115                (-0.22947%) [-1.00230x]
+  L1 Hits:                            61047|61190                (-0.23370%) [-1.00234x]
+  LL Hits:                               18|10                   (+80.0000%) [+1.80000x]
+  RAM Hits:                               4|4                    (No change)
+  Total read+write:                   61069|61204                (-0.22057%) [-1.00221x]
+  Estimated Cycles:                   61277|61380                (-0.16781%) [-1.00168x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta rare_4:(map_rare(1_000))
+  Instructions:                       49952|49966                (-0.02802%) [-1.00028x]
+  L1 Hits:                            60962|61028                (-0.10815%) [-1.00108x]
+  LL Hits:                              158|99                   (+59.5960%) [+1.59596x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   61123|61130                (-0.01145%) [-1.00011x]
+  Estimated Cycles:                   61857|61628                (+0.37158%) [+1.00372x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta rare_5:(map_rare(10_000))
+  Instructions:                       50011|49883                (+0.25660%) [+1.00257x]
+  L1 Hits:                            60909|60768                (+0.23203%) [+1.00232x]
+  LL Hits:                              269|264                  (+1.89394%) [+1.01894x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   61181|61035                (+0.23921%) [+1.00239x]
+  Estimated Cycles:                   62359|62193                (+0.26691%) [+1.00267x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_delta rare_6:(map_rare(100_000))
+  Instructions:                       50534|50716                (-0.35886%) [-1.00360x]
+  L1 Hits:                            61357|61554                (-0.32004%) [-1.00321x]
+  LL Hits:                              270|265                  (+1.88679%) [+1.01887x]
+  RAM Hits:                              57|53                   (+7.54717%) [+1.07547x]
+  Total read+write:                   61684|61872                (-0.30385%) [-1.00305x]
+  Estimated Cycles:                   64702|64734                (-0.04943%) [-1.00049x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy one_0:(map_one(3))
+  Instructions:                       54719|54771                (-0.09494%) [-1.00095x]
+  L1 Hits:                            68054|68100                (-0.06755%) [-1.00068x]
+  LL Hits:                                7|5                    (+40.0000%) [+1.40000x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   68064|68108                (-0.06460%) [-1.00065x]
+  Estimated Cycles:                   68194|68230                (-0.05276%) [-1.00053x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy one_1:(map_one(10))
+  Instructions:                       55492|55544                (-0.09362%) [-1.00094x]
+  L1 Hits:                            68951|68998                (-0.06812%) [-1.00068x]
+  LL Hits:                                9|6                    (+50.0000%) [+1.50000x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   68963|69007                (-0.06376%) [-1.00064x]
+  Estimated Cycles:                   69101|69133                (-0.04629%) [-1.00046x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy one_2:(map_one(30))
+  Instructions:                       55041|55080                (-0.07081%) [-1.00071x]
+  L1 Hits:                            68411|68442                (-0.04529%) [-1.00045x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   68423|68453                (-0.04383%) [-1.00044x]
+  Estimated Cycles:                   68561|68587                (-0.03791%) [-1.00038x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy one_3:(map_one(100))
+  Instructions:                       55202|55846                (-1.15317%) [-1.01167x]
+  L1 Hits:                            68532|69187                (-0.94671%) [-1.00956x]
+  LL Hits:                               11|9                    (+22.2222%) [+1.22222x]
+  RAM Hits:                               4|6                    (-33.3333%) [-1.50000x]
+  Total read+write:                   68547|69202                (-0.94650%) [-1.00956x]
+  Estimated Cycles:                   68727|69442                (-1.02964%) [-1.01040x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy one_4:(map_one(1_000))
+  Instructions:                       55494|55393                (+0.18233%) [+1.00182x]
+  L1 Hits:                            68808|68763                (+0.06544%) [+1.00065x]
+  LL Hits:                              122|46                   (+165.217%) [+2.65217x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   68933|68812                (+0.17584%) [+1.00176x]
+  Estimated Cycles:                   69523|69098                (+0.61507%) [+1.00615x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy one_5:(map_one(10_000))
+  Instructions:                       55436|55352                (+0.15176%) [+1.00152x]
+  L1 Hits:                            68601|68548                (+0.07732%) [+1.00077x]
+  LL Hits:                              263|216                  (+21.7593%) [+1.21759x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   68867|68767                (+0.14542%) [+1.00145x]
+  Estimated Cycles:                   70021|69733                (+0.41300%) [+1.00413x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy one_6:(map_one(100_000))
+  Instructions:                       56120|55893                (+0.40613%) [+1.00406x]
+  L1 Hits:                            69234|69025                (+0.30279%) [+1.00303x]
+  LL Hits:                              257|215                  (+19.5349%) [+1.19535x]
+  RAM Hits:                              52|52                   (No change)
+  Total read+write:                   69543|69292                (+0.36224%) [+1.00362x]
+  Estimated Cycles:                   72339|71920                (+0.58259%) [+1.00583x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy two_0:(map_two(3))
+  Instructions:                      112022|112074               (-0.04640%) [-1.00046x]
+  L1 Hits:                           137314|137360               (-0.03349%) [-1.00033x]
+  LL Hits:                                8|6                    (+33.3333%) [+1.33333x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                  137325|137369               (-0.03203%) [-1.00032x]
+  Estimated Cycles:                  137459|137495               (-0.02618%) [-1.00026x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy two_1:(map_two(10))
+  Instructions:                      117277|117324               (-0.04006%) [-1.00040x]
+  L1 Hits:                           143467|143505               (-0.02648%) [-1.00026x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                               8|8                    (No change)
+  Total read+write:                  143483|143520               (-0.02578%) [-1.00026x]
+  Estimated Cycles:                  143787|143820               (-0.02295%) [-1.00023x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy two_2:(map_two(30))
+  Instructions:                      114208|114323               (-0.10059%) [-1.00101x]
+  L1 Hits:                           139922|140035               (-0.08069%) [-1.00081x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                  139934|140046               (-0.07997%) [-1.00080x]
+  Estimated Cycles:                  140072|140180               (-0.07704%) [-1.00077x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy two_3:(map_two(100))
+  Instructions:                      113593|114476               (-0.77134%) [-1.00777x]
+  L1 Hits:                           139101|140005               (-0.64569%) [-1.00650x]
+  LL Hits:                               10|9                    (+11.1111%) [+1.11111x]
+  RAM Hits:                               3|4                    (-25.0000%) [-1.33333x]
+  Total read+write:                  139114|140018               (-0.64563%) [-1.00650x]
+  Estimated Cycles:                  139256|140190               (-0.66624%) [-1.00671x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy two_4:(map_two(1_000))
+  Instructions:                      113440|113562               (-0.10743%) [-1.00108x]
+  L1 Hits:                           138661|138847               (-0.13396%) [-1.00134x]
+  LL Hits:                              273|208                  (+31.2500%) [+1.31250x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                  138937|139058               (-0.08701%) [-1.00087x]
+  Estimated Cycles:                  140131|139992               (+0.09929%) [+1.00099x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy two_5:(map_two(10_000))
+  Instructions:                      113473|113429               (+0.03879%) [+1.00039x]
+  L1 Hits:                           138584|138524               (+0.04331%) [+1.00043x]
+  LL Hits:                              535|531                  (+0.75330%) [+1.00753x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                  139122|139058               (+0.04602%) [+1.00046x]
+  Estimated Cycles:                  141364|141284               (+0.05662%) [+1.00057x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy two_6:(map_two(100_000))
+  Instructions:                      115144|115002               (+0.12348%) [+1.00123x]
+  L1 Hits:                           140323|140188               (+0.09630%) [+1.00096x]
+  LL Hits:                              567|562                  (+0.88968%) [+1.00890x]
+  RAM Hits:                             102|89                   (+14.6067%) [+1.14607x]
+  Total read+write:                  140992|140839               (+0.10863%) [+1.00109x]
+  Estimated Cycles:                  146728|146113               (+0.42091%) [+1.00421x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy rare_0:(map_rare(3))
+  Instructions:                       61607|61659                (-0.08433%) [-1.00084x]
+  L1 Hits:                            78551|78597                (-0.05853%) [-1.00059x]
+  LL Hits:                                7|5                    (+40.0000%) [+1.40000x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   78561|78605                (-0.05598%) [-1.00056x]
+  Estimated Cycles:                   78691|78727                (-0.04573%) [-1.00046x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy rare_1:(map_rare(10))
+  Instructions:                       65450|65502                (-0.07939%) [-1.00079x]
+  L1 Hits:                            82797|82842                (-0.05432%) [-1.00054x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   82809|82853                (-0.05311%) [-1.00053x]
+  Estimated Cycles:                   82947|82987                (-0.04820%) [-1.00048x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy rare_2:(map_rare(30))
+  Instructions:                       68460|68193                (+0.39154%) [+1.00392x]
+  L1 Hits:                            86325|86026                (+0.34757%) [+1.00348x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   86337|86037                (+0.34869%) [+1.00349x]
+  Estimated Cycles:                   86475|86171                (+0.35279%) [+1.00353x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy rare_3:(map_rare(100))
+  Instructions:                       76302|69380                (+9.97694%) [+1.09977x]
+  L1 Hits:                            95244|87553                (+8.78439%) [+1.08784x]
+  LL Hits:                               11|9                    (+22.2222%) [+1.22222x]
+  RAM Hits:                              34|5                    (+580.000%) [+6.80000x]
+  Total read+write:                   95289|87567                (+8.81839%) [+1.08818x]
+  Estimated Cycles:                   96489|87773                (+9.93016%) [+1.09930x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy rare_4:(map_rare(1_000))
+  Instructions:                       70939|70978                (-0.05495%) [-1.00055x]
+  L1 Hits:                            89214|89306                (-0.10302%) [-1.00103x]
+  LL Hits:                              124|62                   (+100.000%) [+2.00000x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   89341|89371                (-0.03357%) [-1.00034x]
+  Estimated Cycles:                   89939|89721                (+0.24298%) [+1.00243x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy rare_5:(map_rare(10_000))
+  Instructions:                       70830|70944                (-0.16069%) [-1.00161x]
+  L1 Hits:                            88895|89060                (-0.18527%) [-1.00186x]
+  LL Hits:                              265|210                  (+26.1905%) [+1.26190x]
+  RAM Hits:                               4|4                    (No change)
+  Total read+write:                   89164|89274                (-0.12322%) [-1.00123x]
+  Estimated Cycles:                   90360|90250                (+0.12188%) [+1.00122x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_lazy rare_6:(map_rare(100_000))
+  Instructions:                       71471|71279                (+0.26936%) [+1.00269x]
+  L1 Hits:                            89479|89318                (+0.18025%) [+1.00180x]
+  LL Hits:                              273|228                  (+19.7368%) [+1.19737x]
+  RAM Hits:                              65|55                   (+18.1818%) [+1.18182x]
+  Total read+write:                   89817|89601                (+0.24107%) [+1.00241x]
+  Estimated Cycles:                   93119|92383                (+0.79668%) [+1.00797x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::compose_baseline k_0:(compose(1))
+  Instructions:                        3430|3430                 (No change)
+  L1 Hits:                             5184|5185                 (-0.01929%) [-1.00019x]
+  LL Hits:                                0|0                    (No change)
+  RAM Hits:                               4|3                    (+33.3333%) [+1.33333x]
+  Total read+write:                    5188|5188                 (No change)
+  Estimated Cycles:                    5324|5290                 (+0.64272%) [+1.00643x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::compose_baseline k_1:(compose(2))
+  Instructions:                        3494|3494                 (No change)
+  L1 Hits:                             5248|5249                 (-0.01905%) [-1.00019x]
+  LL Hits:                                0|0                    (No change)
+  RAM Hits:                               4|3                    (+33.3333%) [+1.33333x]
+  Total read+write:                    5252|5252                 (No change)
+  Estimated Cycles:                    5388|5354                 (+0.63504%) [+1.00635x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::compose_baseline k_2:(compose(4))
+  Instructions:                        3494|3494                 (No change)
+  L1 Hits:                             5248|5248                 (No change)
+  LL Hits:                                0|0                    (No change)
+  RAM Hits:                               4|4                    (No change)
+  Total read+write:                    5252|5252                 (No change)
+  Estimated Cycles:                    5388|5388                 (No change)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::compose_baseline k_3:(compose(16))
+  Instructions:                        4646|4646                 (No change)
+  L1 Hits:                             7233|7233                 (No change)
+  LL Hits:                                0|0                    (No change)
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                    7236|7236                 (No change)
+  Estimated Cycles:                    7338|7338                 (No change)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::compose_baseline k_4:(compose(64))
+  Instructions:                       10726|10726                (No change)
+  L1 Hits:                            16576|16576                (No change)
+  LL Hits:                                0|0                    (No change)
+  RAM Hits:                               4|4                    (No change)
+  Total read+write:                   16580|16580                (No change)
+  Estimated Cycles:                   16716|16716                (No change)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::compose_delta k_0:(compose(1))
+  Instructions:                        3686|3686                 (No change)
+  L1 Hits:                             5441|5441                 (No change)
+  LL Hits:                                0|0                    (No change)
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                    5444|5444                 (No change)
+  Estimated Cycles:                    5546|5546                 (No change)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::compose_delta k_1:(compose(2))
+  Instructions:                       21990|21990                (No change)
+  L1 Hits:                            30145|30144                (+0.00332%) [+1.00003x]
+  LL Hits:                                0|0                    (No change)
+  RAM Hits:                               3|4                    (-25.0000%) [-1.33333x]
+  Total read+write:                   30148|30148                (No change)
+  Estimated Cycles:                   30250|30284                (-0.11227%) [-1.00112x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::compose_delta k_2:(compose(4))
+  Instructions:                       53926|53926                (No change)
+  L1 Hits:                            73473|73472                (+0.00136%) [+1.00001x]
+  LL Hits:                                0|0                    (No change)
+  RAM Hits:                               3|4                    (-25.0000%) [-1.33333x]
+  Total read+write:                   73476|73476                (No change)
+  Estimated Cycles:                   73578|73612                (-0.04619%) [-1.00046x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::compose_delta k_3:(compose(16))
+  Instructions:                      335206|335206               (No change)
+  L1 Hits:                           456192|456191               (+0.00022%) [+1.00000x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               3|4                    (-25.0000%) [-1.33333x]
+  Total read+write:                  456196|456196               (No change)
+  Estimated Cycles:                  456302|456336               (-0.00745%) [-1.00007x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::compose_delta k_4:(compose(64))
+  Instructions:                     1743974|1745510              (-0.08800%) [-1.00088x]
+  L1 Hits:                          2384129|2386177              (-0.08583%) [-1.00086x]
+  LL Hits:                                0|0                    (No change)
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                 2384132|2386180              (-0.08583%) [-1.00086x]
+  Estimated Cycles:                 2384234|2386282              (-0.08582%) [-1.00086x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree one_0:(vec_one(3))
+  Instructions:                       16024|16076                (-0.32346%) [-1.00325x]
+  L1 Hits:                            23159|23331                (-0.73722%) [-1.00743x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   23162|23334                (-0.73712%) [-1.00743x]
+  Estimated Cycles:                   23234|23406                (-0.73485%) [-1.00740x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree one_1:(vec_one(10))
+  Instructions:                       16442|16494                (-0.31527%) [-1.00316x]
+  L1 Hits:                            23787|23958                (-0.71375%) [-1.00719x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   23790|23962                (-0.71780%) [-1.00723x]
+  Estimated Cycles:                   23862|24038                (-0.73217%) [-1.00738x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree one_2:(vec_one(30))
+  Instructions:                       17636|17688                (-0.29398%) [-1.00295x]
+  L1 Hits:                            25837|26009                (-0.66131%) [-1.00666x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   25840|26012                (-0.66123%) [-1.00666x]
+  Estimated Cycles:                   25912|26084                (-0.65941%) [-1.00664x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree one_3:(vec_one(100))
+  Instructions:                       27827|27917                (-0.32238%) [-1.00323x]
+  L1 Hits:                            40672|40925                (-0.61820%) [-1.00622x]
+  LL Hits:                                4|6                    (-33.3333%) [-1.50000x]
+  RAM Hits:                              17|14                   (+21.4286%) [+1.21429x]
+  Total read+write:                   40693|40945                (-0.61546%) [-1.00619x]
+  Estimated Cycles:                   41287|41445                (-0.38123%) [-1.00383x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree one_4:(vec_one(1_000))
+  Instructions:                       37170|37254                (-0.22548%) [-1.00226x]
+  L1 Hits:                            53362|53755                (-0.73109%) [-1.00736x]
+  LL Hits:                              175|18                   (+872.222%) [+9.72222x]
+  RAM Hits:                               7|7                    (No change)
+  Total read+write:                   53544|53780                (-0.43882%) [-1.00441x]
+  Estimated Cycles:                   54482|54090                (+0.72472%) [+1.00725x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree one_5:(vec_one(10_000))
+  Instructions:                       49256|49340                (-0.17025%) [-1.00171x]
+  L1 Hits:                            69298|69645                (-0.49824%) [-1.00501x]
+  LL Hits:                              737|626                  (+17.7316%) [+1.17732x]
+  RAM Hits:                               5|5                    (No change)
+  Total read+write:                   70040|70276                (-0.33582%) [-1.00337x]
+  Estimated Cycles:                   73158|72950                (+0.28513%) [+1.00285x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree one_6:(vec_one(100_000))
+  Instructions:                       54988|55072                (-0.15253%) [-1.00153x]
+  L1 Hits:                            75377|75696                (-0.42142%) [-1.00423x]
+  LL Hits:                             1059|1012                 (+4.64427%) [+1.04644x]
+  RAM Hits:                              44|8                    (+450.000%) [+5.50000x]
+  Total read+write:                   76480|76716                (-0.30763%) [-1.00309x]
+  Estimated Cycles:                   82212|81036                (+1.45121%) [+1.01451x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree one_7:(vec_one(1_000_000))
+  Instructions:                       71760|71844                (-0.11692%) [-1.00117x]
+  L1 Hits:                            99269|99557                (-0.28928%) [-1.00290x]
+  LL Hits:                             1455|1405                 (+3.55872%) [+1.03559x]
+  RAM Hits:                              60|58                   (+3.44828%) [+1.03448x]
+  Total read+write:                  100784|101020               (-0.23362%) [-1.00234x]
+  Estimated Cycles:                  108644|108612               (+0.02946%) [+1.00029x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree two_0:(vec_two(3))
+  Instructions:                       25532|25648                (-0.45228%) [-1.00454x]
+  L1 Hits:                            37007|37307                (-0.80414%) [-1.00811x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   37010|37310                (-0.80407%) [-1.00811x]
+  Estimated Cycles:                   37082|37382                (-0.80253%) [-1.00809x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree two_1:(vec_two(10))
+  Instructions:                       26182|26298                (-0.44110%) [-1.00443x]
+  L1 Hits:                            38051|38352                (-0.78484%) [-1.00791x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   38056|38356                (-0.78215%) [-1.00788x]
+  Estimated Cycles:                   38136|38432                (-0.77019%) [-1.00776x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree two_2:(vec_two(30))
+  Instructions:                       28306|28422                (-0.40813%) [-1.00410x]
+  L1 Hits:                            41623|41920                (-0.70849%) [-1.00714x]
+  LL Hits:                                1|4                    (-75.0000%) [-4.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   41626|41926                (-0.71555%) [-1.00721x]
+  Estimated Cycles:                   41698|42010                (-0.74268%) [-1.00748x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree two_3:(vec_two(100))
+  Instructions:                       47266|47446                (-0.37938%) [-1.00381x]
+  L1 Hits:                            69801|70229                (-0.60943%) [-1.00613x]
+  LL Hits:                                4|4                    (No change)
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   69808|70236                (-0.60937%) [-1.00613x]
+  Estimated Cycles:                   69926|70354                (-0.60835%) [-1.00612x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree two_4:(vec_two(1_000))
+  Instructions:                       68302|68482                (-0.26284%) [-1.00264x]
+  L1 Hits:                            98286|98957                (-0.67807%) [-1.00683x]
+  LL Hits:                              288|45                   (+540.000%) [+6.40000x]
+  RAM Hits:                              10|10                   (No change)
+  Total read+write:                   98584|99012                (-0.43227%) [-1.00434x]
+  Estimated Cycles:                  100076|99532                (+0.54656%) [+1.00547x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree two_5:(vec_two(10_000))
+  Instructions:                       90774|90954                (-0.19790%) [-1.00198x]
+  L1 Hits:                           127923|128473               (-0.42811%) [-1.00430x]
+  LL Hits:                             1368|1246                 (+9.79133%) [+1.09791x]
+  RAM Hits:                              11|11                   (No change)
+  Total read+write:                  129302|129730               (-0.32992%) [-1.00331x]
+  Estimated Cycles:                  135148|135088               (+0.04442%) [+1.00044x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree two_6:(vec_two(100_000))
+  Instructions:                      105906|106086               (-0.16967%) [-1.00170x]
+  L1 Hits:                           144592|145101               (-0.35079%) [-1.00352x]
+  LL Hits:                             2044|2080                 (-1.73077%) [-1.01761x]
+  RAM Hits:                             132|15                   (+780.000%) [+8.80000x]
+  Total read+write:                  146768|147196               (-0.29077%) [-1.00292x]
+  Estimated Cycles:                  159432|156026               (+2.18297%) [+1.02183x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree two_7:(vec_two(1_000_000))
+  Instructions:                      142278|142458               (-0.12635%) [-1.00127x]
+  L1 Hits:                           195383|195867               (-0.24711%) [-1.00248x]
+  LL Hits:                             2797|2743                 (+1.96865%) [+1.01969x]
+  RAM Hits:                             272|270                  (+0.74074%) [+1.00741x]
+  Total read+write:                  198452|198880               (-0.21521%) [-1.00216x]
+  Estimated Cycles:                  218888|219032               (-0.06574%) [-1.00066x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree rare_0:(vec_rare(3))
+  Instructions:                       15964|16016                (-0.32468%) [-1.00326x]
+  L1 Hits:                            23039|23211                (-0.74103%) [-1.00747x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   23042|23214                (-0.74093%) [-1.00746x]
+  Estimated Cycles:                   23114|23286                (-0.73864%) [-1.00744x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree rare_1:(vec_rare(10))
+  Instructions:                       16382|16434                (-0.31642%) [-1.00317x]
+  L1 Hits:                            23667|23838                (-0.71734%) [-1.00723x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   23670|23842                (-0.72142%) [-1.00727x]
+  Estimated Cycles:                   23742|23918                (-0.73585%) [-1.00741x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree rare_2:(vec_rare(30))
+  Instructions:                       17576|17628                (-0.29499%) [-1.00296x]
+  L1 Hits:                            25717|25889                (-0.66437%) [-1.00669x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   25720|25892                (-0.66430%) [-1.00669x]
+  Estimated Cycles:                   25792|25964                (-0.66246%) [-1.00667x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree rare_3:(vec_rare(100))
+  Instructions:                       27767|27857                (-0.32308%) [-1.00324x]
+  L1 Hits:                            40552|40805                (-0.62002%) [-1.00624x]
+  LL Hits:                                4|6                    (-33.3333%) [-1.50000x]
+  RAM Hits:                              17|14                   (+21.4286%) [+1.21429x]
+  Total read+write:                   40573|40825                (-0.61727%) [-1.00621x]
+  Estimated Cycles:                   41167|41325                (-0.38234%) [-1.00384x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree rare_4:(vec_rare(1_000))
+  Instructions:                       37110|37194                (-0.22584%) [-1.00226x]
+  L1 Hits:                            53242|53635                (-0.73273%) [-1.00738x]
+  LL Hits:                              175|18                   (+872.222%) [+9.72222x]
+  RAM Hits:                               7|7                    (No change)
+  Total read+write:                   53424|53660                (-0.43981%) [-1.00442x]
+  Estimated Cycles:                   54362|53970                (+0.72633%) [+1.00726x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree rare_5:(vec_rare(10_000))
+  Instructions:                       49196|49280                (-0.17045%) [-1.00171x]
+  L1 Hits:                            69178|69525                (-0.49910%) [-1.00502x]
+  LL Hits:                              737|626                  (+17.7316%) [+1.17732x]
+  RAM Hits:                               5|5                    (No change)
+  Total read+write:                   69920|70156                (-0.33639%) [-1.00338x]
+  Estimated Cycles:                   73038|72830                (+0.28560%) [+1.00286x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree rare_6:(vec_rare(100_000))
+  Instructions:                       54928|55012                (-0.15269%) [-1.00153x]
+  L1 Hits:                            75257|75576                (-0.42209%) [-1.00424x]
+  LL Hits:                             1059|1012                 (+4.64427%) [+1.04644x]
+  RAM Hits:                              44|8                    (+450.000%) [+5.50000x]
+  Total read+write:                   76360|76596                (-0.30811%) [-1.00309x]
+  Estimated Cycles:                   82092|80916                (+1.45336%) [+1.01453x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree rare_7:(vec_rare(1_000_000))
+  Instructions:                       71700|71784                (-0.11702%) [-1.00117x]
+  L1 Hits:                            99149|99437                (-0.28963%) [-1.00290x]
+  LL Hits:                             1455|1405                 (+3.55872%) [+1.03559x]
+  RAM Hits:                              60|58                   (+3.44828%) [+1.03448x]
+  Total read+write:                  100664|100900               (-0.23389%) [-1.00234x]
+  Estimated Cycles:                  108524|108492               (+0.02950%) [+1.00029x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree append_0:(vec_append(3))
+  Instructions:                       15108|15160                (-0.34301%) [-1.00344x]
+  L1 Hits:                            21671|21843                (-0.78744%) [-1.00794x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   21674|21846                (-0.78733%) [-1.00794x]
+  Estimated Cycles:                   21746|21918                (-0.78474%) [-1.00791x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree append_1:(vec_append(10))
+  Instructions:                       15108|15160                (-0.34301%) [-1.00344x]
+  L1 Hits:                            21671|21842                (-0.78290%) [-1.00789x]
+  LL Hits:                                1|2                    (-50.0000%) [-2.00000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   21674|21846                (-0.78733%) [-1.00794x]
+  Estimated Cycles:                   21746|21922                (-0.80285%) [-1.00809x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree append_2:(vec_append(30))
+  Instructions:                       15108|15160                (-0.34301%) [-1.00344x]
+  L1 Hits:                            21671|21843                (-0.78744%) [-1.00794x]
+  LL Hits:                                1|1                    (No change)
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   21674|21846                (-0.78733%) [-1.00794x]
+  Estimated Cycles:                   21746|21918                (-0.78474%) [-1.00791x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree append_3:(vec_append(100))
+  Instructions:                       22980|23064                (-0.36420%) [-1.00366x]
+  L1 Hits:                            33252|33487                (-0.70176%) [-1.00707x]
+  LL Hits:                                4|5                    (-20.0000%) [-1.25000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   33258|33494                (-0.70460%) [-1.00710x]
+  Estimated Cycles:                   33342|33582                (-0.71467%) [-1.00720x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree append_4:(vec_append(1_000))
+  Instructions:                       36996|37080                (-0.22654%) [-1.00227x]
+  L1 Hits:                            51808|52045                (-0.45538%) [-1.00457x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   51818|52054                (-0.45338%) [-1.00455x]
+  Estimated Cycles:                   51918|52150                (-0.44487%) [-1.00447x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree append_5:(vec_append(10_000))
+  Instructions:                       44740|44824                (-0.18740%) [-1.00188x]
+  L1 Hits:                            63200|63437                (-0.37360%) [-1.00375x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   63210|63446                (-0.37197%) [-1.00373x]
+  Estimated Cycles:                   63310|63542                (-0.36511%) [-1.00366x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree append_6:(vec_append(100_000))
+  Instructions:                       59076|59160                (-0.14199%) [-1.00142x]
+  L1 Hits:                            79584|79821                (-0.29691%) [-1.00298x]
+  LL Hits:                                0|2                    (-100.000%) [---inf---]
+  RAM Hits:                              10|7                    (+42.8571%) [+1.42857x]
+  Total read+write:                   79594|79830                (-0.29563%) [-1.00297x]
+  Estimated Cycles:                   79934|80076                (-0.17733%) [-1.00178x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree append_7:(vec_append(1_000_000))
+  Instructions:                       81156|81240                (-0.10340%) [-1.00104x]
+  L1 Hits:                           107359|107596               (-0.22027%) [-1.00221x]
+  LL Hits:                                0|0                    (No change)
+  RAM Hits:                              11|10                   (+10.0000%) [+1.10000x]
+  Total read+write:                  107370|107606               (-0.21932%) [-1.00220x]
+  Estimated Cycles:                  107744|107946               (-0.18713%) [-1.00187x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy one_0:(map_one(3))
+  Instructions:                       29271|29006                (+0.91360%) [+1.00914x]
+  L1 Hits:                            37322|36860                (+1.25339%) [+1.01253x]
+  LL Hits:                                7|5                    (+40.0000%) [+1.40000x]
+  RAM Hits:                               3|2                    (+50.0000%) [+1.50000x]
+  Total read+write:                   37332|36867                (+1.26129%) [+1.01261x]
+  Estimated Cycles:                   37462|36955                (+1.37194%) [+1.01372x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy one_1:(map_one(10))
+  Instructions:                       30109|29787                (+1.08101%) [+1.01081x]
+  L1 Hits:                            38296|37771                (+1.38996%) [+1.01390x]
+  LL Hits:                                9|6                    (+50.0000%) [+1.50000x]
+  RAM Hits:                               2|4                    (-50.0000%) [-2.00000x]
+  Total read+write:                   38307|37781                (+1.39223%) [+1.01392x]
+  Estimated Cycles:                   38411|37941                (+1.23877%) [+1.01239x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy one_2:(map_one(30))
+  Instructions:                       29648|29336                (+1.06354%) [+1.01064x]
+  L1 Hits:                            37744|37204                (+1.45146%) [+1.01451x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   37755|37214                (+1.45375%) [+1.01454x]
+  Estimated Cycles:                   37859|37314                (+1.46058%) [+1.01461x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy one_3:(map_one(100))
+  Instructions:                       29451|29219                (+0.79400%) [+1.00794x]
+  L1 Hits:                            37495|37077                (+1.12738%) [+1.01127x]
+  LL Hits:                               10|9                    (+11.1111%) [+1.11111x]
+  RAM Hits:                               5|5                    (No change)
+  Total read+write:                   37510|37091                (+1.12965%) [+1.01130x]
+  Estimated Cycles:                   37720|37297                (+1.13414%) [+1.01134x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy one_4:(map_one(1_000))
+  Instructions:                       29962|29627                (+1.13073%) [+1.01131x]
+  L1 Hits:                            38070|37554                (+1.37402%) [+1.01374x]
+  LL Hits:                               44|24                   (+83.3333%) [+1.83333x]
+  RAM Hits:                               3|3                    (No change)
+  Total read+write:                   38117|37581                (+1.42625%) [+1.01426x]
+  Estimated Cycles:                   38395|37779                (+1.63054%) [+1.01631x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy one_5:(map_one(10_000))
+  Instructions:                       29853|29659                (+0.65410%) [+1.00654x]
+  L1 Hits:                            37813|37541                (+0.72454%) [+1.00725x]
+  LL Hits:                              192|71                   (+170.423%) [+2.70423x]
+  RAM Hits:                               3|2                    (+50.0000%) [+1.50000x]
+  Total read+write:                   38008|37614                (+1.04748%) [+1.01047x]
+  Estimated Cycles:                   38878|37966                (+2.40215%) [+1.02402x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy one_6:(map_one(100_000))
+  Instructions:                       30167|29690                (+1.60660%) [+1.01607x]
+  L1 Hits:                            38056|37501                (+1.47996%) [+1.01480x]
+  LL Hits:                              198|63                   (+214.286%) [+3.14286x]
+  RAM Hits:                              55|56                   (-1.78571%) [-1.01818x]
+  Total read+write:                   38309|37620                (+1.83147%) [+1.01831x]
+  Estimated Cycles:                   40971|39776                (+3.00432%) [+1.03004x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy two_0:(map_two(3))
+  Instructions:                       53451|53122                (+0.61933%) [+1.00619x]
+  L1 Hits:                            66693|66103                (+0.89255%) [+1.00893x]
+  LL Hits:                                8|6                    (+33.3333%) [+1.33333x]
+  RAM Hits:                               3|2                    (+50.0000%) [+1.50000x]
+  Total read+write:                   66704|66111                (+0.89698%) [+1.00897x]
+  Estimated Cycles:                   66838|66203                (+0.95917%) [+1.00959x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy two_1:(map_two(10))
+  Instructions:                       58551|58197                (+0.60828%) [+1.00608x]
+  L1 Hits:                            72658|72041                (+0.85646%) [+1.00856x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                               7|7                    (No change)
+  Total read+write:                   72673|72055                (+0.85768%) [+1.00858x]
+  Estimated Cycles:                   72943|72321                (+0.86005%) [+1.00860x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy two_2:(map_two(30))
+  Instructions:                       55502|55019                (+0.87788%) [+1.00878x]
+  L1 Hits:                            69089|68332                (+1.10783%) [+1.01108x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   69100|68342                (+1.10913%) [+1.01109x]
+  Estimated Cycles:                   69204|68442                (+1.11335%) [+1.01113x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy two_3:(map_two(100))
+  Instructions:                       53443|58678                (-8.92157%) [-1.09795x]
+  L1 Hits:                            66704|72276                (-7.70934%) [-1.08353x]
+  LL Hits:                               10|11                   (-9.09091%) [-1.10000x]
+  RAM Hits:                               3|29                   (-89.6552%) [-9.66667x]
+  Total read+write:                   66717|72316                (-7.74241%) [-1.08392x]
+  Estimated Cycles:                   66859|73346                (-8.84438%) [-1.09703x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy two_4:(map_two(1_000))
+  Instructions:                       54883|54489                (+0.72308%) [+1.00723x]
+  L1 Hits:                            68122|67586                (+0.79306%) [+1.00793x]
+  LL Hits:                              192|67                   (+186.567%) [+2.86567x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   68316|67655                (+0.97702%) [+1.00977x]
+  Estimated Cycles:                   69152|67991                (+1.70758%) [+1.01708x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy two_5:(map_two(10_000))
+  Instructions:                       54053|53786                (+0.49641%) [+1.00496x]
+  L1 Hits:                            66961|66582                (+0.56922%) [+1.00569x]
+  LL Hits:                              491|345                  (+42.3188%) [+1.42319x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   67454|66929                (+0.78441%) [+1.00784x]
+  Estimated Cycles:                   69486|68377                (+1.62189%) [+1.01622x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy two_6:(map_two(100_000))
+  Instructions:                       54963|54434                (+0.97182%) [+1.00972x]
+  L1 Hits:                            67910|67164                (+1.11071%) [+1.01111x]
+  LL Hits:                              499|453                  (+10.1545%) [+1.10155x]
+  RAM Hits:                             110|99                   (+11.1111%) [+1.11111x]
+  Total read+write:                   68519|67716                (+1.18583%) [+1.01186x]
+  Estimated Cycles:                   74255|72894                (+1.86709%) [+1.01867x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy rare_0:(map_rare(3))
+  Instructions:                       16714|16671                (+0.25793%) [+1.00258x]
+  L1 Hits:                            22862|22793                (+0.30272%) [+1.00303x]
+  LL Hits:                                7|5                    (+40.0000%) [+1.40000x]
+  RAM Hits:                               2|2                    (No change)
+  Total read+write:                   22871|22800                (+0.31140%) [+1.00311x]
+  Estimated Cycles:                   22967|22888                (+0.34516%) [+1.00345x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy rare_1:(map_rare(10))
+  Instructions:                       24731|24598                (+0.54069%) [+1.00541x]
+  L1 Hits:                            32264|32078                (+0.57984%) [+1.00580x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               3|2                    (+50.0000%) [+1.50000x]
+  Total read+write:                   32276|32088                (+0.58589%) [+1.00586x]
+  Estimated Cycles:                   32414|32188                (+0.70213%) [+1.00702x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy rare_2:(map_rare(30))
+  Instructions:                       28711|28591                (+0.41971%) [+1.00420x]
+  L1 Hits:                            36937|36754                (+0.49790%) [+1.00498x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                               3|2                    (+50.0000%) [+1.50000x]
+  Total read+write:                   36949|36764                (+0.50321%) [+1.00503x]
+  Estimated Cycles:                   37087|36864                (+0.60493%) [+1.00605x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy rare_3:(map_rare(100))
+  Instructions:                       30294|30166                (+0.42432%) [+1.00424x]
+  L1 Hits:                            38859|38656                (+0.52514%) [+1.00525x]
+  LL Hits:                               11|11                   (No change)
+  RAM Hits:                               5|5                    (No change)
+  Total read+write:                   38875|38672                (+0.52493%) [+1.00525x]
+  Estimated Cycles:                   39089|38886                (+0.52204%) [+1.00522x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy rare_4:(map_rare(1_000))
+  Instructions:                       33130|32983                (+0.44568%) [+1.00446x]
+  L1 Hits:                            42083|41875                (+0.49672%) [+1.00497x]
+  LL Hits:                               61|43                   (+41.8605%) [+1.41860x]
+  RAM Hits:                               3|2                    (+50.0000%) [+1.50000x]
+  Total read+write:                   42147|41920                (+0.54151%) [+1.00542x]
+  Estimated Cycles:                   42493|42160                (+0.78985%) [+1.00790x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy rare_5:(map_rare(10_000))
+  Instructions:                       33455|33349                (+0.31785%) [+1.00318x]
+  L1 Hits:                            42339|42255                (+0.19879%) [+1.00199x]
+  LL Hits:                              209|116                  (+80.1724%) [+1.80172x]
+  RAM Hits:                               3|2                    (+50.0000%) [+1.50000x]
+  Total read+write:                   42551|42373                (+0.42008%) [+1.00420x]
+  Estimated Cycles:                   43489|42905                (+1.36115%) [+1.01361x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fullylazy rare_6:(map_rare(100_000))
+  Instructions:                       32967|32878                (+0.27070%) [+1.00271x]
+  L1 Hits:                            41620|41580                (+0.09620%) [+1.00096x]
+  LL Hits:                              166|45                   (+268.889%) [+3.68889x]
+  RAM Hits:                              98|95                   (+3.15789%) [+1.03158x]
+  Total read+write:                   41884|41720                (+0.39310%) [+1.00393x]
+  Estimated Cycles:                   45880|45130                (+1.66187%) [+1.01662x]
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused one_0:(map_one(3))
+  Instructions:                       24986|N/A                  (*********)
+  L1 Hits:                            30419|N/A                  (*********)
+  LL Hits:                                7|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   30429|N/A                  (*********)
+  Estimated Cycles:                   30559|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused one_1:(map_one(10))
+  Instructions:                       25806|N/A                  (*********)
+  L1 Hits:                            31363|N/A                  (*********)
+  LL Hits:                                9|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   31375|N/A                  (*********)
+  Estimated Cycles:                   31513|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused one_2:(map_one(30))
+  Instructions:                       25309|N/A                  (*********)
+  L1 Hits:                            30778|N/A                  (*********)
+  LL Hits:                                9|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   30790|N/A                  (*********)
+  Estimated Cycles:                   30928|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused one_3:(map_one(100))
+  Instructions:                       25141|N/A                  (*********)
+  L1 Hits:                            30575|N/A                  (*********)
+  LL Hits:                               10|N/A                  (*********)
+  RAM Hits:                               4|N/A                  (*********)
+  Total read+write:                   30589|N/A                  (*********)
+  Estimated Cycles:                   30765|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused one_4:(map_one(1_000))
+  Instructions:                       25628|N/A                  (*********)
+  L1 Hits:                            31131|N/A                  (*********)
+  LL Hits:                               22|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   31156|N/A                  (*********)
+  Estimated Cycles:                   31346|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused one_5:(map_one(10_000))
+  Instructions:                       25554|N/A                  (*********)
+  L1 Hits:                            31007|N/A                  (*********)
+  LL Hits:                               65|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   31075|N/A                  (*********)
+  Estimated Cycles:                   31437|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused one_6:(map_one(100_000))
+  Instructions:                       25786|N/A                  (*********)
+  L1 Hits:                            31202|N/A                  (*********)
+  LL Hits:                               44|N/A                  (*********)
+  RAM Hits:                              57|N/A                  (*********)
+  Total read+write:                   31303|N/A                  (*********)
+  Estimated Cycles:                   33417|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused two_0:(map_two(3))
+  Instructions:                       45498|N/A                  (*********)
+  L1 Hits:                            54258|N/A                  (*********)
+  LL Hits:                                8|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   54269|N/A                  (*********)
+  Estimated Cycles:                   54403|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused two_1:(map_two(10))
+  Instructions:                       50617|N/A                  (*********)
+  L1 Hits:                            60160|N/A                  (*********)
+  LL Hits:                                8|N/A                  (*********)
+  RAM Hits:                               8|N/A                  (*********)
+  Total read+write:                   60176|N/A                  (*********)
+  Estimated Cycles:                   60480|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused two_2:(map_two(30))
+  Instructions:                       47383|N/A                  (*********)
+  L1 Hits:                            56426|N/A                  (*********)
+  LL Hits:                                9|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   56438|N/A                  (*********)
+  Estimated Cycles:                   56576|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused two_3:(map_two(100))
+  Instructions:                       45330|N/A                  (*********)
+  L1 Hits:                            54049|N/A                  (*********)
+  LL Hits:                               10|N/A                  (*********)
+  RAM Hits:                               5|N/A                  (*********)
+  Total read+write:                   54064|N/A                  (*********)
+  Estimated Cycles:                   54274|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused two_4:(map_two(1_000))
+  Instructions:                       46983|N/A                  (*********)
+  L1 Hits:                            55905|N/A                  (*********)
+  LL Hits:                               67|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   55975|N/A                  (*********)
+  Estimated Cycles:                   56345|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused two_5:(map_two(10_000))
+  Instructions:                       46060|N/A                  (*********)
+  L1 Hits:                            54654|N/A                  (*********)
+  LL Hits:                              303|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   54960|N/A                  (*********)
+  Estimated Cycles:                   56274|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused two_6:(map_two(100_000))
+  Instructions:                       46480|N/A                  (*********)
+  L1 Hits:                            54850|N/A                  (*********)
+  LL Hits:                              445|N/A                  (*********)
+  RAM Hits:                              89|N/A                  (*********)
+  Total read+write:                   55384|N/A                  (*********)
+  Estimated Cycles:                   60190|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused rare_0:(map_rare(3))
+  Instructions:                       24926|N/A                  (*********)
+  L1 Hits:                            30299|N/A                  (*********)
+  LL Hits:                                7|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   30309|N/A                  (*********)
+  Estimated Cycles:                   30439|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused rare_1:(map_rare(10))
+  Instructions:                       25707|N/A                  (*********)
+  L1 Hits:                            31201|N/A                  (*********)
+  LL Hits:                                9|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   31213|N/A                  (*********)
+  Estimated Cycles:                   31351|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused rare_2:(map_rare(30))
+  Instructions:                       25223|N/A                  (*********)
+  L1 Hits:                            30630|N/A                  (*********)
+  LL Hits:                                9|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   30642|N/A                  (*********)
+  Estimated Cycles:                   30780|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused rare_3:(map_rare(100))
+  Instructions:                       25057|N/A                  (*********)
+  L1 Hits:                            30430|N/A                  (*********)
+  LL Hits:                               10|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   30443|N/A                  (*********)
+  Estimated Cycles:                   30585|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused rare_4:(map_rare(1_000))
+  Instructions:                       25545|N/A                  (*********)
+  L1 Hits:                            30976|N/A                  (*********)
+  LL Hits:                               33|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   31012|N/A                  (*********)
+  Estimated Cycles:                   31246|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused rare_5:(map_rare(10_000))
+  Instructions:                       25466|N/A                  (*********)
+  L1 Hits:                            30861|N/A                  (*********)
+  LL Hits:                               67|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   30931|N/A                  (*********)
+  Estimated Cycles:                   31301|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::map_fused rare_6:(map_rare(100_000))
+  Instructions:                       25736|N/A                  (*********)
+  L1 Hits:                            31054|N/A                  (*********)
+  LL Hits:                               84|N/A                  (*********)
+  RAM Hits:                              57|N/A                  (*********)
+  Total read+write:                   31195|N/A                  (*********)
+  Estimated Cycles:                   33469|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared one_0:(vec_one(3))
+  Instructions:                       11351|N/A                  (*********)
+  L1 Hits:                            16184|N/A                  (*********)
+  LL Hits:                                1|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   16187|N/A                  (*********)
+  Estimated Cycles:                   16259|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared one_1:(vec_one(10))
+  Instructions:                       11909|N/A                  (*********)
+  L1 Hits:                            17066|N/A                  (*********)
+  LL Hits:                                1|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   17069|N/A                  (*********)
+  Estimated Cycles:                   17141|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared one_2:(vec_one(30))
+  Instructions:                       13522|N/A                  (*********)
+  L1 Hits:                            19472|N/A                  (*********)
+  LL Hits:                                1|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   19475|N/A                  (*********)
+  Estimated Cycles:                   19547|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared one_3:(vec_one(100))
+  Instructions:                       18663|N/A                  (*********)
+  L1 Hits:                            27091|N/A                  (*********)
+  LL Hits:                                4|N/A                  (*********)
+  RAM Hits:                              27|N/A                  (*********)
+  Total read+write:                   27122|N/A                  (*********)
+  Estimated Cycles:                   28056|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared one_4:(vec_one(1_000))
+  Instructions:                       23250|N/A                  (*********)
+  L1 Hits:                            33398|N/A                  (*********)
+  LL Hits:                               15|N/A                  (*********)
+  RAM Hits:                               5|N/A                  (*********)
+  Total read+write:                   33418|N/A                  (*********)
+  Estimated Cycles:                   33648|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared one_5:(vec_one(10_000))
+  Instructions:                       29434|N/A                  (*********)
+  L1 Hits:                            41500|N/A                  (*********)
+  LL Hits:                              410|N/A                  (*********)
+  RAM Hits:                              14|N/A                  (*********)
+  Total read+write:                   41924|N/A                  (*********)
+  Estimated Cycles:                   44040|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared one_6:(vec_one(100_000))
+  Instructions:                       32301|N/A                  (*********)
+  L1 Hits:                            44431|N/A                  (*********)
+  LL Hits:                              645|N/A                  (*********)
+  RAM Hits:                              27|N/A                  (*********)
+  Total read+write:                   45103|N/A                  (*********)
+  Estimated Cycles:                   48601|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared one_7:(vec_one(1_000_000))
+  Instructions:                       40756|N/A                  (*********)
+  L1 Hits:                            56376|N/A                  (*********)
+  LL Hits:                              880|N/A                  (*********)
+  RAM Hits:                              70|N/A                  (*********)
+  Total read+write:                   57326|N/A                  (*********)
+  Estimated Cycles:                   63226|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared two_0:(vec_two(3))
+  Instructions:                       16461|N/A                  (*********)
+  L1 Hits:                            23448|N/A                  (*********)
+  LL Hits:                                1|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   23451|N/A                  (*********)
+  Estimated Cycles:                   23523|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared two_1:(vec_two(10))
+  Instructions:                       17507|N/A                  (*********)
+  L1 Hits:                            25161|N/A                  (*********)
+  LL Hits:                                1|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   25164|N/A                  (*********)
+  Estimated Cycles:                   25236|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared two_2:(vec_two(30))
+  Instructions:                       20075|N/A                  (*********)
+  L1 Hits:                            29004|N/A                  (*********)
+  LL Hits:                                1|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   29007|N/A                  (*********)
+  Estimated Cycles:                   29079|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared two_3:(vec_two(100))
+  Instructions:                       30542|N/A                  (*********)
+  L1 Hits:                            44807|N/A                  (*********)
+  LL Hits:                                4|N/A                  (*********)
+  RAM Hits:                               3|N/A                  (*********)
+  Total read+write:                   44814|N/A                  (*********)
+  Estimated Cycles:                   44932|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared two_4:(vec_two(1_000))
+  Instructions:                       40587|N/A                  (*********)
+  L1 Hits:                            58487|N/A                  (*********)
+  LL Hits:                               28|N/A                  (*********)
+  RAM Hits:                               8|N/A                  (*********)
+  Total read+write:                   58523|N/A                  (*********)
+  Estimated Cycles:                   58907|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared two_5:(vec_two(10_000))
+  Instructions:                       52030|N/A                  (*********)
+  L1 Hits:                            73158|N/A                  (*********)
+  LL Hits:                              972|N/A                  (*********)
+  RAM Hits:                              26|N/A                  (*********)
+  Total read+write:                   74156|N/A                  (*********)
+  Estimated Cycles:                   78928|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared two_6:(vec_two(100_000))
+  Instructions:                       59746|N/A                  (*********)
+  L1 Hits:                            81603|N/A                  (*********)
+  LL Hits:                             1427|N/A                  (*********)
+  RAM Hits:                              39|N/A                  (*********)
+  Total read+write:                   83069|N/A                  (*********)
+  Estimated Cycles:                   90103|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared two_7:(vec_two(1_000_000))
+  Instructions:                       77994|N/A                  (*********)
+  L1 Hits:                           107118|N/A                  (*********)
+  LL Hits:                             1631|N/A                  (*********)
+  RAM Hits:                             267|N/A                  (*********)
+  Total read+write:                  109016|N/A                  (*********)
+  Estimated Cycles:                  124618|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared rare_0:(vec_rare(3))
+  Instructions:                       11291|N/A                  (*********)
+  L1 Hits:                            16064|N/A                  (*********)
+  LL Hits:                                1|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   16067|N/A                  (*********)
+  Estimated Cycles:                   16139|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared rare_1:(vec_rare(10))
+  Instructions:                       11849|N/A                  (*********)
+  L1 Hits:                            16946|N/A                  (*********)
+  LL Hits:                                1|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   16949|N/A                  (*********)
+  Estimated Cycles:                   17021|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared rare_2:(vec_rare(30))
+  Instructions:                       13462|N/A                  (*********)
+  L1 Hits:                            19352|N/A                  (*********)
+  LL Hits:                                1|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   19355|N/A                  (*********)
+  Estimated Cycles:                   19427|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared rare_3:(vec_rare(100))
+  Instructions:                       18603|N/A                  (*********)
+  L1 Hits:                            26971|N/A                  (*********)
+  LL Hits:                                4|N/A                  (*********)
+  RAM Hits:                              27|N/A                  (*********)
+  Total read+write:                   27002|N/A                  (*********)
+  Estimated Cycles:                   27936|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared rare_4:(vec_rare(1_000))
+  Instructions:                       23190|N/A                  (*********)
+  L1 Hits:                            33278|N/A                  (*********)
+  LL Hits:                               15|N/A                  (*********)
+  RAM Hits:                               5|N/A                  (*********)
+  Total read+write:                   33298|N/A                  (*********)
+  Estimated Cycles:                   33528|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared rare_5:(vec_rare(10_000))
+  Instructions:                       29374|N/A                  (*********)
+  L1 Hits:                            41380|N/A                  (*********)
+  LL Hits:                              410|N/A                  (*********)
+  RAM Hits:                              14|N/A                  (*********)
+  Total read+write:                   41804|N/A                  (*********)
+  Estimated Cycles:                   43920|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared rare_6:(vec_rare(100_000))
+  Instructions:                       32241|N/A                  (*********)
+  L1 Hits:                            44311|N/A                  (*********)
+  LL Hits:                              645|N/A                  (*********)
+  RAM Hits:                              27|N/A                  (*********)
+  Total read+write:                   44983|N/A                  (*********)
+  Estimated Cycles:                   48481|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared rare_7:(vec_rare(1_000_000))
+  Instructions:                       40696|N/A                  (*********)
+  L1 Hits:                            56256|N/A                  (*********)
+  LL Hits:                              880|N/A                  (*********)
+  RAM Hits:                              70|N/A                  (*********)
+  Total read+write:                   57206|N/A                  (*********)
+  Estimated Cycles:                   63106|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared append_0:(vec_append(3))
+  Instructions:                       10852|N/A                  (*********)
+  L1 Hits:                            15399|N/A                  (*********)
+  LL Hits:                                1|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   15402|N/A                  (*********)
+  Estimated Cycles:                   15474|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared append_1:(vec_append(10))
+  Instructions:                       10852|N/A                  (*********)
+  L1 Hits:                            15399|N/A                  (*********)
+  LL Hits:                                1|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   15402|N/A                  (*********)
+  Estimated Cycles:                   15474|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared append_2:(vec_append(30))
+  Instructions:                       10852|N/A                  (*********)
+  L1 Hits:                            15399|N/A                  (*********)
+  LL Hits:                                1|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   15402|N/A                  (*********)
+  Estimated Cycles:                   15474|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared append_3:(vec_append(100))
+  Instructions:                       14788|N/A                  (*********)
+  L1 Hits:                            21188|N/A                  (*********)
+  LL Hits:                                4|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   21194|N/A                  (*********)
+  Estimated Cycles:                   21278|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared append_4:(vec_append(1_000))
+  Instructions:                       21796|N/A                  (*********)
+  L1 Hits:                            30464|N/A                  (*********)
+  LL Hits:                                8|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   30474|N/A                  (*********)
+  Estimated Cycles:                   30574|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared append_5:(vec_append(10_000))
+  Instructions:                       25668|N/A                  (*********)
+  L1 Hits:                            36160|N/A                  (*********)
+  LL Hits:                                8|N/A                  (*********)
+  RAM Hits:                               2|N/A                  (*********)
+  Total read+write:                   36170|N/A                  (*********)
+  Estimated Cycles:                   36270|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared append_6:(vec_append(100_000))
+  Instructions:                       32836|N/A                  (*********)
+  L1 Hits:                            44352|N/A                  (*********)
+  LL Hits:                                0|N/A                  (*********)
+  RAM Hits:                              10|N/A                  (*********)
+  Total read+write:                   44362|N/A                  (*********)
+  Estimated Cycles:                   44702|N/A                  (*********)
+rfd_0004_patch_cell_crossover_instructions::patch_cell_crossover::vec_btree_shared append_7:(vec_append(1_000_000))
+  Instructions:                       43876|N/A                  (*********)
+  L1 Hits:                            58239|N/A                  (*********)
+  LL Hits:                                0|N/A                  (*********)
+  RAM Hits:                              11|N/A                  (*********)
+  Total read+write:                   58250|N/A                  (*********)
+  Estimated Cycles:                   58624|N/A                  (*********)
+
+Gungraun result: Ok. 275 without regressions; 0 regressed; 0 filtered; 275 benchmarks finished in 368.366s
