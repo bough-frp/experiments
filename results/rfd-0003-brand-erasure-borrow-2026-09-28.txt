@@ -1,0 +1,378 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-brand-erasure at experiments@c8734b5 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0003-brand-erasure -- borrow
+
+stable:  rustc 1.98.1 (48a229cea 2026-09-01)  (rust-toolchain.toml)
+derive:  rfd-0003-rebrand-derive --features views, built by cargo
+api:     borrow/api.rs = ../api.rs (1272 lines, unchanged) + 499 lines of views
+
+view   fixture            expected result  first error
+read   sample-struct      build    built   
+read   sample-vec         build    built   
+read   sample-tagged      build    built   
+read   sample-lazy        build    built   
+read   plain-own          build    built   
+read   ref-across-send    fail     failed  E0502 cannot borrow `*b` as mutable because it is also borrowed as immutable
+read   ref-out-of-mutate  fail     failed  lifetime may not live long enough
+read   ref-into-mutate    fail     failed  E0521 borrowed data escapes outside of closure
+read   ref-token-nested   fail     failed  E0521 borrowed data escapes outside of closure
+read   ref-into-closure   fail     failed  E0521 borrowed data escapes outside of closure
+read   ref-static         fail     failed  lifetime may not live long enough
+read   stash-loan         fail     failed  E0521 borrowed data escapes outside of associated function
+read   missing-view       fail     failed  E0277 the trait bound `Celsius: bough::Borrow` is not satisfied
+read   stash-in-borrow    fail?    built   
+read   stash-in-view      fail?    built   
+read   lost-index         fail     failed  E0608 cannot index into a value of type `ListRef<'_, bough::Cell<'_, u32>>`
+read   lost-slice         fail     failed  E0521 borrowed data escapes outside of closure
+read   lost-debug         fail     failed  E0277 `PanelsRef<'_, '_>` doesn't implement `Debug`
+read   lost-variance      fail     failed  lifetime may not live long enough
+write  mut-struct         build    built   
+write  mut-generic        build    built   
+write  mut-get-static     fail     failed  E0521 borrowed data escapes outside of closure
+write  mut-retain-static  fail     failed  E0521 borrowed data escapes outside of closure
+write  mut-sort-static    fail     failed  E0521 borrowed data escapes outside of closure
+write  mut-place-static   fail     failed  E0521 borrowed data escapes outside of closure
+write  mut-items          fail     failed  E0616 field `items` of struct `ListMut` is private
+write  mut-escape         fail     failed  E0521 borrowed data escapes outside of closure
+write  lost-variant       fail     failed  E0614 type `ScreenMut<'_, '_>` cannot be dereferenced
+write  lost-dedup         fail     failed  E0599 no method named `dedup_by_key` found for struct `ListMut<'a, T>` in the current scope
+
+fail?: a token copied out of the stored value a hand-written impl is lent;
+it builds, and the run shows the token outliving its root.
+
+--- read: sample-struct.rs, run
+view:    panels left Ok(3) history [Ok(3), Ok(6)] pinned Some(Ok(103)) leaf 7
+again:   panels left Ok(3) history [Ok(3), Ok(6)] pinned Some(Ok(103)) leaf 7
+copy:    left Ok(3) history [Ok(3), Ok(6)]
+sum:     left + double = 9
+restores: sample 1, sample_ref 0
+
+--- read: sample-vec.rs, run
+tokens:  len 4 values [Ok(5), Ok(10), Ok(15), Ok(20)] third Some(Ok(15))
+rows:    x1=Ok(5) x2=Ok(10) x3=Ok(15) x4=Ok(20)
+last:    x4 = Ok(20)
+
+--- read: sample-tagged.rs, run
+one:     one = Ok(2)
+many:    many = [Ok(2), Ok(12)]
+plain:   plain = 42
+nested:  outer.inner = Ok(12)
+keyed:   source Ok(2) all [("a", Ok(2)), ("b", Ok(12))] first Some(Ok(2))
+screens: Login { user: Ok(2) }, Chat(Ok(2), Ok(12)), Closed
+
+--- read: sample-lazy.rs, run
+initial  n=0 -> Ok(0), again n=0 -> Ok(0), calls so far 1
+after 3  n=3 -> Ok(7), again n=3 -> Ok(7), calls so far 2
+after 6  n=6 -> Ok(12), again n=6 -> Ok(12), calls so far 3
+
+--- read: plain-own.rs, run
+stats:   Stats { count: 3, seen: [1, 3, 5] }, mean 3
+numbers: [4, 8], contains 8: true
+
+--- read: stash-in-borrow.rs, run
+sampled:             pair Ok(3)
+stashed, anchored:   Ok(3)
+collected:           5 nodes
+stashed, after:      Err(Stale)
+
+--- read: stash-in-view.rs, run
+mapped:              Ok(4)
+stashed, anchored:   Ok(3)
+collected:           6 nodes
+stashed, after:      Err(Stale)
+
+--- write: mut-struct.rs, run
+before:  before: left Ok(10) rows [c=Ok(10) a=Ok(20) d=Ok(30)] pinned Some(Ok(40))
+after:   after: left Ok(40) rows [A=Ok(30) B=Ok(40) C=Ok(10)] pinned None
+reset:   reset: left Ok(40) rows [] pinned Some(Ok(10))
+
+--- write: mut-generic.rs, run
+many:    many, sorted [Ok(3), Ok(2), Ok(1)]
+one:     one Ok(3)
+keyed:   all [("a2", Ok(1)), ("b", Ok(3))] first Some(("f", Ok(3)))
+screens: Closed, Chat(Ok(1), Ok(3))
+
+--- read: ref-across-send.rs, first diagnostic
+error[E0502]: cannot borrow `*b` as mutable because it is also borrowed as immutable
+  --> fixtures/rfd-0003-brand-erasure/borrow/ref-across-send.rs:39:9
+   |
+38 |         let view = b.sample_ref(pair).expect("live");
+   |                    - immutable borrow occurs here
+39 |         b.send(n_in, 1);
+   |         ^ mutable borrow occurs here
+40 |         println!("{}", view.label);
+   |                        ---------- immutable borrow later used here
+
+--- read: ref-out-of-mutate.rs, first diagnostic
+error: lifetime may not live long enough
+  --> fixtures/rfd-0003-brand-erasure/borrow/ref-out-of-mutate.rs:37:9
+   |
+35 |     let view = rt.mutate(|b| {
+   |                           -- return type of closure is PairRef<'2, '_>
+   |                           |
+   |                           has type `&'1 mut Mutate<'_>`
+36 |         let (_, pair) = build(b);
+37 |         b.sample_ref(pair).expect("live")
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ returning this value requires that `'1` must outlive `'2`
+   |
+   = note: requirement occurs because of the type `PairRef<'_, '_>`, which makes the generic argument `'_` invariant
+   = note: the struct `PairRef<'a, 'g>` is invariant over the parameter `'a`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- read: ref-into-mutate.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/borrow/ref-into-mutate.rs:38:9
+   |
+35 |     let mut kept = None;
+   |         -------- `kept` declared here, outside of the closure body
+36 |     rt.mutate(|b| {
+   |                - `b` is a reference that is only valid in the closure body
+37 |         let (_, pair) = build(b);
+38 |         kept = Some(b.sample_ref(pair).expect("live"));
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `b` escapes the closure body here
+   |
+   = note: requirement occurs because of the type `PairRef<'_, '_>`, which makes the generic argument `'_` invariant
+   = note: the struct `PairRef<'a, 'g>` is invariant over the parameter `'a`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- read: ref-token-nested.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/borrow/ref-token-nested.rs:40:21
+   |
+38 |         let view = b.sample_ref(pair).expect("live");
+   |             ---- `view` declared here, outside of the closure body
+39 |         other.mutate(|m| {
+   |                       - `m` is a reference that is only valid in the closure body
+40 |             let _ = m.sample(view.left);
+   |                     ^^^^^^^^^^^^^^^^^^^ `m` escapes the closure body here
+   |
+   = note: requirement occurs because of the type `bough::Cell<'_, u32>`, which makes the generic argument `'_` invariant
+   = note: the struct `bough::Cell<'g, A>` is invariant over the parameter `'g`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- read: ref-into-closure.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/borrow/ref-into-closure.rs:39:17
+   |
+35 |     rt.mutate(|b| {
+   |                -
+   |                |
+   |                `b` is a reference that is only valid in the closure body
+   |                has type `&'1 mut Mutate<'_>`
+...
+39 |         let _ = n.map(move |v| v + view.label.len() as u32);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |                 |
+   |                 `b` escapes the closure body here
+   |                 argument requires that `'1` must outlive `'static`
+
+--- read: ref-static.rs, first diagnostic
+error: lifetime may not live long enough
+  --> fixtures/rfd-0003-brand-erasure/borrow/ref-static.rs:41:19
+   |
+39 |     rt.mutate(|b| {
+   |                - has type `&mut Mutate<'1>`
+40 |         let (_, pair) = build(b);
+41 |         let view: PairRef<'_, 'static> = b.sample_ref(pair).expect("live");
+   |                   ^^^^^^^^^^^^^^^^^^^^ type annotation requires that `'1` must outlive `'static`
+
+--- read: stash-loan.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of associated function
+  --> fixtures/rfd-0003-brand-erasure/borrow/stash-loan.rs:46:9
+   |
+45 |     fn borrow<'a>(from: &'a Pair<'static>, at: Loan<'a>) -> PairRef<'a, 'g> {
+   |               --  ----
+   |               |   |
+   |               |   `from` declared here, outside of the associated function body
+   |               |   `from` is a reference that is only valid in the associated function body
+   |               lifetime `'a` defined here
+46 |         STASH.set(Some(at));
+   |         ^^^^^^^^^^^^^^^^^^^
+   |         |
+   |         `from` escapes the associated function body here
+   |         argument requires that `'a` must outlive `'static`
+   |
+   = note: requirement occurs because of the type `bough::Loan<'_>`, which makes the generic argument `'_` invariant
+   = note: the struct `bough::Loan<'a>` is invariant over the parameter `'a`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- read: missing-view.rs, first diagnostic
+error[E0277]: the trait bound `Celsius: bough::Borrow` is not satisfied
+  --> fixtures/rfd-0003-brand-erasure/borrow/missing-view.rs:24:18
+   |
+24 |     temperature: Celsius,
+   |                  ^^^^^^^ unsatisfied trait bound
+   |
+help: the trait `bough::Borrow` is not implemented for `Celsius`
+  --> fixtures/rfd-0003-brand-erasure/borrow/missing-view.rs:9:1
+   |
+ 9 | struct Celsius(f64);
+   | ^^^^^^^^^^^^^^
+   = help: the following other types implement trait `bough::Borrow`:
+             ()
+             (A, B)
+             Anchored<T>
+             Input<'g, A>
+             Leaf<T>
+             Option<T>
+             Reading<'g>
+             Shared<'g, A>
+           and 8 others
+
+--- read: lost-index.rs, first diagnostic
+error[E0608]: cannot index into a value of type `ListRef<'_, bough::Cell<'_, u32>>`
+  --> fixtures/rfd-0003-brand-erasure/borrow/lost-index.rs:39:33
+   |
+39 |         let first = view.history[0];
+   |                                 ^^^
+
+--- read: lost-slice.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/borrow/lost-slice.rs:43:17
+   |
+40 |     rt.mutate(|b| {
+   |                -
+   |                |
+   |                `b` is a reference that is only valid in the closure body
+   |                has type `&mut Mutate<'1>`
+...
+43 |         let _ = total(b, view.history.as_slice());
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |                 |
+   |                 `b` escapes the closure body here
+   |                 argument requires that `'1` must outlive `'static`
+   |
+   = note: requirement occurs because of the type `bough::Cell<'_, u32>`, which makes the generic argument `'_` invariant
+   = note: the struct `bough::Cell<'g, A>` is invariant over the parameter `'g`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- read: lost-debug.rs, first diagnostic
+error[E0277]: `PanelsRef<'_, '_>` doesn't implement `Debug`
+  --> fixtures/rfd-0003-brand-erasure/borrow/lost-debug.rs:50:19
+   |
+50 |         println!("{view:?}");
+   |                   ^^^^^^^^ `PanelsRef<'_, '_>` cannot be formatted using `{:?}` because it doesn't implement `Debug`
+   |
+help: the trait `Debug` is not implemented for `PanelsRef<'_, '_>`
+  --> fixtures/rfd-0003-brand-erasure/borrow/lost-debug.rs:7:10
+   |
+ 7 | #[derive(Rebrand)]
+   |          ^^^^^^^
+   = note: add `#[derive(Debug)]` to `PanelsRef<'_, '_>` or manually `impl Debug for PanelsRef<'_, '_>`
+   = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the derive macro `Rebrand` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+--- read: lost-variance.rs, first diagnostic
+error: lifetime may not live long enough
+  --> fixtures/rfd-0003-brand-erasure/borrow/lost-variance.rs:19:5
+   |
+18 | fn shorten_view<'short, 'long: 'short, 'g>(p: PanelsRef<'long, 'g>) -> PanelsRef<'short, 'g> {
+   |                 ------  ----- lifetime `'long` defined here
+   |                 |
+   |                 lifetime `'short` defined here
+19 |     p
+   |     ^ function was supposed to return data with lifetime `'long` but it is returning data with lifetime `'short`
+   |
+   = help: consider adding the following bound: `'short: 'long`
+   = note: requirement occurs because of the type `PanelsRef<'_, '_>`, which makes the generic argument `'_` invariant
+   = note: the struct `PanelsRef<'a, 'g>` is invariant over the parameter `'a`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- write: mut-get-static.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/borrow/mut-get-static.rs:41:34
+   |
+39 |     rt.mutate(|b| {
+   |                -
+   |                |
+   |                `b` is a reference that is only valid in the closure body
+   |                has type `&mut Mutate<'1>`
+40 |         let panels = build(b);
+41 |         b.update(panels, |mut p| STASH.set(Some(p.as_mut().left.get())))
+   |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |                                  |
+   |                                  `b` escapes the closure body here
+   |                                  argument requires that `'1` must outlive `'static`
+
+--- write: mut-retain-static.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/borrow/mut-retain-static.rs:43:17
+   |
+39 |     rt.mutate(|b| {
+   |                -
+   |                |
+   |                `b` is a reference that is only valid in the closure body
+   |                has type `&mut Mutate<'1>`
+...
+43 |                 STASH.set(Some(c));
+   |                 ^^^^^^^^^^^^^^^^^^
+   |                 |
+   |                 `b` escapes the closure body here
+   |                 argument requires that `'1` must outlive `'static`
+
+--- write: mut-sort-static.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/borrow/mut-sort-static.rs:42:17
+   |
+38 |     rt.mutate(|b| {
+   |                -
+   |                |
+   |                `b` is a reference that is only valid in the closure body
+   |                has type `&mut Mutate<'1>`
+...
+42 |                 STASH.set(Some(x));
+   |                 ^^^^^^^^^^^^^^^^^^
+   |                 |
+   |                 `b` escapes the closure body here
+   |                 argument requires that `'1` must outlive `'static`
+
+--- write: mut-place-static.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/borrow/mut-place-static.rs:41:9
+   |
+39 |       rt.mutate(|b| {
+   |                  -
+   |                  |
+   |                  `b` is a reference that is only valid in the closure body
+   |                  has type `&mut Mutate<'1>`
+40 |           let panels = build(b);
+41 | /         b.update(panels, |p: Place<'_, Panels<'static>>| {
+42 | |             STASH.set(Some(p.get().left))
+43 | |         })
+   | |          ^
+   | |          |
+   | |__________`b` escapes the closure body here
+   |            argument requires that `'1` must outlive `'static`
+
+--- write: mut-items.rs, first diagnostic
+error[E0616]: field `items` of struct `ListMut` is private
+  --> fixtures/rfd-0003-brand-erasure/borrow/mut-items.rs:43:28
+   |
+43 |             STASH.set(list.items.first().copied());
+   |                            ^^^^^ private field
+
+--- write: mut-escape.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/borrow/mut-escape.rs:42:30
+   |
+41 |         let mut kept = None;
+   |             -------- `kept` declared here, outside of the closure body
+42 |         b.update(panels, |p| kept = Some(p.into_mut().history))
+   |                           -  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `p` escapes the closure body here
+   |                           |
+   |                           `p` is a reference that is only valid in the closure body
+
+--- write: lost-variant.rs, first diagnostic
+error[E0614]: type `ScreenMut<'_, '_>` cannot be dereferenced
+  --> fixtures/rfd-0003-brand-erasure/borrow/lost-variant.rs:44:13
+   |
+44 |             *a.screen = Screen::Closed;
+   |             ^^^^^^^^^ can't be dereferenced
+
+--- write: lost-dedup.rs, first diagnostic
+error[E0599]: no method named `dedup_by_key` found for struct `ListMut<'a, T>` in the current scope
+  --> fixtures/rfd-0003-brand-erasure/borrow/lost-dedup.rs:40:32
+   |
+40 |             p.as_mut().history.dedup_by_key(|c| c.index())
+   |                                ^^^^^^^^^^^^ method not found in `ListMut<'_, bough::Cell<'_, u32>>`
+
+borrow: 7 of 7 must-build programs built, 20 of 20 must-fail programs failed, 0 of 2 stash routes refused
+(every fixture and library is #![forbid(unsafe_code)]; no view in a fixture is hand-written but sample-struct.rs's Counted and the stash fixtures')
