@@ -1,6 +1,7 @@
 //! The code under test of each probe whose benches share it with a binary
 //! or with each other, one module per probe, named after it.
 
+pub mod rfd_0003_incremental_mark;
 pub mod rfd_0003_rebrand_cost;
 pub mod rfd_0003_sweep_cost;
 pub mod rfd_0003_work_paced_trigger;

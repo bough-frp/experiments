@@ -109,3 +109,11 @@ harness = false
 [[bench]]
 name = "rfd-0003-rebrand-cost-wallclock"
 harness = false
+
+[[bench]]
+name = "rfd-0003-incremental-mark-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0003-incremental-mark-wallclock"
+harness = false
