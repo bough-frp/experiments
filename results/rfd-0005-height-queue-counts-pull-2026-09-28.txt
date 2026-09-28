@@ -1,0 +1,57 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-height-queue-counts-pull at experiments@401293c - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0005_height_queue::tests::counts_instant -- --nocapture --exact
+
+    Finished `release` profile [optimized] target(s) in 0.07s
+     Running unittests src/lib.rs (target/release/deps/bough_experiments-546a1df3524d36be)
+
+running 1 test
+workload pass  marked   fired quiet%  built pulled  early  popped  below    ooo reseat step-r step-p raises  touch  stale
+settled   100  6672.2  6457.3    3.2    0.0    0.0   24.5  6457.2    0.0    0.0   0.00   80.8   80.8   0.37    1.0   0.00
+settled    50  6672.2  4546.1   31.9    0.0    0.0   24.5  4587.9    0.0    0.0   0.00   80.6   80.6   0.37    1.0   0.00
+settled    30  6672.2  2827.9   57.6    0.0    0.0   24.5  2874.8    0.0    0.0   0.00   80.4   80.4   0.37    1.0   0.00
+settled    20  6672.2  1850.3   72.3    0.0    0.0   24.5  1897.2    0.0    0.0   0.00   80.2   80.2   0.37    1.0   0.00
+settled     5  6672.2   318.6   95.2    0.0    0.0   24.5   358.9    0.0    0.0   0.00   79.9   79.9   0.37    1.0   0.00
+mixed     100  7032.2  5705.5   18.9    4.1    4.1   35.5  5706.6    1.4    0.0   0.02   89.4   89.1   0.32    0.9   0.00
+mixed      50  7032.2  3707.3   47.3    4.1    4.1   35.5  3745.8    1.4    0.0   0.02   89.4   89.1   0.32    0.9   0.00
+mixed      30  7032.2  2092.2   70.2    4.1    4.1   35.5  2135.0    1.4    0.0   0.02   89.1   88.8   0.32    0.9   0.00
+mixed      20  7032.2  1376.4   80.4    4.1    4.1   35.5  1419.9    1.4    0.0   0.02   89.1   88.8   0.32    0.9   0.00
+mixed       5  7032.2   135.5   98.1    4.1    4.1   35.5   174.2    1.4    0.0   0.02   88.7   88.4   0.32    0.9   0.00
+churn     100  7826.7  5094.6   34.9   11.5   11.5   30.0  5094.5    4.0    0.2   0.07   75.4   74.4   0.24    0.7   0.00
+churn      50  7826.7  2733.9   65.1   11.5   11.5   30.0  2769.7    4.0    0.1   0.07   75.3   74.3   0.24    0.7   0.00
+churn      30  7826.7  1638.8   79.1   11.5   11.5   30.0  1681.4    4.0    0.1   0.07   74.9   74.0   0.24    0.7   0.00
+churn      20  7826.7  1004.0   87.2   11.5   11.5   30.0  1047.3    4.0    0.1   0.07   74.8   73.8   0.24    0.7   0.00
+churn       5  7826.7   134.1   98.3   11.5   11.5   30.0   176.8    4.0    0.1   0.07   74.3   73.4   0.24    0.7   0.00
+lazy      100  8938.4  5086.2   43.1   23.1   23.1   35.3  5088.1    7.9    0.2   0.08   72.6   71.5   0.13    0.3   0.00
+lazy       50  8938.4  2379.3   73.4   23.1   23.1   35.3  2416.7    7.9    0.1   0.08   70.4   69.3   0.13    0.3   0.00
+lazy       30  8938.4  1303.4   85.4   23.1   23.1   35.3  1348.5    7.9    0.1   0.08   68.9   67.8   0.13    0.3   0.00
+lazy       20  8938.4   738.6   91.7   23.1   23.1   35.3   785.2    7.9    0.1   0.08   67.9   66.8   0.13    0.3   0.00
+lazy        5  8938.4    96.8   98.9   23.1   23.1   35.3   145.3    7.9    0.1   0.08   66.6   65.5   0.13    0.3   0.00
+
+per transaction, over each workload's 300 transactions, with nodes built
+during the instant evaluated in it and each switch_cell reading its new
+inner at the switch instant. Mark and pull: nodes marked, fired (refused
+transactions count none), the quiet share of the marked region, nodes
+built, built nodes pulled once the closure returned, and existing nodes
+pulled ahead of the flat loop. Heights: nodes popped by the pulling
+variant (the re-seating one pops these plus ooo), built nodes at or below
+the cursor when built, those of them evaluated out of order (ooo) by the
+pulling variant, times the re-seating variant sent its cursor back down,
+empty buckets stepped over by each (r, p), switch_cell links made
+mid-evaluation that needed a raise, nodes those raises touched, and queued
+nodes a raise moved and the cursor found at their old height. pass is the
+filters' pass rate in percent.
+
+workload  refus poison
+settled       2      2
+mixed         5      5
+churn         2      2
+lazy          6      6
+
+transactions refused, and of them found to close a cycle during
+evaluation (by a pull coming back to the switch_cell, or by a raise
+coming back to the new inner; the two engines agree), whatever the pass
+rate.
+test rfd_0005_height_queue::tests::counts_instant ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 56 filtered out; finished in 11.16s
+
