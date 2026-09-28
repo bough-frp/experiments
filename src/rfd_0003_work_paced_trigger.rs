@@ -82,7 +82,34 @@
 //! garbage made before an input's first transaction still counts, and
 //! `Backoff`, a threshold that grows after collections that freed little,
 //! against live growth.
+//!
+//! # Spurious and missed collections
+//!
+//! Two follow-ups bound `Excess`'s two failures. A [`Shape`] varies the
+//! uneven schedule: the quiet stretch after each 900 navigating units, and
+//! how fast the live regions grow. With `breathe`, screens are also kept off
+//! the tenth input through each navigating stretch and released one guard at
+//! a time through the quiet one, so RFD 3's release term is nonzero. A
+//! release doesn't take a screen out of any region: its nodes stay in their
+//! inputs' dependents lists, and are evaluated, until a collection prunes
+//! them. So a released screen is garbage that no region term can see, and a
+//! region shrinks only across a collection, where its reference is retaken.
+//!
+//! For misses, `Mix::Lagging` hangs every screen off the hundredth input, so
+//! its first transaction after a collection comes some thirty navigations
+//! late and takes their garbage into its reference. The cheap fix aimed at
+//! that, `Marked`, takes an input's reference to be its region as the last
+//! collection left it: at the input's first transaction after a collection,
+//! the region nodes born before it. A node born since is garbage or live
+//! growth either way, which is what `Excess` means to count, and garbage
+//! made before the input's first transaction is no longer folded in. The
+//! engine needs a birth epoch per node for it (a word, or the collection
+//! count at allocation) and one pass over the region at each input's first
+//! transaction after a collection, which the counts charge to it. Walking
+//! every input's region at the collection instead would pay for inputs that
+//! never fire again.
 
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 use crate::rfd_0005_demand_bounded_push::{Arena, Fixture, Guard, Id, Op, Push, Refresh};
@@ -118,6 +145,10 @@ pub enum Policy {
     /// after a collection that freed under 1% of what it left alive, and
     /// falls back to the survivors after one that freed more.
     Backoff,
+    /// `Excess` whose reference is the input's region as the last collection
+    /// left it: the region nodes born before that collection, counted at the
+    /// input's first transaction after it.
+    Marked,
     /// Collects when the dead nodes transactions evaluated since the last
     /// collection exceed its survivors, or on `Rfd3`. An engine can't count
     /// them; only a run with an audit can, so it is the target, not a
@@ -151,6 +182,7 @@ impl Policy {
             Policy::Total => "total",
             Policy::Decay => "decay",
             Policy::Backoff => "backoff",
+            Policy::Marked => "marked",
             Policy::Oracle => "oracle",
         }
     }
@@ -162,7 +194,8 @@ pub struct Pacer {
     pub policy: Policy,
     /// The live count the last collection left.
     survivors: usize,
-    /// Guards released since the last collection; always zero here.
+    /// Guards released since the last collection; zero but in a breathing
+    /// run.
     released: usize,
     /// Region nodes since the last collection, by the policy's measure.
     work: usize,
@@ -195,7 +228,8 @@ impl Pacer {
         match self.policy {
             Policy::Baseline | Policy::Rfd3 | Policy::Oracle => {}
             Policy::Total => self.work += region,
-            Policy::Excess | Policy::Backoff => {
+            // `Marked`'s reference was set for this epoch before the call.
+            Policy::Excess | Policy::Backoff | Policy::Marked => {
                 let epoch = self.epoch;
                 let r = self.reference(input);
                 if r.0 != epoch {
@@ -252,6 +286,37 @@ impl Pacer {
         self.survivors
     }
 
+    /// A guard was released.
+    pub fn release(&mut self) {
+        self.released += 1;
+    }
+
+    /// Collections so far, plus one: a node born in this epoch was born
+    /// after the last collection.
+    pub fn epoch(&self) -> u32 {
+        self.epoch
+    }
+
+    /// Whether `input` has no reference taken since the last collection.
+    pub fn stale(&self, input: Id) -> bool {
+        self.reference_len(input).is_none()
+    }
+
+    /// `input`'s reference, if it was taken since the last collection.
+    pub fn reference_len(&self, input: Id) -> Option<usize> {
+        self.reference
+            .get(input as usize)
+            .filter(|r| r.0 == self.epoch)
+            .map(|r| r.1 as usize)
+    }
+
+    /// Sets `input`'s reference for this epoch: `Marked`'s, from the region
+    /// nodes born before the last collection.
+    pub fn set_reference(&mut self, input: Id, len: usize) {
+        let epoch = self.epoch;
+        *self.reference(input) = (epoch, len as u32);
+    }
+
     /// Whether to collect after a unit, given the live count now and
     /// whether the unit navigated.
     #[inline]
@@ -261,7 +326,7 @@ impl Pacer {
         match self.policy {
             Policy::Baseline => navigated,
             Policy::Rfd3 => rfd3,
-            Policy::Excess | Policy::Total | Policy::Decay | Policy::Oracle => {
+            Policy::Excess | Policy::Total | Policy::Decay | Policy::Marked | Policy::Oracle => {
                 rfd3 || self.work > self.survivors
             }
             Policy::Backoff => rfd3 || self.work > self.survivors * self.scale,
@@ -471,6 +536,70 @@ const GROW_EVERY: usize = 30;
 /// The uneven workload's inputs, by how often they fire.
 pub const INPUTS: [&str; 4] = ["every", "tenth", "hundredth", "rare"];
 
+/// What the uneven schedule varies: how long its quiet stretches are, how
+/// fast its live regions grow, and whether one input's region breathes.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Shape {
+    /// Units without navigation after each `NAVIGATING` with it.
+    pub quiet: usize,
+    /// Screens kept per 120 units, round the three frequent inputs: 4 is one
+    /// every 30th unit, the first uneven run's rate.
+    pub growth: usize,
+    /// Whether a screen is kept off the tenth input every 30th unit of each
+    /// navigating stretch, and the thirty are released, a guard at a time,
+    /// evenly through the quiet stretch after it.
+    pub breathe: bool,
+}
+
+/// The first uneven run's schedule.
+pub const SHAPE: Shape = Shape {
+    quiet: PERIOD - NAVIGATING,
+    growth: 120 / GROW_EVERY,
+    breathe: false,
+};
+
+impl Shape {
+    pub fn period(self) -> usize {
+        NAVIGATING + self.quiet
+    }
+
+    /// Two periods, as `UNEVEN_WARMUP` is for `SHAPE`.
+    pub fn warmup(self) -> usize {
+        2 * self.period()
+    }
+
+    /// Three periods, as `UNEVEN_WINDOW` is for `SHAPE`.
+    pub fn window(self) -> usize {
+        3 * self.period()
+    }
+
+    fn quiet_at(self, k: usize) -> bool {
+        k % self.period() >= NAVIGATING
+    }
+
+    fn navigates(self, k: usize) -> bool {
+        !self.quiet_at(k) && k.is_multiple_of(3)
+    }
+
+    /// Whether unit `k` keeps a screen: `growth` in every 120 units, spaced
+    /// evenly, so that `SHAPE`'s is every unit 15 mod 30.
+    fn grows(self, k: usize) -> bool {
+        (k + 15) * self.growth / 120 != (k + 14) * self.growth / 120
+    }
+
+    /// Whether unit `k` keeps a breathing screen.
+    fn inhales(self, k: usize) -> bool {
+        self.breathe && !self.quiet_at(k) && k.is_multiple_of(30)
+    }
+
+    /// Whether unit `k` releases a breathing screen, if any is kept: thirty
+    /// release slots spread over the quiet stretch.
+    fn exhales(self, k: usize) -> bool {
+        let step = (self.quiet / 30).max(1);
+        self.breathe && self.quiet_at(k) && (k % self.period() - NAVIGATING).is_multiple_of(step)
+    }
+}
+
 /// Screens kept live off each input at the start: a few off each frequent
 /// one, and the bulk off the rare one, as `app`'s were off the clock.
 const KEPT: [usize; 4] = [20, 20, 20, 370];
@@ -500,6 +629,9 @@ pub enum Mix {
     /// fires every unit, so an input's first transaction after a
     /// collection has usually seen some navigations first.
     Sparse,
+    /// The hundredth alone: its first transaction after a collection comes
+    /// about thirty navigations late, all of them garbage on it.
+    Lagging,
 }
 
 pub const MIXES: [Mix; 2] = [Mix::Spread, Mix::Sparse];
@@ -509,6 +641,7 @@ impl Mix {
         match self {
             Mix::Spread => "spread",
             Mix::Sparse => "sparse",
+            Mix::Lagging => "lagging",
         }
     }
 }
@@ -602,6 +735,20 @@ pub struct UnevenStats {
     /// The largest region total in one unit, a transaction's own pause.
     pub max_unit_region: usize,
     pub checksum: i64,
+    /// Spurious collections after a quiet unit, and the survivors marked
+    /// and slots swept by every spurious one.
+    pub spurious_quiet: usize,
+    pub spurious_visits: usize,
+    /// Region nodes `Marked` passed over to take its references.
+    pub reference_visits: usize,
+    /// The longest run of missed units in a row: how long the dead work
+    /// stayed above the survivors before a collection (audited).
+    pub longest_miss: usize,
+    /// Guards released.
+    pub releases: usize,
+    /// Transactions whose region was smaller than their input's reference
+    /// (audited).
+    pub below: usize,
 }
 
 /// A long run of the uneven workload under one policy: four inputs firing
@@ -624,10 +771,21 @@ pub struct Uneven {
     unit: usize,
     audit: Option<Audit>,
     pub stats: UnevenStats,
+    shape: Shape,
+    /// Breathing screens kept, oldest first, with their guards.
+    breathing: VecDeque<(Vec<Id>, Rc<Guard>)>,
+    /// Per slot, the epoch its node was born in, which only `Marked` keeps:
+    /// the word per node an engine would need for it.
+    born: Vec<u32>,
+    /// Missed units in a row so far.
+    above: usize,
 }
 
 impl Clone for Uneven {
     fn clone(&self) -> Uneven {
+        // A clone shares its guards, so a release in one would release
+        // nothing until the other dropped its copy too.
+        assert!(!self.shape.breathe, "a breathing run can't be cloned");
         let mut arena = self.arena.clone();
         arena.reserve_scratch();
         Uneven {
@@ -638,6 +796,8 @@ impl Clone for Uneven {
             pacer: self.pacer.clone(),
             audit: self.audit.clone(),
             stats: self.stats.clone(),
+            breathing: VecDeque::new(),
+            born: self.born.clone(),
             ..*self
         }
     }
@@ -648,6 +808,11 @@ impl Uneven {
     /// `audit`, the run counts the dead nodes its transactions evaluate,
     /// which costs a pass over every region.
     pub fn new(mix: Mix, policy: Policy, audit: bool) -> Uneven {
+        Uneven::shaped(SHAPE, mix, policy, audit)
+    }
+
+    /// `new` on another schedule.
+    pub fn shaped(shape: Shape, mix: Mix, policy: Policy, audit: bool) -> Uneven {
         assert!(
             audit || policy != Policy::Oracle,
             "the oracle needs an audit"
@@ -691,10 +856,15 @@ impl Uneven {
             unit: 0,
             audit: audit.then(Audit::default),
             stats: UnevenStats::default(),
+            shape,
+            breathing: VecDeque::new(),
+            born: Vec::new(),
+            above: 0,
         };
         u.navigate();
         u.arena.collect();
         u.pacer = Pacer::new(policy, u.arena.live_count());
+        u.born.clear();
         if let Some(a) = &mut u.audit {
             a.pending.clear();
         }
@@ -702,9 +872,10 @@ impl Uneven {
         u
     }
 
-    /// Runs `UNEVEN_WARMUP` units under the policy, then starts the window.
+    /// Runs the shape's warm-up (`UNEVEN_WARMUP` units for `SHAPE`) under
+    /// the policy, then starts the window.
     pub fn warmed(mut self) -> Uneven {
-        self.run(UNEVEN_WARMUP);
+        self.run(self.shape.warmup());
         self.stats = UnevenStats::default();
         self.arena.reserve_scratch();
         self
@@ -718,8 +889,10 @@ impl Uneven {
         let (src, side) = match self.mix {
             Mix::Spread => (self.inputs[n % 3], self.inputs[(n + 1) % 3]),
             Mix::Sparse => (self.inputs[1 + n % 2], self.inputs[1 + (n + 1) % 2]),
+            Mix::Lagging => (self.inputs[2], self.inputs[3]),
         };
         let ids = screen(&mut self.arena, &mut self.rng, src, side, self.theme);
+        self.note_born(&ids);
         let last = *ids.last().unwrap();
         let old = self.current.last().copied();
         self.arena.relink(self.switch, old, last);
@@ -742,14 +915,67 @@ impl Uneven {
         self.grown += 1;
         let (src, side) = (self.inputs[g % 3], self.inputs[(g + 2) % 3]);
         let ids = screen(&mut self.arena, &mut self.rng, src, side, self.theme);
+        self.note_born(&ids);
         let last = *ids.last().unwrap();
         self.guards.push(Rc::new(self.arena.guard(last)));
+    }
+
+    /// A breathing screen kept off the tenth input, its side branch off the
+    /// rare one, so the tenth's live region grows.
+    fn inhale(&mut self) {
+        let (src, side) = (self.inputs[1], self.inputs[3]);
+        let ids = screen(&mut self.arena, &mut self.rng, src, side, self.theme);
+        self.note_born(&ids);
+        let guard = Rc::new(self.arena.guard(*ids.last().unwrap()));
+        self.breathing.push_back((ids, guard));
+    }
+
+    /// The oldest breathing screen's guard released: the screen is garbage,
+    /// still in the tenth's region until a collection.
+    fn exhale(&mut self) {
+        let Some((ids, guard)) = self.breathing.pop_front() else {
+            return;
+        };
+        drop(guard);
+        self.pacer.release();
+        self.stats.releases += 1;
+        if let Some(a) = &mut self.audit {
+            a.dead.resize(self.arena.slots(), false);
+            for &i in &ids {
+                a.dead[i as usize] = true;
+            }
+            a.pending.extend(ids);
+        }
+    }
+
+    /// Records when `ids` were born, for `Marked`.
+    fn note_born(&mut self, ids: &[Id]) {
+        if self.pacer.policy != Policy::Marked {
+            return;
+        }
+        self.born.resize(self.arena.slots(), 0);
+        for &i in ids {
+            self.born[i as usize] = self.pacer.epoch();
+        }
     }
 
     fn fire(&mut self, i: usize, k: usize) -> usize {
         let input = self.inputs[i];
         self.arena.transaction(input, k as i64, Push::All);
         let region = self.arena.region().len();
+        if self.pacer.policy == Policy::Marked && self.pacer.stale(input) {
+            // The region as the last collection left it: what was born
+            // before it. A slot never noted was born before the first.
+            let (born, epoch) = (&self.born, self.pacer.epoch());
+            let old = self
+                .arena
+                .region()
+                .iter()
+                .filter(|&&n| born.get(n as usize).is_none_or(|&b| b < epoch))
+                .count();
+            self.pacer.set_reference(input, old);
+            self.stats.reference_visits += region;
+        }
         self.pacer.observe(input, region);
         let s = &mut self.stats;
         s.fires[i] += 1;
@@ -764,6 +990,8 @@ impl Uneven {
                 .count();
             a.since += dead;
             s.dead[i] += dead;
+            let r = self.pacer.reference_len(input);
+            s.below += usize::from(r.is_some_and(|r| region < r));
             self.pacer.observe_dead(dead);
         }
         region
@@ -776,12 +1004,18 @@ impl Uneven {
         let k = self.unit;
         self.unit += 1;
         self.stats.units += 1;
-        let navigated = k % PERIOD < NAVIGATING && k.is_multiple_of(3);
+        let navigated = self.shape.navigates(k);
         if navigated {
             self.navigate();
         }
-        if k % GROW_EVERY == GROW_EVERY / 2 {
+        if self.shape.grows(k) {
             self.grow();
+        }
+        if self.shape.inhales(k) {
+            self.inhale();
+        }
+        if self.shape.exhales(k) {
+            self.exhale();
         }
         let mut region = 0;
         for i in 0..4 {
@@ -805,6 +1039,10 @@ impl Uneven {
             s.peak = s.peak.max(a.since as f64 / survivors as f64);
             if !due && a.since > survivors {
                 s.missed += 1;
+                self.above += 1;
+                s.longest_miss = s.longest_miss.max(self.above);
+            } else {
+                self.above = 0;
             }
         }
         due.then(|| self.collect())
@@ -827,6 +1065,11 @@ impl Uneven {
         s.collections += 1;
         s.freed += freed;
         s.spurious += usize::from(freed < SPURIOUS);
+        if freed < SPURIOUS {
+            let k = self.unit.saturating_sub(1);
+            s.spurious_quiet += usize::from(self.shape.quiet_at(k));
+            s.spurious_visits += survivors + slots;
+        }
         s.marked += survivors;
         s.swept += slots;
         if freed > s.largest.freed {
@@ -1006,6 +1249,7 @@ mod tests {
                 match mix {
                     Mix::Spread => "every, tenth and hundredth in turn",
                     Mix::Sparse => "tenth and hundredth in turn",
+                    Mix::Lagging => "hundredth alone",
                 }
             );
             println!(
@@ -1071,6 +1315,193 @@ mod tests {
                 }
                 println!(" {:>9}", s.max_unit_region);
             }
+        }
+    }
+
+    /// `SHAPE` keeps the first run's schedule, and on the follow-ups' shapes
+    /// every policy computes the same values and frees exactly what
+    /// navigation and releases left dead (the audit asserts it).
+    #[test]
+    fn follow_up_shapes_keep_the_schedule_and_agree() {
+        for k in 0..10_000 {
+            assert_eq!(SHAPE.grows(k), k % GROW_EVERY == GROW_EVERY / 2);
+            assert_eq!(
+                SHAPE.navigates(k),
+                k % PERIOD < NAVIGATING && k.is_multiple_of(3)
+            );
+        }
+        let breathing = Shape {
+            quiet: 100,
+            growth: 16,
+            breathe: true,
+        };
+        for (shape, mix) in [(breathing, Mix::Spread), (SHAPE, Mix::Lagging)] {
+            let mut sums = Vec::new();
+            let mut live = Vec::new();
+            for p in [Policy::Rfd3, Policy::Excess, Policy::Marked, Policy::Oracle] {
+                let mut r = Uneven::shaped(shape, mix, p, true);
+                sums.push(r.run(2_000));
+                r.collect();
+                live.push(r.arena.live_count());
+            }
+            assert!(sums.iter().all(|&s| s == sums[0]), "{sums:?}");
+            assert!(live.iter().all(|&n| n == live[0]), "{live:?}");
+        }
+    }
+
+    /// The policies the follow-ups compare: the work term, its fix, and the
+    /// rent-or-buy rule on the true dead work.
+    const FOLLOW_UP: [Policy; 3] = [Policy::Excess, Policy::Marked, Policy::Oracle];
+
+    fn growth_name(g: usize) -> String {
+        match g {
+            0 => "0".into(),
+            2 => "0.5x".into(),
+            _ => format!("{}x", g / 4),
+        }
+    }
+
+    /// Runs `shape` and `mix` under each of `FOLLOW_UP` over the shape's
+    /// window after its warm-up, and prints a row per policy.
+    fn follow_up_rows(shape: Shape, mix: Mix) {
+        let mut rows = Vec::new();
+        for p in FOLLOW_UP {
+            let mut r = Uneven::shaped(shape, mix, p, true).warmed();
+            r.run(shape.window());
+            rows.push((p, r));
+        }
+        let visits = |r: &Uneven| {
+            let s = &r.stats;
+            let region: usize = s.region.iter().sum();
+            (region + s.marked + s.swept + s.reference_visits) as f64 / s.units as f64
+        };
+        let oracle = visits(&rows[2].1);
+        for (p, r) in &rows {
+            let s = &r.stats;
+            let u = s.units as f64;
+            let quiet = (3 * shape.quiet) as f64;
+            println!(
+                "  {:<8} {:>5} {:>5} {:<7} {:>5} {:>4} {:>6.2} {:>6.2} {:>7.1} {:>6.1} {:>8.1} {:>6.3} \
+                 {:>6.3} {:>6} {:>5} {:>5.2} {:>4} {:>5}",
+                format!("{}{}", shape.quiet, if shape.breathe { "+b" } else { "" }),
+                growth_name(shape.growth),
+                mix.name(),
+                p.name(),
+                s.collections,
+                s.spurious,
+                s.spurious as f64 * 1_000.0 / u,
+                s.spurious_quiet as f64 * 1_000.0 / quiet,
+                s.spurious_visits as f64 / u,
+                s.reference_visits as f64 / u,
+                visits(r),
+                visits(r) / oracle,
+                (visits(r) - s.reference_visits as f64 / u) / oracle,
+                s.missed,
+                s.longest_miss,
+                s.peak,
+                s.releases,
+                s.below,
+            );
+        }
+    }
+
+    fn follow_up_header() {
+        println!(
+            "  {:<8} {:>5} {:>5} {:<7} {:>5} {:>4} {:>6} {:>6} {:>7} {:>6} {:>8} {:>6} {:>6} {:>6} \
+             {:>5} {:>5} {:>4} {:>5}",
+            "quiet",
+            "grow",
+            "mix",
+            "policy",
+            "colls",
+            "spur",
+            "sp/1ku",
+            "sp/1kq",
+            "spur c/u",
+            "ref/u",
+            "visits/u",
+            "/orcl",
+            "/o-ref",
+            "missed",
+            "long",
+            "peak",
+            "rel",
+            "below"
+        );
+    }
+
+    /// The counts the note quotes for the follow-ups: spurious collections
+    /// against the quiet stretch and the growth rate, with and without a
+    /// breathing input; then misses on a lagging input, and whether
+    /// `Marked` removes them.
+    #[test]
+    fn spurious_missed_counts() {
+        println!(
+            "each row: the shape's window of 3 periods (900 navigating units, every third a \
+             navigation, then `quiet` quiet ones) after 2 periods of warm-up, audited"
+        );
+        println!(
+            "grow = the rate screens are kept at, against the first run's one per 30 units; +b = \
+             30 screens \
+             kept off the tenth input through each navigating stretch, their guards released \
+             evenly through the quiet one"
+        );
+        println!(
+            "spur = collections freeing < {SPURIOUS}; sp/1ku per 1,000 units, sp/1kq spurious \
+             after a quiet unit per 1,000 quiet units; spur c/u = survivors marked + slots swept \
+             by spurious collections per unit; ref/u = region nodes `marked` passed over for its \
+             references per unit; visits/u = region nodes + collection visits + ref/u per unit; \
+             /orcl = that over oracle's; /o-ref = the same without ref/u, the pass fused into \
+             the transaction's own"
+        );
+        println!(
+            "missed = units after which the dead work since the last collection exceeded its \
+             survivors, uncollected; long = the longest run of them; peak = the largest dead \
+             work/survivors after a unit; rel = guards released; below = transactions whose \
+             region was under their input's reference"
+        );
+        println!();
+        println!("spurious: navigation off every, tenth and hundredth in turn (spread)");
+        follow_up_header();
+        for breathe in [false, true] {
+            for quiet in [100, 300, 900, 3_000] {
+                let growths: &[usize] = if breathe { &[4] } else { &[2, 4, 16] };
+                for &growth in growths {
+                    let shape = Shape {
+                        quiet,
+                        growth,
+                        breathe,
+                    };
+                    follow_up_rows(shape, Mix::Spread);
+                }
+            }
+        }
+        println!();
+        println!(
+            "missed: navigation off the hundredth alone (lagging); breathing with no live \
+             growth; and the first run's two mixes"
+        );
+        follow_up_header();
+        for quiet in [300, 3_000] {
+            for growth in [0, 4] {
+                let shape = Shape {
+                    quiet,
+                    growth,
+                    breathe: false,
+                };
+                follow_up_rows(shape, Mix::Lagging);
+            }
+        }
+        for quiet in [300, 3_000] {
+            let shape = Shape {
+                quiet,
+                growth: 0,
+                breathe: true,
+            };
+            follow_up_rows(shape, Mix::Spread);
+        }
+        for mix in MIXES {
+            follow_up_rows(SHAPE, mix);
         }
     }
 }

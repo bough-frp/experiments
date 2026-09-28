@@ -16,6 +16,10 @@
 //!   `UNEVEN_WINDOW` units after `UNEVEN_WARMUP`, under each garbage mix and
 //!   each of `UNEVEN_POLICIES`. Divide `uneven_run` by 3,600 for the cost
 //!   per unit. Run it alone with the filter `*::uneven::*`.
+//! - `lagging_run` (group `spurious_missed`): `uneven_run` with every screen
+//!   off the hundredth input (`Mix::Lagging`), under `baseline`, `excess`
+//!   and `marked`, whose reference pass it counts. Divide by 3,600. Run it
+//!   alone with the filter `*::spurious_missed::*`.
 //!
 //! Every run is built and warmed in setup, outside what is counted, and
 //! handed back so that its drop runs in teardown.
@@ -132,6 +136,20 @@ fn uneven_run(mut r: Uneven) -> (i64, Uneven) {
 }
 
 #[library_benchmark]
+#[benches::lagging(
+    args = [
+        (Mix::Lagging, Policy::Baseline),
+        (Mix::Lagging, Policy::Excess),
+        (Mix::Lagging, Policy::Marked)
+    ],
+    setup = uneven_warmed,
+    teardown = drop_run
+)]
+fn lagging_run(mut r: Uneven) -> (i64, Uneven) {
+    (black_box(r.run(black_box(UNEVEN_WINDOW))), r)
+}
+
+#[library_benchmark]
 #[benches::spread(
     args = [
         (Mix::Spread, Policy::Baseline),
@@ -170,4 +188,13 @@ library_benchmark_group!(
     benchmarks = uneven_run, uneven_pause
 );
 
-main!(library_benchmark_groups = work_paced_trigger, uneven);
+library_benchmark_group!(
+    name = spurious_missed;
+    benchmarks = lagging_run
+);
+
+main!(
+    library_benchmark_groups = work_paced_trigger,
+    uneven,
+    spurious_missed
+);

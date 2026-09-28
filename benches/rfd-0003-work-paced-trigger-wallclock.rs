@@ -24,6 +24,10 @@
 //!   `<group>/<policy>/3600` over `UNEVEN_POLICIES`, `UNEVEN_WINDOW` units
 //!   after `UNEVEN_WARMUP`. Divide by 3,600 for a unit.
 //!
+//! - `uneven-lagging`: `uneven-spread`'s run with every screen off the
+//!   hundredth input, `uneven-lagging/<policy>/3600` under `baseline`,
+//!   `excess` and `marked`, the fix for misses on a lagging input.
+//!
 //! Every run is cloned in `iter_batched`'s setup and handed back so that
 //! neither the clone nor its drop is timed.
 
@@ -33,7 +37,7 @@ use std::time::Duration;
 use criterion::{BatchSize, BenchmarkId, Criterion, SamplingMode, criterion_group, criterion_main};
 
 use bough_experiments::rfd_0003_work_paced_trigger::{
-    APP_KEPT, MIXES, POLICIES, Policy, Run, UNEVEN_POLICIES, UNEVEN_WINDOW, Uneven, WINDOW,
+    APP_KEPT, MIXES, Mix, POLICIES, Policy, Run, UNEVEN_POLICIES, UNEVEN_WINDOW, Uneven, WINDOW,
 };
 
 fn batched<R: Clone, T>(
@@ -96,6 +100,18 @@ fn work_paced_trigger(c: &mut Criterion) {
         }
         g.finish();
     }
+
+    let mut g = c.benchmark_group("uneven-lagging");
+    g.sampling_mode(SamplingMode::Flat);
+    g.sample_size(10);
+    g.measurement_time(Duration::from_secs(8));
+    for p in [Policy::Baseline, Policy::Excess, Policy::Marked] {
+        let r = Uneven::new(Mix::Lagging, p, false).warmed();
+        batched(&mut g, p.name(), UNEVEN_WINDOW, &r, |r| {
+            r.run(black_box(UNEVEN_WINDOW))
+        });
+    }
+    g.finish();
 
     let mut g = c.benchmark_group("fast-path");
     g.measurement_time(Duration::from_millis(300));
