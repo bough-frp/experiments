@@ -13,6 +13,15 @@
 //! `build_baseline`, divided by the nodes built, is what keeping the order
 //! adds to each node. `back` and `twoway` build the same way, so `om`
 //! stands for both.
+//!
+//! `adversarial::adv_*` and `adversarial::cyc_*` run the adversary: one
+//! switch moved 16 times, each to a new inner whose `up` nodes upstream sit
+//! after the switch in the order while the switch's `down` nodes downstream
+//! sit before it (`u<up>_d<down>`), all accepted, or with each new upstream
+//! hung off the switch's downstream so every move is refused (`cyc_*`). The
+//! graph, every new inner and the checker are built in `setup`; only the
+//! moves are measured, so divide by 16 for a cost per move. `adv_baseline`
+//! and `cyc_baseline` are the walk.
 
 use std::hint::black_box;
 
@@ -21,7 +30,7 @@ use gungraun::{library_benchmark, library_benchmark_group, main};
 use bough_experiments::rfd_0005_bounded_relink_check::{
     Baseline, Build, Checker, Pk, Run, Tx, workload,
 };
-use bough_experiments::rfd_0005_small_side_order::{Back, TwoWay};
+use bough_experiments::rfd_0005_small_side_order::{Adversary, Back, TwoWay};
 
 fn transactions<C: Checker>(name: &str) -> (Run<C>, Vec<Tx>) {
     let w = workload(name);
@@ -127,6 +136,78 @@ fn build_om(input: (Run<Back>, Vec<Build>)) -> (Run<Back>, Vec<Build>) {
     black_box(build(input))
 }
 
+fn adversary<C: Checker>(up: usize, down: usize, cyclic: bool) -> Adversary<C> {
+    Adversary::new(up, down, cyclic)
+}
+
+fn adv_setup_baseline(up: usize, down: usize) -> Adversary<Baseline> {
+    adversary(up, down, false)
+}
+
+fn adv_setup_pk(up: usize, down: usize) -> Adversary<Pk> {
+    adversary(up, down, false)
+}
+
+fn adv_setup_back(up: usize, down: usize) -> Adversary<Back> {
+    adversary(up, down, false)
+}
+
+fn adv_setup_twoway(up: usize, down: usize) -> Adversary<TwoWay> {
+    adversary(up, down, false)
+}
+
+fn cyc_setup_baseline(up: usize, down: usize) -> Adversary<Baseline> {
+    adversary(up, down, true)
+}
+
+fn cyc_setup_pk(up: usize, down: usize) -> Adversary<Pk> {
+    adversary(up, down, true)
+}
+
+fn cyc_setup_back(up: usize, down: usize) -> Adversary<Back> {
+    adversary(up, down, true)
+}
+
+fn cyc_setup_twoway(up: usize, down: usize) -> Adversary<TwoWay> {
+    adversary(up, down, true)
+}
+
+/// One benchmark function over every pair of sizes in `SIDES`.
+macro_rules! grid {
+    ($name:ident, $setup:ident, $checker:ty) => {
+        #[library_benchmark]
+        #[bench::u10_d10(args = (10, 10), setup = $setup)]
+        #[bench::u10_d100(args = (10, 100), setup = $setup)]
+        #[bench::u10_d1000(args = (10, 1_000), setup = $setup)]
+        #[bench::u10_d10000(args = (10, 10_000), setup = $setup)]
+        #[bench::u100_d10(args = (100, 10), setup = $setup)]
+        #[bench::u100_d100(args = (100, 100), setup = $setup)]
+        #[bench::u100_d1000(args = (100, 1_000), setup = $setup)]
+        #[bench::u100_d10000(args = (100, 10_000), setup = $setup)]
+        #[bench::u1000_d10(args = (1_000, 10), setup = $setup)]
+        #[bench::u1000_d100(args = (1_000, 100), setup = $setup)]
+        #[bench::u1000_d1000(args = (1_000, 1_000), setup = $setup)]
+        #[bench::u1000_d10000(args = (1_000, 10_000), setup = $setup)]
+        #[bench::u10000_d10(args = (10_000, 10), setup = $setup)]
+        #[bench::u10000_d100(args = (10_000, 100), setup = $setup)]
+        #[bench::u10000_d1000(args = (10_000, 1_000), setup = $setup)]
+        #[bench::u10000_d10000(args = (10_000, 10_000), setup = $setup)]
+        fn $name(mut input: Adversary<$checker>) -> (Adversary<$checker>, usize) {
+            let refused = input.all();
+            black_box((input, refused))
+        }
+    };
+}
+
+grid!(adv_baseline, adv_setup_baseline, Baseline);
+grid!(adv_pk, adv_setup_pk, Pk);
+grid!(adv_back, adv_setup_back, Back);
+grid!(adv_twoway, adv_setup_twoway, TwoWay);
+grid!(cyc_baseline, cyc_setup_baseline, Baseline);
+grid!(cyc_pk, cyc_setup_pk, Pk);
+grid!(cyc_back, cyc_setup_back, Back);
+grid!(cyc_twoway, cyc_setup_twoway, TwoWay);
+
 library_benchmark_group!(
     name = moves;
     benchmarks = moves_baseline, moves_pk, moves_back, moves_twoway
@@ -137,4 +218,10 @@ library_benchmark_group!(
     benchmarks = build_baseline, build_pk, build_om
 );
 
-main!(library_benchmark_groups = moves, build);
+library_benchmark_group!(
+    name = adversarial;
+    benchmarks = adv_baseline, adv_pk, adv_back, adv_twoway,
+        cyc_baseline, cyc_pk, cyc_back, cyc_twoway
+);
+
+main!(library_benchmark_groups = moves, build, adversarial);

@@ -40,8 +40,16 @@
 //! so F46's reversal is never refused, and on a refusal every old inner
 //! relinked through the order. The graph, the workloads, the walk and PK
 //! are the earlier probe's, called through its module.
+//!
+//! On that UI-shaped graph neither search covers much, which isn't a worst
+//! case. [`Adversary`] asks where they stop being cheap: a new inner whose
+//! upstream all sits after the switch in the order, and a switch whose
+//! downstream all sits before the new inner, each side sized apart, so that
+//! `back` has to cover the first and PK both, while two-way should cover
+//! about twice the smaller; and a cyclic form, where both sides lie on the
+//! cycle.
 
-use crate::rfd_0005_bounded_relink_check::{Checker, Counts, Graph, Id, Kind, Move};
+use crate::rfd_0005_bounded_relink_check::{Checker, Counts, Graph, Id, Kind, Move, Run};
 
 /// No node: the end of the list either way.
 const NONE: Id = Id::MAX;
@@ -477,6 +485,173 @@ impl<const TWO_WAY: bool> Checker for Om<TWO_WAY> {
     }
 }
 
+/// The sizes the adversarial cases take for each side: the new inner's
+/// upstream after the switch, and the switch's downstream.
+pub const SIDES: [usize; 4] = [10, 100, 1_000, 10_000];
+
+/// Moves in an adversarial case, each to a new inner of its own.
+pub const ADVERSARY_MOVES: usize = 16;
+
+/// Appends a node depending on `deps`. The adversary's graphs are built
+/// here, outside the earlier probe's generator, and only the walk, PK and
+/// the lists run on them, which read no more than the edges.
+fn add(g: &mut Graph, deps: &[Id]) -> Id {
+    let n = g.len() as Id;
+    g.deps.push(Vec::new());
+    g.dependents.push(Vec::new());
+    for &d in deps {
+        g.link(d, n);
+    }
+    n
+}
+
+/// Appends `len` nodes downstream of `root`, each on the one or two before
+/// it, so every one of them reaches the last and is reached from `root`,
+/// and every path across them is at least half as long as they are: a
+/// search that finds a cycle through them can't take a shortcut.
+/// Returns the first and last.
+fn web(g: &mut Graph, root: Id, len: usize) -> (Id, Id) {
+    let first = g.len() as Id;
+    for i in 0..len as Id {
+        let n = first + i;
+        match i {
+            0 => add(g, &[root]),
+            1 => add(g, &[n - 1]),
+            _ => add(g, &[n - 1, n - 2]),
+        };
+    }
+    (first, first + len as Id - 1)
+}
+
+/// A worst case for the order's searches: one switch, `down` nodes
+/// downstream of it, moved [`ADVERSARY_MOVES`] times, each time to a new
+/// inner whose `up` nodes upstream were all built after the switch, so sit
+/// after it in the order, while the switch's downstream sits before the
+/// new inner. The new inner is invalid against the order every time; the
+/// backward search from it has `up + 1` nodes to cover and the forward
+/// search from the switch `down + 1`.
+///
+/// Every new upstream is built before the first move, since only where a
+/// node sits in the order matters here and a node built appends at the end
+/// either way; so the moves can be measured without the builds. Moves go
+/// from each inner to the next, and all are accepted.
+///
+/// `cyclic` hangs each new upstream off the switch's last downstream node
+/// instead of an input, so every move closes a cycle through both sides
+/// and is refused. The refused screen is then dropped, its edge from the
+/// switch's downstream cut, as the engine would discard it, so that the
+/// next move's forward search doesn't also cover it.
+#[derive(Clone)]
+pub struct Adversary<C> {
+    pub run: Run<C>,
+    pub moves: Vec<Move>,
+    /// Cyclic only: the edge from the switch's downstream to each move's
+    /// new upstream, cut once the move is refused.
+    cuts: Vec<(Id, Id)>,
+    old: Id,
+    switch: Id,
+    /// The checker's counts after warming up, before the first move.
+    pub warm: Counts,
+}
+
+impl<C: Checker> Adversary<C> {
+    pub fn new(up: usize, down: usize, cyclic: bool) -> Self {
+        assert!(up > 0 && down > 0);
+        let mut g = Graph::default();
+        let input = add(&mut g, &[]);
+        let old = add(&mut g, &[]);
+        let switch = add(&mut g, &[old]);
+        let (_, last_down) = web(&mut g, switch, down);
+        // A second switch, moved once below to warm up.
+        let warm_old = add(&mut g, &[]);
+        let warm_switch = add(&mut g, &[warm_old]);
+        let mut run = Run {
+            checker: C::new(&g),
+            graph: g,
+        };
+        let first = run.graph.len() as Id;
+        let (mut moves, mut cuts) = (Vec::new(), Vec::new());
+        let mut from = old;
+        for _ in 0..ADVERSARY_MOVES {
+            let root = if cyclic { last_down } else { input };
+            let (first_up, last_up) = web(&mut run.graph, root, up);
+            let to = add(&mut run.graph, &[last_up]);
+            let kind = if cyclic { Kind::Bad } else { Kind::View };
+            moves.push(Move {
+                switch,
+                from,
+                to,
+                kind,
+            });
+            if cyclic {
+                cuts.push((last_down, first_up));
+            } else {
+                from = to;
+            }
+        }
+        let warm_new = add(&mut run.graph, &[]);
+        run.checker.built(&run.graph, first);
+        // The warm-up move is against the order, so every checker sizes its
+        // visit stamps to the whole graph now rather than in the first
+        // measured move, which would charge it to the moves.
+        let warm = [Move {
+            switch: warm_switch,
+            from: warm_old,
+            to: warm_new,
+            kind: Kind::Local,
+        }];
+        assert!(run.checker.commit(&mut run.graph, &warm));
+        let warm = run.checker.counts().clone();
+        Adversary {
+            run,
+            moves,
+            cuts,
+            old,
+            switch,
+            warm,
+        }
+    }
+
+    /// Commits move `k` alone; returns whether it was accepted.
+    pub fn tx(&mut self, k: usize) -> bool {
+        let run = &mut self.run;
+        let ok = run.checker.commit(&mut run.graph, &self.moves[k..=k]);
+        if !ok && let Some(&(from, to)) = self.cuts.get(k) {
+            run.graph.unlink(from, to);
+        }
+        ok
+    }
+
+    /// Every move in turn; returns how many were refused.
+    pub fn all(&mut self) -> usize {
+        (0..self.moves.len()).filter(|&k| !self.tx(k)).count()
+    }
+
+    /// Puts the graph back as it was before the first move and the checker
+    /// back to `fresh`, a clone of it taken then, so the moves can run
+    /// again without rebuilding the graph.
+    pub fn reset(&mut self, fresh: &C) {
+        let g = &mut self.run.graph;
+        let current = g.deps[self.switch as usize][0];
+        if current != self.old {
+            g.unlink(current, self.switch);
+            g.link(self.old, self.switch);
+        }
+        for &(from, to) in &self.cuts {
+            if !g.dependents[from as usize].contains(&to) {
+                g.link(from, to);
+            }
+        }
+        self.run.checker.clone_from(fresh);
+    }
+
+    /// Nodes the checker visited over the moves, apart from the warm-up.
+    pub fn visited(&self) -> u64 {
+        let now = self.run.checker.counts().visited.iter().sum::<u64>();
+        now - self.warm.visited.iter().sum::<u64>()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -662,5 +837,129 @@ mod tests {
         println!("was against that order, so reordered it or found a cycle. A refused");
         println!("transaction's relinks are counted under their moves' kinds. Relabelled");
         println!("counts nodes the list gave new labels to make room, apart from those moved.");
+    }
+
+    /// Runs one adversarial case through `C`, asserting `check` after every
+    /// move, and returns it with its verdicts.
+    fn adversary<C: Checker>(
+        up: usize,
+        down: usize,
+        cyclic: bool,
+        check: impl Fn(&Graph, &C) -> bool,
+    ) -> (Adversary<C>, Vec<bool>) {
+        let mut a = Adversary::<C>::new(up, down, cyclic);
+        assert!(check(&a.run.graph, &a.run.checker), "the order broke");
+        let refused = (0..a.moves.len())
+            .map(|k| {
+                let refused = !a.tx(k);
+                assert!(check(&a.run.graph, &a.run.checker), "the order broke");
+                refused
+            })
+            .collect();
+        (a, refused)
+    }
+
+    /// On the adversary too, every variant refuses exactly the moves the
+    /// walk refuses, which is all of them when cyclic and none otherwise,
+    /// and keeps a topological order; and a reset case runs the same again.
+    #[test]
+    fn every_variant_refuses_what_the_walk_refuses_on_the_adversary() {
+        for (up, down) in [(1, 1), (10, 100), (100, 10), (37, 37)] {
+            for cyclic in [false, true] {
+                let want = vec![cyclic; ADVERSARY_MOVES];
+                let (_, walk) = adversary::<Baseline>(up, down, cyclic, |_, _| true);
+                assert_eq!(walk, want, "the adversary isn't what it says");
+                let (_, pk) = adversary::<Pk>(up, down, cyclic, |_, _| true);
+                assert_eq!(pk, walk, "pk differs from the walk");
+                let (_, back) = adversary::<Back>(up, down, cyclic, is_topological);
+                assert_eq!(back, walk, "back differs from the walk");
+                let (_, two) = adversary::<TwoWay>(up, down, cyclic, is_topological);
+                assert_eq!(two, walk, "twoway differs from the walk");
+
+                let mut a = Adversary::<TwoWay>::new(up, down, cyclic);
+                let fresh = a.run.checker.clone();
+                let once = (a.all(), a.visited());
+                a.reset(&fresh);
+                assert!(is_topological(&a.run.graph, &a.run.checker));
+                assert_eq!((a.all(), a.visited()), once, "a reset case ran differently");
+            }
+        }
+    }
+
+    /// The adversary's counts: per move, the nodes each checker visited,
+    /// and what the lists relabelled, for every pair of sizes. Run with
+    /// `--nocapture`.
+    #[test]
+    fn adversarial_counts() {
+        println!(
+            "one switch, moved {ADVERSARY_MOVES} times, each to a new inner built after it; \
+             up = the new inner's upstream, all after the switch in the order; \
+             down = the switch's downstream, all before the new inner"
+        );
+        let mut worst_back = 0.0f64;
+        let mut worst_two = 0.0f64;
+        for cyclic in [false, true] {
+            println!();
+            if cyclic {
+                println!(
+                    "cyclic: each new upstream hangs off the switch's downstream, so every move is refused"
+                );
+            } else {
+                println!("acyclic: every move accepted");
+            }
+            println!(
+                "  {:>6} {:>6} {:>8} {:>8} {:>8} {:>8} {:>8} {:>9} {:>9} {:>9}",
+                "up",
+                "down",
+                "walk",
+                "pk",
+                "back",
+                "twoway",
+                "2min+3",
+                "tw/walk",
+                "bk relab",
+                "tw relab"
+            );
+            for up in SIDES {
+                for down in SIDES {
+                    let (walk, rw) = adversary::<Baseline>(up, down, cyclic, |_, _| true);
+                    let (pk, rp) = adversary::<Pk>(up, down, cyclic, |_, _| true);
+                    let (back, rb) = adversary::<Back>(up, down, cyclic, |_, _| true);
+                    let (two, rt) = adversary::<TwoWay>(up, down, cyclic, |_, _| true);
+                    assert!(rw.iter().all(|&r| r == cyclic));
+                    assert!(rp == rw && rb == rw && rt == rw, "verdicts differ");
+                    let per = |v: u64| v as f64 / ADVERSARY_MOVES as f64;
+                    let (w, p, b, t) = (
+                        per(walk.visited()),
+                        per(pk.visited()),
+                        per(back.visited()),
+                        per(two.visited()),
+                    );
+                    let bound = 2 * up.min(down) + 3;
+                    if !cyclic {
+                        worst_back = worst_back.max(b / (up + 1) as f64);
+                        worst_two = worst_two.max(t / bound as f64);
+                    }
+                    let (bl, tl) = (&back.run.checker.order, &two.run.checker.order);
+                    println!(
+                        "  {up:>6} {down:>6} {w:>8.1} {p:>8.1} {b:>8.1} {t:>8.1} {bound:>8} {:>9.2} {:>9.1} {:>9.1}",
+                        t / w,
+                        per(bl.relabeled),
+                        per(tl.relabeled),
+                    );
+                }
+            }
+        }
+        println!();
+        println!("nodes visited per move: walked upstream from the new inner (walk), searched");
+        println!(
+            "forward and back (pk, twoway), or back only (back). 2min+3 is 2 min(up, down) + 3,"
+        );
+        println!("the most a two-way search that stops at the first side to finish can visit");
+        println!("when the sides hold up + 1 and down + 1 nodes. Relab is nodes the list gave");
+        println!("new labels to make room, per move, apart from those moved.");
+        println!(
+            "acyclic: back visited at most {worst_back:.2} times up + 1; twoway at most {worst_two:.2} times 2min+3"
+        );
     }
 }
