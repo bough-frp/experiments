@@ -26,7 +26,12 @@
 //!
 //! `-- derive` runs a follow-up instead, in `rfd-0003-brand-erasure/derive.rs`:
 //! the same `api.rs` with its `Rebrand` impls written by a real proc macro.
+//! `-- borrow` runs another, in `rfd-0003-brand-erasure/borrow.rs`: that
+//! derive also writing borrowed read and write views, and `sample` returning
+//! one.
 
+#[path = "rfd-0003-brand-erasure/borrow.rs"]
+mod borrow;
 #[path = "rfd-0003-brand-erasure/derive.rs"]
 mod derive;
 
@@ -290,6 +295,11 @@ fn main() {
     // `-- derive` runs the follow-up on a real derive instead.
     if std::env::args().nth(1).as_deref() == Some("derive") {
         derive::main(root);
+        return;
+    }
+    // `-- borrow` runs the follow-up on derived borrowed views.
+    if std::env::args().nth(1).as_deref() == Some("borrow") {
+        borrow::main(root);
         return;
     }
     println!("stable:  {}  (rust-toolchain.toml)", version(root, None));

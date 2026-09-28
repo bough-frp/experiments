@@ -51,6 +51,9 @@
 //!   its type is the same in `Self` and in `Of`, so a skipped field that
 //!   holds the brand or a type parameter doesn't compile. It is the field
 //!   level `Leaf`, for another crate's type in a struct.
+//!
+//! With the `views` feature it also writes the borrowed views of
+//! `rfd-0003-brand-erasure -- borrow`; `views.rs` says how.
 use proc_macro::TokenStream;
 use proc_macro2::{Span, TokenStream as Tokens};
 use quote::{format_ident, quote, quote_spanned};
@@ -176,7 +179,7 @@ fn expand(input: &DeriveInput) -> Result<Tokens> {
         }
     });
 
-    Ok(quote! {
+    let rebrand_impl = quote! {
         impl #impl_generics ::bough::Rebrand for #name #ty_generics #where_clause {
             type Of<#x> = #of;
 
@@ -190,8 +193,17 @@ fn expand(input: &DeriveInput) -> Result<Tokens> {
 
             #view
         }
-    })
+    };
+    #[cfg(feature = "views")]
+    let rebrand_impl = {
+        let views = views::expand(input, &generics, brand.as_ref(), has_type_param)?;
+        quote!(#rebrand_impl #views)
+    };
+    Ok(rebrand_impl)
 }
+
+#[cfg(feature = "views")]
+mod views;
 
 /// The brand: the type's one lifetime parameter, or none.
 fn brand(input: &DeriveInput) -> Result<Option<Lifetime>> {

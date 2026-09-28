@@ -73,13 +73,19 @@ struct Libraries {
     foreign: PathBuf,
 }
 
-/// Build the proc macro with Cargo and return the path of its `.so`.
-fn build_derive(root: &Path) -> PathBuf {
+/// Build the proc macro with Cargo, into `target/rfd-0003-brand-erasure/`
+/// `dir` with `features`, and return the path of its `.so`.
+pub(super) fn build_derive(root: &Path, dir: &str, features: &[&str]) -> PathBuf {
     let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".to_string());
-    let target = root.join("target/rfd-0003-brand-erasure/derive-build");
-    let output = Command::new(cargo)
+    let target = root.join("target/rfd-0003-brand-erasure").join(dir);
+    let mut command = Command::new(cargo);
+    command
         .current_dir(root)
-        .args(["build", "--release", "-p", "rfd-0003-rebrand-derive"])
+        .args(["build", "--release", "-p", "rfd-0003-rebrand-derive"]);
+    if !features.is_empty() {
+        command.arg("--features").arg(features.join(","));
+    }
+    let output = command
         .args(["--message-format=json", "--target-dir"])
         .arg(&target)
         .output()
@@ -177,7 +183,7 @@ fn fixture(root: &Path, libs: &Libraries, bough: &str, fixture: &str, mode: Mode
 
 pub fn main(root: &Path) {
     println!("stable:  {}  (rust-toolchain.toml)", version(root, None));
-    let derive = build_derive(root);
+    let derive = build_derive(root, "derive-build", &[]);
     let out = root.join("target/rfd-0003-brand-erasure/derive");
     std::fs::create_dir_all(&out).expect("the output directory");
     let mut libs = Libraries {

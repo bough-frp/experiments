@@ -15,3 +15,9 @@ proc-macro = true
 proc-macro2 = "1"
 quote = "1"
 syn = { version = "2", features = ["full"] }
+
+# `views` also emits `Borrow` and `BorrowMut`, with a `FooRef` and `FooMut`,
+# for `rfd-0003-brand-erasure -- borrow`. Off by default, so the `derive`
+# mode's Bough, which has neither trait, gets what it always got.
+[features]
+views = []
