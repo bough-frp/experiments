@@ -1,0 +1,729 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-rebrand-cost-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0003-rebrand-cost-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.07s
+     Running benches/rfd-0003-rebrand-cost-wallclock.rs (target/release/deps/rfd_0003_rebrand_cost_wallclock-4cd3c8f368398bb0)
+Gnuplot not found, using plotters backend
+Benchmarking read/baseline/u64
+Benchmarking read/baseline/u64: Warming up for 500.00 ms
+Benchmarking read/baseline/u64: Collecting 50 samples in estimated 2.0000 s (195M iterations)
+Benchmarking read/baseline/u64: Analyzing
+read/baseline/u64       time:   [10.197 ns 10.214 ns 10.233 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) low mild
+  1 (2.00%) high severe
+Benchmarking read/baseline/three
+Benchmarking read/baseline/three: Warming up for 500.00 ms
+Benchmarking read/baseline/three: Collecting 50 samples in estimated 2.0000 s (197M iterations)
+Benchmarking read/baseline/three: Analyzing
+read/baseline/three     time:   [10.132 ns 10.138 ns 10.147 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  5 (10.00%) high mild
+Benchmarking read/baseline/vec10
+Benchmarking read/baseline/vec10: Warming up for 500.00 ms
+Benchmarking read/baseline/vec10: Collecting 50 samples in estimated 2.0000 s (166M iterations)
+Benchmarking read/baseline/vec10: Analyzing
+read/baseline/vec10     time:   [12.055 ns 12.064 ns 12.073 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking read/baseline/vec1000
+Benchmarking read/baseline/vec1000: Warming up for 500.00 ms
+Benchmarking read/baseline/vec1000: Collecting 50 samples in estimated 2.0000 s (166M iterations)
+Benchmarking read/baseline/vec1000: Analyzing
+read/baseline/vec1000   time:   [12.069 ns 12.077 ns 12.084 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  1 (2.00%) low severe
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+Benchmarking read/baseline/nested
+Benchmarking read/baseline/nested: Warming up for 500.00 ms
+Benchmarking read/baseline/nested: Collecting 50 samples in estimated 2.0000 s (152M iterations)
+Benchmarking read/baseline/nested: Analyzing
+read/baseline/nested    time:   [13.148 ns 13.175 ns 13.201 ns]
+Benchmarking read/restore/u64
+Benchmarking read/restore/u64: Warming up for 500.00 ms
+Benchmarking read/restore/u64: Collecting 50 samples in estimated 2.0000 s (187M iterations)
+Benchmarking read/restore/u64: Analyzing
+read/restore/u64        time:   [10.754 ns 10.778 ns 10.802 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking read/restore/three
+Benchmarking read/restore/three: Warming up for 500.00 ms
+Benchmarking read/restore/three: Collecting 50 samples in estimated 2.0000 s (177M iterations)
+Benchmarking read/restore/three: Analyzing
+read/restore/three      time:   [11.247 ns 11.268 ns 11.288 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) low mild
+  1 (2.00%) high mild
+Benchmarking read/restore/vec10
+Benchmarking read/restore/vec10: Warming up for 500.00 ms
+Benchmarking read/restore/vec10: Collecting 50 samples in estimated 2.0000 s (67M iterations)
+Benchmarking read/restore/vec10: Analyzing
+read/restore/vec10      time:   [30.205 ns 30.320 ns 30.416 ns]
+Benchmarking read/restore/vec1000
+Benchmarking read/restore/vec1000: Warming up for 500.00 ms
+Benchmarking read/restore/vec1000: Collecting 50 samples in estimated 2.0004 s (6.7M iterations)
+Benchmarking read/restore/vec1000: Analyzing
+read/restore/vec1000    time:   [284.34 ns 286.09 ns 287.94 ns]
+Benchmarking read/restore/nested
+Benchmarking read/restore/nested: Warming up for 500.00 ms
+Benchmarking read/restore/nested: Collecting 50 samples in estimated 2.0001 s (36M iterations)
+Benchmarking read/restore/nested: Analyzing
+read/restore/nested     time:   [55.268 ns 55.380 ns 55.502 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking read/view/u64
+Benchmarking read/view/u64: Warming up for 500.00 ms
+Benchmarking read/view/u64: Collecting 50 samples in estimated 2.0000 s (194M iterations)
+Benchmarking read/view/u64: Analyzing
+read/view/u64           time:   [10.196 ns 10.208 ns 10.220 ns]
+Benchmarking read/view/three
+Benchmarking read/view/three: Warming up for 500.00 ms
+Benchmarking read/view/three: Collecting 50 samples in estimated 2.0000 s (178M iterations)
+Benchmarking read/view/three: Analyzing
+read/view/three         time:   [11.247 ns 11.272 ns 11.294 ns]
+Benchmarking read/view/vec10
+Benchmarking read/view/vec10: Warming up for 500.00 ms
+Benchmarking read/view/vec10: Collecting 50 samples in estimated 2.0000 s (75M iterations)
+Benchmarking read/view/vec10: Analyzing
+read/view/vec10         time:   [27.106 ns 27.337 ns 27.524 ns]
+Benchmarking read/view/vec1000
+Benchmarking read/view/vec1000: Warming up for 500.00 ms
+Benchmarking read/view/vec1000: Collecting 50 samples in estimated 2.0003 s (7.0M iterations)
+Benchmarking read/view/vec1000: Analyzing
+read/view/vec1000       time:   [283.83 ns 286.27 ns 288.69 ns]
+Benchmarking read/view/nested
+Benchmarking read/view/nested: Warming up for 500.00 ms
+Benchmarking read/view/nested: Collecting 50 samples in estimated 2.0000 s (37M iterations)
+Benchmarking read/view/nested: Analyzing
+read/view/nested        time:   [54.138 ns 54.417 ns 54.825 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking read/borrow/u64
+Benchmarking read/borrow/u64: Warming up for 500.00 ms
+Benchmarking read/borrow/u64: Collecting 50 samples in estimated 2.0000 s (182M iterations)
+Benchmarking read/borrow/u64: Analyzing
+read/borrow/u64         time:   [10.988 ns 11.000 ns 11.012 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking read/borrow/three
+Benchmarking read/borrow/three: Warming up for 500.00 ms
+Benchmarking read/borrow/three: Collecting 50 samples in estimated 2.0000 s (171M iterations)
+Benchmarking read/borrow/three: Analyzing
+read/borrow/three       time:   [11.549 ns 11.579 ns 11.609 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking read/borrow/vec10
+Benchmarking read/borrow/vec10: Warming up for 500.00 ms
+Benchmarking read/borrow/vec10: Collecting 50 samples in estimated 2.0000 s (157M iterations)
+Benchmarking read/borrow/vec10: Analyzing
+read/borrow/vec10       time:   [12.695 ns 12.713 ns 12.733 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking read/borrow/vec1000
+Benchmarking read/borrow/vec1000: Warming up for 500.00 ms
+Benchmarking read/borrow/vec1000: Collecting 50 samples in estimated 2.0000 s (157M iterations)
+Benchmarking read/borrow/vec1000: Analyzing
+read/borrow/vec1000     time:   [12.698 ns 12.714 ns 12.731 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  4 (8.00%) high mild
+  1 (2.00%) high severe
+Benchmarking read/borrow/nested
+Benchmarking read/borrow/nested: Warming up for 500.00 ms
+Benchmarking read/borrow/nested: Collecting 50 samples in estimated 2.0000 s (97M iterations)
+Benchmarking read/borrow/nested: Analyzing
+read/borrow/nested      time:   [20.694 ns 20.701 ns 20.708 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high severe
+
+Benchmarking snapshot/baseline/u64
+Benchmarking snapshot/baseline/u64: Warming up for 500.00 ms
+Benchmarking snapshot/baseline/u64: Collecting 50 samples in estimated 2.0001 s (6.1M iterations)
+Benchmarking snapshot/baseline/u64: Analyzing
+snapshot/baseline/u64   time:   [337.38 ns 338.48 ns 339.37 ns]
+Benchmarking snapshot/baseline/three
+Benchmarking snapshot/baseline/three: Warming up for 500.00 ms
+Benchmarking snapshot/baseline/three: Collecting 50 samples in estimated 2.0001 s (5.9M iterations)
+Benchmarking snapshot/baseline/three: Analyzing
+snapshot/baseline/three time:   [331.28 ns 332.99 ns 335.18 ns]
+Benchmarking snapshot/baseline/vec10
+Benchmarking snapshot/baseline/vec10: Warming up for 500.00 ms
+Benchmarking snapshot/baseline/vec10: Collecting 50 samples in estimated 2.0002 s (6.0M iterations)
+Benchmarking snapshot/baseline/vec10: Analyzing
+snapshot/baseline/vec10 time:   [334.61 ns 335.91 ns 337.42 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  4 (8.00%) low mild
+  1 (2.00%) high mild
+Benchmarking snapshot/baseline/vec1000
+Benchmarking snapshot/baseline/vec1000: Warming up for 500.00 ms
+Benchmarking snapshot/baseline/vec1000: Collecting 50 samples in estimated 2.0000 s (5.9M iterations)
+Benchmarking snapshot/baseline/vec1000: Analyzing
+snapshot/baseline/vec1000
+                        time:   [335.07 ns 336.54 ns 337.98 ns]
+Benchmarking snapshot/baseline/nested
+Benchmarking snapshot/baseline/nested: Warming up for 500.00 ms
+Benchmarking snapshot/baseline/nested: Collecting 50 samples in estimated 2.0003 s (6.0M iterations)
+Benchmarking snapshot/baseline/nested: Analyzing
+snapshot/baseline/nested
+                        time:   [333.60 ns 334.49 ns 335.42 ns]
+Benchmarking snapshot/restore/u64
+Benchmarking snapshot/restore/u64: Warming up for 500.00 ms
+Benchmarking snapshot/restore/u64: Collecting 50 samples in estimated 2.0001 s (5.9M iterations)
+Benchmarking snapshot/restore/u64: Analyzing
+snapshot/restore/u64    time:   [338.44 ns 339.60 ns 340.68 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  6 (12.00%) low mild
+  1 (2.00%) high mild
+Benchmarking snapshot/restore/three
+Benchmarking snapshot/restore/three: Warming up for 500.00 ms
+Benchmarking snapshot/restore/three: Collecting 50 samples in estimated 2.0001 s (6.0M iterations)
+Benchmarking snapshot/restore/three: Analyzing
+snapshot/restore/three  time:   [336.88 ns 338.26 ns 339.63 ns]
+Benchmarking snapshot/restore/vec10
+Benchmarking snapshot/restore/vec10: Warming up for 500.00 ms
+Benchmarking snapshot/restore/vec10: Collecting 50 samples in estimated 2.0002 s (5.8M iterations)
+Benchmarking snapshot/restore/vec10: Analyzing
+snapshot/restore/vec10  time:   [352.90 ns 354.18 ns 355.42 ns]
+Benchmarking snapshot/restore/vec1000
+Benchmarking snapshot/restore/vec1000: Warming up for 500.00 ms
+Benchmarking snapshot/restore/vec1000: Collecting 50 samples in estimated 2.0007 s (3.0M iterations)
+Benchmarking snapshot/restore/vec1000: Analyzing
+snapshot/restore/vec1000
+                        time:   [672.18 ns 676.22 ns 680.20 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) high mild
+Benchmarking snapshot/restore/nested
+Benchmarking snapshot/restore/nested: Warming up for 500.00 ms
+Benchmarking snapshot/restore/nested: Collecting 50 samples in estimated 2.0000 s (5.1M iterations)
+Benchmarking snapshot/restore/nested: Analyzing
+snapshot/restore/nested time:   [390.04 ns 390.89 ns 391.81 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking snapshot/view/u64
+Benchmarking snapshot/view/u64: Warming up for 500.00 ms
+Benchmarking snapshot/view/u64: Collecting 50 samples in estimated 2.0000 s (6.0M iterations)
+Benchmarking snapshot/view/u64: Analyzing
+snapshot/view/u64       time:   [336.08 ns 337.42 ns 338.71 ns]
+Benchmarking snapshot/view/three
+Benchmarking snapshot/view/three: Warming up for 500.00 ms
+Benchmarking snapshot/view/three: Collecting 50 samples in estimated 2.0002 s (6.0M iterations)
+Benchmarking snapshot/view/three: Analyzing
+snapshot/view/three     time:   [334.87 ns 336.15 ns 337.46 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) high mild
+Benchmarking snapshot/view/vec10
+Benchmarking snapshot/view/vec10: Warming up for 500.00 ms
+Benchmarking snapshot/view/vec10: Collecting 50 samples in estimated 2.0003 s (5.5M iterations)
+Benchmarking snapshot/view/vec10: Analyzing
+snapshot/view/vec10     time:   [363.51 ns 364.23 ns 364.90 ns]
+Benchmarking snapshot/view/vec1000
+Benchmarking snapshot/view/vec1000: Warming up for 500.00 ms
+Benchmarking snapshot/view/vec1000: Collecting 50 samples in estimated 2.0007 s (3.0M iterations)
+Benchmarking snapshot/view/vec1000: Analyzing
+snapshot/view/vec1000   time:   [651.49 ns 653.47 ns 655.75 ns]
+Benchmarking snapshot/view/nested
+Benchmarking snapshot/view/nested: Warming up for 500.00 ms
+Benchmarking snapshot/view/nested: Collecting 50 samples in estimated 2.0003 s (5.0M iterations)
+Benchmarking snapshot/view/nested: Analyzing
+snapshot/view/nested    time:   [398.10 ns 399.34 ns 400.38 ns]
+Benchmarking snapshot/borrow/u64
+Benchmarking snapshot/borrow/u64: Warming up for 500.00 ms
+Benchmarking snapshot/borrow/u64: Collecting 50 samples in estimated 2.0003 s (6.0M iterations)
+Benchmarking snapshot/borrow/u64: Analyzing
+snapshot/borrow/u64     time:   [330.81 ns 332.15 ns 333.37 ns]
+Benchmarking snapshot/borrow/three
+Benchmarking snapshot/borrow/three: Warming up for 500.00 ms
+Benchmarking snapshot/borrow/three: Collecting 50 samples in estimated 2.0003 s (5.9M iterations)
+Benchmarking snapshot/borrow/three: Analyzing
+snapshot/borrow/three   time:   [337.42 ns 338.45 ns 339.54 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking snapshot/borrow/vec10
+Benchmarking snapshot/borrow/vec10: Warming up for 500.00 ms
+Benchmarking snapshot/borrow/vec10: Collecting 50 samples in estimated 2.0002 s (5.9M iterations)
+Benchmarking snapshot/borrow/vec10: Analyzing
+snapshot/borrow/vec10   time:   [339.63 ns 341.36 ns 343.30 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) low mild
+Benchmarking snapshot/borrow/vec1000
+Benchmarking snapshot/borrow/vec1000: Warming up for 500.00 ms
+Benchmarking snapshot/borrow/vec1000: Collecting 50 samples in estimated 2.0001 s (6.0M iterations)
+Benchmarking snapshot/borrow/vec1000: Analyzing
+snapshot/borrow/vec1000 time:   [338.28 ns 338.94 ns 339.51 ns]
+Benchmarking snapshot/borrow/nested
+Benchmarking snapshot/borrow/nested: Warming up for 500.00 ms
+Benchmarking snapshot/borrow/nested: Collecting 50 samples in estimated 2.0001 s (5.9M iterations)
+Benchmarking snapshot/borrow/nested: Analyzing
+snapshot/borrow/nested  time:   [335.08 ns 336.16 ns 337.30 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) high mild
+
+Benchmarking switch_cell/baseline/u64
+Benchmarking switch_cell/baseline/u64: Warming up for 500.00 ms
+Benchmarking switch_cell/baseline/u64: Collecting 50 samples in estimated 2.0003 s (5.9M iterations)
+Benchmarking switch_cell/baseline/u64: Analyzing
+switch_cell/baseline/u64
+                        time:   [334.93 ns 335.61 ns 336.41 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking switch_cell/baseline/three
+Benchmarking switch_cell/baseline/three: Warming up for 500.00 ms
+Benchmarking switch_cell/baseline/three: Collecting 50 samples in estimated 2.0001 s (5.9M iterations)
+Benchmarking switch_cell/baseline/three: Analyzing
+switch_cell/baseline/three
+                        time:   [339.99 ns 340.78 ns 341.53 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) low mild
+  1 (2.00%) high mild
+Benchmarking switch_cell/baseline/vec10
+Benchmarking switch_cell/baseline/vec10: Warming up for 500.00 ms
+Benchmarking switch_cell/baseline/vec10: Collecting 50 samples in estimated 2.0004 s (5.9M iterations)
+Benchmarking switch_cell/baseline/vec10: Analyzing
+switch_cell/baseline/vec10
+                        time:   [333.84 ns 334.53 ns 335.28 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  5 (10.00%) high mild
+Benchmarking switch_cell/baseline/vec1000
+Benchmarking switch_cell/baseline/vec1000: Warming up for 500.00 ms
+Benchmarking switch_cell/baseline/vec1000: Collecting 50 samples in estimated 2.0002 s (5.9M iterations)
+Benchmarking switch_cell/baseline/vec1000: Analyzing
+switch_cell/baseline/vec1000
+                        time:   [336.55 ns 337.37 ns 338.25 ns]
+Benchmarking switch_cell/baseline/nested
+Benchmarking switch_cell/baseline/nested: Warming up for 500.00 ms
+Benchmarking switch_cell/baseline/nested: Collecting 50 samples in estimated 2.0003 s (5.6M iterations)
+Benchmarking switch_cell/baseline/nested: Analyzing
+switch_cell/baseline/nested
+                        time:   [348.96 ns 349.70 ns 350.54 ns]
+Benchmarking switch_cell/restore/u64
+Benchmarking switch_cell/restore/u64: Warming up for 500.00 ms
+Benchmarking switch_cell/restore/u64: Collecting 50 samples in estimated 2.0000 s (5.9M iterations)
+Benchmarking switch_cell/restore/u64: Analyzing
+switch_cell/restore/u64 time:   [340.25 ns 341.98 ns 343.37 ns]
+Benchmarking switch_cell/restore/three
+Benchmarking switch_cell/restore/three: Warming up for 500.00 ms
+Benchmarking switch_cell/restore/three: Collecting 50 samples in estimated 2.0002 s (5.8M iterations)
+Benchmarking switch_cell/restore/three: Analyzing
+switch_cell/restore/three
+                        time:   [335.59 ns 336.79 ns 337.94 ns]
+Benchmarking switch_cell/restore/vec10
+Benchmarking switch_cell/restore/vec10: Warming up for 500.00 ms
+Benchmarking switch_cell/restore/vec10: Collecting 50 samples in estimated 2.0004 s (5.5M iterations)
+Benchmarking switch_cell/restore/vec10: Analyzing
+switch_cell/restore/vec10
+                        time:   [362.03 ns 363.33 ns 364.71 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking switch_cell/restore/vec1000
+Benchmarking switch_cell/restore/vec1000: Warming up for 500.00 ms
+Benchmarking switch_cell/restore/vec1000: Collecting 50 samples in estimated 2.0007 s (2.9M iterations)
+Benchmarking switch_cell/restore/vec1000: Analyzing
+switch_cell/restore/vec1000
+                        time:   [681.67 ns 685.78 ns 689.83 ns]
+Benchmarking switch_cell/restore/nested
+Benchmarking switch_cell/restore/nested: Warming up for 500.00 ms
+Benchmarking switch_cell/restore/nested: Collecting 50 samples in estimated 2.0002 s (5.0M iterations)
+Benchmarking switch_cell/restore/nested: Analyzing
+switch_cell/restore/nested
+                        time:   [405.23 ns 406.67 ns 408.34 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking switch_cell/view/u64
+Benchmarking switch_cell/view/u64: Warming up for 500.00 ms
+Benchmarking switch_cell/view/u64: Collecting 50 samples in estimated 2.0001 s (5.9M iterations)
+Benchmarking switch_cell/view/u64: Analyzing
+switch_cell/view/u64    time:   [338.74 ns 340.15 ns 341.52 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking switch_cell/view/three
+Benchmarking switch_cell/view/three: Warming up for 500.00 ms
+Benchmarking switch_cell/view/three: Collecting 50 samples in estimated 2.0001 s (5.9M iterations)
+Benchmarking switch_cell/view/three: Analyzing
+switch_cell/view/three  time:   [337.05 ns 338.00 ns 338.92 ns]
+Benchmarking switch_cell/view/vec10
+Benchmarking switch_cell/view/vec10: Warming up for 500.00 ms
+Benchmarking switch_cell/view/vec10: Collecting 50 samples in estimated 2.0002 s (5.5M iterations)
+Benchmarking switch_cell/view/vec10: Analyzing
+switch_cell/view/vec10  time:   [361.07 ns 362.06 ns 363.10 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking switch_cell/view/vec1000
+Benchmarking switch_cell/view/vec1000: Warming up for 500.00 ms
+Benchmarking switch_cell/view/vec1000: Collecting 50 samples in estimated 2.0001 s (3.0M iterations)
+Benchmarking switch_cell/view/vec1000: Analyzing
+switch_cell/view/vec1000
+                        time:   [692.19 ns 696.44 ns 699.46 ns]
+Benchmarking switch_cell/view/nested
+Benchmarking switch_cell/view/nested: Warming up for 500.00 ms
+Benchmarking switch_cell/view/nested: Collecting 50 samples in estimated 2.0005 s (4.9M iterations)
+Benchmarking switch_cell/view/nested: Analyzing
+switch_cell/view/nested time:   [408.05 ns 409.47 ns 410.92 ns]
+Benchmarking switch_cell/borrow/u64
+Benchmarking switch_cell/borrow/u64: Warming up for 500.00 ms
+Benchmarking switch_cell/borrow/u64: Collecting 50 samples in estimated 2.0004 s (6.0M iterations)
+Benchmarking switch_cell/borrow/u64: Analyzing
+switch_cell/borrow/u64  time:   [332.90 ns 334.15 ns 335.52 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  4 (8.00%) high mild
+Benchmarking switch_cell/borrow/three
+Benchmarking switch_cell/borrow/three: Warming up for 500.00 ms
+Benchmarking switch_cell/borrow/three: Collecting 50 samples in estimated 2.0003 s (5.8M iterations)
+Benchmarking switch_cell/borrow/three: Analyzing
+switch_cell/borrow/three
+                        time:   [347.43 ns 348.21 ns 349.01 ns]
+Benchmarking switch_cell/borrow/vec10
+Benchmarking switch_cell/borrow/vec10: Warming up for 500.00 ms
+Benchmarking switch_cell/borrow/vec10: Collecting 50 samples in estimated 2.0002 s (5.8M iterations)
+Benchmarking switch_cell/borrow/vec10: Analyzing
+switch_cell/borrow/vec10
+                        time:   [336.21 ns 337.73 ns 339.15 ns]
+Benchmarking switch_cell/borrow/vec1000
+Benchmarking switch_cell/borrow/vec1000: Warming up for 500.00 ms
+Benchmarking switch_cell/borrow/vec1000: Collecting 50 samples in estimated 2.0003 s (5.9M iterations)
+Benchmarking switch_cell/borrow/vec1000: Analyzing
+switch_cell/borrow/vec1000
+                        time:   [336.30 ns 338.09 ns 339.96 ns]
+Benchmarking switch_cell/borrow/nested
+Benchmarking switch_cell/borrow/nested: Warming up for 500.00 ms
+Benchmarking switch_cell/borrow/nested: Collecting 50 samples in estimated 2.0002 s (5.8M iterations)
+Benchmarking switch_cell/borrow/nested: Analyzing
+switch_cell/borrow/nested
+                        time:   [342.62 ns 343.87 ns 345.09 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+
+Benchmarking sample/baseline/u64
+Benchmarking sample/baseline/u64: Warming up for 500.00 ms
+Benchmarking sample/baseline/u64: Collecting 50 samples in estimated 2.0002 s (5.9M iterations)
+Benchmarking sample/baseline/u64: Analyzing
+sample/baseline/u64     time:   [338.18 ns 339.02 ns 339.83 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking sample/baseline/three
+Benchmarking sample/baseline/three: Warming up for 500.00 ms
+Benchmarking sample/baseline/three: Collecting 50 samples in estimated 2.0002 s (5.7M iterations)
+Benchmarking sample/baseline/three: Analyzing
+sample/baseline/three   time:   [350.18 ns 351.83 ns 353.35 ns]
+Benchmarking sample/baseline/vec10
+Benchmarking sample/baseline/vec10: Warming up for 500.00 ms
+Benchmarking sample/baseline/vec10: Collecting 50 samples in estimated 2.0003 s (5.9M iterations)
+Benchmarking sample/baseline/vec10: Analyzing
+sample/baseline/vec10   time:   [340.74 ns 342.03 ns 343.22 ns]
+Benchmarking sample/baseline/vec1000
+Benchmarking sample/baseline/vec1000: Warming up for 500.00 ms
+Benchmarking sample/baseline/vec1000: Collecting 50 samples in estimated 2.0001 s (5.9M iterations)
+Benchmarking sample/baseline/vec1000: Analyzing
+sample/baseline/vec1000 time:   [338.51 ns 339.87 ns 341.26 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking sample/baseline/nested
+Benchmarking sample/baseline/nested: Warming up for 500.00 ms
+Benchmarking sample/baseline/nested: Collecting 50 samples in estimated 2.0003 s (5.7M iterations)
+Benchmarking sample/baseline/nested: Analyzing
+sample/baseline/nested  time:   [343.02 ns 344.07 ns 345.19 ns]
+Benchmarking sample/restore/u64
+Benchmarking sample/restore/u64: Warming up for 500.00 ms
+Benchmarking sample/restore/u64: Collecting 50 samples in estimated 2.0004 s (6.0M iterations)
+Benchmarking sample/restore/u64: Analyzing
+sample/restore/u64      time:   [337.02 ns 337.97 ns 338.70 ns]
+Benchmarking sample/restore/three
+Benchmarking sample/restore/three: Warming up for 500.00 ms
+Benchmarking sample/restore/three: Collecting 50 samples in estimated 2.0001 s (5.8M iterations)
+Benchmarking sample/restore/three: Analyzing
+sample/restore/three    time:   [339.57 ns 340.75 ns 341.99 ns]
+Benchmarking sample/restore/vec10
+Benchmarking sample/restore/vec10: Warming up for 500.00 ms
+Benchmarking sample/restore/vec10: Collecting 50 samples in estimated 2.0003 s (5.6M iterations)
+Benchmarking sample/restore/vec10: Analyzing
+sample/restore/vec10    time:   [360.42 ns 361.83 ns 363.36 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking sample/restore/vec1000
+Benchmarking sample/restore/vec1000: Warming up for 500.00 ms
+Benchmarking sample/restore/vec1000: Collecting 50 samples in estimated 2.0006 s (3.1M iterations)
+Benchmarking sample/restore/vec1000: Analyzing
+sample/restore/vec1000  time:   [641.68 ns 642.50 ns 643.34 ns]
+Found 11 outliers among 50 measurements (22.00%)
+  4 (8.00%) low mild
+  4 (8.00%) high mild
+  3 (6.00%) high severe
+Benchmarking sample/restore/nested
+Benchmarking sample/restore/nested: Warming up for 500.00 ms
+Benchmarking sample/restore/nested: Collecting 50 samples in estimated 2.0003 s (5.1M iterations)
+Benchmarking sample/restore/nested: Analyzing
+sample/restore/nested   time:   [385.73 ns 387.23 ns 388.79 ns]
+Benchmarking sample/view/u64
+Benchmarking sample/view/u64: Warming up for 500.00 ms
+Benchmarking sample/view/u64: Collecting 50 samples in estimated 2.0001 s (6.0M iterations)
+Benchmarking sample/view/u64: Analyzing
+sample/view/u64         time:   [337.53 ns 338.43 ns 339.16 ns]
+Benchmarking sample/view/three
+Benchmarking sample/view/three: Warming up for 500.00 ms
+Benchmarking sample/view/three: Collecting 50 samples in estimated 2.0002 s (5.7M iterations)
+Benchmarking sample/view/three: Analyzing
+sample/view/three       time:   [343.91 ns 345.21 ns 346.42 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking sample/view/vec10
+Benchmarking sample/view/vec10: Warming up for 500.00 ms
+Benchmarking sample/view/vec10: Collecting 50 samples in estimated 2.0004 s (5.5M iterations)
+Benchmarking sample/view/vec10: Analyzing
+sample/view/vec10       time:   [363.84 ns 364.80 ns 365.95 ns]
+Benchmarking sample/view/vec1000
+Benchmarking sample/view/vec1000: Warming up for 500.00 ms
+Benchmarking sample/view/vec1000: Collecting 50 samples in estimated 2.0004 s (3.1M iterations)
+Benchmarking sample/view/vec1000: Analyzing
+sample/view/vec1000     time:   [639.05 ns 642.82 ns 647.34 ns]
+Found 9 outliers among 50 measurements (18.00%)
+  3 (6.00%) low severe
+  6 (12.00%) low mild
+Benchmarking sample/view/nested
+Benchmarking sample/view/nested: Warming up for 500.00 ms
+Benchmarking sample/view/nested: Collecting 50 samples in estimated 2.0002 s (5.1M iterations)
+Benchmarking sample/view/nested: Analyzing
+sample/view/nested      time:   [391.23 ns 393.08 ns 394.57 ns]
+Benchmarking sample/borrow/u64
+Benchmarking sample/borrow/u64: Warming up for 500.00 ms
+Benchmarking sample/borrow/u64: Collecting 50 samples in estimated 2.0004 s (5.9M iterations)
+Benchmarking sample/borrow/u64: Analyzing
+sample/borrow/u64       time:   [334.81 ns 336.06 ns 337.41 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) high mild
+Benchmarking sample/borrow/three
+Benchmarking sample/borrow/three: Warming up for 500.00 ms
+Benchmarking sample/borrow/three: Collecting 50 samples in estimated 2.0004 s (5.9M iterations)
+Benchmarking sample/borrow/three: Analyzing
+sample/borrow/three     time:   [339.59 ns 340.23 ns 340.86 ns]
+Found 6 outliers among 50 measurements (12.00%)
+  2 (4.00%) low mild
+  2 (4.00%) high mild
+  2 (4.00%) high severe
+Benchmarking sample/borrow/vec10
+Benchmarking sample/borrow/vec10: Warming up for 500.00 ms
+Benchmarking sample/borrow/vec10: Collecting 50 samples in estimated 2.0000 s (5.9M iterations)
+Benchmarking sample/borrow/vec10: Analyzing
+sample/borrow/vec10     time:   [342.91 ns 343.73 ns 344.52 ns]
+Benchmarking sample/borrow/vec1000
+Benchmarking sample/borrow/vec1000: Warming up for 500.00 ms
+Benchmarking sample/borrow/vec1000: Collecting 50 samples in estimated 2.0004 s (5.9M iterations)
+Benchmarking sample/borrow/vec1000: Analyzing
+sample/borrow/vec1000   time:   [343.00 ns 343.94 ns 344.77 ns]
+Benchmarking sample/borrow/nested
+Benchmarking sample/borrow/nested: Warming up for 500.00 ms
+Benchmarking sample/borrow/nested: Collecting 50 samples in estimated 2.0000 s (5.8M iterations)
+Benchmarking sample/borrow/nested: Analyzing
+sample/borrow/nested    time:   [341.30 ns 342.17 ns 343.18 ns]
+
+Benchmarking listener/baseline/u64
+Benchmarking listener/baseline/u64: Warming up for 500.00 ms
+Benchmarking listener/baseline/u64: Collecting 50 samples in estimated 2.0003 s (6.0M iterations)
+Benchmarking listener/baseline/u64: Analyzing
+listener/baseline/u64   time:   [334.46 ns 335.43 ns 336.25 ns]
+Benchmarking listener/baseline/three
+Benchmarking listener/baseline/three: Warming up for 500.00 ms
+Benchmarking listener/baseline/three: Collecting 50 samples in estimated 2.0001 s (5.7M iterations)
+Benchmarking listener/baseline/three: Analyzing
+listener/baseline/three time:   [349.19 ns 350.48 ns 351.49 ns]
+Benchmarking listener/baseline/vec10
+Benchmarking listener/baseline/vec10: Warming up for 500.00 ms
+Benchmarking listener/baseline/vec10: Collecting 50 samples in estimated 2.0003 s (5.8M iterations)
+Benchmarking listener/baseline/vec10: Analyzing
+listener/baseline/vec10 time:   [342.57 ns 343.85 ns 345.10 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  1 (2.00%) low mild
+  2 (4.00%) high mild
+Benchmarking listener/baseline/vec1000
+Benchmarking listener/baseline/vec1000: Warming up for 500.00 ms
+Benchmarking listener/baseline/vec1000: Collecting 50 samples in estimated 2.0001 s (5.9M iterations)
+Benchmarking listener/baseline/vec1000: Analyzing
+listener/baseline/vec1000
+                        time:   [338.74 ns 339.71 ns 340.63 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking listener/baseline/nested
+Benchmarking listener/baseline/nested: Warming up for 500.00 ms
+Benchmarking listener/baseline/nested: Collecting 50 samples in estimated 2.0000 s (5.7M iterations)
+Benchmarking listener/baseline/nested: Analyzing
+listener/baseline/nested
+                        time:   [346.60 ns 347.47 ns 348.39 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  3 (6.00%) low mild
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking listener/restore/u64
+Benchmarking listener/restore/u64: Warming up for 500.00 ms
+Benchmarking listener/restore/u64: Collecting 50 samples in estimated 2.0002 s (5.9M iterations)
+Benchmarking listener/restore/u64: Analyzing
+listener/restore/u64    time:   [336.38 ns 337.53 ns 338.63 ns]
+Benchmarking listener/restore/three
+Benchmarking listener/restore/three: Warming up for 500.00 ms
+Benchmarking listener/restore/three: Collecting 50 samples in estimated 2.0002 s (5.9M iterations)
+Benchmarking listener/restore/three: Analyzing
+listener/restore/three  time:   [337.84 ns 338.94 ns 340.11 ns]
+Benchmarking listener/restore/vec10
+Benchmarking listener/restore/vec10: Warming up for 500.00 ms
+Benchmarking listener/restore/vec10: Collecting 50 samples in estimated 2.0004 s (5.4M iterations)
+Benchmarking listener/restore/vec10: Analyzing
+listener/restore/vec10  time:   [365.27 ns 366.64 ns 368.09 ns]
+Benchmarking listener/restore/vec1000
+Benchmarking listener/restore/vec1000: Warming up for 500.00 ms
+Benchmarking listener/restore/vec1000: Collecting 50 samples in estimated 2.0007 s (3.0M iterations)
+Benchmarking listener/restore/vec1000: Analyzing
+listener/restore/vec1000
+                        time:   [658.41 ns 660.08 ns 661.73 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking listener/restore/nested
+Benchmarking listener/restore/nested: Warming up for 500.00 ms
+Benchmarking listener/restore/nested: Collecting 50 samples in estimated 2.0004 s (5.2M iterations)
+Benchmarking listener/restore/nested: Analyzing
+listener/restore/nested time:   [392.71 ns 393.79 ns 394.59 ns]
+Benchmarking listener/view/u64
+Benchmarking listener/view/u64: Warming up for 500.00 ms
+Benchmarking listener/view/u64: Collecting 50 samples in estimated 2.0001 s (5.9M iterations)
+Benchmarking listener/view/u64: Analyzing
+listener/view/u64       time:   [339.16 ns 339.88 ns 340.50 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) low mild
+Benchmarking listener/view/three
+Benchmarking listener/view/three: Warming up for 500.00 ms
+Benchmarking listener/view/three: Collecting 50 samples in estimated 2.0002 s (5.8M iterations)
+Benchmarking listener/view/three: Analyzing
+listener/view/three     time:   [349.10 ns 349.50 ns 349.86 ns]
+Found 8 outliers among 50 measurements (16.00%)
+  4 (8.00%) low severe
+  4 (8.00%) low mild
+Benchmarking listener/view/vec10
+Benchmarking listener/view/vec10: Warming up for 500.00 ms
+Benchmarking listener/view/vec10: Collecting 50 samples in estimated 2.0001 s (5.5M iterations)
+Benchmarking listener/view/vec10: Analyzing
+listener/view/vec10     time:   [361.52 ns 362.92 ns 364.33 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking listener/view/vec1000
+Benchmarking listener/view/vec1000: Warming up for 500.00 ms
+Benchmarking listener/view/vec1000: Collecting 50 samples in estimated 2.0007 s (3.0M iterations)
+Benchmarking listener/view/vec1000: Analyzing
+listener/view/vec1000   time:   [666.39 ns 668.72 ns 670.88 ns]
+Benchmarking listener/view/nested
+Benchmarking listener/view/nested: Warming up for 500.00 ms
+Benchmarking listener/view/nested: Collecting 50 samples in estimated 2.0002 s (5.1M iterations)
+Benchmarking listener/view/nested: Analyzing
+listener/view/nested    time:   [394.45 ns 395.31 ns 396.02 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) low mild
+Benchmarking listener/borrow/u64
+Benchmarking listener/borrow/u64: Warming up for 500.00 ms
+Benchmarking listener/borrow/u64: Collecting 50 samples in estimated 2.0001 s (5.9M iterations)
+Benchmarking listener/borrow/u64: Analyzing
+listener/borrow/u64     time:   [339.16 ns 340.40 ns 341.64 ns]
+Benchmarking listener/borrow/three
+Benchmarking listener/borrow/three: Warming up for 500.00 ms
+Benchmarking listener/borrow/three: Collecting 50 samples in estimated 2.0002 s (5.8M iterations)
+Benchmarking listener/borrow/three: Analyzing
+listener/borrow/three   time:   [341.00 ns 341.59 ns 342.16 ns]
+Benchmarking listener/borrow/vec10
+Benchmarking listener/borrow/vec10: Warming up for 500.00 ms
+Benchmarking listener/borrow/vec10: Collecting 50 samples in estimated 2.0002 s (5.8M iterations)
+Benchmarking listener/borrow/vec10: Analyzing
+listener/borrow/vec10   time:   [339.73 ns 340.69 ns 341.66 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking listener/borrow/vec1000
+Benchmarking listener/borrow/vec1000: Warming up for 500.00 ms
+Benchmarking listener/borrow/vec1000: Collecting 50 samples in estimated 2.0001 s (5.8M iterations)
+Benchmarking listener/borrow/vec1000: Analyzing
+listener/borrow/vec1000 time:   [341.95 ns 342.86 ns 343.81 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking listener/borrow/nested
+Benchmarking listener/borrow/nested: Warming up for 500.00 ms
+Benchmarking listener/borrow/nested: Collecting 50 samples in estimated 2.0004 s (5.8M iterations)
+Benchmarking listener/borrow/nested: Analyzing
+listener/borrow/nested  time:   [340.72 ns 341.69 ns 342.75 ns]
+
+
+$ python3 scripts/ratios.py
+
+benchmark                    ratio   95% interval       baseline mean
+listener/borrow/nested        0.981  [ 0.978,  0.984]         348.3 ns
+listener/borrow/three         0.982  [ 0.978,  0.985]         348.1 ns
+listener/borrow/u64           1.023  [ 1.019,  1.027]         333.7 ns
+listener/borrow/vec10         0.988  [ 0.984,  0.993]         345.3 ns
+listener/borrow/vec1000       1.014  [ 1.010,  1.018]         339.6 ns
+listener/restore/nested       1.122  [ 1.118,  1.126]         348.3 ns
+listener/restore/three        0.972  [ 0.968,  0.977]         348.1 ns
+listener/restore/u64          1.018  [ 1.013,  1.023]         333.7 ns
+listener/restore/vec10        1.067  [ 1.062,  1.073]         345.3 ns
+listener/restore/vec1000      1.942  [ 1.936,  1.948]         339.6 ns
+listener/view/nested          1.132  [ 1.128,  1.136]         348.3 ns
+listener/view/three           1.000  [ 0.996,  1.004]         348.1 ns
+listener/view/u64             1.017  [ 1.013,  1.020]         333.7 ns
+listener/view/vec10           1.046  [ 1.042,  1.051]         345.3 ns
+listener/view/vec1000         1.965  [ 1.958,  1.971]         339.6 ns
+read/borrow/nested            1.576  [ 1.573,  1.579]          13.1 ns
+read/borrow/three             1.133  [ 1.130,  1.136]          10.2 ns
+read/borrow/u64               1.078  [ 1.076,  1.080]          10.2 ns
+read/borrow/vec10             1.053  [ 1.051,  1.055]          12.1 ns
+read/borrow/vec1000           1.052  [ 1.051,  1.054]          12.1 ns
+read/restore/nested           4.222  [ 4.212,  4.233]          13.1 ns
+read/restore/three            1.104  [ 1.100,  1.107]          10.2 ns
+read/restore/u64              1.055  [ 1.053,  1.057]          10.2 ns
+read/restore/vec10            2.493  [ 2.485,  2.501]          12.1 ns
+read/restore/vec1000         23.859  [23.727, 23.993]          12.1 ns
+read/view/nested              4.137  [ 4.123,  4.153]          13.1 ns
+read/view/three               1.104  [ 1.100,  1.107]          10.2 ns
+read/view/u64                 1.000  [ 0.998,  1.002]          10.2 ns
+read/view/vec10               2.233  [ 2.219,  2.247]          12.1 ns
+read/view/vec1000            23.768  [23.639, 23.904]          12.1 ns
+sample/borrow/nested          0.990  [ 0.986,  0.994]         346.5 ns
+sample/borrow/three           0.977  [ 0.973,  0.981]         349.4 ns
+sample/borrow/u64             0.991  [ 0.986,  0.995]         338.7 ns
+sample/borrow/vec10           1.001  [ 0.998,  1.005]         342.1 ns
+sample/borrow/vec1000         1.007  [ 1.003,  1.012]         339.0 ns
+sample/restore/nested         1.121  [ 1.115,  1.126]         346.5 ns
+sample/restore/three          0.980  [ 0.976,  0.985]         349.4 ns
+sample/restore/u64            0.987  [ 0.982,  0.992]         338.7 ns
+sample/restore/vec10          1.061  [ 1.056,  1.066]         342.1 ns
+sample/restore/vec1000        1.898  [ 1.890,  1.907]         339.0 ns
+sample/view/nested            1.127  [ 1.122,  1.133]         346.5 ns
+sample/view/three             0.991  [ 0.985,  0.997]         349.4 ns
+sample/view/u64               0.995  [ 0.991,  0.999]         338.7 ns
+sample/view/vec10             1.066  [ 1.062,  1.070]         342.1 ns
+sample/view/vec1000           1.916  [ 1.905,  1.925]         339.0 ns
+snapshot/borrow/nested        1.007  [ 1.003,  1.011]         335.1 ns
+snapshot/borrow/three         1.007  [ 1.002,  1.013]         337.0 ns
+snapshot/borrow/u64           0.990  [ 0.984,  0.996]         334.8 ns
+snapshot/borrow/vec10         1.018  [ 1.014,  1.022]         337.6 ns
+snapshot/borrow/vec1000       1.003  [ 0.998,  1.007]         336.0 ns
+snapshot/restore/nested       1.170  [ 1.166,  1.174]         335.1 ns
+snapshot/restore/three        1.000  [ 0.994,  1.006]         337.0 ns
+snapshot/restore/u64          1.015  [ 1.010,  1.021]         334.8 ns
+snapshot/restore/vec10        1.045  [ 1.040,  1.051]         337.6 ns
+snapshot/restore/vec1000      2.004  [ 1.995,  2.014]         336.0 ns
+snapshot/view/nested          1.187  [ 1.182,  1.191]         335.1 ns
+snapshot/view/three           0.999  [ 0.993,  1.005]         337.0 ns
+snapshot/view/u64             0.999  [ 0.993,  1.005]         334.8 ns
+snapshot/view/vec10           1.076  [ 1.072,  1.079]         337.6 ns
+snapshot/view/vec1000         1.961  [ 1.952,  1.970]         336.0 ns
+switch_cell/borrow/nested     0.980  [ 0.976,  0.984]         351.8 ns
+switch_cell/borrow/three      1.025  [ 1.022,  1.029]         339.8 ns
+switch_cell/borrow/u64        0.986  [ 0.981,  0.990]         337.7 ns
+switch_cell/borrow/vec10      1.003  [ 0.998,  1.007]         335.9 ns
+switch_cell/borrow/vec1000    0.997  [ 0.992,  1.002]         337.5 ns
+switch_cell/restore/nested    1.154  [ 1.148,  1.159]         351.8 ns
+switch_cell/restore/three     0.992  [ 0.989,  0.996]         339.8 ns
+switch_cell/restore/u64       1.005  [ 0.999,  1.010]         337.7 ns
+switch_cell/restore/vec10     1.086  [ 1.081,  1.092]         335.9 ns
+switch_cell/restore/vec1000   2.033  [ 2.025,  2.041]         337.5 ns
+switch_cell/view/nested       1.170  [ 1.165,  1.176]         351.8 ns
+switch_cell/view/three        0.996  [ 0.992,  1.000]         339.8 ns
+switch_cell/view/u64          1.009  [ 1.004,  1.013]         337.7 ns
+switch_cell/view/vec10        1.081  [ 1.076,  1.086]         335.9 ns
+switch_cell/view/vec1000      2.040  [ 2.028,  2.052]         337.5 ns
+
