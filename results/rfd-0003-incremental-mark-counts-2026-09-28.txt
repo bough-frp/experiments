@@ -1,0 +1,37 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-incremental-mark-counts at experiments@3d83d68 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0003_incremental_mark::tests::counts -- --nocapture
+
+    Finished `release` profile [optimized] target(s) in 0.06s
+     Running unittests src/lib.rs (target/release/deps/bough_experiments-7908e5454028b438)
+
+running 1 test
+app: 10089 live after a collection; 30000 units from each pace's first cycle, every third a navigation, the rest a click; trigger: the work-paced probe's `excess`
+budget k = k mark-node equivalents a unit (mark 1, prune 1/2, slot tested 3/16, slot freed +5); `-atomic-sweep`: prune and sweep all in the slice where the mark ends
+columns: u/cyc, maxcyc = units a cycle runs, mean and longest; rgn/clk = region nodes a click; coll/u = collection work a unit in mark-node equivalents; shaded, born = white nodes barriers shaded, nodes born black, a cycle
+  pace               cycles  u/cyc maxcyc  rgn/clk  coll/u  freed/c  largest  shaded   born  slots
+  atomic (baseline)     471    1.0      1    279.6   308.0    497.8      542     0.0    0.0  10634
+  atomic+barriers       471    1.0      1    279.6   308.0    497.8      542     0.0    0.0  10634
+  k250                  187   95.2     96    945.6   148.1   1253.7     1301     0.0  741.7  11923
+  k1000                 358   21.0     21    412.0   244.2    656.0      688     0.0  164.1  10902
+  k4000                 438    5.0      5    286.5   288.9    535.7      562     0.0   33.7  10671
+  k250-atomic-sweep     285   41.0     41    730.4   204.1    822.7      862     0.0  317.4  11257
+  k1000-atomic-sweep    402   11.0     11    375.9   269.0    583.7      614     0.0   79.6  10764
+  k4000-atomic-sweep    459    3.0      3    274.1   300.9    511.7      544     0.0   23.6  10635
+  alloc-debt2             2 14767.5  16404  51798.2    12.9  29103.5    45328     1.0 86161.0 178763
+  work-debt2             27 1027.0   2094   5618.4    52.6   7670.7    16500     0.0 7625.8  37009
+
+the costliest unit of the benches' 3900-unit window by the model (est = 100 a region node, 850 a node built, 75 marked, 40 pruned, 12 a slot tested, 400 freed)
+  pace                unit region built marked pruned  slots freed       est
+  atomic (baseline)    569    559     0  10093  10093  10624   531   1556483
+  k250                 422   1602     0     67    366      0     0    179865
+  k1000                746    759     0     67   1866      0     0    155565
+  k4000               1423    579     0   2067   3866      0     0    367565
+  k250-atomic-sweep   3563   1151     0     67  10354  11251   862   1014097
+  k1000-atomic-sweep   740    688     0     67  10139  10753   614    854021
+  k4000-atomic-sweep  1953    549     0   2067  10094  10624   520    949173
+  alloc-debt2         3897  29782     0      0      0      0     0   2978200
+  work-debt2          3465   4922     0   1107    462      0     0    593705
+test rfd_0003_incremental_mark::tests::counts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 40 filtered out; finished in 34.67s
+

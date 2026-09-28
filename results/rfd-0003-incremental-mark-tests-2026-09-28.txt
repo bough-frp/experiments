@@ -1,0 +1,23 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-incremental-mark-tests at experiments@3d83d68 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0003_incremental_mark::tests -- --nocapture --test-threads 1 --skip counts
+
+    Finished `release` profile [optimized] target(s) in 0.07s
+     Running unittests src/lib.rs (target/release/deps/bough_experiments-7908e5454028b438)
+
+running 4 tests
+test rfd_0003_incremental_mark::tests::every_barrier_is_needed ... ok
+test rfd_0003_incremental_mark::tests::incremental_frees_exactly_what_atomic_frees ... atomic: 47 cycles, 23486 freed; after draining 10091 live, as atomic
+k250: 18 cycles, 21830 freed; after draining 10091 live, as atomic
+k1000: 35 cycles, 22946 freed; after draining 10091 live, as atomic
+k4000: 43 cycles, 23149 freed; after draining 10091 live, as atomic
+k250-atomic-sweep: 28 cycles, 22853 freed; after draining 10091 live, as atomic
+k1000-atomic-sweep: 40 cycles, 23441 freed; after draining 10091 live, as atomic
+k4000-atomic-sweep: 45 cycles, 23196 freed; after draining 10091 live, as atomic
+alloc-debt2: 1 cycles, 530 freed; after draining 10091 live, as atomic
+work-debt2: 9 cycles, 18935 freed; after draining 10091 live, as atomic
+ok
+test rfd_0003_incremental_mark::tests::the_baseline_reproduces_the_work_paced_probe ... ok
+test rfd_0003_incremental_mark::tests::white_is_dead_after_the_mark ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 37 filtered out; finished in 0.75s
+
