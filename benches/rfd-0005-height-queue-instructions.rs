@@ -22,7 +22,9 @@
 //! for both; `instant_reseat` and `instant_pull` are the heights, raised
 //! mid-evaluation for the new inners, with built nodes below the cursor
 //! re-seating it or evaluated at once. Their counts are in the `-counts-pull`
-//! results.
+//! results. `instant_unforced` is the mark and pull without the construct
+//! point forced into the mark, marking from the input and the moving
+//! `switch_cell`s only; its counts are in the `-counts-unforced` results.
 //!
 //! The fixture, the graph and the checker's initial order or heights are
 //! built in setup, and everything is handed back so its drop isn't counted.
@@ -33,7 +35,7 @@ use gungraun::{library_benchmark, library_benchmark_group, main};
 
 use bough_experiments::rfd_0005_bounded_relink_check::{Checker, Run};
 use bough_experiments::rfd_0005_height_queue::{
-    HeightQueue, Heights, HeightsPull, HeightsReseat, MarkPull,
+    HeightQueue, Heights, HeightsPull, HeightsReseat, MarkPull, MarkUnforced,
 };
 use bough_experiments::rfd_0005_maintained_rank_queue::{
     Engine, Fixture, HeapQueue, MarkOm, Schedule,
@@ -172,6 +174,21 @@ fn instant_pull((mut e, f): (HeightsPull, Fixture)) -> (HeightsPull, Fixture, u6
     black_box((e, f, digest))
 }
 
+fn mark_unforced(name: &str, pass: u32) -> (MarkUnforced, Fixture) {
+    let f = Fixture::new(name, pass);
+    (MarkUnforced::new(&f), f)
+}
+
+#[library_benchmark]
+#[benches::settled(args = [("settled", 100), ("settled", 50), ("settled", 30), ("settled", 20), ("settled", 5)], setup = mark_unforced)]
+#[benches::mixed(args = [("mixed", 100), ("mixed", 50), ("mixed", 30), ("mixed", 20), ("mixed", 5)], setup = mark_unforced)]
+#[benches::churn(args = [("churn", 100), ("churn", 50), ("churn", 30), ("churn", 20), ("churn", 5)], setup = mark_unforced)]
+#[benches::lazy(args = [("lazy", 100), ("lazy", 50), ("lazy", 30), ("lazy", 20), ("lazy", 5)], setup = mark_unforced)]
+fn instant_unforced((mut e, f): (MarkUnforced, Fixture)) -> (MarkUnforced, Fixture, u64) {
+    let digest = e.all(black_box(&f.txs), black_box(&f.events));
+    black_box((e, f, digest))
+}
+
 library_benchmark_group!(
     name = transactions;
     benchmarks = baseline, heights, heap
@@ -184,7 +201,7 @@ library_benchmark_group!(
 
 library_benchmark_group!(
     name = instant;
-    benchmarks = instant_baseline, instant_reseat, instant_pull
+    benchmarks = instant_baseline, instant_reseat, instant_pull, instant_unforced
 );
 
 main!(library_benchmark_groups = transactions, upkeep, instant);

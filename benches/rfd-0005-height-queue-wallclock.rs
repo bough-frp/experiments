@@ -19,6 +19,11 @@
 //! the heights, raised mid-evaluation, with built nodes below the cursor
 //! re-seating it or evaluated at once.
 //!
+//! `<workload>-unforced/<variant>/<pass>` runs them again against a
+//! `baseline` that doesn't force the construct point into the mark, marking
+//! from the input and the moving `switch_cell`s only; `pull` is the heights
+//! as in `-instant`, so the ratio is the heights' to that baseline.
+//!
 //! Each fixture is first checked to give the same results through every
 //! engine. Each iteration runs on a clone of one prepared engine, made in
 //! `iter_batched`'s setup and handed back so its drop is not timed.
@@ -32,8 +37,8 @@ use criterion::{criterion_group, criterion_main};
 
 use bough_experiments::rfd_0005_bounded_relink_check::{Checker, Run};
 use bough_experiments::rfd_0005_height_queue::{
-    HeightQueue, Heights, HeightsPull, HeightsReseat, MarkPull, PASS, WORKLOADS, agree,
-    agree_instant,
+    HeightQueue, Heights, HeightsPull, HeightsReseat, MarkPull, MarkUnforced, PASS, WORKLOADS,
+    agree, agree_instant,
 };
 use bough_experiments::rfd_0005_maintained_rank_queue::{
     Engine, Fixture, HeapQueue, MarkOm, Schedule,
@@ -136,6 +141,21 @@ fn height_queue(c: &mut Criterion) {
                 e.all(&f.txs, &f.events)
             });
             instant_one(&mut g, "reseat", HeightsReseat::new(&f), &f, |e, f| {
+                e.all(&f.txs, &f.events)
+            });
+            instant_one(&mut g, "pull", HeightsPull::new(&f), &f, |e, f| {
+                e.all(&f.txs, &f.events)
+            });
+        }
+        g.finish();
+    }
+    for name in WORKLOADS {
+        let mut g = c.benchmark_group(format!("{name}-unforced"));
+        setup(&mut g);
+        for pass in PASS {
+            let f = Fixture::new(name, pass);
+            agree_instant(&f);
+            instant_one(&mut g, "baseline", MarkUnforced::new(&f), &f, |e, f| {
                 e.all(&f.txs, &f.events)
             });
             instant_one(&mut g, "pull", HeightsPull::new(&f), &f, |e, f| {

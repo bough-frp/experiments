@@ -74,6 +74,12 @@
 //!   land there (an event reading an input), and then either the cursor is
 //!   re-seated down to it (`RESEAT`) or it is evaluated at once, out of the
 //!   height order.
+//! - [`MarkUnforced`]: [`MarkPull`] with nothing forced into the mark.
+//!   Forcing the construct point marks everything downstream of the root
+//!   event stream, every view, where the heights visit only what fires; this
+//!   one marks from the input and the moving `switch_cell`s alone, runs the
+//!   closure at the start and pulls what it built, so the comparison with
+//!   the heights is of scheduling, not of region.
 //! - [`Recompute`]: every node evaluated in a fresh topological order,
 //!   the reference [`agree_instant`] holds the others to.
 
@@ -857,6 +863,79 @@ impl MarkPull {
     }
 }
 
+/// [`MarkPull`] without the construct point forced into its mark, to see
+/// how much of the heights' lead is the region that forcing adds.
+///
+/// Forcing the root event stream's forward token into every navigation's
+/// mark marks everything downstream of it, which is every view. Here the
+/// mark starts from the fired input alone, plus each existing
+/// `switch_cell` that moves: a switch has no selector in the graph, and at
+/// a switch instant it emits whatever its new inner did, so it stands in
+/// for the selector firing and marking it. The closure runs at the start,
+/// as for F46's pair, since the selector that learns the moves is off the
+/// graph too; the nodes it built are pulled once it returns, each after
+/// what it depends on, and a switch built and moved in the same instant is
+/// pulled with them. A moving `switch_cell` pulls its new inner when the
+/// loop reaches it, and every move, `switch_stream`s' too, is checked at
+/// commit, as in [`MarkPull`].
+#[derive(Clone)]
+pub struct MarkUnforced(pub MarkPull);
+
+impl MarkUnforced {
+    pub fn new(f: &Fixture) -> Self {
+        MarkUnforced(MarkPull::new(f))
+    }
+
+    /// One transaction: the mark from the input and the moving switches,
+    /// the closure and its pulls, the loop, then the commit, whose values
+    /// stand only if it is accepted.
+    pub fn tx(&mut self, t: &Tx, (input, value): (Id, u64)) -> Outcome {
+        let e = &mut self.0;
+        e.slots.begin(input, value);
+        e.first = e.run.graph.len() as Id;
+        e.order.clear();
+        e.mark_from(input);
+        for m in t.moves.iter().filter(|m| is_cell(m)) {
+            // One built this instant doesn't exist yet; it's pulled.
+            if m.switch < e.first {
+                e.mark_from(m.switch);
+            }
+        }
+        e.stats.visited += e.order.len() as u64;
+        e.announce(t);
+        let mut poisoned = e.pull_built().is_err();
+        let order = std::mem::take(&mut e.order);
+        for &n in order.iter().rev() {
+            if poisoned {
+                break;
+            }
+            if e.done[n as usize] == e.slots.tx {
+                continue;
+            }
+            poisoned = e.step(n).is_err();
+        }
+        e.order = order;
+        e.stats.poisoned += poisoned as u64;
+        let accepted = e.run.checker.commit(&mut e.run.graph, &t.moves) && !poisoned;
+        e.slots.finish(accepted)
+    }
+
+    /// Every transaction with its event; the sum of the digests.
+    pub fn all(&mut self, txs: &[Tx], events: &[(Id, u64)]) -> u64 {
+        txs.iter()
+            .zip(events)
+            .fold(0, |acc, (t, &e)| acc.wrapping_add(self.tx(t, e).digest))
+    }
+
+    pub fn stats(&self) -> &InstantStats {
+        &self.0.stats
+    }
+
+    pub fn values(&self) -> &[u64] {
+        self.0.slots.values()
+    }
+}
+
 /// Pushes `n` into the bucket of its height now.
 #[inline]
 fn push(buckets: &mut Vec<Vec<Id>>, height: &[u32], n: Id, top: &mut usize) {
@@ -1190,15 +1269,22 @@ pub fn agree_instant(f: &Fixture) {
     let mut mark = MarkPull::new(f);
     let mut reseat = HeightsReseat::new(f);
     let mut pull = HeightsPull::new(f);
+    let mut unforced = MarkUnforced::new(f);
     for (k, (t, &e)) in f.txs.iter().zip(&f.events).enumerate() {
         let o = reference.tx(t, e);
-        let others = [mark.tx(t, e), reseat.tx(t, e), pull.tx(t, e)];
+        let others = [
+            mark.tx(t, e),
+            reseat.tx(t, e),
+            pull.tx(t, e),
+            unforced.tx(t, e),
+        ];
         assert!(others.iter().all(|x| *x == o), "tx {k}: {o:?} {others:?}");
         debug_assert!(reseat.run.checker.valid(&reseat.run.graph), "tx {k}");
         debug_assert!(pull.run.checker.valid(&pull.run.graph), "tx {k}");
     }
     let v = reference.slots.values();
     assert!(mark.slots.values() == v && reseat.slots.values() == v && pull.slots.values() == v);
+    assert!(unforced.values() == v);
 }
 
 #[cfg(test)]
@@ -1335,6 +1421,71 @@ mod tests {
         println!("evaluation (by a pull coming back to the switch_cell, or by a raise");
         println!("coming back to the new inner; the two engines agree), whatever the pass");
         println!("rate.");
+    }
+
+    /// The mark's region with and without the construct point forced into
+    /// it, beside what fires and what the heights pop. Run with
+    /// `--nocapture`.
+    #[test]
+    fn counts_unforced() {
+        println!(
+            "{:<8} {:>4} {:>7} {:>7} {:>7} {:>6} {:>6} {:>6} {:>6} {:>7}",
+            "workload",
+            "pass",
+            "forced",
+            "unforc",
+            "fired",
+            "q-forc",
+            "q-unf",
+            "e-forc",
+            "e-unf",
+            "popped",
+        );
+        let mut txs = 0;
+        for name in WORKLOADS {
+            for pass in PASS {
+                let f = Fixture::new(name, pass);
+                agree_instant(&f);
+                txs = f.txs.len();
+                let mut forced = MarkPull::new(&f);
+                let mut unforced = MarkUnforced::new(&f);
+                let mut pull = HeightsPull::new(&f);
+                let mut fired = 0u64;
+                for (t, &e) in f.txs.iter().zip(&f.events) {
+                    fired += forced.tx(t, e).fired as u64;
+                    unforced.tx(t, e);
+                    pull.tx(t, e);
+                }
+                let (m, u, p) = (&forced.stats, unforced.stats(), &pull.stats);
+                assert_eq!((m.built, m.pulled), (u.built, u.pulled));
+                assert_eq!(m.poisoned, u.poisoned);
+                let n = f.txs.len() as f64;
+                let per = |x: u64| x as f64 / n;
+                let quiet = |marked: u64| 100.0 * (1.0 - fired as f64 / marked as f64);
+                println!(
+                    "{:<8} {:>4} {:>7.1} {:>7.1} {:>7.1} {:>6.1} {:>6.1} {:>6.1} {:>6.1} {:>7.1}",
+                    name,
+                    pass,
+                    per(m.visited),
+                    per(u.visited),
+                    per(fired),
+                    quiet(m.visited),
+                    quiet(u.visited),
+                    per(m.pulled_early),
+                    per(u.pulled_early),
+                    per(p.visited + p.out_of_order),
+                );
+            }
+        }
+        println!();
+        println!("per transaction, over each workload's {txs} transactions, with nodes built");
+        println!("during the instant evaluated in it: nodes marked with the construct point");
+        println!("(the root event stream's forward token) forced into the mark, and without");
+        println!("it (from the input and the moving switch_cells only); nodes fired (refused");
+        println!("transactions count none); the quiet share of each marked region; existing");
+        println!("nodes each pulled ahead of the flat loop; and nodes the heights evaluated");
+        println!("(popped, plus built nodes evaluated out of order). Both marks pull the same");
+        println!("built nodes. pass is the filters' pass rate in percent.");
     }
 
     /// Through the checker alone: the heights refuse exactly what the walk
