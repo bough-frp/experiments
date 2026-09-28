@@ -31,13 +31,22 @@
 //! one. `-- trace` runs a third, in `rfd-0003-brand-erasure/trace.rs`:
 //! `Trace` derived beside `Rebrand` and skipped fields checked, copy-free
 //! reads of generic brand-free types, and seals against the stash route.
+//! `-- uncapped`, in `rfd-0003-brand-erasure/uncapped.rs`, runs the default,
+//! `derive` and `borrow` modes again without `--cap-lints allow`, to see
+//! whether their `#![forbid(unsafe_code)]` held. `-- entry`, in
+//! `rfd-0003-brand-erasure/entry.rs`, bounds every entry a stashed token
+//! could come back through, and seals the borrowed views.
 
 #[path = "rfd-0003-brand-erasure/borrow.rs"]
 mod borrow;
 #[path = "rfd-0003-brand-erasure/derive.rs"]
 mod derive;
+#[path = "rfd-0003-brand-erasure/entry.rs"]
+mod entry;
 #[path = "rfd-0003-brand-erasure/trace.rs"]
 mod trace;
+#[path = "rfd-0003-brand-erasure/uncapped.rs"]
+mod uncapped;
 
 use std::path::Path;
 use std::process::{Command, Stdio};
@@ -200,6 +209,18 @@ fn rustc(root: &Path, toolchain: Option<&str>) -> Command {
     command
 }
 
+/// `--cap-lints allow`, unless `--uncapped` is among the arguments. The cap
+/// silences warnings, which are noise here, but it caps `forbid` and `deny`
+/// too, so a capped run never enforces a fixture's `#![forbid(unsafe_code)]`.
+/// `--uncapped` runs a mode with every lint at the level its source sets.
+fn cap_lints() -> &'static [&'static str] {
+    if std::env::args().any(|a| a == "--uncapped") {
+        &[]
+    } else {
+        &["--cap-lints", "allow"]
+    }
+}
+
 fn version(root: &Path, toolchain: Option<&str>) -> String {
     let output = rustc(root, toolchain)
         .arg("-V")
@@ -272,9 +293,11 @@ fn compile(root: &Path, design: &Design, fixture: &str, mode: Mode) -> Outcome {
             .arg(binary.with_extension("rmeta")),
         Run => command.arg("-o").arg(&binary),
     };
-    // Warnings are noise here; errors are what the probe reads.
+    // Warnings are noise here; errors are what the probe reads. See
+    // `cap_lints` for what the cap also hides.
     let output = command
-        .args(["--cap-lints", "allow", "--color", "never"])
+        .args(cap_lints())
+        .args(["--color", "never"])
         .arg(&source)
         .output()
         .expect("rustc runs");
@@ -310,6 +333,17 @@ fn main() {
     // seals.
     if std::env::args().nth(1).as_deref() == Some("trace") {
         trace::main(root);
+        return;
+    }
+    // `-- entry` runs the follow-ups on bounded entries and sealed views.
+    if std::env::args().nth(1).as_deref() == Some("entry") {
+        entry::main(root);
+        return;
+    }
+    // `-- uncapped` runs the default, `derive` and `borrow` modes with and
+    // without `--uncapped`, and reports every row that changes.
+    if std::env::args().nth(1).as_deref() == Some("uncapped") {
+        uncapped::main(root);
         return;
     }
     println!("stable:  {}  (rust-toolchain.toml)", version(root, None));

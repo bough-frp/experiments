@@ -31,7 +31,7 @@
 use std::path::{Path, PathBuf};
 
 use super::derive::build_derive;
-use super::{Mode, Outcome, first_diagnostic, run, rustc, version};
+use super::{Mode, Outcome, cap_lints, first_diagnostic, run, rustc, version};
 use Expect::{Build, Fail, Refuse};
 use Mode::{Check, Run};
 
@@ -97,7 +97,8 @@ fn library(root: &Path, out: &Path, derive: &Path) -> (PathBuf, Outcome) {
         .arg("bough")
         .arg("--extern")
         .arg(format!("rfd_0003_rebrand_derive={}", derive.display()))
-        .args(["--cap-lints", "allow", "--color", "never", "-o"])
+        .args(cap_lints())
+        .args(["--color", "never", "-o"])
         .arg(&rlib)
         .arg(Path::new(DIR).join("bough.rs"))
         .output()
@@ -127,7 +128,8 @@ fn fixture(root: &Path, libs: &Libraries, fixture: &str, mode: Mode) -> Outcome 
         Run => command.arg("-o").arg(&binary),
     };
     let output = command
-        .args(["--cap-lints", "allow", "--color", "never"])
+        .args(cap_lints())
+        .args(["--color", "never"])
         .arg(Path::new(DIR).join(format!("{fixture}.rs")))
         .output()
         .expect("rustc runs");

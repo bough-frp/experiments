@@ -31,3 +31,7 @@ trace = []
 seal = []
 unsafe-seal = []
 bare-unsafe = ["unsafe-seal"]
+# `bare-unsafe-views` makes the `Borrow` and `BorrowMut` impls `views` writes
+# `unsafe impl`, with no `allow`, for `rfd-0003-brand-erasure -- entry`, whose
+# Bough makes both traits `unsafe` under `--cfg bough_seal_views`.
+bare-unsafe-views = ["views"]

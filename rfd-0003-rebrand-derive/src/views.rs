@@ -56,6 +56,12 @@
 //!   the stored copy.
 //! - **The generated types have no `Debug`**; nothing a derive on the
 //!   original says carries over to them.
+//!
+//! With `bare-unsafe-views` too, both impls are `unsafe impl`, with no
+//! `#[allow(unsafe_code)]`, for `rfd-0003-brand-erasure -- entry`, where the
+//! two traits are `unsafe`: a seal a hand-written impl must name, and which
+//! the derive's output passes in a crate that forbids `unsafe_code`, since
+//! rustc doesn't lint another crate's macro output.
 use proc_macro2::{Span, TokenStream as Tokens};
 use quote::{format_ident, quote, quote_spanned};
 use syn::spanned::Spanned;
@@ -101,6 +107,15 @@ impl Kind {
     }
 }
 
+/// `unsafe` before each impl under `bare-unsafe-views`, nothing otherwise.
+fn seal() -> Tokens {
+    if cfg!(feature = "bare-unsafe-views") {
+        quote!(unsafe)
+    } else {
+        Tokens::new()
+    }
+}
+
 /// `generics` is the `Rebrand` impl's: every type parameter bound by
 /// `Rebrand`, and the `Of` bounds in its `where` clause.
 pub(crate) fn expand(
@@ -129,15 +144,16 @@ pub(crate) fn expand(
 fn own_copy(input: &DeriveInput, generics: &Generics, a: &Lifetime) -> Tokens {
     let name = &input.ident;
     let (impl_generics, ty_generics, where_clause) = generics.split_for_impl();
+    let seal = seal();
     quote! {
-        impl #impl_generics ::bough::Borrow for #name #ty_generics #where_clause {
+        #seal impl #impl_generics ::bough::Borrow for #name #ty_generics #where_clause {
             type Ref<#a> = &#a Self;
             fn borrow<#a>(from: &#a Self::Of<'static>, _: ::bough::Loan<#a>) -> Self::Ref<#a> {
                 from
             }
         }
 
-        impl #impl_generics ::bough::BorrowMut for #name #ty_generics #where_clause {
+        #seal impl #impl_generics ::bough::BorrowMut for #name #ty_generics #where_clause {
             type Mut<#a> = &#a mut Self;
             fn borrow_mut<#a>(from: &#a mut Self::Of<'static>, _: ::bough::Loan<#a>) -> Self::Mut<#a> {
                 from
@@ -268,13 +284,14 @@ fn view(input: &DeriveInput, generics: &Generics, a: &Lifetime, kind: Kind) -> R
         }
     });
 
+    let seal = seal();
     Ok(quote! {
         #[doc = #doc]
         #definition
 
         #copy
 
-        impl #impl_impl_generics #trait_path for #name #ty_generics #impl_where {
+        #seal impl #impl_impl_generics #trait_path for #name #ty_generics #impl_where {
             type #assoc<#a> = #view_name #view_ty_generics;
 
             fn #method<#a>(from: #reference Self::Of<'static>, at: ::bough::Loan<#a>) -> Self::#assoc<#a> {
