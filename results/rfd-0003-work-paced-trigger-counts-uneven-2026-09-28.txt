@@ -1,0 +1,52 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-work-paced-trigger-counts-uneven at experiments@d881c42 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0003_work_paced_trigger::tests::uneven_counts -- --nocapture
+
+    Finished `release` profile [optimized] target(s) in 0.06s
+     Running unittests src/lib.rs (target/release/deps/bough_experiments-7908e5454028b438)
+
+running 1 test
+uneven: 10076 live after the first collection; 3600 units after 2400 of warm-up, in periods of 1200: 900 navigating every third unit, then quiet; a screen kept every 30 units
+inputs fire every unit, every 10th, every 100th, and at unit 5 then every 1,500th; spurious = freed < 18 (under one screen); missed = a unit after which the dead nodes evaluated since the last collection exceeded its survivors, uncollected
+columns: peak = largest dead-evaluated/survivors after a unit; region/u, coll/u = region nodes and collection visits (survivors marked + slots swept) per unit; surv = survivors at the window's last collection
+
+spread: navigation off every, tenth and hundredth in turn
+  policy     colls  spur missed   peak region/u   coll/u visits/u  freed/c  largest    surv   slots
+  baseline     900     0      0   0.00   2376.8   6645.2   9022.0     23.5       30   14568   14798
+  rfd3           2     0   3433 436.42   5004.5     20.5   5025.0  10470.5    10943   14021   24964
+  excess        37     1     14   1.08   2495.8    280.0   2775.8    572.6      731   14731   15237
+  total        578   151      0   0.02   2384.8   4335.3   6720.1     36.7       84   14798   14798
+  decay         43     3      0   0.89   2484.8    324.9   2809.7    492.7      638   14798   15144
+  backoff       35     1    105   1.83   2503.9    265.5   2769.4    605.3      861   14619   15155
+  oracle        34     0      0   1.04   2500.3    257.2   2757.5    623.1      696   14619   15222
+  per input, region nodes / dead nodes per transaction
+  policy         every (3600)       tenth (360)    hundredth (36)          rare (2)  max unit
+  baseline           2135 / 3          2147 / 3          2077 / 3         10571 / 0     13281
+  rfd3            4501 / 2368       4529 / 2385       4443 / 2369       11440 / 869     14780
+  excess           2243 / 110        2251 / 107        2181 / 106        10636 / 64     13395
+  total             2143 / 10         2154 / 10         2087 / 12        10584 / 13     13289
+  decay            2233 / 100        2246 / 102         2169 / 94       10714 / 143     13627
+  backoff          2250 / 117        2261 / 117        2193 / 119        10645 / 74     13586
+  oracle           2246 / 114        2260 / 116        2188 / 114       10696 / 125     13681
+
+sparse: navigation off tenth and hundredth in turn
+  policy     colls  spur missed   peak region/u   coll/u visits/u  freed/c  largest    surv   slots
+  baseline     900     0      0   0.00   2361.5   6645.2   9006.7     23.5       30   14568   14798
+  rfd3           2     0   3168  65.50   2754.0     20.5   2774.6  10470.5    10943   14021   24964
+  excess        18     0      0   0.78   2401.3    139.9   2541.3   1176.9     1462   14596   15910
+  total        574   148      0   0.00   2362.8   4306.0   6668.9     36.9       84   14798   14798
+  decay         27     3      0   0.41   2389.5    207.1   2596.6    784.6     1085   14731   15600
+  backoff       18     0      0   0.80   2402.2    139.9   2542.1   1176.9     1484   14596   15910
+  oracle        14     0      0   1.08   2414.8    110.3   2525.1   1513.2     1768   14689   16249
+  per input, region nodes / dead nodes per transaction
+  policy         every (3600)       tenth (360)    hundredth (36)          rare (2)  max unit
+  baseline           2119 / 0          2155 / 2          2085 / 6         10571 / 0     13272
+  rfd3               2119 / 0       5722 / 3569       5621 / 3542       11440 / 869     13855
+  excess             2119 / 0        2519 / 365        2433 / 354        10664 / 92     13290
+  total              2119 / 0         2168 / 14         2097 / 18        10584 / 13     13280
+  decay              2119 / 0        2409 / 256        2344 / 265       10694 / 123     13280
+  backoff            2119 / 0        2525 / 372        2462 / 383        10664 / 92     13290
+  oracle             2119 / 0        2638 / 485        2572 / 493       10834 / 263     13491
+test rfd_0003_work_paced_trigger::tests::uneven_counts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 32 filtered out; finished in 4.67s
+
