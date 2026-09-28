@@ -1,0 +1,51 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-cycle-in-mark at experiments@f16d00b - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0005-cycle-in-mark
+
+cycle-in-mark: the grey mark against RFD 5's per-move upstream walk
+
+Per case, what found the cycle: transaction, phase, mechanism. Both designs
+keep Brent's guard on reads and the pull's in-progress stamp on nodes built
+during an instant; `walk` also walks upstream at every first link and move,
+`grey` marks with a grey state instead.
+
+case                                     legal walk (RFD 5)             grey mark                 without Brent (walk / grey)
+F46 two-switch reversal                  yes   nothing, 2 tx            nothing, 2 tx             nothing, 2 tx
+F50 10,000 upstream, acyclic             yes   nothing, 4 tx            nothing, 4 tx             nothing, 4 tx
+F50 10,000 upstream, move closes cycle   no    tx1 relink, walk         tx3 mark, grey mark       tx1 relink, walk / tx3 mark, grey mark
+R10b move closes cycle, no reader        no    tx1 relink, walk         tx3 mark, grey mark       tx1 relink, walk / tx3 mark, grey mark
+R10b, then Runtime::sample               no    tx1 relink, walk         tx1 sample after, Brent   tx1 relink, walk / tx1 sample after, OVERFLOW
+R10b, cell listener on the loop          no    tx1 relink, walk         tx1 dispatch, Brent       tx1 relink, walk / tx1 dispatch, OVERFLOW
+R10 steps view reads after instant       no    tx1 evaluate, Brent      tx1 evaluate, Brent       tx1 evaluate, OVERFLOW
+F57 relink reads a switch of a switch    no    tx1 relink, Brent        tx1 relink, Brent         tx1 relink, OVERFLOW
+F19/F49 construct samples switch         no    tx1 construct, Brent     tx1 construct, Brent      tx1 construct, OVERFLOW
+F19/F49 same, through a map_cell         no    tx1 construct, Brent     tx1 construct, Brent      tx1 construct, OVERFLOW
+F19/F49 same, in the build               no    tx0 build, Brent         tx0 build, Brent          tx0 build, OVERFLOW
+F56 construct pulls a snapshot           no    tx1 construct, Brent     tx1 construct, Brent      tx1 construct, OVERFLOW
+first link closes cycle, construct       no    tx1 construct, walk      tx1 construct, pull stamp tx1 construct, walk / tx1 construct, pull stamp
+first link closes cycle, build           no    tx0 build, walk          tx0 build, pull stamp     tx0 build, walk / tx0 build, pull stamp
+switch_stream selects own output         no    tx2 relink, walk         nothing, 5 tx             tx2 relink, walk / nothing, 5 tx
+same, output merged with input y         no    tx2 relink, walk         tx5 mark, grey mark       tx2 relink, walk / tx5 mark, grey mark
+switch_stream own output, build          no    tx0 build, walk          tx0 build, pull stamp     tx0 build, walk / tx0 build, pull stamp
+switch_stream navigation loop            yes   nothing, 3 tx            nothing, 3 tx             nothing, 3 tx
+
+F46, relink queue b before a: walk after all moves nothing, 2 tx, grey nothing, 2 tx, walk after each move nothing, 2 tx
+F46, relink queue a before b: walk after all moves nothing, 2 tx, grey nothing, 2 tx, walk after each move tx1 relink, walk
+F50 move: the walk visits 10001 nodes; the next mark from the source orders 10101
+
+Generated family: a random DAG of 20 to 200 nodes over 4 inputs, a selector and
+two constants, one switch; tx1 moves it, then 20 transactions each fire one of
+the five inputs at random. Cyclic: the new inner is downstream of the switch.
+
+switch        move     trials  walk@tx1  walk?   grey+1 grey+2-5 grey+6-20  never   no input in  grey=reach
+switch_cell   cycle      2000      2000      0      781      882       327     10             0   2000/2000
+switch_cell   acyclic    2000         0      0        0        0         0      0             0   2000/2000
+switch_stream cycle      2000      2000      0      371      490       221    918           912   2000/2000
+switch_stream acyclic    2000         0      0        0        0         0      0             0   2000/2000
+
+walk?: trials where the walk design found something other than its expected
+result (a cycle at tx1 relink, or nothing). grey+k: found by the grey mark k
+transactions after the move. never: not found in 20. no input in: of those,
+no input reaches the cycle at all. grey=reach: the grey mark fired exactly at the
+first transaction whose input reaches the switch.
+
+Verdict: of 15 illegal cases, the walk is what finds 9; in the grey design the grey mark finds 3 of those, all transactions later than the walk (F50 10,000 upstream, move closes cycle; R10b move closes cycle, no reader; same, output merged with input y), 5 are found by another guard (R10b, then Runtime::sample; R10b, cell listener on the loop; first link closes cycle, construct; first link closes cycle, build; switch_stream own output, build), and 1 never (switch_stream selects own output). 3 of the 9 are found at the same transaction and phase. The other 6 are found by Brent before either check runs, in both designs, and overflow without it.
