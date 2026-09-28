@@ -1,0 +1,71 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-height-queue-counts-growth at experiments@9c8acb5 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0005_height_queue::tests::growth -- --nocapture --exact
+
+
+running 1 test
+workload    tx  nodes   max   mean raises touched stepped  popped
+settled    300  10147    88   21.3    143    6860    60.1  1926.3
+settled    600  10147    93   21.4     47     134    68.9  2209.6
+settled    900  10147   113   21.5     16      50    72.8  2161.8
+settled   1200  10147   134   21.6     23      86    75.0  1817.2
+settled   1500  10147   155   21.9     20     106    92.8  1850.3
+settled   1800  10147   160   21.9      8      34   100.9  2120.2
+settled   2100  10147   176   22.0     14      67   108.2  2314.0
+settled   2400  10147   182   22.1     10      50   117.4  2236.7
+settled   2700  10147   242   22.6     13     105   125.6  1986.4
+settled   3000  10147   242   22.6      5      15   142.1  1737.6
+settled         10147    78   21.2   longest paths of the final graph
+mixed      300  11395    96   21.1    120    6911    61.9  1371.9
+mixed      600  12954   107   20.8     23      65    63.1   902.2
+mixed      900  14485   154   20.5     20     102    68.0   919.9
+mixed     1200  15808   182   20.3     24     104    69.9   975.1
+mixed     1500  17164   219   20.1     19      75    74.1   885.7
+mixed     1800  18426   229   20.0     18      61    77.5   994.8
+mixed     2100  19703   245   19.9     14      59    78.7  1109.0
+mixed     2400  21163   285   19.8     24      87    83.1  1148.3
+mixed     2700  22415   329   19.7     10      81    78.7   892.5
+mixed     3000  23858   352   19.6     20      93   100.0  1643.3
+mixed           23858    71   17.7   longest paths of the final graph
+churn      300  13604    75   21.0     89   14292    54.6   999.7
+churn      600  16846   108   20.5     36     131    57.6   870.2
+churn      900  20407   114   20.0     22      54    59.2   870.3
+churn     1200  23835   136   19.7     28      67    61.0  1349.3
+churn     1500  27190   155   19.5     33      83    62.1  1362.1
+churn     1800  30727   199   19.4     22      89    66.2  1357.9
+churn     2100  34252   223   19.3     21      63    71.4  1840.3
+churn     2400  37729   273   19.2     20      77    72.5  1726.8
+churn     2700  41287   308   19.1     23      90    73.4  1760.3
+churn     3000  44627   326   19.1     39     144    87.7  2588.2
+churn           44627    74   18.8   longest paths of the final graph
+lazy       300  17112    75   19.5     44    7276    53.1   746.4
+lazy       600  24065   115   18.9     18      79    59.4  1144.2
+lazy       900  31072   145   18.5     33     120    60.3  1395.8
+lazy      1200  38054   174   18.3     25      86    66.8  2437.4
+lazy      1500  45009   195   18.1     21      73    66.0  2094.0
+lazy      1800  51967   232   18.0     23      98    67.3  2115.4
+lazy      2100  58932   259   17.9     29      87    72.5  2794.4
+lazy      2400  65938   283   18.5     27   38772    74.8  2996.0
+lazy      2700  72895   327   18.5     44     122    77.6  3248.7
+lazy      3000  79848   367   18.4     26     105    90.4  4825.7
+lazy            79848    71   16.3   longest paths of the final graph
+
+every 300 transactions of a 3000-transaction run at pass 20%: the
+nodes, the largest height any node has had and the mean height now, the
+raises and the nodes they touched in the window (refusals' restoring
+included), and per transaction the empty buckets the evaluation cursor
+stepped over and the nodes it popped. The last line of each workload is
+the longest-path heights of its final graph, the least they could be.
+
+workload     h0  h1000  h2000  h3000  tight
+settled      72     78     78     78     72
+mixed        72     78     78     78     72
+churn        72     78     78     78     72
+lazy         72     74     74     74     71
+
+the same runs with no transaction trying to close a cycle: the largest
+height at the start and every 1000 transactions, and the longest path of
+the final graph.
+test rfd_0005_height_queue::tests::growth ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 50 filtered out; finished in 9.87s
+

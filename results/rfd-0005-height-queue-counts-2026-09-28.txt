@@ -1,0 +1,76 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-height-queue-counts at experiments@9c8acb5 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0005_height_queue::tests::counts -- --nocapture --exact
+
+
+running 1 test
+workload pass   marked    fired  quiet%   popped  stepped labelled
+settled   100   6501.3   6501.3     0.0   6500.3     80.9   6500.3
+settled    50   6501.3   4562.2    29.8   4603.5     76.9   4603.5
+settled    30   6501.3   2841.8    56.3   2888.1     67.6   2888.1
+settled    20   6501.3   1865.9    71.3   1912.2     60.2   1912.2
+settled     5   6501.3    302.6    95.3    342.0     27.0    342.0
+mixed     100   5816.0   5816.0     0.0   5815.0     86.3   5815.0
+mixed      50   5816.0   3738.0    35.7   3775.5     79.3   3775.5
+mixed      30   5816.0   2101.4    63.9   2143.4     68.5   2143.4
+mixed      20   5816.0   1400.9    75.9   1443.7     62.4   1443.7
+mixed       5   5816.0    121.8    97.9    159.7     26.7    159.7
+churn     100   5132.2   5132.2     0.0   5131.2     72.9   5131.2
+churn      50   5132.2   2727.3    46.9   2762.1     67.3   2762.1
+churn      30   5132.2   1626.0    68.3   1667.7     60.5   1667.7
+churn      20   5132.2    990.4    80.7   1032.8     54.6   1032.8
+churn       5   5132.2    119.0    97.7    160.8     26.5    160.8
+lazy      100   5110.0   5110.0     0.0   5109.0     72.1   5109.0
+lazy       50   5110.0   2402.6    53.0   2438.4     66.3   2438.4
+lazy       30   5110.0   1334.0    73.9   1377.6     59.2   1377.6
+lazy       20   5110.0    764.1    85.0    809.6     53.3    809.6
+lazy        5   5110.0     82.7    98.4    130.1     26.9    130.1
+
+per transaction, over each workload's 300 transactions: nodes marked by the
+depth-first mark, fired, the quiet share of the marked region, popped by the
+height buckets, empty buckets their cursor stepped over, and popped by the
+label-ordered queue of the maintained-rank probe. pass is the filters'
+pass rate in percent.
+
+workload moves built raises touched largest restored refus two-way     walk   h0 h300
+settled   1259     0    145    6855    6464        9     2     391   359903   72   88
+mixed     1261  1233    120    6893    6546       19     5    2528   232534   72   96
+churn     1258  3437     91   14291    7421        5     2    6061   147821   72   75
+lazy      1249  6920     46    7253    7129       27     6   11596   101595   72   75
+
+totals over each workload's 300 transactions, whatever the pass rate:
+moves, nodes built and given a height, links that needed a raise, nodes
+those raises touched (took out of the adjust heap), the most one link
+touched, nodes touched after a refusal finishing the raises and relinking,
+transactions refused; then nodes the two-way small-side check and the
+upstream walk visited for the same moves; and the largest height before
+the first transaction and after the last.
+
+workload kind    moves  raises  touched  two-way     walk
+settled  view      594      79      235      270   318111
+settled  event     596      34     6563       50    11398
+settled  local      63      28       39       49    29701
+settled  bad         2       2       14       14      681
+settled  f46         4       2        4        8       12
+mixed    view      591      51      163     2053   204024
+mixed    event     596      24     6634      362     7333
+mixed    local      65      38       64       69    19893
+mixed    bad         5       5       28       36     1272
+mixed    f46         4       2        4        8       12
+churn    view      594      42      151     5029   131340
+churn    event     596      18    14091      970     3612
+churn    local      62      27       35       44    12018
+churn    bad         2       2       10       10      839
+churn    f46         4       2        4        8       12
+lazy     view      590      12       42     9672    91413
+lazy     event     596       8     7153     1868     1859
+lazy     local      53      18       32       21     7625
+lazy     bad         6       6       22       27      686
+lazy     f46         4       2        4        8       12
+
+the same by kind of move: a switch_cell over screen views, a switch_stream
+over screen events, a local switch, a view move retargeted to close a
+cycle, and F46's pair. Refusals' restoring is not in these.
+test rfd_0005_height_queue::tests::counts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 50 filtered out; finished in 13.53s
+

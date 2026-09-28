@@ -1,0 +1,29 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-height-queue-counts-cap-alone at experiments@9c8acb5 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0005_height_queue::tests::cap_alone -- --nocapture --exact
+
+
+running 1 test
+workload   cap   walk capped  false guard-tch   cap-tch
+settled    128      2      2      0        14       208
+settled    144      2      2      0        14       258
+settled    288      2      2      0        14       720
+mixed      128      5      5      0        28       745
+mixed      144      5      5      0        28       915
+mixed      288      5      5      0        28      2433
+churn      128      2      2      0        10       247
+churn      144      2      2      0        10       300
+churn      288      2      2      0        10       780
+lazy       128      6      6      0        22      1023
+lazy       144      6      6      0        22      1218
+lazy       288      6      6      0        22      2990
+
+per workload of 300 transactions, with the cap at Incremental's default
+and at two and four times the starting height: transactions the walk
+refused, refused by the cap alone, refused by it though acyclic, and the
+nodes the raises touched in the transactions the walk refused, with the
+original-child check and with the cap alone (restoring not included).
+After a refusal by the cap, heights are recomputed from scratch.
+test rfd_0005_height_queue::tests::cap_alone ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.17s
+
