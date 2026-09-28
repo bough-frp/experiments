@@ -32,6 +32,12 @@
 //! upstream of `s` nodes before the switch in the order and `n` nodes of
 //! its own after it, with 1,000 nodes downstream of the switch
 //! (`s<s>_n<n>`); `mix_baseline` is the walk. Setup as for the adversary.
+//!
+//! `nosort::*_back_nosort` runs `back` with fresh spacing and a depth-first
+//! search whose post-order moves without a sort, on the workloads
+//! (`moves_*`), the adversary (`adv_*`, `cyc_*`) and the mixed adversary
+//! (`mix_*`), to set against `moves_back_fresh`, `adv_back_fresh`,
+//! `mix_back_fresh`, `cyc_back` and each group's baseline.
 
 use std::hint::black_box;
 
@@ -41,7 +47,7 @@ use bough_experiments::rfd_0005_bounded_relink_check::{
     Baseline, Build, Checker, Pk, Run, Tx, workload,
 };
 use bough_experiments::rfd_0005_small_side_order::{
-    Adversary, Back, BackFresh, MIXED_DOWN, TwoWay, TwoWayFresh,
+    Adversary, Back, BackFresh, BackNoSort, MIXED_DOWN, TwoWay, TwoWayFresh,
 };
 
 fn transactions<C: Checker>(name: &str) -> (Run<C>, Vec<Tx>) {
@@ -75,6 +81,10 @@ fn txs_back_fresh(name: &str) -> (Run<BackFresh>, Vec<Tx>) {
 }
 
 fn txs_twoway_fresh(name: &str) -> (Run<TwoWayFresh>, Vec<Tx>) {
+    transactions(name)
+}
+
+fn txs_back_nosort(name: &str) -> (Run<BackNoSort>, Vec<Tx>) {
     transactions(name)
 }
 
@@ -157,6 +167,15 @@ fn moves_twoway_fresh(input: (Run<TwoWayFresh>, Vec<Tx>)) -> (Run<TwoWayFresh>, 
 }
 
 #[library_benchmark]
+#[bench::settled(args = ("settled"), setup = txs_back_nosort)]
+#[bench::mixed(args = ("mixed"), setup = txs_back_nosort)]
+#[bench::churn(args = ("churn"), setup = txs_back_nosort)]
+#[bench::lazy(args = ("lazy"), setup = txs_back_nosort)]
+fn moves_back_nosort(input: (Run<BackNoSort>, Vec<Tx>)) -> (Run<BackNoSort>, Vec<Tx>, usize) {
+    black_box(run(input))
+}
+
+#[library_benchmark]
 #[bench::lazy(args = ("lazy"), setup = builds_baseline)]
 fn build_baseline(input: (Run<Baseline>, Vec<Build>)) -> (Run<Baseline>, Vec<Build>) {
     black_box(build(input))
@@ -202,6 +221,10 @@ fn adv_setup_twoway_fresh(up: usize, down: usize) -> Adversary<TwoWayFresh> {
     adversary(up, down, false)
 }
 
+fn adv_setup_back_nosort(up: usize, down: usize) -> Adversary<BackNoSort> {
+    adversary(up, down, false)
+}
+
 fn mix_setup_baseline(shared: usize, new: usize) -> Adversary<Baseline> {
     Adversary::mixed(shared, new, MIXED_DOWN)
 }
@@ -222,6 +245,10 @@ fn mix_setup_twoway_fresh(shared: usize, new: usize) -> Adversary<TwoWayFresh> {
     Adversary::mixed(shared, new, MIXED_DOWN)
 }
 
+fn mix_setup_back_nosort(shared: usize, new: usize) -> Adversary<BackNoSort> {
+    Adversary::mixed(shared, new, MIXED_DOWN)
+}
+
 fn cyc_setup_baseline(up: usize, down: usize) -> Adversary<Baseline> {
     adversary(up, down, true)
 }
@@ -235,6 +262,10 @@ fn cyc_setup_back(up: usize, down: usize) -> Adversary<Back> {
 }
 
 fn cyc_setup_twoway(up: usize, down: usize) -> Adversary<TwoWay> {
+    adversary(up, down, true)
+}
+
+fn cyc_setup_back_nosort(up: usize, down: usize) -> Adversary<BackNoSort> {
     adversary(up, down, true)
 }
 
@@ -275,6 +306,8 @@ grid!(cyc_baseline, cyc_setup_baseline, Baseline);
 grid!(cyc_pk, cyc_setup_pk, Pk);
 grid!(cyc_back, cyc_setup_back, Back);
 grid!(cyc_twoway, cyc_setup_twoway, TwoWay);
+grid!(adv_back_nosort, adv_setup_back_nosort, BackNoSort);
+grid!(cyc_back_nosort, cyc_setup_back_nosort, BackNoSort);
 
 /// One benchmark function over every pair of sizes in `SHARED` and `NEW`.
 macro_rules! mixed_grid {
@@ -312,6 +345,7 @@ mixed_grid!(mix_back, mix_setup_back, Back);
 mixed_grid!(mix_twoway, mix_setup_twoway, TwoWay);
 mixed_grid!(mix_back_fresh, mix_setup_back_fresh, BackFresh);
 mixed_grid!(mix_twoway_fresh, mix_setup_twoway_fresh, TwoWayFresh);
+mixed_grid!(mix_back_nosort, mix_setup_back_nosort, BackNoSort);
 
 library_benchmark_group!(
     name = moves;
@@ -339,10 +373,16 @@ library_benchmark_group!(
     benchmarks = mix_baseline, mix_back, mix_twoway, mix_back_fresh, mix_twoway_fresh
 );
 
+library_benchmark_group!(
+    name = nosort;
+    benchmarks = moves_back_nosort, adv_back_nosort, cyc_back_nosort, mix_back_nosort
+);
+
 main!(
     library_benchmark_groups = moves,
     build,
     adversarial,
     spacing,
-    spacing_mixed
+    spacing_mixed,
+    nosort
 );

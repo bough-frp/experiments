@@ -34,6 +34,11 @@
 //! 16 moves, each to a new inner that reads a shared upstream of `shared`
 //! nodes before the switch in the order and `new` nodes of its own after
 //! it, with 1,000 nodes downstream of the switch, timed like the adversary.
+//!
+//! `back-nosort`, in `moves`, `adversarial`, `adversarial-cycle` and
+//! `mixed`, is `back-fresh` with a depth-first search whose post-order moves
+//! without a sort; its ratio to `back-fresh` is what dropping the sort
+//! saves, and to `baseline` where it stands against the walk.
 
 use std::hint::black_box;
 use std::time::{Duration, Instant};
@@ -44,7 +49,7 @@ use bough_experiments::rfd_0005_bounded_relink_check::{
     Baseline, Checker, Pk, Run, Workload, workload,
 };
 use bough_experiments::rfd_0005_small_side_order::{
-    Adversary, Back, BackFresh, MIXED_DOWN, NEW, SHARED, SIDES, TwoWay, TwoWayFresh,
+    Adversary, Back, BackFresh, BackNoSort, MIXED_DOWN, NEW, SHARED, SIDES, TwoWay, TwoWayFresh,
 };
 
 const WORKLOADS: [&str; 4] = ["settled", "mixed", "churn", "lazy"];
@@ -147,6 +152,7 @@ fn adversarial(c: &mut Criterion) {
                     adversary_one::<BackFresh>(&mut g, "back-fresh", up, down, cyclic);
                     adversary_one::<TwoWayFresh>(&mut g, "twoway-fresh", up, down, cyclic);
                 }
+                adversary_one::<BackNoSort>(&mut g, "back-nosort", up, down, cyclic);
             }
         }
         g.finish();
@@ -165,6 +171,7 @@ fn mixed(c: &mut Criterion) {
             mixed_one::<TwoWay>(&mut g, "twoway", shared, new);
             mixed_one::<BackFresh>(&mut g, "back-fresh", shared, new);
             mixed_one::<TwoWayFresh>(&mut g, "twoway-fresh", shared, new);
+            mixed_one::<BackNoSort>(&mut g, "back-nosort", shared, new);
         }
     }
     g.finish();
@@ -181,6 +188,7 @@ fn order(c: &mut Criterion) {
         moves_one::<TwoWay>(&mut g, "twoway", name, &w);
         moves_one::<BackFresh>(&mut g, "back-fresh", name, &w);
         moves_one::<TwoWayFresh>(&mut g, "twoway-fresh", name, &w);
+        moves_one::<BackNoSort>(&mut g, "back-nosort", name, &w);
     }
     g.finish();
 

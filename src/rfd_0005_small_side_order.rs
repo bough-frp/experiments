@@ -59,6 +59,17 @@
 //! in the half of its gap away from where the next one will go, and when
 //! the gap is too small, relabel a neighbourhood once so that half of it is
 //! left open there: see [`Order::insert_after`].
+//!
+//! A third. With fresh spacing, `back` on the adversary spends most of its
+//! time sorting what it found by label before moving it, to keep its old
+//! relative order. Any topological order of the set will do, though: a
+//! node the set depends on outside it sits before the switch, and one that
+//! depends on it after the switch, either way. `back`'s search records a
+//! node when it pops it, before its dependencies, so neither that order nor
+//! its reverse is topological in general. [`BackNoSort`] searches depth
+//! first instead and records a node when it finishes, after every
+//! dependency it reaches in the set, and moves the set in that post-order,
+//! unsorted.
 
 use crate::rfd_0005_bounded_relink_check::{Checker, Counts, Graph, Id, Kind, Move, Run};
 
@@ -316,8 +327,8 @@ impl Order {
         self.insert_after(Some(anchor), side, Room::Before);
     }
 
-    /// Moves `side`, sorted by label, just before `anchor`, which isn't in
-    /// it.
+    /// Moves `side`, sorted by label or otherwise topological among itself,
+    /// just before `anchor`, which isn't in it.
     fn move_before(&mut self, anchor: Id, side: &[Id]) {
         for &n in side {
             self.remove(n);
@@ -351,6 +362,9 @@ struct Search {
     found: Vec<Id>,
     stamp: Vec<u32>,
     epoch: u32,
+    /// The depth-first search's path: a node and how many of its
+    /// dependencies it has yet to try.
+    path: Vec<(Id, u32)>,
 }
 
 impl Search {
@@ -388,14 +402,20 @@ enum Outcome {
     Cycle,
 }
 
-/// The order-maintenance checker; `TWO_WAY` picks the search, and `FRESH`
-/// the spacing a moved set is given.
+/// The order-maintenance checker; `TWO_WAY` picks the search, `FRESH` the
+/// spacing a moved set is given, and `POST` (backward only) a depth-first
+/// search whose post-order moves without a sort.
 #[derive(Clone, Default)]
-pub struct Om<const TWO_WAY: bool, const FRESH: bool = false> {
+pub struct Om<const TWO_WAY: bool, const FRESH: bool = false, const POST: bool = false> {
     pub order: Order,
     forward: Search,
     backward: Search,
     counts: Counts,
+    /// Tests only: of the sets the stack search moved before a switch, how
+    /// many, and how many were topological among themselves in the order it
+    /// found them, and in the reverse.
+    #[cfg(test)]
+    discovery: [u64; 3],
 }
 
 /// Backward from the new inner only; what it finds goes before the switch.
@@ -410,7 +430,11 @@ pub type BackFresh = Om<false, true>;
 /// [`TwoWay`], leaving room where the next moved set goes.
 pub type TwoWayFresh = Om<true, true>;
 
-impl<const TWO_WAY: bool, const FRESH: bool> Om<TWO_WAY, FRESH> {
+/// [`BackFresh`], searching depth first and moving what it finds in
+/// post-order, without sorting it.
+pub type BackNoSort = Om<false, true, true>;
+
+impl<const TWO_WAY: bool, const FRESH: bool, const POST: bool> Om<TWO_WAY, FRESH, POST> {
     /// Expands one node of the forward search from `y`, among nodes before
     /// `x`. Reaching `x`, or a node the backward search found, is a cycle.
     fn forward_step(&mut self, g: &Graph, x: Id) -> Step {
@@ -452,6 +476,42 @@ impl<const TWO_WAY: bool, const FRESH: bool> Om<TWO_WAY, FRESH> {
         Step::More
     }
 
+    /// Back's search from `x`, among nodes after `y`, depth first, recording
+    /// each node in `found` when it finishes: after every dependency of it
+    /// that the search reaches, so `found` is topological among itself.
+    /// Reaching `y` is a cycle. Returns the outcome and the nodes entered.
+    ///
+    /// A node's dependencies are tried last first, the order the stack
+    /// search expands them in, so the two meet a cycle along the same paths
+    /// rather than one of them taking a shortcut the other doesn't.
+    fn backward_post(&mut self, g: &Graph, x: Id, y: Id) -> (Outcome, usize) {
+        let lb = self.order.label(y);
+        let s = &mut self.backward;
+        s.begin(g.len(), x);
+        s.stack.clear();
+        s.path.clear();
+        s.path.push((x, g.deps[x as usize].len() as u32));
+        let mut entered = 1;
+        while let Some((n, left)) = s.path.last_mut() {
+            if *left == 0 {
+                s.found.push(*n);
+                s.path.pop();
+                continue;
+            }
+            *left -= 1;
+            let w = g.deps[*n as usize][*left as usize];
+            if w == y {
+                return (Outcome::Cycle, entered);
+            }
+            if self.order.label(w) > lb && !s.seen(w) {
+                s.mark(w);
+                s.path.push((w, g.deps[w as usize].len() as u32));
+                entered += 1;
+            }
+        }
+        (Outcome::Back, entered)
+    }
+
     /// Links `x → y` unless it closes a cycle, keeping the order.
     fn insert(&mut self, g: &mut Graph, x: Id, y: Id, kind: Kind) -> bool {
         if self.order.label(x) < self.order.label(y) {
@@ -459,6 +519,17 @@ impl<const TWO_WAY: bool, const FRESH: bool> Om<TWO_WAY, FRESH> {
             return true;
         }
         self.counts.invalid[kind as usize] += 1;
+        if POST && !TWO_WAY {
+            let (outcome, entered) = self.backward_post(g, x, y);
+            self.counts.visited[kind as usize] += entered as u64;
+            if let Outcome::Cycle = outcome {
+                return false;
+            }
+            // Already topological among itself: no sort.
+            self.order.move_before(y, &self.backward.found);
+            g.link(x, y);
+            return true;
+        }
         self.backward.begin(g.len(), x);
         if TWO_WAY {
             self.forward.begin(g.len(), y);
@@ -479,6 +550,14 @@ impl<const TWO_WAY: bool, const FRESH: bool> Om<TWO_WAY, FRESH> {
         };
         let forward = if TWO_WAY { self.forward.found.len() } else { 0 };
         self.counts.visited[kind as usize] += (self.backward.found.len() + forward) as u64;
+        #[cfg(test)]
+        if let Outcome::Back = outcome {
+            let found = &self.backward.found;
+            let rev: Vec<Id> = found.iter().rev().copied().collect();
+            self.discovery[0] += 1;
+            self.discovery[1] += tests::topological_among(g, found) as u64;
+            self.discovery[2] += tests::topological_among(g, &rev) as u64;
+        }
         let order = &mut self.order;
         match outcome {
             Outcome::Cycle => return false,
@@ -498,7 +577,9 @@ impl<const TWO_WAY: bool, const FRESH: bool> Om<TWO_WAY, FRESH> {
     }
 }
 
-impl<const TWO_WAY: bool, const FRESH: bool> Checker for Om<TWO_WAY, FRESH> {
+impl<const TWO_WAY: bool, const FRESH: bool, const POST: bool> Checker
+    for Om<TWO_WAY, FRESH, POST>
+{
     fn new(g: &Graph) -> Self {
         // Kahn's algorithm over the whole graph.
         let mut indeg: Vec<u32> = g.deps.iter().map(|d| d.len() as u32).collect();
@@ -779,8 +860,22 @@ mod tests {
         Baseline, KINDS, Pk, Run, TXS, Workload, generate, workloads,
     };
 
+    /// Whether every node in `seq` comes after its dependencies in `seq`.
+    pub(super) fn topological_among(g: &Graph, seq: &[Id]) -> bool {
+        let at: std::collections::HashMap<Id, usize> =
+            seq.iter().enumerate().map(|(i, &n)| (n, i)).collect();
+        seq.iter().enumerate().all(|(i, &n)| {
+            g.deps[n as usize]
+                .iter()
+                .all(|d| at.get(d).is_none_or(|&j| j < i))
+        })
+    }
+
     /// Every edge goes forward in the order, and the list is sound.
-    fn is_topological<const T: bool, const F: bool>(g: &Graph, c: &Om<T, F>) -> bool {
+    fn is_topological<const T: bool, const F: bool, const P: bool>(
+        g: &Graph,
+        c: &Om<T, F, P>,
+    ) -> bool {
         c.order.is_consistent(g.len())
             && (0..g.len()).all(|n| {
                 g.deps[n]
@@ -792,12 +887,12 @@ mod tests {
     /// F46, in the workload's own gadget: B from p to c and A from x to y
     /// together is legal; B back to p alone then closes a cycle; both back
     /// together is legal again.
-    fn f46_accepted<const T: bool, const F: bool>() {
+    fn f46_accepted<const T: bool, const F: bool, const P: bool>() {
         let w = generate(&workloads(4)[0].1);
         // Transaction 2 is F46's reversal, and 3 undoes it.
         let (there, back) = (&w.txs[2].moves, &w.txs[3].moves);
         assert!(there.iter().chain(back).all(|m| m.kind == Kind::F46));
-        let mut run = Run::<Om<T, F>>::new(&w);
+        let mut run = Run::<Om<T, F, P>>::new(&w);
         assert!(run.checker.commit(&mut run.graph, there), "F46 refused");
         assert!(is_topological(&run.graph, &run.checker));
         let b = there[0];
@@ -820,10 +915,11 @@ mod tests {
 
     #[test]
     fn f46_is_accepted_by_every_variant() {
-        f46_accepted::<false, false>();
-        f46_accepted::<true, false>();
-        f46_accepted::<false, true>();
-        f46_accepted::<true, true>();
+        f46_accepted::<false, false, false>();
+        f46_accepted::<true, false, false>();
+        f46_accepted::<false, true, false>();
+        f46_accepted::<true, true, false>();
+        f46_accepted::<false, true, true>();
     }
 
     /// Runs `w` through `C`, asserting `check` after every transaction and
@@ -853,6 +949,7 @@ mod tests {
                 agrees::<TwoWay>(&w, is_topological);
                 agrees::<BackFresh>(&w, is_topological);
                 agrees::<TwoWayFresh>(&w, is_topological);
+                agrees::<BackNoSort>(&w, is_topological);
             }
         }
     }
@@ -1057,6 +1154,8 @@ mod tests {
                 assert_eq!(bf, walk, "back fresh differs from the walk");
                 let (_, tf) = adversary::<TwoWayFresh>(up, down, cyclic, is_topological);
                 assert_eq!(tf, walk, "twoway fresh differs from the walk");
+                let (_, bn) = adversary::<BackNoSort>(up, down, cyclic, is_topological);
+                assert_eq!(bn, walk, "back nosort differs from the walk");
 
                 let mut a = Adversary::<TwoWay>::new(up, down, cyclic);
                 let fresh = a.run.checker.clone();
@@ -1175,7 +1274,7 @@ mod tests {
     }
 
     /// Relabelled nodes per move, apart from those moved.
-    fn relabels<const T: bool, const F: bool>(c: &Om<T, F>, moves: u64) -> f64 {
+    fn relabels<const T: bool, const F: bool, const P: bool>(c: &Om<T, F, P>, moves: u64) -> f64 {
         c.order.relabeled as f64 / moves as f64
     }
 
@@ -1343,5 +1442,156 @@ mod tests {
         println!("labels to make room, per move, apart from those moved. On the adversaries the");
         println!("searches visit the same nodes with either spacing; on the workloads the orders");
         println!("differ, so the searches can too.");
+    }
+
+    /// The share of `c`'s moved sets that were topological among themselves
+    /// as found and reversed, as percentages, and how many there were.
+    fn discovery<const T: bool, const F: bool, const P: bool>(c: &Om<T, F, P>) -> (u64, f64, f64) {
+        let [sets, found, rev] = c.discovery;
+        let pc = |k: u64| 100.0 * k as f64 / sets.max(1) as f64;
+        (sets, pc(found), pc(rev))
+    }
+
+    /// The no-sort counts: nodes visited and relabelled by `back` with fresh
+    /// spacing against the same with a depth-first search moving its set in
+    /// post-order, on the earlier probe's workloads, the adversary and the
+    /// mixed adversary; and whether the stack search's own order, or its
+    /// reverse, was already topological among the set. Every list's order is
+    /// checked after every transaction or move. Run with `--nocapture`.
+    #[test]
+    fn nosort_counts() {
+        println!("bf: back with fresh spacing, its stack search's set sorted by label before");
+        println!("the move; bn: the same with a depth-first search, its set moved in post-order");
+        println!();
+        println!("{TXS} transactions per workload, 2 slots each; per move:");
+        println!(
+            "  {:<8} {:>6} {:>8} {:>8} {:>8} {:>8} {:>7} {:>8} {:>8}",
+            "workload",
+            "moves",
+            "bf vis",
+            "bn vis",
+            "bf relab",
+            "bn relab",
+            "sets",
+            "found ok",
+            "rev ok"
+        );
+        for (name, p) in workloads(TXS) {
+            let w = generate(&p);
+            let bf = agrees::<BackFresh>(&w, is_topological);
+            let bn = agrees::<BackNoSort>(&w, is_topological);
+            let moves: u64 = bf.checker.counts().moves.iter().sum();
+            let vis = |c: &Counts| c.visited.iter().sum::<u64>() as f64 / moves as f64;
+            let (sets, found, rev) = discovery(&bf.checker);
+            println!(
+                "  {name:<8} {moves:>6} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {sets:>7} {found:>7.1}% {rev:>7.1}%",
+                vis(bf.checker.counts()),
+                vis(bn.checker.counts()),
+                relabels(&bf.checker, moves),
+                relabels(&bn.checker, moves),
+            );
+        }
+
+        let per = |v: u64| v as f64 / ADVERSARY_MOVES as f64;
+        for cyclic in [false, true] {
+            println!();
+            if cyclic {
+                println!(
+                    "the adversary, cyclic ({ADVERSARY_MOVES} moves, all refused, none moved); per move:"
+                );
+            } else {
+                println!(
+                    "the adversary, acyclic ({ADVERSARY_MOVES} moves, all accepted); per move:"
+                );
+            }
+            println!(
+                "  {:>6} {:>6} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8}",
+                "up",
+                "down",
+                "walk",
+                "bf vis",
+                "bn vis",
+                "bf relab",
+                "bn relab",
+                "found ok",
+                "rev ok"
+            );
+            for up in SIDES {
+                for down in SIDES {
+                    let (walk, rw) = adversary::<Baseline>(up, down, cyclic, |_, _| true);
+                    let (bf, rbf) = adversary::<BackFresh>(up, down, cyclic, is_topological);
+                    let (bn, rbn) = adversary::<BackNoSort>(up, down, cyclic, is_topological);
+                    assert!(
+                        [&rw, &rbf, &rbn]
+                            .iter()
+                            .all(|r| r.iter().all(|&r| r == cyclic))
+                    );
+                    let (bfc, bnc) = (&bf.run.checker, &bn.run.checker);
+                    // The warm-up move is one set, of its new inner alone,
+                    // so always topological: it is left out.
+                    let [sets, found, rev] = bfc.discovery;
+                    assert_eq!(sets, 1 + if cyclic { 0 } else { ADVERSARY_MOVES as u64 });
+                    assert!(found >= 1 && rev >= 1);
+                    let ok = |k: u64| match sets - 1 {
+                        0 => "-".to_string(),
+                        n => format!("{:.1}%", 100.0 * (k - 1) as f64 / n as f64),
+                    };
+                    println!(
+                        "  {up:>6} {down:>6} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {:>8} {:>8}",
+                        per(walk.visited()),
+                        per(bf.visited()),
+                        per(bn.visited()),
+                        per(bfc.order.relabeled),
+                        per(bnc.order.relabeled),
+                        ok(found),
+                        ok(rev),
+                    );
+                }
+            }
+        }
+
+        println!();
+        println!(
+            "mixed adversary: {ADVERSARY_MOVES} moves, all accepted, each to a new inner reading \
+             `shared` nodes before the switch in the order and `new` nodes of its own after it; \
+             the switch's downstream is {MIXED_DOWN}; per move:"
+        );
+        println!(
+            "  {:>6} {:>6} {:>8} {:>8} {:>8} {:>8} {:>8}",
+            "shared", "new", "walk", "bf vis", "bn vis", "bf relab", "bn relab"
+        );
+        for shared in SHARED {
+            for new in NEW {
+                let (walk, rw) = moves(
+                    Adversary::<Baseline>::mixed(shared, new, MIXED_DOWN),
+                    |_, _| true,
+                );
+                let (bf, rbf) = moves(
+                    Adversary::<BackFresh>::mixed(shared, new, MIXED_DOWN),
+                    is_topological,
+                );
+                let (bn, rbn) = moves(
+                    Adversary::<BackNoSort>::mixed(shared, new, MIXED_DOWN),
+                    is_topological,
+                );
+                assert!([rw, rbf, rbn].iter().flatten().all(|&r| !r));
+                println!(
+                    "  {shared:>6} {new:>6} {:>8.1} {:>8.1} {:>8.1} {:>8.1} {:>8.1}",
+                    per(walk.visited()),
+                    per(bf.visited()),
+                    per(bn.visited()),
+                    per(bf.run.checker.order.relabeled),
+                    per(bn.run.checker.order.relabeled),
+                );
+            }
+        }
+        println!();
+        println!("vis and walk: nodes visited per move, walked upstream from the new inner");
+        println!("(walk) or searched back: expanded by bf's stack search, entered by bn's");
+        println!("depth-first one. relab: nodes the list gave new labels to make room, per");
+        println!("move, apart from those moved. sets: sets bf moved before a switch; found ok");
+        println!("and rev ok: the share of them that were topological among themselves in the");
+        println!("order bf's search found them, and in the reverse, so could have moved without");
+        println!("a sort (on the adversary, the warm-up move left out; - where none moved).");
     }
 }
