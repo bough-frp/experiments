@@ -1,0 +1,384 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0001-forgetful-cut at experiments@c982f4f - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0001-forgetful-cut
+
+forgetful-cut: the text's replay against Bough's creation cut, over T = [Int]
+
+Reproductions (the node is the one the finding is about; 'program' is the last node):
+
+F6: a switch_cell built at [3] inside construct, over an outer that picked c2 at [1];
+    c1 = constant 1; c2 = hold 10, steps to 20 at [3] (the draft's 'a', 'x', 'y')
+  text          switch_cell at [3]: (10, [[3]:1 [1]:20])  in order: NO  forgetful: NO (the chop)
+                program: (1, [[0]:1 [3]:1])
+  cut-all       switch_cell at [3]: (10, [[3]:20])  in order: yes  forgetful: yes
+                program: (1, [[0]:1 [3]:20])
+  cut-stateful  switch_cell at [3]: (10, [[3]:20])  in order: yes  forgetful: yes
+                program: (1, [[0]:1 [3]:20])
+
+F7: a split into 2 of an input (1 at [1]) merged with its own defer
+  text          split at [0]: [[1,0]:10 [1,1]:11 [1,0,0]:10 [1,0,1]:11]  in order: NO  forgetful: yes
+                program: [[1,0]:10 [1,1]:11 [1,0,0]:10 [1,0,1]:11]
+  cut-all       split at [0]: [[1,0]:10 [1,0,0]:10 [1,0,1]:11 [1,1]:11]  in order: yes  forgetful: yes
+                program: [[1,0]:10 [1,0,0]:10 [1,0,1]:11 [1,1]:11]
+  cut-stateful  split at [0]: [[1,0]:10 [1,0,0]:10 [1,0,1]:11 [1,1]:11]  in order: yes  forgetful: yes
+                program: [[1,0]:10 [1,0,0]:10 [1,0,1]:11 [1,1]:11]
+
+F89: construct over defer x runs at [1,0]; the body splits x into 3 and holds -1 over them
+  text          split at [1,0]: [[1,0]:10 [1,1]:11 [1,2]:12]  in order: yes  forgetful: NO (the chop)
+                program: (0, [[0]:0 [1,0]:10 [1,1]:11 [1,2]:12])
+  cut-all       split at [1,0]: []  in order: yes  forgetful: yes
+                program: (0, [[0]:0 [1,0]:-1])
+  cut-stateful  split at [1,0]: []  in order: yes  forgetful: yes
+                program: (0, [[0]:0 [1,0]:-1])
+
+F89 defer: the same with a defer of x in the body
+  text          defer at [1,0]: [[1,0]:1]  in order: yes  forgetful: NO (the chop)
+                program: (0, [[0]:0 [1,0]:1])
+  cut-all       defer at [1,0]: []  in order: yes  forgetful: yes
+                program: (0, [[0]:0 [1,0]:-1])
+  cut-stateful  defer at [1,0]: []  in order: yes  forgetful: yes
+                program: (0, [[0]:0 [1,0]:-1])
+
+Random programs: 3000 programs x 2 input histories = 6000 runs; 2 inputs firing at [1]..[4]
+Local check: each node built after [0] rebuilt over its arguments chopped at t0, and over 3 junk pasts
+
+variant         nodes    late  leak runs leak nodes  unforgetful       whole  literal
+text           136339   68004        859       4632        13046   430/28118     6538
+cut-all        121225   54301          0          0            0     0/24409     4784
+cut-stateful   134813   66593          0          0            0     0/28226     5562
+
+  nodes: every node the runs built; late: those built after [0] with arguments
+  leak runs / leak nodes: output from t0 changes when the arguments' past is chopped
+  unforgetful: output from t0 changes under the chop or a junk past
+  whole: rerun on inputs that agree from t0 on; nodes whose output changed, of those whose arguments also agree
+  literal: the same rerun, nodes whose output changed with only the inputs agreeing
+
+text:
+  leaks          F6     switch_cell at child       747
+  leaks          F6     switch_cell at external    1664
+  leaks          F89    defer at child             1150
+  leaks          F89    split at child             1024
+  leaks          Downstream lift2 at child             12
+  leaks          Downstream lift2 at external          23
+  leaks          Downstream pick at child              4
+  leaks          Downstream pick at external           4
+  leaks          Downstream snapshot at child          4
+  unforgetful           defer at child             2063
+  unforgetful           lift2 at child             12
+  unforgetful           lift2 at external          23
+  unforgetful           pick at child              4
+  unforgetful           pick at external           4
+  unforgetful           snapshot at child          4
+  unforgetful           split at child             1681
+  unforgetful           switch_cell at child       3987
+  unforgetful           switch_cell at external    5268
+  whole          F6     switch_cell at child       62
+  whole          F6     switch_cell at external    82
+  whole          F89    defer at child             144
+  whole          F89    split at child             139
+  whole          Body   construct at child         3
+  out of order (origin) split at build             36
+  out of order (origin) split at child             39
+  out of order (origin) split at external          44
+  out of order (origin) switch_cell at child       1999
+  out of order (origin) switch_cell at external    1889
+  out of order, all nodes: 4629
+  F6-shaped nodes: 3876, of which leak: 2411
+  F89-shaped nodes: 2174, of which leak: 2174
+
+cut-all:
+  F6-shaped nodes: 3012, of which leak: 0
+  F89-shaped nodes: 1618, of which leak: 0
+
+cut-stateful:
+  F6-shaped nodes: 3796, of which leak: 0
+  F89-shaped nodes: 2129, of which leak: 0
+
+Late nodes checked under cut-stateful, by op and where built:
+  construct at child 1258, construct at external 1941, defer at child 3072, defer at external 3964
+  filter at child 702, filter at external 1115, hold at child 2545, hold at external 3767
+  hold_cell at child 1534, hold_cell at external 2857, lift2 at child 961, lift2 at external 949
+  map at child 1866, map at external 2426, map_cell at child 990, map_cell at external 1006
+  merge at child 1887, merge at external 2701, pick at child 3193, pick at external 4174
+  snapshot at child 2076, snapshot at external 2673, split at child 2100, split at external 2613
+  switch_cell at child 3885, switch_cell at external 5268, switch_stream at child 310, switch_stream at external 449
+  updates at child 947, updates at external 1168, value at child 793, value at external 1403
+
+Text against cut-stateful, nodes where they part (arguments equal from t0, output not):
+  F6     switch_cell at child       717
+  F6     switch_cell at external    1630
+  F89    defer at child             1127
+  F89    split at child             1002
+  F7     split at build             36
+  F7     split at child             15
+  F7     split at external          44
+  Body   construct at build         339
+  Body   construct at child         97
+  Body   construct at external      193
+
+Cut-all against cut-stateful: 121225 nodes in both, 0 differ from their t0 on; 0 only in cut-all, 13588 only in cut-stateful (bodies run for events before their construct existed)
+
+Verdict: text leaks in 859 of 6000 runs: 5012 nodes of F6/F89 shape, 50 downstream of one (an out-of-order argument, or a construct whose body has one), 0 otherwise; the two cuts fail forgetfulness at 0 nodes; cut-all and cut-stateful differ at 0 of 121225 shared nodes.
+
+Smallest program per finding:
+
+text leaks: Downstream, lift2 at child
+  seed 177, 21 ops; node: body of r8 at [4] / body of r3 at [3,0] / its op 2, built at [3,0]
+  input 0: [[1]:1 [2]:7 [3]:7 [4]:9]
+  input 1: [[1]:5 [3]:8 [4]:9]
+    r0 = input(0)
+    r1 = input(1)
+    r2 = defer(r1)
+    r3 = hold(r1, 0)
+    r4 = construct(r2), body at each event, r4 = its value:
+        r5 = pick(r4, r4, r4, r3)
+        r6 = merge(r2, r0, Right)
+        returns r4
+    r5 = hold_cell(r4, r3)
+    r6 = switch_cell(r5)
+    r7 = hold(r0, 3)
+    r8 = construct(r0), body at each event, r8 = its value:
+        r9 = switch_cell(r5)
+        r10 = hold(r2, 6)
+        r11 = defer(r1)
+        r12 = construct(r11), body at each event, r12 = its value:
+            r13 = defer(r11)
+            r14 = hold_cell(r4, r8)
+            r15 = lift2(r9, r6, Add)
+            r16 = hold(r0, 9)
+            r17 = split(r11, 3)
+            returns r16
+        r13 = merge(r2, r1, Sub)
+        returns r9
+  output: (8, [[0]:8 [1]:13 [1,0]:13 [3,0]:16 [4]:16 [1,0]:13 [3,0]:16 [4,0]:18])
+
+text leaks: Downstream, lift2 at external
+  seed 1688, 14 ops; node: body of r4 at [4] / its op 4, built at [4]
+  input 0: []
+  input 1: [[1]:9 [4]:3]
+    r0 = input(0)
+    r1 = input(1)
+    r2 = defer(r1)
+    r3 = hold(r1, 0)
+    r4 = construct(r1), body at each event, r4 = its value:
+        r5 = pick(r3, r3, r3, r3)
+        r6 = switch_cell(r5)
+        r7 = pick(r4, r0, r1, r0)
+        r8 = pick(r3, r3, r6, r6)
+        r9 = lift2(r3, r6, Sub)
+        returns r6
+    r5 = pick(r3, r1, r1, r1)
+    r6 = map(r0, Mul(3))
+    r7 = hold(r2, 6)
+    r8 = map_cell(r3, Mul(2))
+  output: (-9, [[1]:0 [4]:-6 [1]:-6 [4]:0])
+
+text leaks: Downstream, pick at child
+  seed 176, 41 ops; node: body of r13 at [2,0] / its op 1, built at [2,0]
+  input 0: [[1]:1 [3]:9 [4]:1]
+  input 1: [[1]:7 [2]:6 [3]:2 [4]:1]
+    r0 = input(0)
+    r1 = input(1)
+    r2 = defer(r1)
+    r3 = hold(r0, 0)
+    r4 = construct(r0), body at each event, r4 = its value:
+        r5 = defer(r2)
+        r6 = pick(r4, r0, r1)
+        r7 = construct(r1), body at each event, r7 = its value:
+            r8 = hold(r0, 8)
+            r9 = updates(r3)
+            returns r8
+        r8 = hold_cell(r7, r4)
+        r9 = switch_cell(r8)
+        r10 = hold_cell(r7, r4)
+        r11 = construct(r5), body at each event, r11 = its value:
+            r12 = map_cell(r4, Mul(3))
+            r13 = hold_cell(r7, r12)
+            r14 = hold(r5, 4)
+            r15 = hold(r2, 8)
+            r16 = hold_cell(r7, r11)
+            returns r12
+        r12 = hold_cell(r11, r4)
+        r13 = switch_cell(r12)
+        returns r9
+    r5 = hold_cell(r4, r3)
+    r6 = switch_cell(r5)
+    r7 = value(r6)
+    r8 = construct(r0), body at each event, r8 = its value:
+        r9 = switch_cell(r5)
+        r10 = pick(r3, r1, r7, r7)
+        r11 = pick(r9, r8, r9)
+        r12 = defer(r1)
+        r13 = snapshot(r0, r6, Right)
+        returns r9
+    r9 = hold_cell(r8, r3)
+    r10 = switch_cell(r9)
+    r11 = split(r1, 2)
+    r12 = merge(r11, r2, Left)
+    r13 = construct(r11), body at each event, r13 = its value:
+        r14 = switch_cell(r5)
+        r15 = pick(r3, r14, r6, r6)
+        r16 = updates(r10)
+        r17 = pick(r14, r14, r10, r10)
+        returns r14
+    r14 = hold_cell(r13, r10)
+    r15 = switch_cell(r14)
+  output: (<cell>, [[1]:<cell> [3]:<cell> [4]:<cell>])
+
+text leaks: Downstream, pick at external
+  seed 2571, 22 ops; node: body of r7 at [3] / its op 1, built at [3]
+  input 0: [[1]:9 [2]:2 [4]:8]
+  input 1: [[1]:7 [3]:4 [4]:8]
+    r0 = input(0)
+    r1 = input(1)
+    r2 = defer(r0)
+    r3 = hold(r1, 0)
+    r4 = construct(r2), body at each event, r4 = its value:
+        r5 = defer(r0)
+        r6 = pick(r3, r0, r0)
+        r7 = defer(r0)
+        returns r4
+    r5 = hold_cell(r4, r3)
+    r6 = switch_cell(r5)
+    r7 = construct(r1), body at each event, r7 = its value:
+        r8 = switch_cell(r5)
+        r9 = pick(r8, r8, r8)
+        r10 = switch_cell(r5)
+        r11 = defer(r2)
+        r12 = map_cell(r3, Mul(3))
+        returns r8
+    r8 = hold_cell(r7, r6)
+    r9 = switch_cell(r8)
+    r10 = hold(r0, 3)
+    r11 = map_cell(r9, Mul(2))
+    r12 = lift2(r10, r11, Sub)
+    r13 = defer(r0)
+  output: (<cell>, [[3]:<cell> [1,0]:<cell> [2,0]:<cell> [4,0]:<cell>])
+
+text leaks: Downstream, snapshot at child
+  seed 2243, 39 ops; node: body of r13 at [1,0] / its op 3, built at [1,0]
+  input 0: [[1]:0]
+  input 1: [[1]:1 [2]:8 [4]:2]
+    r0 = input(0)
+    r1 = input(1)
+    r2 = defer(r0)
+    r3 = hold(r0, 0)
+    r4 = split(r0, 2)
+    r5 = never()
+    r6 = construct(r0), body at each event, r6 = its value:
+        r7 = value(r6)
+        r8 = constant(4)
+        r9 = filter(r2, Gt(5))
+        r10 = value(r6)
+        r11 = pick(r8, r5, r2)
+        returns r8
+    r7 = hold_cell(r6, r3)
+    r8 = switch_cell(r7)
+    r9 = construct(r2), body at each event, r9 = its value:
+        r10 = switch_cell(r7)
+        r11 = value(r10)
+        r12 = hold_cell(r6, r3)
+        returns r10
+    r10 = hold_cell(r9, r8)
+    r11 = switch_cell(r10)
+    r12 = snapshot(r4, r11, Right)
+    r13 = construct(r4), body at each event, r13 = its value:
+        r14 = switch_cell(r7)
+        r15 = snapshot(r1, r13, Sub)
+        r16 = snapshot(r0, r13, Sub)
+        r17 = snapshot(r15, r14, Sub)
+        r18 = construct(r15), body at each event, r18 = its value:
+            r19 = pick(r11, r14, r3)
+            r20 = map(r4, Add(5))
+            r21 = split(r4, 3)
+            r22 = map(r15, Mul(2))
+            r23 = split(r12, 3)
+            returns r18
+        r19 = hold_cell(r18, r11)
+        r20 = switch_cell(r19)
+        r21 = pick(r11, r8, r8)
+        returns r20
+    r14 = hold_cell(r13, r11)
+    r15 = switch_cell(r14)
+    r16 = pick(r8, r2, r0)
+    r17 = snapshot(r4, r8, Add)
+  output: [[1]:-3 [2]:4 [4]:-2]
+
+text leaks: F6, switch_cell at child
+  seed 517, 17 ops; node: body of r7 at [3,0] / its op 1, built at [3,0]
+  input 0: [[1]:1 [4]:4]
+  input 1: [[3]:0]
+    r0 = input(0)
+    r1 = input(1)
+    r2 = defer(r1)
+    r3 = hold(r0, 0)
+    r4 = split(r1, 3)
+    r5 = merge(r4, r2, Right)
+    r6 = hold(r1, 1)
+    r7 = construct(r2), body at each event, r7 = its value:
+        r8 = pick(r3, r7, r3)
+        r9 = switch_cell(r8)
+        r10 = split(r0, 3)
+        returns r9
+    r8 = hold_cell(r7, r3)
+    r9 = switch_cell(r8)
+    r10 = merge(r4, r4, Add)
+    r11 = snapshot(r5, r9, Add)
+    r12 = pick(r3, r10, r4, r0)
+    r13 = hold_cell(r7, r9)
+  output: (1, [[3,0]:0 [1]:1 [4]:0])
+
+text leaks: F6, switch_cell at external
+  seed 279, 13 ops; node: body of r4 at [2] / its op 3, built at [2]
+  input 0: [[1]:8 [2]:5 [4]:6]
+  input 1: [[1]:9 [2]:9 [3]:6 [4]:5]
+    r0 = input(0)
+    r1 = input(1)
+    r2 = defer(r1)
+    r3 = hold(r1, 0)
+    r4 = construct(r1), body at each event, r4 = its value:
+        r5 = pick(r4, r1, r0)
+        r6 = pick(r3, r3, r4)
+        r7 = split(r0, 2)
+        r8 = switch_cell(r6)
+        returns r8
+    r5 = defer(r1)
+    r6 = hold(r0, 6)
+    r7 = hold(r1, 4)
+    r8 = pick(r6, r7, r7, r6)
+  output: (9, [[2]:9 [1]:9 [2]:9 [3]:6 [4]:9])
+
+text leaks: F89, defer at child
+  seed 2873, 11 ops; node: body of r6 at [1,0] / its op 1, built at [1,0]
+  input 0: [[2]:6 [3]:7]
+  input 1: [[1]:1 [3]:1 [4]:9]
+    r0 = input(0)
+    r1 = input(1)
+    r2 = defer(r1)
+    r3 = hold(r0, 0)
+    r4 = snapshot(r2, r3, Left)
+    r5 = snapshot(r4, r3, Sub)
+    r6 = construct(r4), body at each event, r6 = its value:
+        r7 = merge(r2, r4, Left)
+        r8 = defer(r1)
+        returns r6
+    r7 = hold_cell(r6, r3)
+    r8 = switch_cell(r7)
+  output: [[1,0]:1 [3,0]:1 [4,0]:9]
+
+text leaks: F89, split at child
+  seed 487, 10 ops; node: body of r6 at [1,0] / its op 1, built at [1,0]
+  input 0: [[1]:7 [3]:3]
+  input 1: [[1]:9 [3]:0 [4]:2]
+    r0 = input(0)
+    r1 = input(1)
+    r2 = defer(r1)
+    r3 = hold(r1, 0)
+    r4 = map_cell(r3, Mul(2))
+    r5 = defer(r1)
+    r6 = construct(r5), body at each event, r6 = its value:
+        r7 = split(r5, 3)
+        r8 = split(r1, 3)
+        returns r6
+    r7 = hold(r5, 1)
+  output: [[1,0]:90 [1,1]:91 [1,2]:92 [3,0]:0 [3,1]:1 [3,2]:2 [4,0]:20 [4,1]:21 [4,2]:22]
+
