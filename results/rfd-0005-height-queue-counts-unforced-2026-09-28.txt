@@ -1,0 +1,41 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-height-queue-counts-unforced at experiments@dd225eb - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0005_height_queue::tests::counts_unforced -- --nocapture --exact
+
+    Finished `release` profile [optimized] target(s) in 0.09s
+     Running unittests src/lib.rs (target/release/deps/bough_experiments-546a1df3524d36be)
+
+running 1 test
+workload pass  forced  unforc   fired q-forc  q-unf e-forc  e-unf  popped
+settled   100  6672.2  6501.8  6457.3    3.2    0.7   24.5   23.4  6457.2
+settled    50  6672.2  6501.8  4546.1   31.9   30.1   24.5   23.4  4587.9
+settled    30  6672.2  6501.8  2827.9   57.6   56.5   24.5   23.4  2874.8
+settled    20  6672.2  6501.8  1850.3   72.3   71.5   24.5   23.4  1897.2
+settled     5  6672.2  6501.8   318.6   95.2   95.1   24.5   23.4   358.9
+mixed     100  7032.2  5818.9  5705.5   18.9    1.9   35.5   34.8  5706.7
+mixed      50  7032.2  5818.9  3707.3   47.3   36.3   35.5   34.8  3745.9
+mixed      30  7032.2  5818.9  2092.2   70.2   64.0   35.5   34.8  2135.0
+mixed      20  7032.2  5818.9  1376.4   80.4   76.3   35.5   34.8  1419.9
+mixed       5  7032.2  5818.9   135.5   98.1   97.7   35.5   34.8   174.3
+churn     100  7826.7  5137.5  5094.6   34.9    0.8   30.0   29.0  5094.7
+churn      50  7826.7  5137.5  2733.9   65.1   46.8   30.0   29.0  2769.7
+churn      30  7826.7  5137.5  1638.8   79.1   68.1   30.0   29.0  1681.4
+churn      20  7826.7  5137.5  1004.0   87.2   80.5   30.0   29.0  1047.4
+churn       5  7826.7  5137.5   134.1   98.3   97.4   30.0   29.0   176.9
+lazy      100  8938.4  5116.2  5086.2   43.1    0.6   35.3   26.8  5088.2
+lazy       50  8938.4  5116.2  2379.3   73.4   53.5   35.3   26.8  2416.9
+lazy       30  8938.4  5116.2  1303.4   85.4   74.5   35.3   26.8  1348.6
+lazy       20  8938.4  5116.2   738.6   91.7   85.6   35.3   26.8   785.3
+lazy        5  8938.4  5116.2    96.8   98.9   98.1   35.3   26.8   145.4
+
+per transaction, over each workload's 300 transactions, with nodes built
+during the instant evaluated in it: nodes marked with the construct point
+(the root event stream's forward token) forced into the mark, and without
+it (from the input and the moving switch_cells only); nodes fired (refused
+transactions count none); the quiet share of each marked region; existing
+nodes each pulled ahead of the flat loop; and nodes the heights evaluated
+(popped, plus built nodes evaluated out of order). Both marks pull the same
+built nodes. pass is the filters' pass rate in percent.
+test rfd_0005_height_queue::tests::counts_unforced ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 65 filtered out; finished in 14.64s
+
