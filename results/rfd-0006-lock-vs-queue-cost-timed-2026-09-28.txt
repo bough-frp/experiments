@@ -1,0 +1,44 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0006-lock-vs-queue-cost at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0006-lock-vs-queue-cost -- --timed
+
+    Finished `release` profile [optimized] target(s) in 0.06s
+     Running `target/release/rfd-0006-lock-vs-queue-cost --timed`
+INDICATIVE: wall-clock, not on an idle machine
+bytes   lock   threads    bare ns   extra ns    wakes/u    wake ns/u
+0B      mutex        2        527        356      0.000            0
+0B      futex        2        527        370      0.234          340
+0B      mutex        4        527        367      0.000            0
+0B      futex        4        527        478      0.599          863
+0B      mutex        8        527        474      0.000            0
+0B      futex        8        527        520      0.891         1843
+256KiB  mutex        2       5927       2171      0.000            0
+256KiB  futex        2       5927       2310      0.855         1749
+256KiB  mutex        4       5881       1168      0.000            0
+256KiB  futex        4       5881        972      0.893          762
+256KiB  mutex        8       5885       1583      0.000            0
+256KiB  futex        8       5885       1735      0.902         1006
+
+INDICATIVE: pinned, wall-clock, not on an idle machine; ns per call for the copy
+bytes   where lock   threads  bare ns extra ns  wakes/u     wake  slept/u     wait   to-run
+0B      ccx1  mutex        2      535      302        -        -        -        -        -
+0B      ccx1  futex        2      535      333    0.233     1365    0.112     3403     5960
+0B      ccx1  mutex        4      536      418        -        -        -        -        -
+0B      ccx1  futex        4      536      359    0.597     1189    0.285     3569     1454
+0B      ccx2  mutex        2      536      382        -        -        -        -        -
+0B      ccx2  futex        2      536      414    0.241     1598    0.092     3654     7832
+0B      ccx2  mutex        4      536      444        -        -        -        -        -
+0B      ccx2  futex        4      536      402    0.577     1497    0.236     3695     1555
+256KiB  ccx1  mutex        2     6018      714        -        -        -        -        -
+256KiB  ccx1  futex        2     6018      647    0.702      884    0.702     6852     4696
+256KiB  ccx1  mutex        4     6014      619        -        -        -        -        -
+256KiB  ccx1  futex        4     6014      643    0.832      775    0.832    15145     4592
+256KiB  ccx2  mutex        2     6010     2121        -        -        -        -        -
+256KiB  ccx2  futex        2     6010     2144    0.852     1917    0.832     8390     6496
+256KiB  ccx2  mutex        4     6013     1294        -        -        -        -        -
+256KiB  ccx2  futex        4     6013     1354    0.883     1115    0.883    19721     5504
+
+wake: ns inside each futex_wake. wait: ns inside each futex_wait, asleep
+behind the holder included. to-run: ns from a wake's send to the woken
+thread's return from futex_wait, over waits that slept (exact at 2 threads,
+reads low at 4). Timed run: the best of 3, with its own counts.
+
