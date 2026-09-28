@@ -119,3 +119,11 @@ harness = false
 [[bench]]
 name = "rfd-0003-incremental-mark-wallclock"
 harness = false
+
+[[bench]]
+name = "rfd-0005-height-queue-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0005-height-queue-wallclock"
+harness = false
