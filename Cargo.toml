@@ -77,3 +77,19 @@ harness = false
 [[bench]]
 name = "rfd-0006-lock-vs-queue-cost-wallclock"
 harness = false
+
+[[bench]]
+name = "rfd-0005-small-side-order-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0005-small-side-order-wallclock"
+harness = false
+
+[[bench]]
+name = "rfd-0003-work-paced-trigger-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0003-work-paced-trigger-wallclock"
+harness = false
