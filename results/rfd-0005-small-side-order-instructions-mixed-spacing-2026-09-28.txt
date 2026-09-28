@@ -1,0 +1,2017 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-small-side-order-instructions at experiments@1e7b257 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0005-small-side-order-instructions
+
+   Compiling bough-experiments v0.1.0 (/home/zefs/prog/bough/experiments)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 8.23s
+     Running benches/rfd-0005-small-side-order-instructions.rs (target/release/deps/rfd_0005_small_side_order_instructions-3c561ae06049d5ca)
+rfd_0005_small_side_order_instructions::moves::moves_baseline settled:(txs_baseline("settled"))
+  Instructions:                    17640523|17640522             (+0.00001%) [+1.00000x]
+  L1 Hits:                         25772821|25773099             (-0.00108%) [-1.00001x]
+  LL Hits:                           669637|669359               (+0.04153%) [+1.00042x]
+  RAM Hits:                              10|9                    (+11.1111%) [+1.11111x]
+  Total read+write:                26442468|26442467             (+0.00000%) [+1.00000x]
+  Estimated Cycles:                29121356|29120209             (+0.00394%) [+1.00004x]
+rfd_0005_small_side_order_instructions::moves::moves_baseline mixed:(txs_baseline("mixed"))
+  Instructions:                    12639839|12639838             (+0.00001%) [+1.00000x]
+  L1 Hits:                         19398278|19398842             (-0.00291%) [-1.00003x]
+  LL Hits:                           357707|357143               (+0.15792%) [+1.00158x]
+  RAM Hits:                            1358|1357                 (+0.07369%) [+1.00074x]
+  Total read+write:                19757343|19757342             (+0.00001%) [+1.00000x]
+  Estimated Cycles:                21234343|21232052             (+0.01079%) [+1.00011x]
+rfd_0005_small_side_order_instructions::moves::moves_baseline churn:(txs_baseline("churn"))
+  Instructions:                     9651437|9651436              (+0.00001%) [+1.00000x]
+  L1 Hits:                         14966706|14967319             (-0.00410%) [-1.00004x]
+  LL Hits:                           185871|185258               (+0.33089%) [+1.00331x]
+  RAM Hits:                            1382|1381                 (+0.07241%) [+1.00072x]
+  Total read+write:                15153959|15153958             (+0.00001%) [+1.00000x]
+  Estimated Cycles:                15944431|15941944             (+0.01560%) [+1.00016x]
+rfd_0005_small_side_order_instructions::moves::moves_baseline lazy:(txs_baseline("lazy"))
+  Instructions:                     9261585|9261584              (+0.00001%) [+1.00000x]
+  L1 Hits:                         14295089|14295964             (-0.00612%) [-1.00006x]
+  LL Hits:                            93836|92961                (+0.94125%) [+1.00941x]
+  RAM Hits:                           12970|12969                (+0.00771%) [+1.00008x]
+  Total read+write:                14401895|14401894             (+0.00001%) [+1.00000x]
+  Estimated Cycles:                15218219|15214684             (+0.02323%) [+1.00023x]
+rfd_0005_small_side_order_instructions::moves::moves_pk settled:(txs_pk("settled"))
+  Instructions:                      418987|418987               (No change)
+  L1 Hits:                           625173|625178               (-0.00080%) [-1.00001x]
+  LL Hits:                             7843|7842                 (+0.01275%) [+1.00013x]
+  RAM Hits:                             194|190                  (+2.10526%) [+1.02105x]
+  Total read+write:                  633210|633210               (No change)
+  Estimated Cycles:                  671178|671038               (+0.02086%) [+1.00021x]
+rfd_0005_small_side_order_instructions::moves::moves_pk mixed:(txs_pk("mixed"))
+  Instructions:                   289774113|290233863            (-0.15841%) [-1.00159x]
+  L1 Hits:                        416208476|416752892            (-0.13063%) [-1.00131x]
+  LL Hits:                          2588964|2588782              (+0.00703%) [+1.00007x]
+  RAM Hits:                            1789|1784                 (+0.28027%) [+1.00280x]
+  Total read+write:               418799229|419343458            (-0.12978%) [-1.00130x]
+  Estimated Cycles:               429215911|429759242            (-0.12643%) [-1.00127x]
+rfd_0005_small_side_order_instructions::moves::moves_pk churn:(txs_pk("churn"))
+  Instructions:                   925416293|926881319            (-0.15806%) [-1.00158x]
+  L1 Hits:                       1327145638|1328882508           (-0.13070%) [-1.00131x]
+  LL Hits:                          8357109|8355137              (+0.02360%) [+1.00024x]
+  RAM Hits:                            1618|1615                 (+0.18576%) [+1.00186x]
+  Total read+write:              1335504365|1337239260           (-0.12974%) [-1.00130x]
+  Estimated Cycles:              1368987813|1370714718           (-0.12599%) [-1.00126x]
+rfd_0005_small_side_order_instructions::moves::moves_pk lazy:(txs_pk("lazy"))
+  Instructions:                  2129137174|2132495293           (-0.15747%) [-1.00158x]
+  L1 Hits:                       3052835183|3056810265           (-0.13004%) [-1.00130x]
+  LL Hits:                         19551212|19550353             (+0.00439%) [+1.00004x]
+  RAM Hits:                           13169|13163                (+0.04558%) [+1.00046x]
+  Total read+write:              3072399564|3076373781           (-0.12919%) [-1.00129x]
+  Estimated Cycles:              3151052158|3155022735           (-0.12585%) [-1.00126x]
+rfd_0005_small_side_order_instructions::moves::moves_back settled:(txs_back("settled"))
+  Instructions:                      482349|480787               (+0.32488%) [+1.00325x]
+  L1 Hits:                           718203|715434               (+0.38704%) [+1.00387x]
+  LL Hits:                             9430|9409                 (+0.22319%) [+1.00223x]
+  RAM Hits:                             150|149                  (+0.67114%) [+1.00671x]
+  Total read+write:                  727783|724992               (+0.38497%) [+1.00385x]
+  Estimated Cycles:                  770603|767694               (+0.37893%) [+1.00379x]
+rfd_0005_small_side_order_instructions::moves::moves_back mixed:(txs_back("mixed"))
+  Instructions:                     2284813|2280395              (+0.19374%) [+1.00194x]
+  L1 Hits:                          4346487|4338577              (+0.18232%) [+1.00182x]
+  LL Hits:                            37540|37525                (+0.03997%) [+1.00040x]
+  RAM Hits:                            1587|1585                 (+0.12618%) [+1.00126x]
+  Total read+write:                 4385614|4377687              (+0.18108%) [+1.00181x]
+  Estimated Cycles:                 4589732|4581677              (+0.17581%) [+1.00176x]
+rfd_0005_small_side_order_instructions::moves::moves_back churn:(txs_back("churn"))
+  Instructions:                     4124754|4107603              (+0.41754%) [+1.00418x]
+  L1 Hits:                          6902935|6871289              (+0.46055%) [+1.00461x]
+  LL Hits:                            47474|47446                (+0.05901%) [+1.00059x]
+  RAM Hits:                            1632|1624                 (+0.49261%) [+1.00493x]
+  Total read+write:                 6952041|6920359              (+0.45781%) [+1.00458x]
+  Estimated Cycles:                 7197425|7165359              (+0.44751%) [+1.00448x]
+rfd_0005_small_side_order_instructions::moves::moves_back lazy:(txs_back("lazy"))
+  Instructions:                     7562520|7506615              (+0.74474%) [+1.00745x]
+  L1 Hits:                         11753478|11648200             (+0.90381%) [+1.00904x]
+  LL Hits:                            61197|61142                (+0.08995%) [+1.00090x]
+  RAM Hits:                           13025|13019                (+0.04609%) [+1.00046x]
+  Total read+write:                11827700|11722361             (+0.89862%) [+1.00899x]
+  Estimated Cycles:                12515338|12409575             (+0.85227%) [+1.00852x]
+rfd_0005_small_side_order_instructions::moves::moves_twoway settled:(txs_twoway("settled"))
+  Instructions:                      419285|418764               (+0.12441%) [+1.00124x]
+  L1 Hits:                           651968|651250               (+0.11025%) [+1.00110x]
+  LL Hits:                             9153|9117                 (+0.39487%) [+1.00395x]
+  RAM Hits:                              54|54                   (No change)
+  Total read+write:                  661175|660421               (+0.11417%) [+1.00114x]
+  Estimated Cycles:                  699623|698725               (+0.12852%) [+1.00129x]
+rfd_0005_small_side_order_instructions::moves::moves_twoway mixed:(txs_twoway("mixed"))
+  Instructions:                     2316018|2312991              (+0.13087%) [+1.00131x]
+  L1 Hits:                          4487510|4482298              (+0.11628%) [+1.00116x]
+  LL Hits:                            40696|40723                (-0.06630%) [-1.00066x]
+  RAM Hits:                            1888|1886                 (+0.10604%) [+1.00106x]
+  Total read+write:                 4530094|4524907              (+0.11463%) [+1.00115x]
+  Estimated Cycles:                 4757070|4751923              (+0.10831%) [+1.00108x]
+rfd_0005_small_side_order_instructions::moves::moves_twoway churn:(txs_twoway("churn"))
+  Instructions:                     4119166|4110581              (+0.20885%) [+1.00209x]
+  L1 Hits:                          6969546|6954446              (+0.21713%) [+1.00217x]
+  LL Hits:                            51805|51755                (+0.09661%) [+1.00097x]
+  RAM Hits:                            1603|1596                 (+0.43860%) [+1.00439x]
+  Total read+write:                 7022954|7007797              (+0.21629%) [+1.00216x]
+  Estimated Cycles:                 7284676|7269081              (+0.21454%) [+1.00215x]
+rfd_0005_small_side_order_instructions::moves::moves_twoway lazy:(txs_twoway("lazy"))
+  Instructions:                     7265951|7241235              (+0.34132%) [+1.00341x]
+  L1 Hits:                         11559431|11514514             (+0.39009%) [+1.00390x]
+  LL Hits:                            66066|66163                (-0.14661%) [-1.00147x]
+  RAM Hits:                           13036|13029                (+0.05373%) [+1.00054x]
+  Total read+write:                11638533|11593706             (+0.38665%) [+1.00387x]
+  Estimated Cycles:                12346021|12301344             (+0.36319%) [+1.00363x]
+rfd_0005_small_side_order_instructions::build::build_baseline lazy:(builds_baseline("lazy"))
+  Instructions:                     4267406|4267405              (+0.00002%) [+1.00000x]
+  L1 Hits:                          6778515|6778525              (-0.00015%) [-1.00000x]
+  LL Hits:                            33701|33690                (+0.03265%) [+1.00033x]
+  RAM Hits:                           12813|12813                (No change)
+  Total read+write:                 6825029|6825028              (+0.00001%) [+1.00000x]
+  Estimated Cycles:                 7395475|7395430              (+0.00061%) [+1.00001x]
+rfd_0005_small_side_order_instructions::build::build_pk lazy:(builds_pk("lazy"))
+  Instructions:                     4399856|4399856              (No change)
+  L1 Hits:                          7044034|7044069              (-0.00050%) [-1.00000x]
+  LL Hits:                            35545|35509                (+0.10138%) [+1.00101x]
+  RAM Hits:                           12812|12813                (-0.00780%) [-1.00008x]
+  Total read+write:                 7092391|7092391              (No change)
+  Estimated Cycles:                 7670179|7670069              (+0.00143%) [+1.00001x]
+rfd_0005_small_side_order_instructions::build::build_om lazy:(builds_om("lazy"))
+  Instructions:                     4848519|4848506              (+0.00027%) [+1.00000x]
+  L1 Hits:                          7860212|7860183              (+0.00037%) [+1.00000x]
+  LL Hits:                            40859|40869                (-0.02447%) [-1.00024x]
+  RAM Hits:                           12823|12821                (+0.01560%) [+1.00016x]
+  Total read+write:                 7913894|7913873              (+0.00027%) [+1.00000x]
+  Estimated Cycles:                 8513312|8513263              (+0.00058%) [+1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u10_d10:(adv_setup_baseline(10, 10))
+  Instructions:                       17875|17875                (No change)
+  L1 Hits:                            25920|25917                (+0.01158%) [+1.00012x]
+  LL Hits:                               14|17                   (-17.6471%) [-1.21429x]
+  RAM Hits:                               5|5                    (No change)
+  Total read+write:                   25939|25939                (No change)
+  Estimated Cycles:                   26165|26177                (-0.04584%) [-1.00046x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u10_d100:(adv_setup_baseline(10, 100))
+  Instructions:                       17878|17878                (No change)
+  L1 Hits:                            25798|25797                (+0.00388%) [+1.00004x]
+  LL Hits:                              142|143                  (-0.69930%) [-1.00704x]
+  RAM Hits:                               5|5                    (No change)
+  Total read+write:                   25945|25945                (No change)
+  Estimated Cycles:                   26683|26687                (-0.01499%) [-1.00015x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u10_d1000:(adv_setup_baseline(10, 1_000))
+  Instructions:                       17977|17977                (No change)
+  L1 Hits:                            25959|25954                (+0.01926%) [+1.00019x]
+  LL Hits:                               47|52                   (-9.61538%) [-1.10638x]
+  RAM Hits:                               5|5                    (No change)
+  Total read+write:                   26011|26011                (No change)
+  Estimated Cycles:                   26369|26389                (-0.07579%) [-1.00076x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u10_d10000:(adv_setup_baseline(10, 10_000))
+  Instructions:                       17958|17958                (No change)
+  L1 Hits:                            25534|25538                (-0.01566%) [-1.00016x]
+  LL Hits:                              284|280                  (+1.42857%) [+1.01429x]
+  RAM Hits:                              15|15                   (No change)
+  Total read+write:                   25833|25833                (No change)
+  Estimated Cycles:                   27479|27463                (+0.05826%) [+1.00058x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u100_d10:(adv_setup_baseline(100, 10))
+  Instructions:                       98322|98322                (No change)
+  L1 Hits:                           143365|143365               (No change)
+  LL Hits:                             2363|2363                 (No change)
+  RAM Hits:                               7|7                    (No change)
+  Total read+write:                  145735|145735               (No change)
+  Estimated Cycles:                  155425|155425               (No change)
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u100_d100:(adv_setup_baseline(100, 100))
+  Instructions:                       98327|98327                (No change)
+  L1 Hits:                           143373|143374               (-0.00070%) [-1.00001x]
+  LL Hits:                             2360|2359                 (+0.04239%) [+1.00042x]
+  RAM Hits:                               7|7                    (No change)
+  Total read+write:                  145740|145740               (No change)
+  Estimated Cycles:                  155418|155414               (+0.00257%) [+1.00003x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u100_d1000:(adv_setup_baseline(100, 1_000))
+  Instructions:                       98440|98440                (No change)
+  L1 Hits:                           143482|143484               (-0.00139%) [-1.00001x]
+  LL Hits:                             2364|2362                 (+0.08467%) [+1.00085x]
+  RAM Hits:                               7|7                    (No change)
+  Total read+write:                  145853|145853               (No change)
+  Estimated Cycles:                  155547|155539               (+0.00514%) [+1.00005x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u100_d10000:(adv_setup_baseline(100, 10_000))
+  Instructions:                       97788|97788                (No change)
+  L1 Hits:                           142361|142363               (-0.00140%) [-1.00001x]
+  LL Hits:                             2354|2352                 (+0.08503%) [+1.00085x]
+  RAM Hits:                              20|20                   (No change)
+  Total read+write:                  144735|144735               (No change)
+  Estimated Cycles:                  154831|154823               (+0.00517%) [+1.00005x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u1000_d10:(adv_setup_baseline(1_000, 10))
+  Instructions:                      890418|890418               (No change)
+  L1 Hits:                          1297446|1297464              (-0.00139%) [-1.00001x]
+  LL Hits:                            25787|25769                (+0.06985%) [+1.00070x]
+  RAM Hits:                            3124|3124                 (No change)
+  Total read+write:                 1326357|1326357              (No change)
+  Estimated Cycles:                 1535721|1535649              (+0.00469%) [+1.00005x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u1000_d100:(adv_setup_baseline(1_000, 100))
+  Instructions:                      890418|890418               (No change)
+  L1 Hits:                          1297463|1297482              (-0.00146%) [-1.00001x]
+  LL Hits:                            25804|25785                (+0.07369%) [+1.00074x]
+  RAM Hits:                            3090|3090                 (No change)
+  Total read+write:                 1326357|1326357              (No change)
+  Estimated Cycles:                 1534633|1534557              (+0.00495%) [+1.00005x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u1000_d1000:(adv_setup_baseline(1_000, 1_000))
+  Instructions:                      890418|890418               (No change)
+  L1 Hits:                          1297469|1297488              (-0.00146%) [-1.00001x]
+  LL Hits:                            23074|23055                (+0.08241%) [+1.00082x]
+  RAM Hits:                            5814|5814                 (No change)
+  Total read+write:                 1326357|1326357              (No change)
+  Estimated Cycles:                 1616329|1616253              (+0.00470%) [+1.00005x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u1000_d10000:(adv_setup_baseline(1_000, 10_000))
+  Instructions:                      890418|890418               (No change)
+  L1 Hits:                          1297452|1297473              (-0.00162%) [-1.00002x]
+  LL Hits:                            26466|26445                (+0.07941%) [+1.00079x]
+  RAM Hits:                            2439|2439                 (No change)
+  Total read+write:                 1326357|1326357              (No change)
+  Estimated Cycles:                 1515147|1515063              (+0.00554%) [+1.00006x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u10000_d10:(adv_setup_baseline(10_000, 10))
+  Instructions:                     8811253|8811253              (No change)
+  L1 Hits:                         12827585|12827604             (-0.00015%) [-1.00000x]
+  LL Hits:                            83237|83217                (+0.02403%) [+1.00024x]
+  RAM Hits:                          224625|224626               (-0.00045%) [-1.00000x]
+  Total read+write:                13135447|13135447             (No change)
+  Estimated Cycles:                21105645|21105599             (+0.00022%) [+1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u10000_d100:(adv_setup_baseline(10_000, 100))
+  Instructions:                     8811253|8811253              (No change)
+  L1 Hits:                         12827580|12827602             (-0.00017%) [-1.00000x]
+  LL Hits:                            83160|83137                (+0.02767%) [+1.00028x]
+  RAM Hits:                          224707|224708               (-0.00045%) [-1.00000x]
+  Total read+write:                13135447|13135447             (No change)
+  Estimated Cycles:                21108125|21108067             (+0.00027%) [+1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u10000_d1000:(adv_setup_baseline(10_000, 1_000))
+  Instructions:                     8811253|8811253              (No change)
+  L1 Hits:                         12827576|12827596             (-0.00016%) [-1.00000x]
+  LL Hits:                            83320|83299                (+0.02521%) [+1.00025x]
+  RAM Hits:                          224551|224552               (-0.00045%) [-1.00000x]
+  Total read+write:                13135447|13135447             (No change)
+  Estimated Cycles:                21103461|21103411             (+0.00024%) [+1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::adv_baseline u10000_d10000:(adv_setup_baseline(10_000, 10_000))
+  Instructions:                     8811253|8811253              (No change)
+  L1 Hits:                         12827572|12827591             (-0.00015%) [-1.00000x]
+  LL Hits:                            83111|83091                (+0.02407%) [+1.00024x]
+  RAM Hits:                          224764|224765               (-0.00044%) [-1.00000x]
+  Total read+write:                13135447|13135447             (No change)
+  Estimated Cycles:                21109867|21109821             (+0.00022%) [+1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u10_d10:(adv_setup_pk(10, 10))
+  Instructions:                       77082|77082                (No change)
+  L1 Hits:                           108965|108965               (No change)
+  LL Hits:                               40|43                   (-6.97674%) [-1.07500x]
+  RAM Hits:                              43|40                   (+7.50000%) [+1.07500x]
+  Total read+write:                  109048|109048               (No change)
+  Estimated Cycles:                  110670|110580               (+0.08139%) [+1.00081x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u10_d100:(adv_setup_pk(10, 100))
+  Instructions:                      495856|496528               (-0.13534%) [-1.00136x]
+  L1 Hits:                           704835|705632               (-0.11295%) [-1.00113x]
+  LL Hits:                              365|371                  (-1.61725%) [-1.01644x]
+  RAM Hits:                             169|166                  (+1.80723%) [+1.01807x]
+  Total read+write:                  705369|706169               (-0.11329%) [-1.00113x]
+  Estimated Cycles:                  712575|713297               (-0.10122%) [-1.00101x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u10_d1000:(adv_setup_pk(10, 1_000))
+  Instructions:                     5816664|5826648              (-0.17135%) [-1.00172x]
+  L1 Hits:                          8310721|8322418              (-0.14055%) [-1.00141x]
+  LL Hits:                            32597|32582                (+0.04604%) [+1.00046x]
+  RAM Hits:                             171|169                  (+1.18343%) [+1.01183x]
+  Total read+write:                 8343489|8355169              (-0.13979%) [-1.00140x]
+  Estimated Cycles:                 8479691|8491243              (-0.13605%) [-1.00136x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u10_d10000:(adv_setup_pk(10, 10_000))
+  Instructions:                    71773494|71884518             (-0.15445%) [-1.00155x]
+  L1 Hits:                        103242479|103372396            (-0.12568%) [-1.00126x]
+  LL Hits:                           508750|508739               (+0.00216%) [+1.00002x]
+  RAM Hits:                            1118|1116                 (+0.17921%) [+1.00179x]
+  Total read+write:               103752347|103882251            (-0.12505%) [-1.00125x]
+  Estimated Cycles:               105825359|105955151            (-0.12250%) [-1.00123x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u100_d10:(adv_setup_pk(100, 10))
+  Instructions:                      516276|517332               (-0.20412%) [-1.00205x]
+  L1 Hits:                           732309|733631               (-0.18020%) [-1.00181x]
+  LL Hits:                             2504|2496                 (+0.32051%) [+1.00321x]
+  RAM Hits:                             166|164                  (+1.21951%) [+1.01220x]
+  Total read+write:                  734979|736291               (-0.17819%) [-1.00179x]
+  Estimated Cycles:                  750639|751851               (-0.16120%) [-1.00161x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u100_d100:(adv_setup_pk(100, 100))
+  Instructions:                      930587|931739               (-0.12364%) [-1.00124x]
+  L1 Hits:                          1320652|1322258              (-0.12146%) [-1.00122x]
+  LL Hits:                             3082|2821                 (+9.25204%) [+1.09252x]
+  RAM Hits:                             272|271                  (+0.36900%) [+1.00369x]
+  Total read+write:                 1324006|1325350              (-0.10141%) [-1.00102x]
+  Estimated Cycles:                 1345582|1345848              (-0.01976%) [-1.00020x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u100_d1000:(adv_setup_pk(100, 1_000))
+  Instructions:                     6346162|6357250              (-0.17442%) [-1.00175x]
+  L1 Hits:                          9059545|9072860              (-0.14676%) [-1.00147x]
+  LL Hits:                            36175|35917                (+0.71832%) [+1.00718x]
+  RAM Hits:                             272|271                  (+0.36900%) [+1.00369x]
+  Total read+write:                 9095992|9109048              (-0.14333%) [-1.00144x]
+  Estimated Cycles:                 9249940|9261930              (-0.12945%) [-1.00130x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u100_d10000:(adv_setup_pk(100, 10_000))
+  Instructions:                    72271843|72383971             (-0.15491%) [-1.00155x]
+  L1 Hits:                        103904373|104035868            (-0.12639%) [-1.00127x]
+  LL Hits:                           510624|510410               (+0.04193%) [+1.00042x]
+  RAM Hits:                            2146|2145                 (+0.04662%) [+1.00047x]
+  Total read+write:               104417143|104548423            (-0.12557%) [-1.00126x]
+  Estimated Cycles:               106532603|106662993            (-0.12224%) [-1.00122x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u1000_d10:(adv_setup_pk(1_000, 10))
+  Instructions:                     6270273|6282609              (-0.19635%) [-1.00197x]
+  L1 Hits:                          8978149|8992709              (-0.16191%) [-1.00162x]
+  LL Hits:                            31452|31439                (+0.04135%) [+1.00041x]
+  RAM Hits:                            3422|3419                 (+0.08774%) [+1.00088x]
+  Total read+write:                 9013023|9027567              (-0.16111%) [-1.00161x]
+  Estimated Cycles:                 9255179|9269569              (-0.15524%) [-1.00155x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u1000_d100:(adv_setup_pk(1_000, 100))
+  Instructions:                     6788932|6801268              (-0.18138%) [-1.00182x]
+  L1 Hits:                          9716364|9731046              (-0.15088%) [-1.00151x]
+  LL Hits:                            34011|33778                (+0.68980%) [+1.00690x]
+  RAM Hits:                            3549|3548                 (+0.02818%) [+1.00028x]
+  Total read+write:                 9753924|9768372              (-0.14791%) [-1.00148x]
+  Estimated Cycles:                10010634|10024116             (-0.13450%) [-1.00135x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u1000_d1000:(adv_setup_pk(1_000, 1_000))
+  Instructions:                    12200663|12221063             (-0.16692%) [-1.00167x]
+  L1 Hits:                         17442861|17466779             (-0.13693%) [-1.00137x]
+  LL Hits:                            62252|61999                (+0.40807%) [+1.00408x]
+  RAM Hits:                            6289|6288                 (+0.01590%) [+1.00016x]
+  Total read+write:                17511402|17535066             (-0.13495%) [-1.00135x]
+  Estimated Cycles:                17974236|17996854             (-0.12568%) [-1.00126x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u1000_d10000:(adv_setup_pk(1_000, 10_000))
+  Instructions:                    79199950|79324270             (-0.15672%) [-1.00157x]
+  L1 Hits:                        113870809|114016786            (-0.12803%) [-1.00128x]
+  LL Hits:                           555323|555076               (+0.04450%) [+1.00044x]
+  RAM Hits:                            4306|4304                 (+0.04647%) [+1.00046x]
+  Total read+write:               114430438|114576166            (-0.12719%) [-1.00127x]
+  Estimated Cycles:               116798134|116942806            (-0.12371%) [-1.00124x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u10000_d10:(adv_setup_pk(10_000, 10))
+  Instructions:                    76621095|76757703             (-0.17797%) [-1.00178x]
+  L1 Hits:                        110301264|110463382            (-0.14676%) [-1.00147x]
+  LL Hits:                           322126|322093               (+0.01025%) [+1.00010x]
+  RAM Hits:                          233624|233619               (+0.00214%) [+1.00002x]
+  Total read+write:               110857014|111019094            (-0.14599%) [-1.00146x]
+  Estimated Cycles:               120088734|120250512            (-0.13453%) [-1.00135x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u10000_d100:(adv_setup_pk(10_000, 100))
+  Instructions:                    77827562|77957834             (-0.16711%) [-1.00167x]
+  L1 Hits:                        112093031|112246735            (-0.13693%) [-1.00137x]
+  LL Hits:                           325006|324812               (+0.05973%) [+1.00060x]
+  RAM Hits:                          234293|234319               (-0.01110%) [-1.00011x]
+  Total read+write:               112652330|112805866            (-0.13611%) [-1.00136x]
+  Estimated Cycles:               121918316|122071960            (-0.12586%) [-1.00126x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u10000_d1000:(adv_setup_pk(10_000, 1_000))
+  Instructions:                    83678368|83811520             (-0.15887%) [-1.00159x]
+  L1 Hits:                        120337910|120493903            (-0.12946%) [-1.00130x]
+  LL Hits:                           373851|373699               (+0.04067%) [+1.00041x]
+  RAM Hits:                          231775|231774               (+0.00043%) [+1.00000x]
+  Total read+write:               120943536|121099376            (-0.12869%) [-1.00129x]
+  Estimated Cycles:               130319290|130474488            (-0.11895%) [-1.00119x]
+rfd_0005_small_side_order_instructions::adversarial::adv_pk u10000_d10000:(adv_setup_pk(10_000, 10_000))
+  Instructions:                   150758994|150996930            (-0.15758%) [-1.00158x]
+  L1 Hits:                        216777063|217056324            (-0.12866%) [-1.00129x]
+  LL Hits:                           841354|841148               (+0.02449%) [+1.00024x]
+  RAM Hits:                          249660|249661               (-0.00040%) [-1.00000x]
+  Total read+write:               217868077|218147133            (-0.12792%) [-1.00128x]
+  Estimated Cycles:               229721933|230000199            (-0.12099%) [-1.00121x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u10_d10:(adv_setup_back(10, 10))
+  Instructions:                       59837|58914                (+1.56669%) [+1.01567x]
+  L1 Hits:                            84506|82775                (+2.09121%) [+1.02091x]
+  LL Hits:                               56|52                   (+7.69231%) [+1.07692x]
+  RAM Hits:                              40|36                   (+11.1111%) [+1.11111x]
+  Total read+write:                   84602|82863                (+2.09864%) [+1.02099x]
+  Estimated Cycles:                   86186|84295                (+2.24331%) [+1.02243x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u10_d100:(adv_setup_back(10, 100))
+  Instructions:                       60039|59116                (+1.56134%) [+1.01561x]
+  L1 Hits:                            84645|82906                (+2.09756%) [+1.02098x]
+  LL Hits:                              186|190                  (-2.10526%) [-1.02151x]
+  RAM Hits:                              31|27                   (+14.8148%) [+1.14815x]
+  Total read+write:                   84862|83123                (+2.09208%) [+1.02092x]
+  Estimated Cycles:                   86660|84801                (+2.19219%) [+1.02192x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u10_d1000:(adv_setup_back(10, 1_000))
+  Instructions:                       59529|58606                (+1.57492%) [+1.01575x]
+  L1 Hits:                            83946|82209                (+2.11291%) [+1.02113x]
+  LL Hits:                              304|306                  (-0.65359%) [-1.00658x]
+  RAM Hits:                              33|29                   (+13.7931%) [+1.13793x]
+  Total read+write:                   84283|82544                (+2.10676%) [+1.02107x]
+  Estimated Cycles:                   86621|84754                (+2.20285%) [+1.02203x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u10_d10000:(adv_setup_back(10, 10_000))
+  Instructions:                       59504|58581                (+1.57560%) [+1.01576x]
+  L1 Hits:                            83809|82075                (+2.11270%) [+1.02113x]
+  LL Hits:                              346|345                  (+0.28986%) [+1.00290x]
+  RAM Hits:                              31|27                   (+14.8148%) [+1.14815x]
+  Total read+write:                   84186|82447                (+2.10923%) [+1.02109x]
+  Estimated Cycles:                   86624|84745                (+2.21724%) [+1.02217x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u100_d10:(adv_setup_back(100, 10))
+  Instructions:                      533239|525550               (+1.46304%) [+1.01463x]
+  L1 Hits:                           754890|739677               (+2.05671%) [+1.02057x]
+  LL Hits:                             3338|3339                 (-0.02995%) [-1.00030x]
+  RAM Hits:                             203|196                  (+3.57143%) [+1.03571x]
+  Total read+write:                  758431|743212               (+2.04773%) [+1.02048x]
+  Estimated Cycles:                  778685|763232               (+2.02468%) [+1.02025x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u100_d100:(adv_setup_back(100, 100))
+  Instructions:                      533513|525824               (+1.46228%) [+1.01462x]
+  L1 Hits:                           755159|739946               (+2.05596%) [+1.02056x]
+  LL Hits:                             3359|3360                 (-0.02976%) [-1.00030x]
+  RAM Hits:                             139|132                  (+5.30303%) [+1.05303x]
+  Total read+write:                  758657|743438               (+2.04711%) [+1.02047x]
+  Estimated Cycles:                  776819|761366               (+2.02964%) [+1.02030x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u100_d1000:(adv_setup_back(100, 1_000))
+  Instructions:                      533494|525805               (+1.46233%) [+1.01462x]
+  L1 Hits:                           755220|740014               (+2.05483%) [+1.02055x]
+  LL Hits:                             3380|3374                 (+0.17783%) [+1.00178x]
+  RAM Hits:                             141|134                  (+5.22388%) [+1.05224x]
+  Total read+write:                  758741|743522               (+2.04688%) [+1.02047x]
+  Estimated Cycles:                  777055|761574               (+2.03276%) [+1.02033x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u100_d10000:(adv_setup_back(100, 10_000))
+  Instructions:                      532738|525049               (+1.46443%) [+1.01464x]
+  L1 Hits:                           754143|738929               (+2.05893%) [+1.02059x]
+  LL Hits:                             3350|3352                 (-0.05967%) [-1.00060x]
+  RAM Hits:                             139|132                  (+5.30303%) [+1.05303x]
+  Total read+write:                  757632|742413               (+2.04994%) [+1.02050x]
+  Estimated Cycles:                  775758|760309               (+2.03194%) [+1.02032x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u1000_d10:(adv_setup_back(1_000, 10))
+  Instructions:                     6806134|6712467              (+1.39542%) [+1.01395x]
+  L1 Hits:                          9680171|9493115              (+1.97044%) [+1.01970x]
+  LL Hits:                            50650|50612                (+0.07508%) [+1.00075x]
+  RAM Hits:                            4267|4260                 (+0.16432%) [+1.00164x]
+  Total read+write:                 9735088|9547987              (+1.95959%) [+1.01960x]
+  Estimated Cycles:                10082766|9895275              (+1.89475%) [+1.01895x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u1000_d100:(adv_setup_back(1_000, 100))
+  Instructions:                     6805582|6711915              (+1.39553%) [+1.01396x]
+  L1 Hits:                          9679573|9492514              (+1.97059%) [+1.01971x]
+  LL Hits:                            50637|50602                (+0.06917%) [+1.00069x]
+  RAM Hits:                            4189|4182                 (+0.16738%) [+1.00167x]
+  Total read+write:                 9734399|9547298              (+1.95973%) [+1.01960x]
+  Estimated Cycles:                10079373|9891894              (+1.89528%) [+1.01895x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u1000_d1000:(adv_setup_back(1_000, 1_000))
+  Instructions:                     6807698|6714031              (+1.39509%) [+1.01395x]
+  L1 Hits:                          9682309|9495252              (+1.97001%) [+1.01970x]
+  LL Hits:                            48178|48141                (+0.07686%) [+1.00077x]
+  RAM Hits:                            6785|6778                 (+0.10328%) [+1.00103x]
+  Total read+write:                 9737272|9550171              (+1.95914%) [+1.01959x]
+  Estimated Cycles:                10160674|9973187              (+1.87991%) [+1.01880x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u1000_d10000:(adv_setup_back(1_000, 10_000))
+  Instructions:                     6841316|6747649              (+1.38814%) [+1.01388x]
+  L1 Hits:                          9780556|9593494              (+1.94988%) [+1.01950x]
+  LL Hits:                            52532|52500                (+0.06095%) [+1.00061x]
+  RAM Hits:                            3408|3401                 (+0.20582%) [+1.00206x]
+  Total read+write:                 9836496|9649395              (+1.93899%) [+1.01939x]
+  Estimated Cycles:                10162496|9975029              (+1.87936%) [+1.01879x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u10000_d10:(adv_setup_back(10_000, 10))
+  Instructions:                    81421161|80347357             (+1.33645%) [+1.01336x]
+  L1 Hits:                        116777172|114629588            (+1.87350%) [+1.01873x]
+  LL Hits:                           640765|641137               (-0.05802%) [-1.00058x]
+  RAM Hits:                          270409|270347               (+0.02293%) [+1.00023x]
+  Total read+write:               117688346|115541072            (+1.85845%) [+1.01858x]
+  Estimated Cycles:               129445312|127297418            (+1.68730%) [+1.01687x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u10000_d100:(adv_setup_back(10_000, 100))
+  Instructions:                    83467831|82317579             (+1.39733%) [+1.01397x]
+  L1 Hits:                        119676179|117375749            (+1.95989%) [+1.01960x]
+  LL Hits:                           651156|651518               (-0.05556%) [-1.00056x]
+  RAM Hits:                          284016|283952               (+0.02254%) [+1.00023x]
+  Total read+write:               120611351|118311219            (+1.94414%) [+1.01944x]
+  Estimated Cycles:               132872519|130571659            (+1.76214%) [+1.01762x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u10000_d1000:(adv_setup_back(10_000, 1_000))
+  Instructions:                    77551083|76639783             (+1.18907%) [+1.01189x]
+  L1 Hits:                        110962715|109140178            (+1.66990%) [+1.01670x]
+  LL Hits:                           597915|598234               (-0.05332%) [-1.00053x]
+  RAM Hits:                          260519|260498               (+0.00806%) [+1.00008x]
+  Total read+write:               111821149|109998910            (+1.65660%) [+1.01657x]
+  Estimated Cycles:               123070455|121248778            (+1.50243%) [+1.01502x]
+rfd_0005_small_side_order_instructions::adversarial::adv_back u10000_d10000:(adv_setup_back(10_000, 10_000))
+  Instructions:                    77756651|76845351             (+1.18589%) [+1.01186x]
+  L1 Hits:                        111571357|109748802            (+1.66066%) [+1.01661x]
+  LL Hits:                           601933|602268               (-0.05562%) [-1.00056x]
+  RAM Hits:                          262933|262914               (+0.00723%) [+1.00007x]
+  Total read+write:               112436223|110613984            (+1.64739%) [+1.01647x]
+  Estimated Cycles:               123783677|121962132            (+1.49353%) [+1.01494x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u10_d10:(adv_setup_twoway(10, 10))
+  Instructions:                       79346|78423                (+1.17695%) [+1.01177x]
+  L1 Hits:                           114584|112846               (+1.54015%) [+1.01540x]
+  LL Hits:                               83|84                   (-1.19048%) [-1.01205x]
+  RAM Hits:                              45|43                   (+4.65116%) [+1.04651x]
+  Total read+write:                  114712|112973               (+1.53931%) [+1.01539x]
+  Estimated Cycles:                  116574|114771               (+1.57095%) [+1.01571x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u10_d100:(adv_setup_twoway(10, 100))
+  Instructions:                       82537|81614                (+1.13093%) [+1.01131x]
+  L1 Hits:                           119655|117919               (+1.47220%) [+1.01472x]
+  LL Hits:                              222|221                  (+0.45249%) [+1.00452x]
+  RAM Hits:                              34|32                   (+6.25000%) [+1.06250x]
+  Total read+write:                  119911|118172               (+1.47158%) [+1.01472x]
+  Estimated Cycles:                  121955|120144               (+1.50736%) [+1.01507x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u10_d1000:(adv_setup_twoway(10, 1_000))
+  Instructions:                       82292|81369                (+1.13434%) [+1.01134x]
+  L1 Hits:                           119209|117471               (+1.47951%) [+1.01480x]
+  LL Hits:                              367|368                  (-0.27174%) [-1.00272x]
+  RAM Hits:                              36|34                   (+5.88235%) [+1.05882x]
+  Total read+write:                  119612|117873               (+1.47532%) [+1.01475x]
+  Estimated Cycles:                  122304|120501               (+1.49625%) [+1.01496x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u10_d10000:(adv_setup_twoway(10, 10_000))
+  Instructions:                       82462|81539                (+1.13197%) [+1.01132x]
+  L1 Hits:                           119354|117618               (+1.47596%) [+1.01476x]
+  LL Hits:                              381|380                  (+0.26316%) [+1.00263x]
+  RAM Hits:                              34|32                   (+6.25000%) [+1.06250x]
+  Total read+write:                  119769|118030               (+1.47335%) [+1.01473x]
+  Estimated Cycles:                  122449|120638               (+1.50119%) [+1.01501x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u100_d10:(adv_setup_twoway(100, 10))
+  Instructions:                       67476|67091                (+0.57385%) [+1.00574x]
+  L1 Hits:                            99695|98972                (+0.73051%) [+1.00731x]
+  LL Hits:                              540|540                  (No change)
+  RAM Hits:                              22|23                   (-4.34783%) [-1.04545x]
+  Total read+write:                  100257|99535                (+0.72537%) [+1.00725x]
+  Estimated Cycles:                  103165|102477               (+0.67137%) [+1.00671x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u100_d100:(adv_setup_twoway(100, 100))
+  Instructions:                      716742|709341               (+1.04336%) [+1.01043x]
+  L1 Hits:                          1036619|1021627              (+1.46746%) [+1.01467x]
+  LL Hits:                             4687|4735                 (-1.01373%) [-1.01024x]
+  RAM Hits:                             201|198                  (+1.51515%) [+1.01515x]
+  Total read+write:                 1041507|1026560              (+1.45603%) [+1.01456x]
+  Estimated Cycles:                 1067089|1052232              (+1.41195%) [+1.01412x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u100_d1000:(adv_setup_twoway(100, 1_000))
+  Instructions:                      732865|725464               (+1.02017%) [+1.01020x]
+  L1 Hits:                          1063036|1048110              (+1.42409%) [+1.01424x]
+  LL Hits:                             6527|6509                 (+0.27654%) [+1.00277x]
+  RAM Hits:                             143|140                  (+2.14286%) [+1.02143x]
+  Total read+write:                 1069706|1054759              (+1.41710%) [+1.01417x]
+  Estimated Cycles:                 1100676|1085555              (+1.39293%) [+1.01393x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u100_d10000:(adv_setup_twoway(100, 10_000))
+  Instructions:                      733646|726245               (+1.01908%) [+1.01019x]
+  L1 Hits:                          1063643|1048649              (+1.42984%) [+1.01430x]
+  LL Hits:                             6691|6741                 (-0.74173%) [-1.00747x]
+  RAM Hits:                             141|138                  (+2.17391%) [+1.02174x]
+  Total read+write:                 1070475|1055528              (+1.41607%) [+1.01416x]
+  Estimated Cycles:                 1102033|1087184              (+1.36582%) [+1.01366x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u1000_d10:(adv_setup_twoway(1_000, 10))
+  Instructions:                       67507|67122                (+0.57358%) [+1.00574x]
+  L1 Hits:                            99493|98772                (+0.72996%) [+1.00730x]
+  LL Hits:                              489|487                  (+0.41068%) [+1.00411x]
+  RAM Hits:                             118|119                  (-0.84034%) [-1.00847x]
+  Total read+write:                  100100|99378                (+0.72652%) [+1.00727x]
+  Estimated Cycles:                  106068|105372               (+0.66052%) [+1.00661x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u1000_d100:(adv_setup_twoway(1_000, 100))
+  Instructions:                      621923|618946               (+0.48098%) [+1.00481x]
+  L1 Hits:                           916107|909827               (+0.69024%) [+1.00690x]
+  LL Hits:                             4590|4658                 (-1.45985%) [-1.01481x]
+  RAM Hits:                             801|803                  (-0.24907%) [-1.00250x]
+  Total read+write:                  921498|915288               (+0.67847%) [+1.00678x]
+  Estimated Cycles:                  967092|961222               (+0.61068%) [+1.00611x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u1000_d1000:(adv_setup_twoway(1_000, 1_000))
+  Instructions:                     8602232|8514277              (+1.03303%) [+1.01033x]
+  L1 Hits:                         12415452|12234063             (+1.48266%) [+1.01483x]
+  LL Hits:                            88828|88815                (+0.01464%) [+1.00015x]
+  RAM Hits:                            6795|6792                 (+0.04417%) [+1.00044x]
+  Total read+write:                12511075|12329670             (+1.47129%) [+1.01471x]
+  Estimated Cycles:                13097417|12915858             (+1.40571%) [+1.01406x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u1000_d10000:(adv_setup_twoway(1_000, 10_000))
+  Instructions:                     8782247|8694292              (+1.01164%) [+1.01012x]
+  L1 Hits:                         12771279|12589893             (+1.44073%) [+1.01441x]
+  LL Hits:                            95143|95127                (+0.01682%) [+1.00017x]
+  RAM Hits:                            3410|3407                 (+0.08805%) [+1.00088x]
+  Total read+write:                12869832|12688427             (+1.42969%) [+1.01430x]
+  Estimated Cycles:                13366344|13184773             (+1.37713%) [+1.01377x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u10000_d10:(adv_setup_twoway(10_000, 10))
+  Instructions:                       67477|67092                (+0.57384%) [+1.00574x]
+  L1 Hits:                            99336|98630                (+0.71581%) [+1.00716x]
+  LL Hits:                              388|371                  (+4.58221%) [+1.04582x]
+  RAM Hits:                             340|341                  (-0.29326%) [-1.00294x]
+  Total read+write:                  100064|99342                (+0.72678%) [+1.00727x]
+  Estimated Cycles:                  113176|112420               (+0.67248%) [+1.00672x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u10000_d100:(adv_setup_twoway(10_000, 100))
+  Instructions:                      621831|618854               (+0.48105%) [+1.00481x]
+  L1 Hits:                           915733|909433               (+0.69274%) [+1.00693x]
+  LL Hits:                             3111|3195                 (-2.62911%) [-1.02700x]
+  RAM Hits:                            2544|2550                 (-0.23529%) [-1.00236x]
+  Total read+write:                  921388|915178               (+0.67856%) [+1.00679x]
+  Estimated Cycles:                 1020328|1014658              (+0.55881%) [+1.00559x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u10000_d1000:(adv_setup_twoway(10_000, 1_000))
+  Instructions:                     6934314|6907145              (+0.39335%) [+1.00393x]
+  L1 Hits:                         10212140|10152899             (+0.58349%) [+1.00583x]
+  LL Hits:                            55565|55599                (-0.06115%) [-1.00061x]
+  RAM Hits:                           24486|24491                (-0.02042%) [-1.00020x]
+  Total read+write:                10292191|10232989             (+0.57854%) [+1.00579x]
+  Estimated Cycles:                11346975|11288079             (+0.52175%) [+1.00522x]
+rfd_0005_small_side_order_instructions::adversarial::adv_twoway u10000_d10000:(adv_setup_twoway(10_000, 10_000))
+  Instructions:                    95672222|94821114             (+0.89759%) [+1.00898x]
+  L1 Hits:                        138932588|137169951            (+1.28500%) [+1.01285x]
+  LL Hits:                           977371|977903               (-0.05440%) [-1.00054x]
+  RAM Hits:                          289742|289752               (-0.00345%) [-1.00003x]
+  Total read+write:               140199701|138437606            (+1.27284%) [+1.01273x]
+  Estimated Cycles:               153960413|152200786            (+1.15612%) [+1.01156x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u10_d10:(cyc_setup_baseline(10, 10))
+  Instructions:                       23162|23162                (No change)
+  L1 Hits:                            33949|33949                (No change)
+  LL Hits:                               23|23                   (No change)
+  RAM Hits:                              10|10                   (No change)
+  Total read+write:                   33982|33982                (No change)
+  Estimated Cycles:                   34414|34414                (No change)
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u10_d100:(cyc_setup_baseline(10, 100))
+  Instructions:                       69297|69297                (No change)
+  L1 Hits:                           103947|103952               (-0.00481%) [-1.00005x]
+  LL Hits:                              201|196                  (+2.55102%) [+1.02551x]
+  RAM Hits:                              10|10                   (No change)
+  Total read+write:                  104158|104158               (No change)
+  Estimated Cycles:                  105302|105282               (+0.01900%) [+1.00019x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u10_d1000:(cyc_setup_baseline(10, 1_000))
+  Instructions:                      524267|524267               (No change)
+  L1 Hits:                           782887|783064               (-0.02260%) [-1.00023x]
+  LL Hits:                            14274|14097                (+1.25559%) [+1.01256x]
+  RAM Hits:                              10|10                   (No change)
+  Total read+write:                  797171|797171               (No change)
+  Estimated Cycles:                  854607|853899               (+0.08291%) [+1.00083x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u10_d10000:(cyc_setup_baseline(10, 10_000))
+  Instructions:                     5059778|5059778              (No change)
+  L1 Hits:                          7552353|7552371              (-0.00024%) [-1.00000x]
+  LL Hits:                           152466|152448               (+0.01181%) [+1.00012x]
+  RAM Hits:                            3402|3402                 (No change)
+  Total read+write:                 7708221|7708221              (No change)
+  Estimated Cycles:                 8433753|8433681              (+0.00085%) [+1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u100_d10:(cyc_setup_baseline(100, 10))
+  Instructions:                       69242|69242                (No change)
+  L1 Hits:                           102509|102510               (-0.00098%) [-1.00001x]
+  LL Hits:                             1584|1583                 (+0.06317%) [+1.00063x]
+  RAM Hits:                              10|10                   (No change)
+  Total read+write:                  104103|104103               (No change)
+  Estimated Cycles:                  110779|110775               (+0.00361%) [+1.00004x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u100_d100:(cyc_setup_baseline(100, 100))
+  Instructions:                      114966|114966               (No change)
+  L1 Hits:                           172028|172033               (-0.00291%) [-1.00003x]
+  LL Hits:                             1687|1682                 (+0.29727%) [+1.00297x]
+  RAM Hits:                              10|10                   (No change)
+  Total read+write:                  173725|173725               (No change)
+  Estimated Cycles:                  180813|180793               (+0.01106%) [+1.00011x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u100_d1000:(cyc_setup_baseline(100, 1_000))
+  Instructions:                      569756|569756               (No change)
+  L1 Hits:                           849311|849369               (-0.00683%) [-1.00007x]
+  LL Hits:                            17208|17150                (+0.33819%) [+1.00338x]
+  RAM Hits:                              10|10                   (No change)
+  Total read+write:                  866529|866529               (No change)
+  Estimated Cycles:                  935701|935469               (+0.02480%) [+1.00025x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u100_d10000:(cyc_setup_baseline(100, 10_000))
+  Instructions:                     5105138|5105138              (No change)
+  L1 Hits:                          7620064|7620079              (-0.00020%) [-1.00000x]
+  LL Hits:                           153872|153857               (+0.00975%) [+1.00010x]
+  RAM Hits:                            3405|3405                 (No change)
+  Total read+write:                 7777341|7777341              (No change)
+  Estimated Cycles:                 8508599|8508539              (+0.00071%) [+1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u1000_d10:(cyc_setup_baseline(1_000, 10))
+  Instructions:                      522938|522938               (No change)
+  L1 Hits:                           778862|778889               (-0.00347%) [-1.00003x]
+  LL Hits:                            13133|13106                (+0.20601%) [+1.00206x]
+  RAM Hits:                            3130|3130                 (No change)
+  Total read+write:                  795125|795125               (No change)
+  Estimated Cycles:                  954077|953969               (+0.01132%) [+1.00011x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u1000_d100:(cyc_setup_baseline(1_000, 100))
+  Instructions:                      568508|568508               (No change)
+  L1 Hits:                           846831|846856               (-0.00295%) [-1.00003x]
+  LL Hits:                            14555|14530                (+0.17206%) [+1.00172x]
+  RAM Hits:                            3133|3133                 (No change)
+  Total read+write:                  864519|864519               (No change)
+  Estimated Cycles:                 1029261|1029161              (+0.00972%) [+1.00010x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u1000_d1000:(cyc_setup_baseline(1_000, 1_000))
+  Instructions:                     1022108|1022108              (No change)
+  L1 Hits:                          1523994|1524013              (-0.00125%) [-1.00001x]
+  LL Hits:                            25503|25484                (+0.07456%) [+1.00075x]
+  RAM Hits:                            6222|6222                 (No change)
+  Total read+write:                 1555719|1555719              (No change)
+  Estimated Cycles:                 1869279|1869203              (+0.00407%) [+1.00004x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u1000_d10000:(cyc_setup_baseline(1_000, 10_000))
+  Instructions:                     5558738|5558738              (No change)
+  L1 Hits:                          8297284|8297301              (-0.00020%) [-1.00000x]
+  LL Hits:                           164754|164737               (+0.01032%) [+1.00010x]
+  RAM Hits:                            6503|6503                 (No change)
+  Total read+write:                 8468541|8468541              (No change)
+  Estimated Cycles:                 9348659|9348591              (+0.00073%) [+1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u10000_d10:(cyc_setup_baseline(10_000, 10))
+  Instructions:                     5059773|5059773              (No change)
+  L1 Hits:                          7552301|7552321              (-0.00026%) [-1.00000x]
+  LL Hits:                            16612|16578                (+0.20509%) [+1.00205x]
+  RAM Hits:                          139302|139316               (-0.01005%) [-1.00010x]
+  Total read+write:                 7708215|7708215              (No change)
+  Estimated Cycles:                12510931|12511271             (-0.00272%) [-1.00003x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u10000_d100:(cyc_setup_baseline(10_000, 100))
+  Instructions:                     5105133|5105133              (No change)
+  L1 Hits:                          7620064|7620083              (-0.00025%) [-1.00000x]
+  LL Hits:                            17949|17931                (+0.10038%) [+1.00100x]
+  RAM Hits:                          139322|139321               (+0.00072%) [+1.00001x]
+  Total read+write:                 7777335|7777335              (No change)
+  Estimated Cycles:                12586079|12585973             (+0.00084%) [+1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u10000_d1000:(cyc_setup_baseline(10_000, 1_000))
+  Instructions:                     5558733|5558733              (No change)
+  L1 Hits:                          8297285|8297304              (-0.00023%) [-1.00000x]
+  LL Hits:                            30302|30290                (+0.03962%) [+1.00040x]
+  RAM Hits:                          140948|140941               (+0.00497%) [+1.00005x]
+  Total read+write:                 8468535|8468535              (No change)
+  Estimated Cycles:                13381975|13381689             (+0.00214%) [+1.00002x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_baseline u10000_d10000:(cyc_setup_baseline(10_000, 10_000))
+  Instructions:                    10094943|10094943             (No change)
+  L1 Hits:                         15070031|15070049             (-0.00012%) [-1.00000x]
+  LL Hits:                           159805|159783               (+0.01377%) [+1.00014x]
+  RAM Hits:                          150973|150977               (-0.00265%) [-1.00003x]
+  Total read+write:                15380809|15380809             (No change)
+  Estimated Cycles:                21153111|21153159             (-0.00023%) [-1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u10_d10:(cyc_setup_pk(10, 10))
+  Instructions:                       22884|22884                (No change)
+  L1 Hits:                            34634|34629                (+0.01444%) [+1.00014x]
+  LL Hits:                               18|23                   (-21.7391%) [-1.27778x]
+  RAM Hits:                               9|9                    (No change)
+  Total read+write:                   34661|34661                (No change)
+  Estimated Cycles:                   35039|35059                (-0.05705%) [-1.00057x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u10_d100:(cyc_setup_pk(10, 100))
+  Instructions:                       82842|82842                (No change)
+  L1 Hits:                           126928|126930               (-0.00158%) [-1.00002x]
+  LL Hits:                              168|166                  (+1.20482%) [+1.01205x]
+  RAM Hits:                               9|9                    (No change)
+  Total read+write:                  127105|127105               (No change)
+  Estimated Cycles:                  128083|128075               (+0.00625%) [+1.00006x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u10_d1000:(cyc_setup_pk(10, 1_000))
+  Instructions:                      662487|662487               (No change)
+  L1 Hits:                          1007378|1007380              (-0.00020%) [-1.00000x]
+  LL Hits:                            17480|17478                (+0.01144%) [+1.00011x]
+  RAM Hits:                              11|11                   (No change)
+  Total read+write:                 1024869|1024869              (No change)
+  Estimated Cycles:                 1095163|1095155              (+0.00073%) [+1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u10_d10000:(cyc_setup_pk(10, 10_000))
+  Instructions:                     6477391|6477391              (No change)
+  L1 Hits:                          9935625|9935620              (+0.00005%) [+1.00000x]
+  LL Hits:                           172528|172533               (-0.00290%) [-1.00003x]
+  RAM Hits:                             129|129                  (No change)
+  Total read+write:                10108282|10108282             (No change)
+  Estimated Cycles:                10802780|10802800             (-0.00019%) [-1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u100_d10:(cyc_setup_pk(100, 10))
+  Instructions:                       82611|82611                (No change)
+  L1 Hits:                           125179|125186               (-0.00559%) [-1.00006x]
+  LL Hits:                             1661|1654                 (+0.42322%) [+1.00423x]
+  RAM Hits:                               9|9                    (No change)
+  Total read+write:                  126849|126849               (No change)
+  Estimated Cycles:                  133799|133771               (+0.02093%) [+1.00021x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u100_d100:(cyc_setup_pk(100, 100))
+  Instructions:                      141466|141466               (No change)
+  L1 Hits:                           216015|216013               (+0.00093%) [+1.00001x]
+  LL Hits:                             1777|1779                 (-0.11242%) [-1.00113x]
+  RAM Hits:                               9|9                    (No change)
+  Total read+write:                  217801|217801               (No change)
+  Estimated Cycles:                  225215|225223               (-0.00355%) [-1.00004x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u100_d1000:(cyc_setup_pk(100, 1_000))
+  Instructions:                      721358|721358               (No change)
+  L1 Hits:                          1096957|1096954              (+0.00027%) [+1.00000x]
+  LL Hits:                            19087|19090                (-0.01572%) [-1.00016x]
+  RAM Hits:                               9|9                    (No change)
+  Total read+write:                 1116053|1116053              (No change)
+  Estimated Cycles:                 1192707|1192719              (-0.00101%) [-1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u100_d10000:(cyc_setup_pk(100, 10_000))
+  Instructions:                     6534640|6534640              (No change)
+  L1 Hits:                         10022894|10022891             (+0.00003%) [+1.00000x]
+  LL Hits:                           173280|173283               (-0.00173%) [-1.00002x]
+  RAM Hits:                             936|936                  (No change)
+  Total read+write:                10197110|10197110             (No change)
+  Estimated Cycles:                10922054|10922066             (-0.00011%) [-1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u1000_d10:(cyc_setup_pk(1_000, 10))
+  Instructions:                      661364|661364               (No change)
+  L1 Hits:                          1005655|1005656              (-0.00010%) [-1.00000x]
+  LL Hits:                            14554|14553                (+0.00687%) [+1.00007x]
+  RAM Hits:                            3197|3197                 (No change)
+  Total read+write:                 1023406|1023406              (No change)
+  Estimated Cycles:                 1190320|1190316              (+0.00034%) [+1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u1000_d100:(cyc_setup_pk(1_000, 100))
+  Instructions:                      720551|720551               (No change)
+  L1 Hits:                          1095537|1095537              (No change)
+  LL Hits:                            16143|16143                (No change)
+  RAM Hits:                            3249|3249                 (No change)
+  Total read+write:                 1114929|1114929              (No change)
+  Estimated Cycles:                 1289967|1289967              (No change)
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u1000_d1000:(cyc_setup_pk(1_000, 1_000))
+  Instructions:                     1296991|1296991              (No change)
+  L1 Hits:                          1973566|1973569              (-0.00015%) [-1.00000x]
+  LL Hits:                            34597|34594                (+0.00867%) [+1.00009x]
+  RAM Hits:                             218|218                  (No change)
+  Total read+write:                 2008381|2008381              (No change)
+  Estimated Cycles:                 2154181|2154169              (+0.00056%) [+1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u1000_d10000:(cyc_setup_pk(1_000, 10_000))
+  Instructions:                     7111402|7111402              (No change)
+  L1 Hits:                         10901385|10901382             (+0.00003%) [+1.00000x]
+  LL Hits:                           188894|188897               (-0.00159%) [-1.00002x]
+  RAM Hits:                             683|683                  (No change)
+  Total read+write:                11090962|11090962             (No change)
+  Estimated Cycles:                11869760|11869772             (-0.00010%) [-1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u10000_d10:(cyc_setup_pk(10_000, 10))
+  Instructions:                     6475448|6475448              (No change)
+  L1 Hits:                          9932882|9932882              (No change)
+  LL Hits:                            26961|26957                (+0.01484%) [+1.00015x]
+  RAM Hits:                          145707|145711               (-0.00275%) [-1.00003x]
+  Total read+write:                10105550|10105550             (No change)
+  Estimated Cycles:                15167432|15167552             (-0.00079%) [-1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u10000_d100:(cyc_setup_pk(10_000, 100))
+  Instructions:                     6525346|6525346              (No change)
+  L1 Hits:                          9997111|9997108              (+0.00003%) [+1.00000x]
+  LL Hits:                            27168|27164                (+0.01473%) [+1.00015x]
+  RAM Hits:                          146885|146892               (-0.00477%) [-1.00005x]
+  Total read+write:                10171164|10171164             (No change)
+  Estimated Cycles:                15273926|15274148             (-0.00145%) [-1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u10000_d1000:(cyc_setup_pk(10_000, 1_000))
+  Instructions:                     7094799|7094799              (No change)
+  L1 Hits:                         10852426|10852424             (+0.00002%) [+1.00000x]
+  LL Hits:                            44750|44771                (-0.04691%) [-1.00047x]
+  RAM Hits:                          144399|144380               (+0.01316%) [+1.00013x]
+  Total read+write:                11041575|11041575             (No change)
+  Estimated Cycles:                16130141|16129579             (+0.00348%) [+1.00003x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_pk u10000_d10000:(cyc_setup_pk(10_000, 10_000))
+  Instructions:                    12904760|12904760             (No change)
+  L1 Hits:                         19774331|19774329             (+0.00001%) [+1.00000x]
+  LL Hits:                           183690|183695               (-0.00272%) [-1.00003x]
+  RAM Hits:                          159969|159966               (+0.00188%) [+1.00002x]
+  Total read+write:                20117990|20117990             (No change)
+  Estimated Cycles:                26291696|26291614             (+0.00031%) [+1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u10_d10:(cyc_setup_back(10, 10))
+  Instructions:                       23743|23743                (No change)
+  L1 Hits:                            35965|35966                (-0.00278%) [-1.00003x]
+  LL Hits:                               40|40                   (No change)
+  RAM Hits:                              12|11                   (+9.09091%) [+1.09091x]
+  Total read+write:                   36017|36017                (No change)
+  Estimated Cycles:                   36585|36551                (+0.09302%) [+1.00093x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u10_d100:(cyc_setup_back(10, 100))
+  Instructions:                       90356|90356                (No change)
+  L1 Hits:                           137820|137819               (+0.00073%) [+1.00001x]
+  LL Hits:                              235|237                  (-0.84388%) [-1.00851x]
+  RAM Hits:                              10|9                    (+11.1111%) [+1.11111x]
+  Total read+write:                  138065|138065               (No change)
+  Estimated Cycles:                  139345|139319               (+0.01866%) [+1.00019x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u10_d1000:(cyc_setup_back(10, 1_000))
+  Instructions:                      734378|734378               (No change)
+  L1 Hits:                          1110517|1110509              (+0.00072%) [+1.00001x]
+  LL Hits:                            18490|18499                (-0.04865%) [-1.00049x]
+  RAM Hits:                              12|11                   (+9.09091%) [+1.09091x]
+  Total read+write:                 1129019|1129019              (No change)
+  Estimated Cycles:                 1203387|1203389              (-0.00017%) [-1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u10_d10000:(cyc_setup_back(10, 10_000))
+  Instructions:                     7197642|7197642              (No change)
+  L1 Hits:                         10966074|10966059             (+0.00014%) [+1.00000x]
+  LL Hits:                           182533|182549               (-0.00876%) [-1.00009x]
+  RAM Hits:                              10|9                    (+11.1111%) [+1.11111x]
+  Total read+write:                11148617|11148617             (No change)
+  Estimated Cycles:                11879089|11879119             (-0.00025%) [-1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u100_d10:(cyc_setup_back(100, 10))
+  Instructions:                       89894|89894                (No change)
+  L1 Hits:                           135706|135722               (-0.01179%) [-1.00012x]
+  LL Hits:                             1794|1779                 (+0.84317%) [+1.00843x]
+  RAM Hits:                              12|11                   (+9.09091%) [+1.09091x]
+  Total read+write:                  137512|137512               (No change)
+  Estimated Cycles:                  145096|145002               (+0.06483%) [+1.00065x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u100_d100:(cyc_setup_back(100, 100))
+  Instructions:                      155216|155216               (No change)
+  L1 Hits:                           235931|235927               (+0.00170%) [+1.00002x]
+  LL Hits:                             1918|1923                 (-0.26001%) [-1.00261x]
+  RAM Hits:                              10|9                    (+11.1111%) [+1.11111x]
+  Total read+write:                  237859|237859               (No change)
+  Estimated Cycles:                  245871|245857               (+0.00569%) [+1.00006x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u100_d1000:(cyc_setup_back(100, 1_000))
+  Instructions:                      800476|800476               (No change)
+  L1 Hits:                          1210104|1210096              (+0.00066%) [+1.00001x]
+  LL Hits:                            20362|20371                (-0.04418%) [-1.00044x]
+  RAM Hits:                              12|11                   (+9.09091%) [+1.09091x]
+  Total read+write:                 1230478|1230478              (No change)
+  Estimated Cycles:                 1312334|1312336              (-0.00015%) [-1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u100_d10000:(cyc_setup_back(100, 10_000))
+  Instructions:                     7261681|7261681              (No change)
+  L1 Hits:                         11063093|11063079             (+0.00013%) [+1.00000x]
+  LL Hits:                           183627|183642               (-0.00817%) [-1.00008x]
+  RAM Hits:                             583|582                  (+0.17182%) [+1.00172x]
+  Total read+write:                11247303|11247303             (No change)
+  Estimated Cycles:                12001633|12001659             (-0.00022%) [-1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u1000_d10:(cyc_setup_back(1_000, 10))
+  Instructions:                      733765|733765               (No change)
+  L1 Hits:                          1109402|1109390              (+0.00108%) [+1.00001x]
+  LL Hits:                            15517|15530                (-0.08371%) [-1.00084x]
+  RAM Hits:                            3190|3189                 (+0.03136%) [+1.00031x]
+  Total read+write:                 1128109|1128109              (No change)
+  Estimated Cycles:                 1298637|1298655              (-0.00139%) [-1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u1000_d100:(cyc_setup_back(1_000, 100))
+  Instructions:                      799329|799329               (No change)
+  L1 Hits:                          1208494|1208482              (+0.00099%) [+1.00001x]
+  LL Hits:                            17187|17200                (-0.07558%) [-1.00076x]
+  RAM Hits:                            3215|3214                 (+0.03111%) [+1.00031x]
+  Total read+write:                 1228896|1228896              (No change)
+  Estimated Cycles:                 1406954|1406972              (-0.00128%) [-1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u1000_d1000:(cyc_setup_back(1_000, 1_000))
+  Instructions:                     1441138|1441138              (No change)
+  L1 Hits:                          2180043|2180034              (+0.00041%) [+1.00000x]
+  LL Hits:                            30458|30468                (-0.03282%) [-1.00033x]
+  RAM Hits:                            6153|6152                 (+0.01625%) [+1.00016x]
+  Total read+write:                 2216654|2216654              (No change)
+  Estimated Cycles:                 2547688|2547694              (-0.00024%) [-1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u1000_d10000:(cyc_setup_back(1_000, 10_000))
+  Instructions:                     7902949|7902949              (No change)
+  L1 Hits:                         12034036|12034022             (+0.00012%) [+1.00000x]
+  LL Hits:                           193920|193935               (-0.00773%) [-1.00008x]
+  RAM Hits:                            6496|6495                 (+0.01540%) [+1.00015x]
+  Total read+write:                12234452|12234452             (No change)
+  Estimated Cycles:                13230996|13231022             (-0.00020%) [-1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u10000_d10:(cyc_setup_back(10_000, 10))
+  Instructions:                     7195904|7195904              (No change)
+  L1 Hits:                         10963822|10963810             (+0.00011%) [+1.00000x]
+  LL Hits:                            32599|32613                (-0.04293%) [-1.00043x]
+  RAM Hits:                          149994|149992               (+0.00133%) [+1.00001x]
+  Total read+write:                11146415|11146415             (No change)
+  Estimated Cycles:                16376607|16376595             (+0.00007%) [+1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u10000_d100:(cyc_setup_back(10_000, 100))
+  Instructions:                     7252051|7252051              (No change)
+  L1 Hits:                         11036939|11036924             (+0.00014%) [+1.00000x]
+  LL Hits:                            34227|34239                (-0.03505%) [-1.00035x]
+  RAM Hits:                          149802|149805               (-0.00200%) [-1.00002x]
+  Total read+write:                11220968|11220968             (No change)
+  Estimated Cycles:                16451144|16451294             (-0.00091%) [-1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u10000_d1000:(cyc_setup_back(10_000, 1_000))
+  Instructions:                     7902270|7902270              (No change)
+  L1 Hits:                         12033060|12033049             (+0.00009%) [+1.00000x]
+  LL Hits:                            49795|49801                (-0.01205%) [-1.00012x]
+  RAM Hits:                          150600|150605               (-0.00332%) [-1.00003x]
+  Total read+write:                12233455|12233455             (No change)
+  Estimated Cycles:                17553035|17553229             (-0.00111%) [-1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_back u10000_d10000:(cyc_setup_back(10_000, 10_000))
+  Instructions:                    14344879|14344879             (No change)
+  L1 Hits:                         21834576|21834560             (+0.00007%) [+1.00000x]
+  LL Hits:                           203504|203519               (-0.00737%) [-1.00007x]
+  RAM Hits:                          160017|160018               (-0.00062%) [-1.00001x]
+  Total read+write:                22198097|22198097             (No change)
+  Estimated Cycles:                28452691|28452785             (-0.00033%) [-1.00000x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u10_d10:(cyc_setup_twoway(10, 10))
+  Instructions:                       27735|27735                (No change)
+  L1 Hits:                            42365|42365                (No change)
+  LL Hits:                               45|45                   (No change)
+  RAM Hits:                              15|15                   (No change)
+  Total read+write:                   42425|42425                (No change)
+  Estimated Cycles:                   43115|43115                (No change)
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u10_d100:(cyc_setup_twoway(10, 100))
+  Instructions:                      106771|106771               (No change)
+  L1 Hits:                           164477|164479               (-0.00122%) [-1.00001x]
+  LL Hits:                              214|212                  (+0.94340%) [+1.00943x]
+  RAM Hits:                              13|13                   (No change)
+  Total read+write:                  164704|164704               (No change)
+  Estimated Cycles:                  166002|165994               (+0.00482%) [+1.00005x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u10_d1000:(cyc_setup_twoway(10, 1_000))
+  Instructions:                      873311|873311               (No change)
+  L1 Hits:                          1335412|1335384              (+0.00210%) [+1.00002x]
+  LL Hits:                            19672|19700                (-0.14213%) [-1.00142x]
+  RAM Hits:                              15|15                   (No change)
+  Total read+write:                 1355099|1355099              (No change)
+  Estimated Cycles:                 1434297|1434409              (-0.00781%) [-1.00008x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u10_d10000:(cyc_setup_twoway(10, 10_000))
+  Instructions:                     8507550|8507550              (No change)
+  L1 Hits:                         13063335|13063309             (+0.00020%) [+1.00000x]
+  LL Hits:                           192026|192052               (-0.01354%) [-1.00014x]
+  RAM Hits:                             330|330                  (No change)
+  Total read+write:                13255691|13255691             (No change)
+  Estimated Cycles:                14035015|14035119             (-0.00074%) [-1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u100_d10:(cyc_setup_twoway(100, 10))
+  Instructions:                      109369|109369               (No change)
+  L1 Hits:                           166519|166544               (-0.01501%) [-1.00015x]
+  LL Hits:                             1899|1874                 (+1.33404%) [+1.01334x]
+  RAM Hits:                              15|15                   (No change)
+  Total read+write:                  168433|168433               (No change)
+  Estimated Cycles:                  176539|176439               (+0.05668%) [+1.00057x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u100_d100:(cyc_setup_twoway(100, 100))
+  Instructions:                      184979|184979               (No change)
+  L1 Hits:                           283940|283929               (+0.00387%) [+1.00004x]
+  LL Hits:                             2034|2045                 (-0.53790%) [-1.00541x]
+  RAM Hits:                              13|13                   (No change)
+  Total read+write:                  285987|285987               (No change)
+  Estimated Cycles:                  294565|294609               (-0.01494%) [-1.00015x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u100_d1000:(cyc_setup_twoway(100, 1_000))
+  Instructions:                      952321|952321               (No change)
+  L1 Hits:                          1455806|1455780              (+0.00179%) [+1.00002x]
+  LL Hits:                            21568|21594                (-0.12040%) [-1.00121x]
+  RAM Hits:                              15|15                   (No change)
+  Total read+write:                 1477389|1477389              (No change)
+  Estimated Cycles:                 1564171|1564275              (-0.00665%) [-1.00007x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u100_d10000:(cyc_setup_twoway(100, 10_000))
+  Instructions:                     8583281|8583281              (No change)
+  L1 Hits:                         13179437|13179411             (+0.00020%) [+1.00000x]
+  LL Hits:                           193653|193679               (-0.01342%) [-1.00013x]
+  RAM Hits:                             459|459                  (No change)
+  Total read+write:                13373549|13373549             (No change)
+  Estimated Cycles:                14163767|14163871             (-0.00073%) [-1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u1000_d10:(cyc_setup_twoway(1_000, 10))
+  Instructions:                      875560|875560               (No change)
+  L1 Hits:                          1338210|1338183              (+0.00202%) [+1.00002x]
+  LL Hits:                            16752|16779                (-0.16092%) [-1.00161x]
+  RAM Hits:                            3186|3186                 (No change)
+  Total read+write:                 1358148|1358148              (No change)
+  Estimated Cycles:                 1533480|1533588              (-0.00704%) [-1.00007x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u1000_d100:(cyc_setup_twoway(1_000, 100))
+  Instructions:                      953839|953839               (No change)
+  L1 Hits:                          1457927|1457902              (+0.00171%) [+1.00002x]
+  LL Hits:                            18531|18556                (-0.13473%) [-1.00135x]
+  RAM Hits:                            3201|3201                 (No change)
+  Total read+write:                 1479659|1479659              (No change)
+  Estimated Cycles:                 1662617|1662717              (-0.00601%) [-1.00006x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u1000_d1000:(cyc_setup_twoway(1_000, 1_000))
+  Instructions:                     1711540|1711540              (No change)
+  L1 Hits:                          2619078|2619048              (+0.00115%) [+1.00001x]
+  LL Hits:                            32845|32875                (-0.09125%) [-1.00091x]
+  RAM Hits:                            5782|5782                 (No change)
+  Total read+write:                 2657705|2657705              (No change)
+  Estimated Cycles:                 2985673|2985793              (-0.00402%) [-1.00004x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u1000_d10000:(cyc_setup_twoway(1_000, 10_000))
+  Instructions:                     9332529|9332529              (No change)
+  L1 Hits:                         14315962|14315936             (+0.00018%) [+1.00000x]
+  LL Hits:                           206332|206358               (-0.01260%) [-1.00013x]
+  RAM Hits:                            4438|4438                 (No change)
+  Total read+write:                14526732|14526732             (No change)
+  Estimated Cycles:                15502952|15503056             (-0.00067%) [-1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u10000_d10:(cyc_setup_twoway(10_000, 10))
+  Instructions:                     8507126|8507126              (No change)
+  L1 Hits:                         13062892|13062870             (+0.00017%) [+1.00000x]
+  LL Hits:                            39125|39145                (-0.05109%) [-1.00051x]
+  RAM Hits:                          153458|153460               (-0.00130%) [-1.00001x]
+  Total read+write:                13255475|13255475             (No change)
+  Estimated Cycles:                18629547|18629695             (-0.00079%) [-1.00001x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u10000_d100:(cyc_setup_twoway(10_000, 100))
+  Instructions:                     8582885|8582885              (No change)
+  L1 Hits:                         13179151|13179119             (+0.00024%) [+1.00000x]
+  LL Hits:                            39807|39868                (-0.15300%) [-1.00153x]
+  RAM Hits:                          154468|154439               (+0.01878%) [+1.00019x]
+  Total read+write:                13373426|13373426             (No change)
+  Estimated Cycles:                18784566|18783824             (+0.00395%) [+1.00004x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u10000_d1000:(cyc_setup_twoway(10_000, 1_000))
+  Instructions:                     9351425|9351425              (No change)
+  L1 Hits:                         14368004|14367980             (+0.00017%) [+1.00000x]
+  LL Hits:                            57033|57110                (-0.13483%) [-1.00135x]
+  RAM Hits:                          154618|154565               (+0.03429%) [+1.00034x]
+  Total read+write:                14579655|14579655             (No change)
+  Estimated Cycles:                20064799|20063305             (+0.00745%) [+1.00007x]
+rfd_0005_small_side_order_instructions::adversarial::cyc_twoway u10000_d10000:(cyc_setup_twoway(10_000, 10_000))
+  Instructions:                    17006690|17006690             (No change)
+  L1 Hits:                         26177432|26177399             (+0.00013%) [+1.00000x]
+  LL Hits:                           219106|219135               (-0.01323%) [-1.00013x]
+  RAM Hits:                          165217|165221               (-0.00242%) [-1.00002x]
+  Total read+write:                26561755|26561755             (No change)
+  Estimated Cycles:                33055557|33055809             (-0.00076%) [-1.00001x]
+rfd_0005_small_side_order_instructions::spacing::moves_back_fresh settled:(txs_back_fresh("settled"))
+  Instructions:                      482664|N/A                  (*********)
+  L1 Hits:                           718515|N/A                  (*********)
+  LL Hits:                             9429|N/A                  (*********)
+  RAM Hits:                             154|N/A                  (*********)
+  Total read+write:                  728098|N/A                  (*********)
+  Estimated Cycles:                  771050|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::moves_back_fresh mixed:(txs_back_fresh("mixed"))
+  Instructions:                     2285705|N/A                  (*********)
+  L1 Hits:                          4347375|N/A                  (*********)
+  LL Hits:                            37541|N/A                  (*********)
+  RAM Hits:                            1590|N/A                  (*********)
+  Total read+write:                 4386506|N/A                  (*********)
+  Estimated Cycles:                 4590730|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::moves_back_fresh churn:(txs_back_fresh("churn"))
+  Instructions:                     3946783|N/A                  (*********)
+  L1 Hits:                          6673367|N/A                  (*********)
+  LL Hits:                            45539|N/A                  (*********)
+  RAM Hits:                            1619|N/A                  (*********)
+  Total read+write:                 6720525|N/A                  (*********)
+  Estimated Cycles:                 6957727|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::moves_back_fresh lazy:(txs_back_fresh("lazy"))
+  Instructions:                     6938362|N/A                  (*********)
+  L1 Hits:                         10945215|N/A                  (*********)
+  LL Hits:                            52808|N/A                  (*********)
+  RAM Hits:                           13029|N/A                  (*********)
+  Total read+write:                11011052|N/A                  (*********)
+  Estimated Cycles:                11665270|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::moves_twoway_fresh settled:(txs_twoway_fresh("settled"))
+  Instructions:                      419621|N/A                  (*********)
+  L1 Hits:                           652349|N/A                  (*********)
+  LL Hits:                             9151|N/A                  (*********)
+  RAM Hits:                              59|N/A                  (*********)
+  Total read+write:                  661559|N/A                  (*********)
+  Estimated Cycles:                  700169|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::moves_twoway_fresh mixed:(txs_twoway_fresh("mixed"))
+  Instructions:                     2316928|N/A                  (*********)
+  L1 Hits:                          4488463|N/A                  (*********)
+  LL Hits:                            40692|N/A                  (*********)
+  RAM Hits:                            1892|N/A                  (*********)
+  Total read+write:                 4531047|N/A                  (*********)
+  Estimated Cycles:                 4758143|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::moves_twoway_fresh churn:(txs_twoway_fresh("churn"))
+  Instructions:                     4090919|N/A                  (*********)
+  L1 Hits:                          6932831|N/A                  (*********)
+  LL Hits:                            51373|N/A                  (*********)
+  RAM Hits:                            1591|N/A                  (*********)
+  Total read+write:                 6985795|N/A                  (*********)
+  Estimated Cycles:                 7245381|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::moves_twoway_fresh lazy:(txs_twoway_fresh("lazy"))
+  Instructions:                     7066686|N/A                  (*********)
+  L1 Hits:                         11306331|N/A                  (*********)
+  LL Hits:                            61405|N/A                  (*********)
+  RAM Hits:                           13039|N/A                  (*********)
+  Total read+write:                11380775|N/A                  (*********)
+  Estimated Cycles:                12069721|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u10_d10:(adv_setup_back_fresh(10, 10))
+  Instructions:                       46308|N/A                  (*********)
+  L1 Hits:                            66869|N/A                  (*********)
+  LL Hits:                               50|N/A                  (*********)
+  RAM Hits:                              14|N/A                  (*********)
+  Total read+write:                   66933|N/A                  (*********)
+  Estimated Cycles:                   67609|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u10_d100:(adv_setup_back_fresh(10, 100))
+  Instructions:                       46503|N/A                  (*********)
+  L1 Hits:                            66921|N/A                  (*********)
+  LL Hits:                              182|N/A                  (*********)
+  RAM Hits:                              12|N/A                  (*********)
+  Total read+write:                   67115|N/A                  (*********)
+  Estimated Cycles:                   68251|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u10_d1000:(adv_setup_back_fresh(10, 1_000))
+  Instructions:                       46078|N/A                  (*********)
+  L1 Hits:                            66375|N/A                  (*********)
+  LL Hits:                              290|N/A                  (*********)
+  RAM Hits:                              14|N/A                  (*********)
+  Total read+write:                   66679|N/A                  (*********)
+  Estimated Cycles:                   68315|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u10_d10000:(adv_setup_back_fresh(10, 10_000))
+  Instructions:                       45983|N/A                  (*********)
+  L1 Hits:                            66148|N/A                  (*********)
+  LL Hits:                              331|N/A                  (*********)
+  RAM Hits:                              12|N/A                  (*********)
+  Total read+write:                   66491|N/A                  (*********)
+  Estimated Cycles:                   68223|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u100_d10:(adv_setup_back_fresh(100, 10))
+  Instructions:                      423985|N/A                  (*********)
+  L1 Hits:                           609952|N/A                  (*********)
+  LL Hits:                             2798|N/A                  (*********)
+  RAM Hits:                             121|N/A                  (*********)
+  Total read+write:                  612871|N/A                  (*********)
+  Estimated Cycles:                  628177|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u100_d100:(adv_setup_back_fresh(100, 100))
+  Instructions:                      424506|N/A                  (*********)
+  L1 Hits:                           610597|N/A                  (*********)
+  LL Hits:                             2801|N/A                  (*********)
+  RAM Hits:                             119|N/A                  (*********)
+  Total read+write:                  613517|N/A                  (*********)
+  Estimated Cycles:                  628767|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u100_d1000:(adv_setup_back_fresh(100, 1_000))
+  Instructions:                      424051|N/A                  (*********)
+  L1 Hits:                           610049|N/A                  (*********)
+  LL Hits:                             2803|N/A                  (*********)
+  RAM Hits:                             121|N/A                  (*********)
+  Total read+write:                  612973|N/A                  (*********)
+  Estimated Cycles:                  628299|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u100_d10000:(adv_setup_back_fresh(100, 10_000))
+  Instructions:                      423983|N/A                  (*********)
+  L1 Hits:                           609864|N/A                  (*********)
+  LL Hits:                             2811|N/A                  (*********)
+  RAM Hits:                             119|N/A                  (*********)
+  Total read+write:                  612794|N/A                  (*********)
+  Estimated Cycles:                  628084|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u1000_d10:(adv_setup_back_fresh(1_000, 10))
+  Instructions:                     5310403|N/A                  (*********)
+  L1 Hits:                          7695961|N/A                  (*********)
+  LL Hits:                            34548|N/A                  (*********)
+  RAM Hits:                            3370|N/A                  (*********)
+  Total read+write:                 7733879|N/A                  (*********)
+  Estimated Cycles:                 7986651|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u1000_d100:(adv_setup_back_fresh(1_000, 100))
+  Instructions:                     5310058|N/A                  (*********)
+  L1 Hits:                          7695575|N/A                  (*********)
+  LL Hits:                            34607|N/A                  (*********)
+  RAM Hits:                            3290|N/A                  (*********)
+  Total read+write:                 7733472|N/A                  (*********)
+  Estimated Cycles:                 7983760|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u1000_d1000:(adv_setup_back_fresh(1_000, 1_000))
+  Instructions:                     5311367|N/A                  (*********)
+  L1 Hits:                          7697225|N/A                  (*********)
+  LL Hits:                            32062|N/A                  (*********)
+  RAM Hits:                            5888|N/A                  (*********)
+  Total read+write:                 7735175|N/A                  (*********)
+  Estimated Cycles:                 8063615|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u1000_d10000:(adv_setup_back_fresh(1_000, 10_000))
+  Instructions:                     5311559|N/A                  (*********)
+  L1 Hits:                          7697435|N/A                  (*********)
+  LL Hits:                            35421|N/A                  (*********)
+  RAM Hits:                            2511|N/A                  (*********)
+  Total read+write:                 7735367|N/A                  (*********)
+  Estimated Cycles:                 7962425|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u10000_d10:(adv_setup_back_fresh(10_000, 10))
+  Instructions:                    62602654|N/A                  (*********)
+  L1 Hits:                         90900158|N/A                  (*********)
+  LL Hits:                           446662|N/A                  (*********)
+  RAM Hits:                          251564|N/A                  (*********)
+  Total read+write:                91598384|N/A                  (*********)
+  Estimated Cycles:               101938208|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u10000_d100:(adv_setup_back_fresh(10_000, 100))
+  Instructions:                    62628011|N/A                  (*********)
+  L1 Hits:                         90974257|N/A                  (*********)
+  LL Hits:                           446591|N/A                  (*********)
+  RAM Hits:                          252553|N/A                  (*********)
+  Total read+write:                91673401|N/A                  (*********)
+  Estimated Cycles:               102046567|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u10000_d1000:(adv_setup_back_fresh(10_000, 1_000))
+  Instructions:                    62637394|N/A                  (*********)
+  L1 Hits:                         90999839|N/A                  (*********)
+  LL Hits:                           446814|N/A                  (*********)
+  RAM Hits:                          252709|N/A                  (*********)
+  Total read+write:                91699362|N/A                  (*********)
+  Estimated Cycles:               102078724|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_back_fresh u10000_d10000:(adv_setup_back_fresh(10_000, 10_000))
+  Instructions:                    62605029|N/A                  (*********)
+  L1 Hits:                         90903014|N/A                  (*********)
+  LL Hits:                           448914|N/A                  (*********)
+  RAM Hits:                          249526|N/A                  (*********)
+  Total read+write:                91601454|N/A                  (*********)
+  Estimated Cycles:               101880994|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u10_d10:(adv_setup_twoway_fresh(10, 10))
+  Instructions:                       65861|N/A                  (*********)
+  L1 Hits:                            96981|N/A                  (*********)
+  LL Hits:                               81|N/A                  (*********)
+  RAM Hits:                              21|N/A                  (*********)
+  Total read+write:                   97083|N/A                  (*********)
+  Estimated Cycles:                   98121|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u10_d100:(adv_setup_twoway_fresh(10, 100))
+  Instructions:                       69173|N/A                  (*********)
+  L1 Hits:                           102171|N/A                  (*********)
+  LL Hits:                              205|N/A                  (*********)
+  RAM Hits:                              17|N/A                  (*********)
+  Total read+write:                  102393|N/A                  (*********)
+  Estimated Cycles:                  103791|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u10_d1000:(adv_setup_twoway_fresh(10, 1_000))
+  Instructions:                       68827|N/A                  (*********)
+  L1 Hits:                           101611|N/A                  (*********)
+  LL Hits:                              352|N/A                  (*********)
+  RAM Hits:                              19|N/A                  (*********)
+  Total read+write:                  101982|N/A                  (*********)
+  Estimated Cycles:                  104036|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u10_d10000:(adv_setup_twoway_fresh(10, 10_000))
+  Instructions:                       68801|N/A                  (*********)
+  L1 Hits:                           101503|N/A                  (*********)
+  LL Hits:                              374|N/A                  (*********)
+  RAM Hits:                              17|N/A                  (*********)
+  Total read+write:                  101894|N/A                  (*********)
+  Estimated Cycles:                  103968|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u100_d10:(adv_setup_twoway_fresh(100, 10))
+  Instructions:                       67539|N/A                  (*********)
+  L1 Hits:                            99772|N/A                  (*********)
+  LL Hits:                              540|N/A                  (*********)
+  RAM Hits:                              23|N/A                  (*********)
+  Total read+write:                  100335|N/A                  (*********)
+  Estimated Cycles:                  103277|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u100_d100:(adv_setup_twoway_fresh(100, 100))
+  Instructions:                      607827|N/A                  (*********)
+  L1 Hits:                           892387|N/A                  (*********)
+  LL Hits:                             3758|N/A                  (*********)
+  RAM Hits:                             124|N/A                  (*********)
+  Total read+write:                  896269|N/A                  (*********)
+  Estimated Cycles:                  915517|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u100_d1000:(adv_setup_twoway_fresh(100, 1_000))
+  Instructions:                      623829|N/A                  (*********)
+  L1 Hits:                           918739|N/A                  (*********)
+  LL Hits:                             5452|N/A                  (*********)
+  RAM Hits:                             126|N/A                  (*********)
+  Total read+write:                  924317|N/A                  (*********)
+  Estimated Cycles:                  950409|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u100_d10000:(adv_setup_twoway_fresh(100, 10_000))
+  Instructions:                      625110|N/A                  (*********)
+  L1 Hits:                           920006|N/A                  (*********)
+  LL Hits:                             5722|N/A                  (*********)
+  RAM Hits:                             124|N/A                  (*********)
+  Total read+write:                  925852|N/A                  (*********)
+  Estimated Cycles:                  952956|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u1000_d10:(adv_setup_twoway_fresh(1_000, 10))
+  Instructions:                       67570|N/A                  (*********)
+  L1 Hits:                            99570|N/A                  (*********)
+  LL Hits:                              489|N/A                  (*********)
+  RAM Hits:                             119|N/A                  (*********)
+  Total read+write:                  100178|N/A                  (*********)
+  Estimated Cycles:                  106180|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u1000_d100:(adv_setup_twoway_fresh(1_000, 100))
+  Instructions:                      622274|N/A                  (*********)
+  L1 Hits:                           916454|N/A                  (*********)
+  LL Hits:                             4592|N/A                  (*********)
+  RAM Hits:                             802|N/A                  (*********)
+  Total read+write:                  921848|N/A                  (*********)
+  Estimated Cycles:                  967484|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u1000_d1000:(adv_setup_twoway_fresh(1_000, 1_000))
+  Instructions:                     7111323|N/A                  (*********)
+  L1 Hits:                         10435859|N/A                  (*********)
+  LL Hits:                            72676|N/A                  (*********)
+  RAM Hits:                            5895|N/A                  (*********)
+  Total read+write:                10514430|N/A                  (*********)
+  Estimated Cycles:                11005564|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u1000_d10000:(adv_setup_twoway_fresh(1_000, 10_000))
+  Instructions:                     7257968|N/A                  (*********)
+  L1 Hits:                         10693579|N/A                  (*********)
+  LL Hits:                            78044|N/A                  (*********)
+  RAM Hits:                            2516|N/A                  (*********)
+  Total read+write:                10774139|N/A                  (*********)
+  Estimated Cycles:                11171859|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u10000_d10:(adv_setup_twoway_fresh(10_000, 10))
+  Instructions:                       67540|N/A                  (*********)
+  L1 Hits:                            99413|N/A                  (*********)
+  LL Hits:                              388|N/A                  (*********)
+  RAM Hits:                             341|N/A                  (*********)
+  Total read+write:                  100142|N/A                  (*********)
+  Estimated Cycles:                  113288|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u10000_d100:(adv_setup_twoway_fresh(10_000, 100))
+  Instructions:                      622182|N/A                  (*********)
+  L1 Hits:                           916077|N/A                  (*********)
+  LL Hits:                             3115|N/A                  (*********)
+  RAM Hits:                            2546|N/A                  (*********)
+  Total read+write:                  921738|N/A                  (*********)
+  Estimated Cycles:                 1020762|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u10000_d1000:(adv_setup_twoway_fresh(10_000, 1_000))
+  Instructions:                     6939273|N/A                  (*********)
+  L1 Hits:                         10217096|N/A                  (*********)
+  LL Hits:                            55566|N/A                  (*********)
+  RAM Hits:                           24487|N/A                  (*********)
+  Total read+write:                10297149|N/A                  (*********)
+  Estimated Cycles:                11351971|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing::adv_twoway_fresh u10000_d10000:(adv_setup_twoway_fresh(10_000, 10_000))
+  Instructions:                    80613348|N/A                  (*********)
+  L1 Hits:                        118421097|N/A                  (*********)
+  LL Hits:                           823536|N/A                  (*********)
+  RAM Hits:                          278253|N/A                  (*********)
+  Total read+write:               119522886|N/A                  (*********)
+  Estimated Cycles:               132277632|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s10_n10:(mix_setup_baseline(10, 10))
+  Instructions:                       26832|N/A                  (*********)
+  L1 Hits:                            39112|N/A                  (*********)
+  LL Hits:                               73|N/A                  (*********)
+  RAM Hits:                               5|N/A                  (*********)
+  Total read+write:                   39190|N/A                  (*********)
+  Estimated Cycles:                   39652|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s10_n100:(mix_setup_baseline(10, 100))
+  Instructions:                      107192|N/A                  (*********)
+  L1 Hits:                           156447|N/A                  (*********)
+  LL Hits:                             2369|N/A                  (*********)
+  RAM Hits:                               7|N/A                  (*********)
+  Total read+write:                  158823|N/A                  (*********)
+  Estimated Cycles:                  168537|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s10_n1000:(mix_setup_baseline(10, 1_000))
+  Instructions:                      898866|N/A                  (*********)
+  L1 Hits:                          1309758|N/A                  (*********)
+  LL Hits:                            23393|N/A                  (*********)
+  RAM Hits:                            5814|N/A                  (*********)
+  Total read+write:                 1338965|N/A                  (*********)
+  Estimated Cycles:                 1630213|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s10_n10000:(mix_setup_baseline(10, 10_000))
+  Instructions:                     8819701|N/A                  (*********)
+  L1 Hits:                         12839882|N/A                  (*********)
+  LL Hits:                            83617|N/A                  (*********)
+  RAM Hits:                          224556|N/A                  (*********)
+  Total read+write:                13148055|N/A                  (*********)
+  Estimated Cycles:                21117427|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s100_n10:(mix_setup_baseline(100, 10))
+  Instructions:                      107040|N/A                  (*********)
+  L1 Hits:                           158315|N/A                  (*********)
+  LL Hits:                              296|N/A                  (*********)
+  RAM Hits:                               7|N/A                  (*********)
+  Total read+write:                  158618|N/A                  (*********)
+  Estimated Cycles:                  160040|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s100_n100:(mix_setup_baseline(100, 100))
+  Instructions:                      186747|N/A                  (*********)
+  L1 Hits:                           274733|N/A                  (*********)
+  LL Hits:                             2656|N/A                  (*********)
+  RAM Hits:                               7|N/A                  (*********)
+  Total read+write:                  277396|N/A                  (*********)
+  Estimated Cycles:                  288258|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s100_n1000:(mix_setup_baseline(100, 1_000))
+  Instructions:                      978276|N/A                  (*********)
+  L1 Hits:                          1425381|N/A                  (*********)
+  LL Hits:                            26121|N/A                  (*********)
+  RAM Hits:                            5817|N/A                  (*********)
+  Total read+write:                 1457319|N/A                  (*********)
+  Estimated Cycles:                 1759581|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s100_n10000:(mix_setup_baseline(100, 10_000))
+  Instructions:                     8898901|N/A                  (*********)
+  L1 Hits:                         12955176|N/A                  (*********)
+  LL Hits:                            86286|N/A                  (*********)
+  RAM Hits:                          224673|N/A                  (*********)
+  Total read+write:                13266135|N/A                  (*********)
+  Estimated Cycles:                21250161|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s1000_n10:(mix_setup_baseline(1_000, 10))
+  Instructions:                      900226|N/A                  (*********)
+  L1 Hits:                          1314154|N/A                  (*********)
+  LL Hits:                            26882|N/A                  (*********)
+  RAM Hits:                               7|N/A                  (*********)
+  Total read+write:                 1341043|N/A                  (*********)
+  Estimated Cycles:                 1448809|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s1000_n100:(mix_setup_baseline(1_000, 100))
+  Instructions:                      978276|N/A                  (*********)
+  L1 Hits:                          1426680|N/A                  (*********)
+  LL Hits:                            30589|N/A                  (*********)
+  RAM Hits:                              50|N/A                  (*********)
+  Total read+write:                 1457319|N/A                  (*********)
+  Estimated Cycles:                 1581375|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s1000_n1000:(mix_setup_baseline(1_000, 1_000))
+  Instructions:                     1770276|N/A                  (*********)
+  L1 Hits:                          2578375|N/A                  (*********)
+  LL Hits:                            53899|N/A                  (*********)
+  RAM Hits:                            5845|N/A                  (*********)
+  Total read+write:                 2638119|N/A                  (*********)
+  Estimated Cycles:                 3052445|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s1000_n10000:(mix_setup_baseline(1_000, 10_000))
+  Instructions:                     9708089|N/A                  (*********)
+  L1 Hits:                         14157807|N/A                  (*********)
+  LL Hits:                           113138|N/A                  (*********)
+  RAM Hits:                          226357|N/A                  (*********)
+  Total read+write:                14497302|N/A                  (*********)
+  Estimated Cycles:                22645992|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s10000_n10:(mix_setup_baseline(10_000, 10))
+  Instructions:                     8819706|N/A                  (*********)
+  L1 Hits:                         12842205|N/A                  (*********)
+  LL Hits:                           302457|N/A                  (*********)
+  RAM Hits:                            3399|N/A                  (*********)
+  Total read+write:                13148061|N/A                  (*********)
+  Estimated Cycles:                14473455|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s10000_n100:(mix_setup_baseline(10_000, 100))
+  Instructions:                     8899435|N/A                  (*********)
+  L1 Hits:                         12957244|N/A                  (*********)
+  LL Hits:                           306216|N/A                  (*********)
+  RAM Hits:                            3409|N/A                  (*********)
+  Total read+write:                13266869|N/A                  (*********)
+  Estimated Cycles:                14607639|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s10000_n1000:(mix_setup_baseline(10_000, 1_000))
+  Instructions:                     9690906|N/A                  (*********)
+  L1 Hits:                         14108111|N/A                  (*********)
+  LL Hits:                           332704|N/A                  (*********)
+  RAM Hits:                            6126|N/A                  (*********)
+  Total read+write:                14446941|N/A                  (*********)
+  Estimated Cycles:                15986041|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s10000_n10000:(mix_setup_baseline(10_000, 10_000))
+  Instructions:                    17611111|N/A                  (*********)
+  L1 Hits:                         25637328|N/A                  (*********)
+  LL Hits:                           378558|N/A                  (*********)
+  RAM Hits:                          239323|N/A                  (*********)
+  Total read+write:                26255209|N/A                  (*********)
+  Estimated Cycles:                35906423|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s100000_n10:(mix_setup_baseline(100_000, 10))
+  Instructions:                    88086249|N/A                  (*********)
+  L1 Hits:                        128327769|N/A                  (*********)
+  LL Hits:                          1343192|N/A                  (*********)
+  RAM Hits:                         1754998|N/A                  (*********)
+  Total read+write:               131425959|N/A                  (*********)
+  Estimated Cycles:               196468659|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s100000_n100:(mix_setup_baseline(100_000, 100))
+  Instructions:                    88165449|N/A                  (*********)
+  L1 Hits:                        128442296|N/A                  (*********)
+  LL Hits:                          1343275|N/A                  (*********)
+  RAM Hits:                         1758468|N/A                  (*********)
+  Total read+write:               131544039|N/A                  (*********)
+  Estimated Cycles:               196705051|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s100000_n1000:(mix_setup_baseline(100_000, 1_000))
+  Instructions:                    89022982|N/A                  (*********)
+  L1 Hits:                        129788334|N/A                  (*********)
+  LL Hits:                          1363860|N/A                  (*********)
+  RAM Hits:                         1769234|N/A                  (*********)
+  Total read+write:               132921428|N/A                  (*********)
+  Estimated Cycles:               198530824|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_baseline s100000_n10000:(mix_setup_baseline(100_000, 10_000))
+  Instructions:                    96811531|N/A                  (*********)
+  L1 Hits:                        140927870|N/A                  (*********)
+  LL Hits:                          1222587|N/A                  (*********)
+  RAM Hits:                         2185300|N/A                  (*********)
+  Total read+write:               144335757|N/A                  (*********)
+  Estimated Cycles:               223526305|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s10_n10:(mix_setup_back(10, 10))
+  Instructions:                       59536|N/A                  (*********)
+  L1 Hits:                            83957|N/A                  (*********)
+  LL Hits:                              308|N/A                  (*********)
+  RAM Hits:                              33|N/A                  (*********)
+  Total read+write:                   84298|N/A                  (*********)
+  Estimated Cycles:                   86652|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s10_n100:(mix_setup_back(10, 100))
+  Instructions:                      532509|N/A                  (*********)
+  L1 Hits:                           753958|N/A                  (*********)
+  LL Hits:                             3323|N/A                  (*********)
+  RAM Hits:                             141|N/A                  (*********)
+  Total read+write:                  757422|N/A                  (*********)
+  Estimated Cycles:                  775508|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s10_n1000:(mix_setup_back(10, 1_000))
+  Instructions:                     6807748|N/A                  (*********)
+  L1 Hits:                          9682383|N/A                  (*********)
+  LL Hits:                            48173|N/A                  (*********)
+  RAM Hits:                            6782|N/A                  (*********)
+  Total read+write:                 9737338|N/A                  (*********)
+  Estimated Cycles:                10160618|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s10_n10000:(mix_setup_back(10, 10_000))
+  Instructions:                    77551015|N/A                  (*********)
+  L1 Hits:                        110962497|N/A                  (*********)
+  LL Hits:                           597920|N/A                  (*********)
+  RAM Hits:                          260506|N/A                  (*********)
+  Total read+write:               111820923|N/A                  (*********)
+  Estimated Cycles:               123069807|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s100_n10:(mix_setup_back(100, 10))
+  Instructions:                       59626|N/A                  (*********)
+  L1 Hits:                            83977|N/A                  (*********)
+  LL Hits:                              303|N/A                  (*********)
+  RAM Hits:                              31|N/A                  (*********)
+  Total read+write:                   84311|N/A                  (*********)
+  Estimated Cycles:                   86577|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s100_n100:(mix_setup_back(100, 100))
+  Instructions:                      532720|N/A                  (*********)
+  L1 Hits:                           754220|N/A                  (*********)
+  LL Hits:                             3334|N/A                  (*********)
+  RAM Hits:                             139|N/A                  (*********)
+  Total read+write:                  757693|N/A                  (*********)
+  Estimated Cycles:                  775755|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s100_n1000:(mix_setup_back(100, 1_000))
+  Instructions:                     6807797|N/A                  (*********)
+  L1 Hits:                          9682435|N/A                  (*********)
+  LL Hits:                            48205|N/A                  (*********)
+  RAM Hits:                            6747|N/A                  (*********)
+  Total read+write:                 9737387|N/A                  (*********)
+  Estimated Cycles:                10159605|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s100_n10000:(mix_setup_back(100, 10_000))
+  Instructions:                    77518165|N/A                  (*********)
+  L1 Hits:                        110865720|N/A                  (*********)
+  LL Hits:                           596730|N/A                  (*********)
+  RAM Hits:                          260198|N/A                  (*********)
+  Total read+write:               111722648|N/A                  (*********)
+  Estimated Cycles:               122956300|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s1000_n10:(mix_setup_back(1_000, 10))
+  Instructions:                       59646|N/A                  (*********)
+  L1 Hits:                            84017|N/A                  (*********)
+  LL Hits:                              329|N/A                  (*********)
+  RAM Hits:                              33|N/A                  (*********)
+  Total read+write:                   84379|N/A                  (*********)
+  Estimated Cycles:                   86817|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s1000_n100:(mix_setup_back(1_000, 100))
+  Instructions:                      533612|N/A                  (*********)
+  L1 Hits:                           755234|N/A                  (*********)
+  LL Hits:                             3355|N/A                  (*********)
+  RAM Hits:                             141|N/A                  (*********)
+  Total read+write:                  758730|N/A                  (*********)
+  Estimated Cycles:                  776944|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s1000_n1000:(mix_setup_back(1_000, 1_000))
+  Instructions:                     6825034|N/A                  (*********)
+  L1 Hits:                          9732319|N/A                  (*********)
+  LL Hits:                            48861|N/A                  (*********)
+  RAM Hits:                            6417|N/A                  (*********)
+  Total read+write:                 9787597|N/A                  (*********)
+  Estimated Cycles:                10201219|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s1000_n10000:(mix_setup_back(1_000, 10_000))
+  Instructions:                    77501425|N/A                  (*********)
+  L1 Hits:                        110815989|N/A                  (*********)
+  LL Hits:                           597299|N/A                  (*********)
+  RAM Hits:                          259611|N/A                  (*********)
+  Total read+write:               111672899|N/A                  (*********)
+  Estimated Cycles:               122888869|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s10000_n10:(mix_setup_back(10_000, 10))
+  Instructions:                       59828|N/A                  (*********)
+  L1 Hits:                            84200|N/A                  (*********)
+  LL Hits:                              351|N/A                  (*********)
+  RAM Hits:                              33|N/A                  (*********)
+  Total read+write:                   84584|N/A                  (*********)
+  Estimated Cycles:                   87110|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s10000_n100:(mix_setup_back(10_000, 100))
+  Instructions:                      533076|N/A                  (*********)
+  L1 Hits:                           754554|N/A                  (*********)
+  LL Hits:                             3349|N/A                  (*********)
+  RAM Hits:                             141|N/A                  (*********)
+  Total read+write:                  758044|N/A                  (*********)
+  Estimated Cycles:                  776234|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s10000_n1000:(mix_setup_back(10_000, 1_000))
+  Instructions:                     6841419|N/A                  (*********)
+  L1 Hits:                          9780835|N/A                  (*********)
+  LL Hits:                            52843|N/A                  (*********)
+  RAM Hits:                            3036|N/A                  (*********)
+  Total read+write:                 9836714|N/A                  (*********)
+  Estimated Cycles:                10151310|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s10000_n10000:(mix_setup_back(10_000, 10_000))
+  Instructions:                    77756977|N/A                  (*********)
+  L1 Hits:                        111572036|N/A                  (*********)
+  LL Hits:                           601593|N/A                  (*********)
+  RAM Hits:                          263233|N/A                  (*********)
+  Total read+write:               112436862|N/A                  (*********)
+  Estimated Cycles:               123793156|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s100000_n10:(mix_setup_back(100_000, 10))
+  Instructions:                       58515|N/A                  (*********)
+  L1 Hits:                            82246|N/A                  (*********)
+  LL Hits:                              318|N/A                  (*********)
+  RAM Hits:                              61|N/A                  (*********)
+  Total read+write:                   82625|N/A                  (*********)
+  Estimated Cycles:                   85971|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s100000_n100:(mix_setup_back(100_000, 100))
+  Instructions:                      531519|N/A                  (*********)
+  L1 Hits:                           752310|N/A                  (*********)
+  LL Hits:                             3200|N/A                  (*********)
+  RAM Hits:                             236|N/A                  (*********)
+  Total read+write:                  755746|N/A                  (*********)
+  Estimated Cycles:                  776570|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s100000_n1000:(mix_setup_back(100_000, 1_000))
+  Instructions:                     6804890|N/A                  (*********)
+  L1 Hits:                          9678381|N/A                  (*********)
+  LL Hits:                            53616|N/A                  (*********)
+  RAM Hits:                            1160|N/A                  (*********)
+  Total read+write:                 9733157|N/A                  (*********)
+  Estimated Cycles:                 9987061|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back s100000_n10000:(mix_setup_back(100_000, 10_000))
+  Instructions:                    77491317|N/A                  (*********)
+  L1 Hits:                        110789251|N/A                  (*********)
+  LL Hits:                           595323|N/A                  (*********)
+  RAM Hits:                          261300|N/A                  (*********)
+  Total read+write:               111645874|N/A                  (*********)
+  Estimated Cycles:               122911366|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s10_n10:(mix_setup_twoway(10, 10))
+  Instructions:                       82456|N/A                  (*********)
+  L1 Hits:                           119470|N/A                  (*********)
+  LL Hits:                              353|N/A                  (*********)
+  RAM Hits:                              36|N/A                  (*********)
+  Total read+write:                  119859|N/A                  (*********)
+  Estimated Cycles:                  122495|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s10_n100:(mix_setup_twoway(10, 100))
+  Instructions:                      732769|N/A                  (*********)
+  L1 Hits:                          1062893|N/A                  (*********)
+  LL Hits:                             6558|N/A                  (*********)
+  RAM Hits:                             143|N/A                  (*********)
+  Total read+write:                 1069594|N/A                  (*********)
+  Estimated Cycles:                 1100688|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s10_n1000:(mix_setup_twoway(10, 1_000))
+  Instructions:                     8601924|N/A                  (*********)
+  L1 Hits:                         12415005|N/A                  (*********)
+  LL Hits:                            88880|N/A                  (*********)
+  RAM Hits:                            6793|N/A                  (*********)
+  Total read+write:                12510678|N/A                  (*********)
+  Estimated Cycles:                13097160|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s10_n10000:(mix_setup_twoway(10, 10_000))
+  Instructions:                     6933770|N/A                  (*********)
+  L1 Hits:                         10211450|N/A                  (*********)
+  LL Hits:                            55552|N/A                  (*********)
+  RAM Hits:                           24547|N/A                  (*********)
+  Total read+write:                10291549|N/A                  (*********)
+  Estimated Cycles:                11348355|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s100_n10:(mix_setup_twoway(100, 10))
+  Instructions:                       82355|N/A                  (*********)
+  L1 Hits:                           119307|N/A                  (*********)
+  LL Hits:                              322|N/A                  (*********)
+  RAM Hits:                              34|N/A                  (*********)
+  Total read+write:                  119663|N/A                  (*********)
+  Estimated Cycles:                  122107|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s100_n100:(mix_setup_twoway(100, 100))
+  Instructions:                      732403|N/A                  (*********)
+  L1 Hits:                          1062367|N/A                  (*********)
+  LL Hits:                             6480|N/A                  (*********)
+  RAM Hits:                             141|N/A                  (*********)
+  Total read+write:                 1068988|N/A                  (*********)
+  Estimated Cycles:                 1099702|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s100_n1000:(mix_setup_twoway(100, 1_000))
+  Instructions:                     8602121|N/A                  (*********)
+  L1 Hits:                         12415265|N/A                  (*********)
+  LL Hits:                            88812|N/A                  (*********)
+  RAM Hits:                            6756|N/A                  (*********)
+  Total read+write:                12510833|N/A                  (*********)
+  Estimated Cycles:                13095785|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s100_n10000:(mix_setup_twoway(100, 10_000))
+  Instructions:                     6934130|N/A                  (*********)
+  L1 Hits:                         10211889|N/A                  (*********)
+  LL Hits:                            55909|N/A                  (*********)
+  RAM Hits:                           24152|N/A                  (*********)
+  Total read+write:                10291950|N/A                  (*********)
+  Estimated Cycles:                11336754|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s1000_n10:(mix_setup_twoway(1_000, 10))
+  Instructions:                       82063|N/A                  (*********)
+  L1 Hits:                           118903|N/A                  (*********)
+  LL Hits:                              366|N/A                  (*********)
+  RAM Hits:                              36|N/A                  (*********)
+  Total read+write:                  119305|N/A                  (*********)
+  Estimated Cycles:                  121993|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s1000_n100:(mix_setup_twoway(1_000, 100))
+  Instructions:                      732555|N/A                  (*********)
+  L1 Hits:                          1062433|N/A                  (*********)
+  LL Hits:                             6577|N/A                  (*********)
+  RAM Hits:                             143|N/A                  (*********)
+  Total read+write:                 1069153|N/A                  (*********)
+  Estimated Cycles:                 1100323|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s1000_n1000:(mix_setup_twoway(1_000, 1_000))
+  Instructions:                     8610353|N/A                  (*********)
+  L1 Hits:                         12439712|N/A                  (*********)
+  LL Hits:                            89307|N/A                  (*********)
+  RAM Hits:                            6412|N/A                  (*********)
+  Total read+write:                12535431|N/A                  (*********)
+  Estimated Cycles:                13110667|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s1000_n10000:(mix_setup_twoway(1_000, 10_000))
+  Instructions:                     6934417|N/A                  (*********)
+  L1 Hits:                         10212151|N/A                  (*********)
+  LL Hits:                            56358|N/A                  (*********)
+  RAM Hits:                           23770|N/A                  (*********)
+  Total read+write:                10292279|N/A                  (*********)
+  Estimated Cycles:                11325891|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s10000_n10:(mix_setup_twoway(10_000, 10))
+  Instructions:                       82107|N/A                  (*********)
+  L1 Hits:                           118929|N/A                  (*********)
+  LL Hits:                              385|N/A                  (*********)
+  RAM Hits:                              36|N/A                  (*********)
+  Total read+write:                  119350|N/A                  (*********)
+  Estimated Cycles:                  122114|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s10000_n100:(mix_setup_twoway(10_000, 100))
+  Instructions:                      733144|N/A                  (*********)
+  L1 Hits:                          1063130|N/A                  (*********)
+  LL Hits:                             6612|N/A                  (*********)
+  RAM Hits:                             143|N/A                  (*********)
+  Total read+write:                 1069885|N/A                  (*********)
+  Estimated Cycles:                 1101195|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s10000_n1000:(mix_setup_twoway(10_000, 1_000))
+  Instructions:                     8636021|N/A                  (*********)
+  L1 Hits:                         12513953|N/A                  (*********)
+  LL Hits:                            93573|N/A                  (*********)
+  RAM Hits:                            3038|N/A                  (*********)
+  Total read+write:                12610564|N/A                  (*********)
+  Estimated Cycles:                13088148|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s10000_n10000:(mix_setup_twoway(10_000, 10_000))
+  Instructions:                     6934779|N/A                  (*********)
+  L1 Hits:                         10212580|N/A                  (*********)
+  LL Hits:                            55266|N/A                  (*********)
+  RAM Hits:                           24795|N/A                  (*********)
+  Total read+write:                10292641|N/A                  (*********)
+  Estimated Cycles:                11356735|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s100000_n10:(mix_setup_twoway(100_000, 10))
+  Instructions:                       81614|N/A                  (*********)
+  L1 Hits:                           117978|N/A                  (*********)
+  LL Hits:                              356|N/A                  (*********)
+  RAM Hits:                              70|N/A                  (*********)
+  Total read+write:                  118404|N/A                  (*********)
+  Estimated Cycles:                  122208|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s100000_n100:(mix_setup_twoway(100_000, 100))
+  Instructions:                      731893|N/A                  (*********)
+  L1 Hits:                          1061357|N/A                  (*********)
+  LL Hits:                             6419|N/A                  (*********)
+  RAM Hits:                             281|N/A                  (*********)
+  Total read+write:                 1068057|N/A                  (*********)
+  Estimated Cycles:                 1103287|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s100000_n1000:(mix_setup_twoway(100_000, 1_000))
+  Instructions:                     8602997|N/A                  (*********)
+  L1 Hits:                         12416397|N/A                  (*********)
+  LL Hits:                            94113|N/A                  (*********)
+  RAM Hits:                            1405|N/A                  (*********)
+  Total read+write:                12511915|N/A                  (*********)
+  Estimated Cycles:                12936137|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway s100000_n10000:(mix_setup_twoway(100_000, 10_000))
+  Instructions:                     6932984|N/A                  (*********)
+  L1 Hits:                         10210352|N/A                  (*********)
+  LL Hits:                            53274|N/A                  (*********)
+  RAM Hits:                           26718|N/A                  (*********)
+  Total read+write:                10290344|N/A                  (*********)
+  Estimated Cycles:                11411852|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s10_n10:(mix_setup_back_fresh(10, 10))
+  Instructions:                       45932|N/A                  (*********)
+  L1 Hits:                            66183|N/A                  (*********)
+  LL Hits:                              299|N/A                  (*********)
+  RAM Hits:                              12|N/A                  (*********)
+  Total read+write:                   66494|N/A                  (*********)
+  Estimated Cycles:                   68098|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s10_n100:(mix_setup_back_fresh(10, 100))
+  Instructions:                      423869|N/A                  (*********)
+  L1 Hits:                           609814|N/A                  (*********)
+  LL Hits:                             2797|N/A                  (*********)
+  RAM Hits:                             121|N/A                  (*********)
+  Total read+write:                  612732|N/A                  (*********)
+  Estimated Cycles:                  628034|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s10_n1000:(mix_setup_back_fresh(10, 1_000))
+  Instructions:                     5311367|N/A                  (*********)
+  L1 Hits:                          7697229|N/A                  (*********)
+  LL Hits:                            32060|N/A                  (*********)
+  RAM Hits:                            5886|N/A                  (*********)
+  Total read+write:                 7735175|N/A                  (*********)
+  Estimated Cycles:                 8063539|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s10_n10000:(mix_setup_back_fresh(10, 10_000))
+  Instructions:                    62637346|N/A                  (*********)
+  L1 Hits:                         90999651|N/A                  (*********)
+  LL Hits:                           446863|N/A                  (*********)
+  RAM Hits:                          252704|N/A                  (*********)
+  Total read+write:                91699218|N/A                  (*********)
+  Estimated Cycles:               102078606|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s100_n10:(mix_setup_back_fresh(100, 10))
+  Instructions:                       45958|N/A                  (*********)
+  L1 Hits:                            66172|N/A                  (*********)
+  LL Hits:                              288|N/A                  (*********)
+  RAM Hits:                              12|N/A                  (*********)
+  Total read+write:                   66472|N/A                  (*********)
+  Estimated Cycles:                   68032|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s100_n100:(mix_setup_back_fresh(100, 100))
+  Instructions:                      423879|N/A                  (*********)
+  L1 Hits:                           609817|N/A                  (*********)
+  LL Hits:                             2806|N/A                  (*********)
+  RAM Hits:                             119|N/A                  (*********)
+  Total read+write:                  612742|N/A                  (*********)
+  Estimated Cycles:                  628012|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s100_n1000:(mix_setup_back_fresh(100, 1_000))
+  Instructions:                     5311391|N/A                  (*********)
+  L1 Hits:                          7697263|N/A                  (*********)
+  LL Hits:                            32087|N/A                  (*********)
+  RAM Hits:                            5849|N/A                  (*********)
+  Total read+write:                 7735199|N/A                  (*********)
+  Estimated Cycles:                 8062413|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s100_n10000:(mix_setup_back_fresh(100, 10_000))
+  Instructions:                    62620736|N/A                  (*********)
+  L1 Hits:                         90951241|N/A                  (*********)
+  LL Hits:                           446450|N/A                  (*********)
+  RAM Hits:                          252246|N/A                  (*********)
+  Total read+write:                91649937|N/A                  (*********)
+  Estimated Cycles:               102012101|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s1000_n10:(mix_setup_back_fresh(1_000, 10))
+  Instructions:                       46218|N/A                  (*********)
+  L1 Hits:                            66470|N/A                  (*********)
+  LL Hits:                              313|N/A                  (*********)
+  RAM Hits:                              14|N/A                  (*********)
+  Total read+write:                   66797|N/A                  (*********)
+  Estimated Cycles:                   68525|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s1000_n100:(mix_setup_back_fresh(1_000, 100))
+  Instructions:                      424383|N/A                  (*********)
+  L1 Hits:                           610382|N/A                  (*********)
+  LL Hits:                             2817|N/A                  (*********)
+  RAM Hits:                             121|N/A                  (*********)
+  Total read+write:                  613320|N/A                  (*********)
+  Estimated Cycles:                  628702|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s1000_n1000:(mix_setup_back_fresh(1_000, 1_000))
+  Instructions:                     5311465|N/A                  (*********)
+  L1 Hits:                          7697384|N/A                  (*********)
+  LL Hits:                            32376|N/A                  (*********)
+  RAM Hits:                            5513|N/A                  (*********)
+  Total read+write:                 7735273|N/A                  (*********)
+  Estimated Cycles:                 8052219|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s1000_n10000:(mix_setup_back_fresh(1_000, 10_000))
+  Instructions:                    62612528|N/A                  (*********)
+  L1 Hits:                         90926527|N/A                  (*********)
+  LL Hits:                           446703|N/A                  (*********)
+  RAM Hits:                          252015|N/A                  (*********)
+  Total read+write:                91625245|N/A                  (*********)
+  Estimated Cycles:               101980567|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s10000_n10:(mix_setup_back_fresh(10_000, 10))
+  Instructions:                       46307|N/A                  (*********)
+  L1 Hits:                            66535|N/A                  (*********)
+  LL Hits:                              340|N/A                  (*********)
+  RAM Hits:                              14|N/A                  (*********)
+  Total read+write:                   66889|N/A                  (*********)
+  Estimated Cycles:                   68725|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s10000_n100:(mix_setup_back_fresh(10_000, 100))
+  Instructions:                      424234|N/A                  (*********)
+  L1 Hits:                           610207|N/A                  (*********)
+  LL Hits:                             2804|N/A                  (*********)
+  RAM Hits:                             121|N/A                  (*********)
+  Total read+write:                  613132|N/A                  (*********)
+  Estimated Cycles:                  628462|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s10000_n1000:(mix_setup_back_fresh(10_000, 1_000))
+  Instructions:                     5311580|N/A                  (*********)
+  L1 Hits:                          7697534|N/A                  (*********)
+  LL Hits:                            35721|N/A                  (*********)
+  RAM Hits:                            2138|N/A                  (*********)
+  Total read+write:                 7735393|N/A                  (*********)
+  Estimated Cycles:                 7950969|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s10000_n10000:(mix_setup_back_fresh(10_000, 10_000))
+  Instructions:                    62605152|N/A                  (*********)
+  L1 Hits:                         90903145|N/A                  (*********)
+  LL Hits:                           447302|N/A                  (*********)
+  RAM Hits:                          251258|N/A                  (*********)
+  Total read+write:                91601705|N/A                  (*********)
+  Estimated Cycles:               101933685|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s100000_n10:(mix_setup_back_fresh(100_000, 10))
+  Instructions:                       45852|N/A                  (*********)
+  L1 Hits:                            65773|N/A                  (*********)
+  LL Hits:                              317|N/A                  (*********)
+  RAM Hits:                              33|N/A                  (*********)
+  Total read+write:                   66123|N/A                  (*********)
+  Estimated Cycles:                   68513|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s100000_n100:(mix_setup_back_fresh(100_000, 100))
+  Instructions:                      423831|N/A                  (*********)
+  L1 Hits:                           609486|N/A                  (*********)
+  LL Hits:                             2769|N/A                  (*********)
+  RAM Hits:                             156|N/A                  (*********)
+  Total read+write:                  612411|N/A                  (*********)
+  Estimated Cycles:                  628791|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s100000_n1000:(mix_setup_back_fresh(100_000, 1_000))
+  Instructions:                     5309527|N/A                  (*********)
+  L1 Hits:                          7694755|N/A                  (*********)
+  LL Hits:                            37626|N/A                  (*********)
+  RAM Hits:                             262|N/A                  (*********)
+  Total read+write:                 7732643|N/A                  (*********)
+  Estimated Cycles:                 7892055|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_back_fresh s100000_n10000:(mix_setup_back_fresh(100_000, 10_000))
+  Instructions:                    62619127|N/A                  (*********)
+  L1 Hits:                         90948782|N/A                  (*********)
+  LL Hits:                           444915|N/A                  (*********)
+  RAM Hits:                          254047|N/A                  (*********)
+  Total read+write:                91647744|N/A                  (*********)
+  Estimated Cycles:               102065002|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s10_n10:(mix_setup_twoway_fresh(10, 10))
+  Instructions:                       68890|N/A                  (*********)
+  L1 Hits:                           101712|N/A                  (*********)
+  LL Hits:                              347|N/A                  (*********)
+  RAM Hits:                              17|N/A                  (*********)
+  Total read+write:                  102076|N/A                  (*********)
+  Estimated Cycles:                  104042|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s10_n100:(mix_setup_twoway_fresh(10, 100))
+  Instructions:                      623840|N/A                  (*********)
+  L1 Hits:                           918615|N/A                  (*********)
+  LL Hits:                             5601|N/A                  (*********)
+  RAM Hits:                             126|N/A                  (*********)
+  Total read+write:                  924342|N/A                  (*********)
+  Estimated Cycles:                  951030|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s10_n1000:(mix_setup_twoway_fresh(10, 1_000))
+  Instructions:                     7110903|N/A                  (*********)
+  L1 Hits:                         10435354|N/A                  (*********)
+  LL Hits:                            72674|N/A                  (*********)
+  RAM Hits:                            5891|N/A                  (*********)
+  Total read+write:                10513919|N/A                  (*********)
+  Estimated Cycles:                11004909|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s10_n10000:(mix_setup_twoway_fresh(10, 10_000))
+  Instructions:                     6938729|N/A                  (*********)
+  L1 Hits:                         10216406|N/A                  (*********)
+  LL Hits:                            55566|N/A                  (*********)
+  RAM Hits:                           24535|N/A                  (*********)
+  Total read+write:                10296507|N/A                  (*********)
+  Estimated Cycles:                11352961|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s100_n10:(mix_setup_twoway_fresh(100, 10))
+  Instructions:                       69009|N/A                  (*********)
+  L1 Hits:                           101849|N/A                  (*********)
+  LL Hits:                              316|N/A                  (*********)
+  RAM Hits:                              17|N/A                  (*********)
+  Total read+write:                  102182|N/A                  (*********)
+  Estimated Cycles:                  104024|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s100_n100:(mix_setup_twoway_fresh(100, 100))
+  Instructions:                      624028|N/A                  (*********)
+  L1 Hits:                           918946|N/A                  (*********)
+  LL Hits:                             5443|N/A                  (*********)
+  RAM Hits:                             124|N/A                  (*********)
+  Total read+write:                  924513|N/A                  (*********)
+  Estimated Cycles:                  950501|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s100_n1000:(mix_setup_twoway_fresh(100, 1_000))
+  Instructions:                     7111132|N/A                  (*********)
+  L1 Hits:                         10435703|N/A                  (*********)
+  LL Hits:                            72612|N/A                  (*********)
+  RAM Hits:                            5854|N/A                  (*********)
+  Total read+write:                10514169|N/A                  (*********)
+  Estimated Cycles:                11003653|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s100_n10000:(mix_setup_twoway_fresh(100, 10_000))
+  Instructions:                     6939089|N/A                  (*********)
+  L1 Hits:                         10216845|N/A                  (*********)
+  LL Hits:                            55915|N/A                  (*********)
+  RAM Hits:                           24148|N/A                  (*********)
+  Total read+write:                10296908|N/A                  (*********)
+  Estimated Cycles:                11341600|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s1000_n10:(mix_setup_twoway_fresh(1_000, 10))
+  Instructions:                       68446|N/A                  (*********)
+  L1 Hits:                           101107|N/A                  (*********)
+  LL Hits:                              351|N/A                  (*********)
+  RAM Hits:                              17|N/A                  (*********)
+  Total read+write:                  101475|N/A                  (*********)
+  Estimated Cycles:                  103457|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s1000_n100:(mix_setup_twoway_fresh(1_000, 100))
+  Instructions:                      624113|N/A                  (*********)
+  L1 Hits:                           918825|N/A                  (*********)
+  LL Hits:                             5633|N/A                  (*********)
+  RAM Hits:                             126|N/A                  (*********)
+  Total read+write:                  924584|N/A                  (*********)
+  Estimated Cycles:                  951400|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s1000_n1000:(mix_setup_twoway_fresh(1_000, 1_000))
+  Instructions:                     7111343|N/A                  (*********)
+  L1 Hits:                         10435808|N/A                  (*********)
+  LL Hits:                            73054|N/A                  (*********)
+  RAM Hits:                            5518|N/A                  (*********)
+  Total read+write:                10514380|N/A                  (*********)
+  Estimated Cycles:                10994208|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s1000_n10000:(mix_setup_twoway_fresh(1_000, 10_000))
+  Instructions:                     6939376|N/A                  (*********)
+  L1 Hits:                         10217107|N/A                  (*********)
+  LL Hits:                            56350|N/A                  (*********)
+  RAM Hits:                           23780|N/A                  (*********)
+  Total read+write:                10297237|N/A                  (*********)
+  Estimated Cycles:                11331157|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s10000_n10:(mix_setup_twoway_fresh(10_000, 10))
+  Instructions:                       68446|N/A                  (*********)
+  L1 Hits:                           101079|N/A                  (*********)
+  LL Hits:                              379|N/A                  (*********)
+  RAM Hits:                              17|N/A                  (*********)
+  Total read+write:                  101475|N/A                  (*********)
+  Estimated Cycles:                  103569|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s10000_n100:(mix_setup_twoway_fresh(10_000, 100))
+  Instructions:                      624606|N/A                  (*********)
+  L1 Hits:                           919546|N/A                  (*********)
+  LL Hits:                             5591|N/A                  (*********)
+  RAM Hits:                             124|N/A                  (*********)
+  Total read+write:                  925261|N/A                  (*********)
+  Estimated Cycles:                  951841|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s10000_n1000:(mix_setup_twoway_fresh(10_000, 1_000))
+  Instructions:                     7111501|N/A                  (*********)
+  L1 Hits:                         10436076|N/A                  (*********)
+  LL Hits:                            76319|N/A                  (*********)
+  RAM Hits:                            2143|N/A                  (*********)
+  Total read+write:                10514538|N/A                  (*********)
+  Estimated Cycles:                10892676|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s10000_n10000:(mix_setup_twoway_fresh(10_000, 10_000))
+  Instructions:                     6939738|N/A                  (*********)
+  L1 Hits:                         10217537|N/A                  (*********)
+  LL Hits:                            55263|N/A                  (*********)
+  RAM Hits:                           24799|N/A                  (*********)
+  Total read+write:                10297599|N/A                  (*********)
+  Estimated Cycles:                11361817|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s100000_n10:(mix_setup_twoway_fresh(100_000, 10))
+  Instructions:                       68951|N/A                  (*********)
+  L1 Hits:                           101505|N/A                  (*********)
+  LL Hits:                              353|N/A                  (*********)
+  RAM Hits:                              44|N/A                  (*********)
+  Total read+write:                  101902|N/A                  (*********)
+  Estimated Cycles:                  104810|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s100000_n100:(mix_setup_twoway_fresh(100_000, 100))
+  Instructions:                      624214|N/A                  (*********)
+  L1 Hits:                           918824|N/A                  (*********)
+  LL Hits:                             5583|N/A                  (*********)
+  RAM Hits:                             208|N/A                  (*********)
+  Total read+write:                  924615|N/A                  (*********)
+  Estimated Cycles:                  954019|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s100000_n1000:(mix_setup_twoway_fresh(100_000, 1_000))
+  Instructions:                     7111416|N/A                  (*********)
+  L1 Hits:                         10435993|N/A                  (*********)
+  LL Hits:                            77922|N/A                  (*********)
+  RAM Hits:                             509|N/A                  (*********)
+  Total read+write:                10514424|N/A                  (*********)
+  Estimated Cycles:                10843418|N/A                  (*********)
+rfd_0005_small_side_order_instructions::spacing_mixed::mix_twoway_fresh s100000_n10000:(mix_setup_twoway_fresh(100_000, 10_000))
+  Instructions:                     6937943|N/A                  (*********)
+  L1 Hits:                         10215312|N/A                  (*********)
+  LL Hits:                            53289|N/A                  (*********)
+  RAM Hits:                           26701|N/A                  (*********)
+  Total read+write:                10295302|N/A                  (*********)
+  Estimated Cycles:                11416292|N/A                  (*********)
+
+Gungraun result: Ok. 287 without regressions; 0 regressed; 0 filtered; 287 benchmarks finished in 420.259s

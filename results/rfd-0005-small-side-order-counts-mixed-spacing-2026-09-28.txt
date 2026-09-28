@@ -1,0 +1,76 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-small-side-order-counts at experiments@1e7b257 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0005_small_side_order::tests::mixed_spacing_counts -- --nocapture
+
+    Finished `release` profile [optimized] target(s) in 0.09s
+     Running unittests src/lib.rs (target/release/deps/bough_experiments-546a1df3524d36be)
+
+running 1 test
+fresh spacing: a moved set takes half its gap, away from where the next set
+to that spot goes, and a relabelling leaves half its range open there
+
+300 transactions per workload, 2 slots each; per move:
+  workload  moves   bk vis   bf vis   tw vis   tf vis bk relab bf relab tw relab tf relab
+  settled    1259      0.6      0.6      0.3      0.3      0.0      0.0      0.0      0.0
+  mixed      1261      1.6      1.6      2.0      2.0      0.0      0.0      0.0      0.0
+  churn      1258      3.0      3.0      4.8      4.8      2.2      0.0      0.3      0.0
+  lazy       1249      5.6      5.6      9.3      9.3     11.0      2.5      2.6      0.2
+
+the adversary, acyclic (16 moves, all accepted; no cyclic move is reordered, so none relabels); per move:
+      up   down     back   twoway bk relab bf relab tw relab tf relab
+      10     10     11.0     22.0     10.5      0.0     10.5      0.0
+      10    100     11.0     22.0     10.5      0.0     10.5      0.0
+      10   1000     11.0     22.0     10.5      0.0     10.5      0.0
+      10  10000     11.0     22.0     10.5      0.0     10.5      0.0
+     100     10    101.0     23.0    126.0      0.0      0.0      0.0
+     100    100    101.0    202.0    126.0      0.0    126.0      0.0
+     100   1000    101.0    202.0    126.0      0.0    126.0      0.0
+     100  10000    101.0    202.0    126.0      0.0    126.0      0.0
+    1000     10   1001.0     23.0   1904.4      0.0      0.0      0.0
+    1000    100   1001.0    203.0   1904.4      0.0      0.0      0.0
+    1000   1000   1001.0   2002.0   1904.4      0.0   1904.4      0.0
+    1000  10000   1001.0   2002.0   1904.4      0.0   1904.4      0.0
+   10000     10  10001.0     23.0  23523.0      0.0      0.0      0.0
+   10000    100  10001.0    203.0  25907.2      0.0      0.0      0.0
+   10000   1000  10001.0   2003.0  18440.9      0.0      0.0      0.0
+   10000  10000  10001.0  20002.0  18440.9      0.0  18440.9      0.0
+
+mixed adversary: 16 moves, all accepted, each to a new inner reading `shared` nodes before the switch in the order and `new` nodes of its own after it; the switch's downstream is 1000; per move:
+  shared    new     walk     back   twoway bk relab bf relab tw relab tf relab
+      10     10     22.0     11.0     22.0     10.5      0.0     10.5      0.0
+      10    100    112.0    101.0    202.0    126.0      0.0    126.0      0.0
+      10   1000   1012.0   1001.0   2002.0   1904.5      0.0   1904.5      0.0
+      10  10000  10012.0  10001.0   2003.0  18440.9      0.0      0.0      0.0
+     100     10    112.0     11.0     22.0     10.5      0.0     10.5      0.0
+     100    100    202.0    101.0    202.0    126.0      0.0    126.0      0.0
+     100   1000   1102.0   1001.0   2002.0   1904.5      0.0   1904.5      0.0
+     100  10000  10102.0  10001.0   2003.0  18440.9      0.0      0.0      0.0
+    1000     10   1012.0     11.0     22.0     10.5      0.0     10.5      0.0
+    1000    100   1102.0    101.0    202.0    126.0      0.0    126.0      0.0
+    1000   1000   2002.0   1001.0   2002.0   1904.5      0.0   1904.5      0.0
+    1000  10000  11002.0  10001.0   2003.0  18440.9      0.0      0.0      0.0
+   10000     10  10012.0     11.0     22.0     10.5      0.0     10.5      0.0
+   10000    100  10102.0    101.0    202.0    126.0      0.0    126.0      0.0
+   10000   1000  11002.0   1001.0   2002.0   1904.5      0.0   1904.5      0.0
+   10000  10000  20002.0  10001.0   2003.0  18440.9      0.0      0.0      0.0
+  100000     10 100012.0     11.0     22.0     10.5      0.0     10.5      0.0
+  100000    100 100102.0    101.0    202.0    126.0      0.0    126.0      0.0
+  100000   1000 101002.0   1001.0   2002.0   1904.5      0.0   1904.5      0.0
+  100000  10000 110002.0  10001.0   2003.0  18440.9      0.0      0.0      0.0
+
+the list alone: 1000 sets of k new nodes, each moved just before one node (as back does) or just after one (as twoway's forward side does); per move:
+       k  before even before fresh   after even  after fresh
+       1          5.1          2.6          5.2          2.5
+      10         68.0         27.3         61.4         30.6
+     100        630.8        310.0        651.5        310.0
+    1000       6324.2       2368.5       6729.1       2368.5
+
+vis and walk/back/twoway: nodes visited per move, walked upstream from the new
+inner (walk), searched back only (back, bk, bf) or both ways (twoway, tw, tf).
+bf and tf are back and twoway with fresh spacing. relab: nodes the list gave new
+labels to make room, per move, apart from those moved. On the adversaries the
+searches visit the same nodes with either spacing; on the workloads the orders
+differ, so the searches can too.
+test rfd_0005_small_side_order::tests::mixed_spacing_counts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 45 filtered out; finished in 7.60s
+
