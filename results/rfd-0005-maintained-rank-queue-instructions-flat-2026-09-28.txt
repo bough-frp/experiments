@@ -1,0 +1,1268 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-maintained-rank-queue-instructions at experiments@b0701be - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0005-maintained-rank-queue-instructions
+
+   Compiling bough-experiments v0.1.0 (/home/zefs/prog/bough/experiments)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 9.72s
+     Running benches/rfd-0005-maintained-rank-queue-instructions.rs (target/release/deps/rfd_0005_maintained_rank_queue_instructions-c4b9bd74456f26a1)
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline settled_0:(walked("settled", 100))
+  Instructions:                   489139578|500831124            (-2.33443%) [-1.02390x]
+  L1 Hits:                        667397297|686884832            (-2.83709%) [-1.02920x]
+  LL Hits:                          9626766|9626046              (+0.00748%) [+1.00007x]
+  RAM Hits:                            1782|1786                 (-0.22396%) [-1.00224x]
+  Total read+write:               677025845|696512664            (-2.79777%) [-1.02878x]
+  Estimated Cycles:               715593497|735077572            (-2.65061%) [-1.02723x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline settled_1:(walked("settled", 50))
+  Instructions:                   429732656|439097322            (-2.13271%) [-1.02179x]
+  L1 Hits:                        593346820|608180253            (-2.43899%) [-1.02500x]
+  LL Hits:                          8953039|8952662              (+0.00421%) [+1.00004x]
+  RAM Hits:                            1766|1769                 (-0.16959%) [-1.00170x]
+  Total read+write:               602301625|617134684            (-2.40354%) [-1.02463x]
+  Estimated Cycles:               638173825|653005478            (-2.27129%) [-1.02324x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline settled_2:(walked("settled", 30))
+  Instructions:                   374583933|381884023            (-1.91160%) [-1.01949x]
+  L1 Hits:                        524814564|535518365            (-1.99877%) [-1.02040x]
+  LL Hits:                          8281652|8281754              (-0.00123%) [-1.00001x]
+  RAM Hits:                            1760|1764                 (-0.22676%) [-1.00227x]
+  Total read+write:               533097976|543801883            (-1.96835%) [-1.02008x]
+  Estimated Cycles:               566284424|576988875            (-1.85523%) [-1.01890x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline settled_3:(walked("settled", 20))
+  Instructions:                   342976904|349105958            (-1.75564%) [-1.01787x]
+  L1 Hits:                        485557986|493919429            (-1.69288%) [-1.01722x]
+  LL Hits:                          7895438|7895827              (-0.00493%) [-1.00005x]
+  RAM Hits:                            1741|1744                 (-0.17202%) [-1.00172x]
+  Total read+write:               493455165|501817000            (-1.66631%) [-1.01695x]
+  Estimated Cycles:               525096111|533459604            (-1.56778%) [-1.01593x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline settled_4:(walked("settled", 5))
+  Instructions:                   291464325|295717435            (-1.43823%) [-1.01459x]
+  L1 Hits:                        421636978|426246011            (-1.08131%) [-1.01093x]
+  LL Hits:                          7256323|7257234              (-0.01255%) [-1.00013x]
+  RAM Hits:                            1662|1665                 (-0.18018%) [-1.00181x]
+  Total read+write:               428894963|433504910            (-1.06341%) [-1.01075x]
+  Estimated Cycles:               457976763|462590456            (-0.99736%) [-1.01007x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline mixed_0:(walked("mixed", 100))
+  Instructions:                   434636388|445093887            (-2.34950%) [-1.02406x]
+  L1 Hits:                        593882266|611312261            (-2.85124%) [-1.02935x]
+  LL Hits:                          8546193|8546639              (-0.00522%) [-1.00005x]
+  RAM Hits:                            6885|6888                 (-0.04355%) [-1.00044x]
+  Total read+write:               602435344|619865788            (-2.81197%) [-1.02893x]
+  Estimated Cycles:               636854206|654286536            (-2.66433%) [-1.02737x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline mixed_1:(walked("mixed", 50))
+  Instructions:                   370319016|378282991            (-2.10530%) [-1.02151x]
+  L1 Hits:                        513783043|526225206            (-2.36442%) [-1.02422x]
+  LL Hits:                          7787574|7788803              (-0.01578%) [-1.00016x]
+  RAM Hits:                            6859|6863                 (-0.05828%) [-1.00058x]
+  Total read+write:               521577476|534020872            (-2.33013%) [-1.02386x]
+  Estimated Cycles:               552960978|565409426            (-2.20167%) [-1.02251x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline mixed_2:(walked("mixed", 30))
+  Instructions:                   317661953|323661936            (-1.85378%) [-1.01889x]
+  L1 Hits:                        448293208|456807944            (-1.86396%) [-1.01899x]
+  LL Hits:                          7124117|7124789              (-0.00943%) [-1.00009x]
+  RAM Hits:                            5704|5708                 (-0.07008%) [-1.00070x]
+  Total read+write:               455423029|463938441            (-1.83546%) [-1.01870x]
+  Estimated Cycles:               484113433|492631669            (-1.72913%) [-1.01760x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline mixed_3:(walked("mixed", 20))
+  Instructions:                   294969003|300128466            (-1.71908%) [-1.01749x]
+  L1 Hits:                        420111578|426945333            (-1.60062%) [-1.01627x]
+  LL Hits:                          6843640|6844253              (-0.00896%) [-1.00009x]
+  RAM Hits:                            5705|5709                 (-0.07006%) [-1.00070x]
+  Total read+write:               426960923|433795295            (-1.57548%) [-1.01601x]
+  Estimated Cycles:               454529453|461366413            (-1.48189%) [-1.01504x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline mixed_4:(walked("mixed", 5))
+  Instructions:                   252816682|256441233            (-1.41340%) [-1.01434x]
+  L1 Hits:                        367829340|371592707            (-1.01277%) [-1.01023x]
+  LL Hits:                          6311344|6312521              (-0.01865%) [-1.00019x]
+  RAM Hits:                            5705|5709                 (-0.07006%) [-1.00070x]
+  Total read+write:               374146389|377910937            (-0.99615%) [-1.01006x]
+  Estimated Cycles:               399585735|403355127            (-0.93451%) [-1.00943x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline churn_0:(walked("churn", 100))
+  Instructions:                   382279242|391505467            (-2.35660%) [-1.02413x]
+  L1 Hits:                        522156010|537533421            (-2.86074%) [-1.02945x]
+  LL Hits:                          7605870|7607233              (-0.01792%) [-1.00018x]
+  RAM Hits:                            8119|8124                 (-0.06155%) [-1.00062x]
+  Total read+write:               529769999|545148778            (-2.82102%) [-1.02903x]
+  Estimated Cycles:               560469525|575853926            (-2.67158%) [-1.02745x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline churn_1:(walked("churn", 50))
+  Instructions:                   306874744|313215073            (-2.02427%) [-1.02066x]
+  L1 Hits:                        428352421|437958171            (-2.19330%) [-1.02242x]
+  LL Hits:                          6681472|6682706              (-0.01847%) [-1.00018x]
+  RAM Hits:                            8120|8123                 (-0.03693%) [-1.00037x]
+  Total read+write:               435042013|444649000            (-2.16058%) [-1.02208x]
+  Estimated Cycles:               462043981|471656006            (-2.03793%) [-1.02080x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline churn_2:(walked("churn", 30))
+  Instructions:                   271510319|276529120            (-1.81493%) [-1.01848x]
+  L1 Hits:                        384289290|391252419            (-1.77970%) [-1.01812x]
+  LL Hits:                          6224191|6224989              (-0.01282%) [-1.00013x]
+  RAM Hits:                            6760|6764                 (-0.05914%) [-1.00059x]
+  Total read+write:               390520241|397484172            (-1.75200%) [-1.01783x]
+  Estimated Cycles:               415646845|422614104            (-1.64861%) [-1.01676x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline churn_3:(walked("churn", 20))
+  Instructions:                   250829790|255085863            (-1.66849%) [-1.01697x]
+  L1 Hits:                        358613627|364050909            (-1.49355%) [-1.01516x]
+  LL Hits:                          5966793|5967982              (-0.01992%) [-1.00020x]
+  RAM Hits:                            6759|6763                 (-0.05915%) [-1.00059x]
+  Total read+write:               364587179|370025654            (-1.46976%) [-1.01492x]
+  Estimated Cycles:               388684157|394127524            (-1.38112%) [-1.01400x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline churn_4:(walked("churn", 5))
+  Instructions:                   222156428|225366877            (-1.42454%) [-1.01445x]
+  L1 Hits:                        323053008|326399311            (-1.02522%) [-1.01036x]
+  LL Hits:                          5602937|5603857              (-0.01642%) [-1.00016x]
+  RAM Hits:                            6757|6761                 (-0.05916%) [-1.00059x]
+  Total read+write:               328662702|332009929            (-1.00817%) [-1.01018x]
+  Estimated Cycles:               351304188|354655231            (-0.94487%) [-1.00954x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline lazy_0:(walked("lazy", 100))
+  Instructions:                   380277730|389463641            (-2.35861%) [-1.02416x]
+  L1 Hits:                        519016491|534329988            (-2.86593%) [-1.02950x]
+  LL Hits:                          7727117|7725469              (+0.02133%) [+1.00021x]
+  RAM Hits:                           14350|14354                (-0.02787%) [-1.00028x]
+  Total read+write:               526757958|542069811            (-2.82470%) [-1.02907x]
+  Estimated Cycles:               558154326|573459723            (-2.66896%) [-1.02742x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline lazy_1:(walked("lazy", 50))
+  Instructions:                   295007421|300944552            (-1.97283%) [-1.02013x]
+  L1 Hits:                        412988882|421805096            (-2.09012%) [-1.02135x]
+  LL Hits:                          6656642|6654716              (+0.02894%) [+1.00029x]
+  RAM Hits:                           14320|14325                (-0.03490%) [-1.00035x]
+  Total read+write:               419659844|428474137            (-2.05714%) [-1.02100x]
+  Estimated Cycles:               446773292|455580051            (-1.93309%) [-1.01971x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline lazy_2:(walked("lazy", 30))
+  Instructions:                   260712707|265367446            (-1.75407%) [-1.01785x]
+  L1 Hits:                        370400528|376652182            (-1.65979%) [-1.01688x]
+  LL Hits:                          6211364|6209214              (+0.03463%) [+1.00035x]
+  RAM Hits:                           14267|14272                (-0.03503%) [-1.00035x]
+  Total read+write:               376626159|382875668            (-1.63226%) [-1.01659x]
+  Estimated Cycles:               401956693|408197772            (-1.52894%) [-1.01553x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline lazy_3:(walked("lazy", 20))
+  Instructions:                   242183236|246154127            (-1.61317%) [-1.01640x]
+  L1 Hits:                        347405184|352288390            (-1.38614%) [-1.01406x]
+  LL Hits:                          5970141|5968744              (+0.02341%) [+1.00023x]
+  RAM Hits:                           14268|14272                (-0.02803%) [-1.00028x]
+  Total read+write:               353389593|358271406            (-1.36260%) [-1.01381x]
+  Estimated Cycles:               377755269|382631630            (-1.27443%) [-1.01291x]
+rfd_0005_maintained_rank_queue_instructions::transactions::baseline lazy_4:(walked("lazy", 5))
+  Instructions:                   219708843|222862026            (-1.41486%) [-1.01435x]
+  L1 Hits:                        319445900|322693297            (-1.00634%) [-1.01017x]
+  LL Hits:                          5673183|5672179              (+0.01770%) [+1.00018x]
+  RAM Hits:                           13648|13652                (-0.02930%) [-1.00029x]
+  Total read+write:               325132731|328379128            (-0.98861%) [-1.00998x]
+  Estimated Cycles:               348289495|351532012            (-0.92240%) [-1.00931x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om settled_0:(mark_om("settled", 100))
+  Instructions:                   471917903|487252966            (-3.14725%) [-1.03250x]
+  L1 Hits:                        642282044|665414847            (-3.47645%) [-1.03602x]
+  LL Hits:                          8960710|8958636              (+0.02315%) [+1.00023x]
+  RAM Hits:                            1821|1817                 (+0.22014%) [+1.00220x]
+  Total read+write:               651244575|674375300            (-3.42995%) [-1.03552x]
+  Estimated Cycles:               687149329|710271622            (-3.25542%) [-1.03365x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om settled_1:(mark_om("settled", 50))
+  Instructions:                   412510981|425519164            (-3.05701%) [-1.03153x]
+  L1 Hits:                        568228039|586707021            (-3.14961%) [-1.03252x]
+  LL Hits:                          8290512|8288498              (+0.02430%) [+1.00024x]
+  RAM Hits:                            1804|1801                 (+0.16657%) [+1.00167x]
+  Total read+write:               576520355|594997320            (-3.10539%) [-1.03205x]
+  Estimated Cycles:               609743739|628212546            (-2.93990%) [-1.03029x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om settled_2:(mark_om("settled", 30))
+  Instructions:                   357362136|368305743            (-2.97134%) [-1.03062x]
+  L1 Hits:                        499696570|514046587            (-2.79158%) [-1.02872x]
+  LL Hits:                          7618134|7615933              (+0.02890%) [+1.00029x]
+  RAM Hits:                            1798|1795                 (+0.16713%) [+1.00167x]
+  Total read+write:               507316502|521664315            (-2.75039%) [-1.02828x]
+  Estimated Cycles:               537850170|552189077            (-2.59674%) [-1.02666x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om settled_3:(mark_om("settled", 20))
+  Instructions:                   325755102|335527673            (-2.91260%) [-1.03000x]
+  L1 Hits:                        460441418|472449313            (-2.54163%) [-1.02608x]
+  LL Hits:                          7230490|7228338              (+0.02977%) [+1.00030x]
+  RAM Hits:                            1778|1776                 (+0.11261%) [+1.00113x]
+  Total read+write:               467673686|479679427            (-2.50287%) [-1.02567x]
+  Estimated Cycles:               496656098|508653163            (-2.35859%) [-1.02416x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om settled_4:(mark_om("settled", 5))
+  Instructions:                   274242921|282139548            (-2.79884%) [-1.02879x]
+  L1 Hits:                        396521462|404777244            (-2.03959%) [-1.02082x]
+  LL Hits:                          6590861|6588936              (+0.02922%) [+1.00029x]
+  RAM Hits:                            1700|1696                 (+0.23585%) [+1.00236x]
+  Total read+write:               403114023|411367876            (-2.00644%) [-1.02048x]
+  Estimated Cycles:               429535267|437781284            (-1.88359%) [-1.01920x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om mixed_0:(mark_om("mixed", 100))
+  Instructions:                   424302828|438019136            (-3.13144%) [-1.03233x]
+  L1 Hits:                        579008519|599703325            (-3.45084%) [-1.03574x]
+  LL Hits:                          8174583|8172644              (+0.02373%) [+1.00024x]
+  RAM Hits:                           10209|10209                (No change)
+  Total read+write:               587193311|607886178            (-3.40407%) [-1.03524x]
+  Estimated Cycles:               620238749|640923860            (-3.22739%) [-1.03335x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om mixed_1:(mark_om("mixed", 50))
+  Instructions:                   359985456|371208240            (-3.02331%) [-1.03118x]
+  L1 Hits:                        498901293|514609383            (-3.05243%) [-1.03149x]
+  LL Hits:                          7423968|7421696              (+0.03061%) [+1.00031x]
+  RAM Hits:                           10182|10183                (-0.00982%) [-1.00010x]
+  Total read+write:               506335443|522041262            (-3.00854%) [-1.03102x]
+  Estimated Cycles:               536377503|552074268            (-2.84323%) [-1.02926x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om mixed_2:(mark_om("mixed", 30))
+  Instructions:                   307410795|316669587            (-2.92380%) [-1.03012x]
+  L1 Hits:                        433640039|445419970            (-2.64468%) [-1.02717x]
+  LL Hits:                          6777566|6775469              (+0.03095%) [+1.00031x]
+  RAM Hits:                            8391|8392                 (-0.01192%) [-1.00012x]
+  Total read+write:               440425996|452203831            (-2.60454%) [-1.02674x]
+  Estimated Cycles:               467821554|479591035            (-2.45407%) [-1.02516x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om mixed_3:(mark_om("mixed", 20))
+  Instructions:                   284717188|293135460            (-2.87180%) [-1.02957x]
+  L1 Hits:                        405459361|415558230            (-2.43019%) [-1.02491x]
+  LL Hits:                          6495237|6493163              (+0.03194%) [+1.00032x]
+  RAM Hits:                            8392|8392                 (No change)
+  Total read+write:               411962990|422059785            (-2.39227%) [-1.02451x]
+  Estimated Cycles:               438229266|448317765            (-2.25030%) [-1.02302x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om mixed_4:(mark_om("mixed", 5))
+  Instructions:                   242565374|249448734            (-2.75943%) [-1.02838x]
+  L1 Hits:                        353174283|360202778            (-1.95126%) [-1.01990x]
+  LL Hits:                          5966554|5965030              (+0.02555%) [+1.00026x]
+  RAM Hits:                            8392|8392                 (No change)
+  Total read+write:               359149229|366176200            (-1.91901%) [-1.01957x]
+  Estimated Cycles:               383300773|390321648            (-1.79874%) [-1.01832x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om churn_0:(mark_om("churn", 100))
+  Instructions:                   376727436|388837087            (-3.11433%) [-1.03214x]
+  L1 Hits:                        514195929|532470312            (-3.43200%) [-1.03554x]
+  LL Hits:                          7410244|7408281              (+0.02650%) [+1.00026x]
+  RAM Hits:                           11971|11966                (+0.04179%) [+1.00042x]
+  Total read+write:               521618144|539890559            (-3.38447%) [-1.03503x]
+  Estimated Cycles:               551666134|569930527            (-3.20467%) [-1.03311x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om churn_1:(mark_om("churn", 50))
+  Instructions:                   301354770|310578525            (-2.96986%) [-1.03061x]
+  L1 Hits:                        420476917|432979211            (-2.88750%) [-1.02973x]
+  LL Hits:                          6498354|6496688              (+0.02564%) [+1.00026x]
+  RAM Hits:                           11971|11966                (+0.04179%) [+1.00042x]
+  Total read+write:               426987242|439487865            (-2.84436%) [-1.02928x]
+  Estimated Cycles:               453387672|465881461            (-2.68175%) [-1.02756x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om churn_2:(mark_om("churn", 30))
+  Instructions:                   266073001|273975228            (-2.88429%) [-1.02970x]
+  L1 Hits:                        376642165|386501124            (-2.55082%) [-1.02618x]
+  LL Hits:                          6058398|6057009              (+0.02293%) [+1.00023x]
+  RAM Hits:                            9971|9968                 (+0.03010%) [+1.00030x]
+  Total read+write:               382710534|392568101            (-2.51105%) [-1.02576x]
+  Estimated Cycles:               407283140|417135049            (-2.36180%) [-1.02419x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om churn_3:(mark_om("churn", 20))
+  Instructions:                   245391602|252531101            (-2.82718%) [-1.02909x]
+  L1 Hits:                        350968993|359302429            (-2.31934%) [-1.02374x]
+  LL Hits:                          5797314|5795994              (+0.02277%) [+1.00023x]
+  RAM Hits:                            9973|9968                 (+0.05016%) [+1.00050x]
+  Total read+write:               356776280|365108391            (-2.28209%) [-1.02335x]
+  Estimated Cycles:               380304618|388631279            (-2.14256%) [-1.02189x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om churn_4:(mark_om("churn", 5))
+  Instructions:                   216719457|222813332            (-2.73497%) [-1.02812x]
+  L1 Hits:                        315416191|321657992            (-1.94051%) [-1.01979x]
+  LL Hits:                          5427579|5426645              (+0.01721%) [+1.00017x]
+  RAM Hits:                            9970|9966                 (+0.04014%) [+1.00040x]
+  Total read+write:               320853740|327094603            (-1.90797%) [-1.01945x]
+  Estimated Cycles:               342903036|349140027            (-1.78639%) [-1.01819x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om lazy_0:(mark_om("lazy", 100))
+  Instructions:                   378134791|390208203            (-3.09409%) [-1.03193x]
+  L1 Hits:                        515971984|534195646            (-3.41142%) [-1.03532x]
+  LL Hits:                          7650167|7649128              (+0.01358%) [+1.00014x]
+  RAM Hits:                           17731|17728                (+0.01692%) [+1.00017x]
+  Total read+write:               523639882|541862502            (-3.36296%) [-1.03480x]
+  Estimated Cycles:               554843404|573061766            (-3.17913%) [-1.03284x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om lazy_1:(mark_om("lazy", 50))
+  Instructions:                   292864436|301689068            (-2.92508%) [-1.03013x]
+  L1 Hits:                        409940121|421667033            (-2.78108%) [-1.02861x]
+  LL Hits:                          6583884|6582037              (+0.02806%) [+1.00028x]
+  RAM Hits:                           17732|17727                (+0.02821%) [+1.00028x]
+  Total read+write:               416541737|428266797            (-2.73779%) [-1.02815x]
+  Estimated Cycles:               443480161|455197663            (-2.57416%) [-1.02642x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om lazy_2:(mark_om("lazy", 30))
+  Instructions:                   258567785|266110025            (-2.83426%) [-1.02917x]
+  L1 Hits:                        367351045|376512947            (-2.43336%) [-1.02494x]
+  LL Hits:                          6136652|6135030              (+0.02644%) [+1.00026x]
+  RAM Hits:                           17732|17728                (+0.02256%) [+1.00023x]
+  Total read+write:               373505429|382665705            (-2.39381%) [-1.02453x]
+  Estimated Cycles:               398654925|407808577            (-2.24460%) [-1.02296x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om lazy_3:(mark_om("lazy", 20))
+  Instructions:                   240038864|246897256            (-2.77783%) [-1.02857x]
+  L1 Hits:                        344357900|352151845            (-2.21323%) [-1.02263x]
+  LL Hits:                          5893985|5892624              (+0.02310%) [+1.00023x]
+  RAM Hits:                           17736|17732                (+0.02256%) [+1.00023x]
+  Total read+write:               350269621|358062201            (-2.17632%) [-1.02225x]
+  Estimated Cycles:               374448585|382235585            (-2.03723%) [-1.02080x]
+rfd_0005_maintained_rank_queue_instructions::transactions::mark_with_om lazy_4:(mark_om("lazy", 5))
+  Instructions:                   217569546|223610230            (-2.70143%) [-1.02776x]
+  L1 Hits:                        316406282|322564266            (-1.90907%) [-1.01946x]
+  LL Hits:                          5595417|5594602              (+0.01457%) [+1.00015x]
+  RAM Hits:                           17737|17732                (+0.02820%) [+1.00028x]
+  Total read+write:               322019436|328176600            (-1.87617%) [-1.01912x]
+  Estimated Cycles:               345004162|351157896            (-1.75241%) [-1.01784x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix settled_0:(radix_queue("settled", 100))
+  Instructions:                  1314685323|1333959167           (-1.44486%) [-1.01466x]
+  L1 Hits:                       1808292204|1840968252           (-1.77494%) [-1.01807x]
+  LL Hits:                         21725117|21756882             (-0.14600%) [-1.00146x]
+  RAM Hits:                            3953|3950                 (+0.07595%) [+1.00076x]
+  Total read+write:              1830021274|1862729084           (-1.75591%) [-1.01787x]
+  Estimated Cycles:              1917056144|1949890912           (-1.68393%) [-1.01713x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix settled_1:(radix_queue("settled", 50))
+  Instructions:                   914238995|927769634            (-1.45841%) [-1.01480x]
+  L1 Hits:                       1257793941|1280731993           (-1.79101%) [-1.01824x]
+  LL Hits:                         15124575|15127743             (-0.02094%) [-1.00021x]
+  RAM Hits:                            3571|3567                 (+0.11214%) [+1.00112x]
+  Total read+write:              1272922087|1295863303           (-1.77034%) [-1.01802x]
+  Estimated Cycles:              1333541801|1356495553           (-1.69214%) [-1.01721x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix settled_2:(radix_queue("settled", 30))
+  Instructions:                   565823713|574247800            (-1.46698%) [-1.01489x]
+  L1 Hits:                        778707412|792975045            (-1.79925%) [-1.01832x]
+  LL Hits:                          9324316|9330196              (-0.06302%) [-1.00063x]
+  RAM Hits:                            3263|3258                 (+0.15347%) [+1.00153x]
+  Total read+write:               788034991|802308499            (-1.77905%) [-1.01811x]
+  Estimated Cycles:               825443197|839740055            (-1.70253%) [-1.01732x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix settled_3:(radix_queue("settled", 20))
+  Instructions:                   369185044|374712590            (-1.47514%) [-1.01497x]
+  L1 Hits:                        508302225|517656496            (-1.80704%) [-1.01840x]
+  LL Hits:                          6037259|6041720              (-0.07384%) [-1.00074x]
+  RAM Hits:                            2812|2809                 (+0.10680%) [+1.00107x]
+  Total read+write:               514342296|523701025            (-1.78704%) [-1.01820x]
+  Estimated Cycles:               538586940|547963411            (-1.71115%) [-1.01741x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix settled_4:(radix_queue("settled", 5))
+  Instructions:                    62144796|63036432             (-1.41448%) [-1.01435x]
+  L1 Hits:                         85854276|87352088             (-1.71468%) [-1.01745x]
+  LL Hits:                           936389|936568               (-0.01911%) [-1.00019x]
+  RAM Hits:                            2395|2391                 (+0.16729%) [+1.00167x]
+  Total read+write:                86793060|88291047             (-1.69665%) [-1.01726x]
+  Estimated Cycles:                90620046|92118613             (-1.62678%) [-1.01654x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix mixed_0:(radix_queue("mixed", 100))
+  Instructions:                  1171478084|1188692192           (-1.44816%) [-1.01469x]
+  L1 Hits:                       1613290008|1642481300           (-1.77727%) [-1.01809x]
+  LL Hits:                         19091494|19103148             (-0.06101%) [-1.00061x]
+  RAM Hits:                           11142|11140                (+0.01795%) [+1.00018x]
+  Total read+write:              1632392644|1661595588           (-1.75752%) [-1.01789x]
+  Estimated Cycles:              1709137448|1738386940           (-1.68257%) [-1.01711x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix mixed_1:(radix_queue("mixed", 50))
+  Instructions:                   746439549|757509797            (-1.46140%) [-1.01483x]
+  L1 Hits:                       1028880607|1047643021           (-1.79092%) [-1.01824x]
+  LL Hits:                         12181020|12180892             (+0.00105%) [+1.00001x]
+  RAM Hits:                           11118|11115                (+0.02699%) [+1.00027x]
+  Total read+write:              1041072745|1059835028           (-1.77030%) [-1.01802x]
+  Estimated Cycles:              1090174837|1108936506           (-1.69186%) [-1.01721x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix mixed_2:(radix_queue("mixed", 30))
+  Instructions:                   418074560|424296475            (-1.46641%) [-1.01488x]
+  L1 Hits:                        577182263|587719099            (-1.79284%) [-1.01826x]
+  LL Hits:                          6822923|6821976              (+0.01388%) [+1.00014x]
+  RAM Hits:                            9290|9288                 (+0.02153%) [+1.00022x]
+  Total read+write:               584014476|594550363            (-1.77208%) [-1.01804x]
+  Estimated Cycles:               611622028|622154059            (-1.69283%) [-1.01722x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix mixed_3:(radix_queue("mixed", 20))
+  Instructions:                   278232569|282378974            (-1.46838%) [-1.01490x]
+  L1 Hits:                        384753305|391772771            (-1.79172%) [-1.01824x]
+  LL Hits:                          4509711|4505027              (+0.10397%) [+1.00104x]
+  RAM Hits:                            9292|9289                 (+0.03230%) [+1.00032x]
+  Total read+write:               389272308|396287087            (-1.77013%) [-1.01802x]
+  Estimated Cycles:               407627080|414623021            (-1.68730%) [-1.01716x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix mixed_4:(radix_queue("mixed", 5))
+  Instructions:                    29697839|30058532             (-1.19997%) [-1.01215x]
+  L1 Hits:                         42665556|43263384             (-1.38183%) [-1.01401x]
+  LL Hits:                           438510|438187               (+0.07371%) [+1.00074x]
+  RAM Hits:                            9293|9289                 (+0.04306%) [+1.00043x]
+  Total read+write:                43113359|43710860             (-1.36694%) [-1.01386x]
+  Estimated Cycles:                45183361|45779434             (-1.30205%) [-1.01319x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix churn_0:(radix_queue("churn", 100))
+  Instructions:                  1043226886|1058382878           (-1.43200%) [-1.01453x]
+  L1 Hits:                       1437328628|1463019721           (-1.75603%) [-1.01787x]
+  LL Hits:                         16402755|16409988             (-0.04408%) [-1.00044x]
+  RAM Hits:                           12324|12317                (+0.05683%) [+1.00057x]
+  Total read+write:              1453743707|1479442026           (-1.73703%) [-1.01768x]
+  Estimated Cycles:              1519773743|1545500756           (-1.66464%) [-1.01693x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix churn_1:(radix_queue("churn", 50))
+  Instructions:                   548640326|556704955            (-1.44864%) [-1.01470x]
+  L1 Hits:                        757098430|770747463            (-1.77088%) [-1.01803x]
+  LL Hits:                          8694115|8703620              (-0.10921%) [-1.00109x]
+  RAM Hits:                           10931|10924                (+0.06408%) [+1.00064x]
+  Total read+write:               765803476|779462007            (-1.75230%) [-1.01784x]
+  Estimated Cycles:               800951590|814647903            (-1.68126%) [-1.01710x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix churn_2:(radix_queue("churn", 30))
+  Instructions:                   326291874|331104228            (-1.45343%) [-1.01475x]
+  L1 Hits:                        451046101|459179121            (-1.77121%) [-1.01803x]
+  LL Hits:                          5169843|5177824              (-0.15414%) [-1.00154x]
+  RAM Hits:                           10968|10962                (+0.05473%) [+1.00055x]
+  Total read+write:               456226912|464367907            (-1.75313%) [-1.01784x]
+  Estimated Cycles:               477279196|485451911            (-1.68353%) [-1.01712x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix churn_3:(radix_queue("churn", 20))
+  Instructions:                   200664203|203598214            (-1.44108%) [-1.01462x]
+  L1 Hits:                        278122287|283075506            (-1.74979%) [-1.01781x]
+  LL Hits:                          3150033|3152741              (-0.08589%) [-1.00086x]
+  RAM Hits:                           10965|10959                (+0.05475%) [+1.00055x]
+  Total read+write:               281283285|286239206            (-1.73139%) [-1.01762x]
+  Estimated Cycles:               294256227|299222776            (-1.65982%) [-1.01688x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix churn_4:(radix_queue("churn", 5))
+  Instructions:                    31688193|32051639             (-1.13394%) [-1.01147x]
+  L1 Hits:                         45455875|46055956             (-1.30294%) [-1.01320x]
+  LL Hits:                           455704|455020               (+0.15032%) [+1.00150x]
+  RAM Hits:                           10967|10961                (+0.05474%) [+1.00055x]
+  Total read+write:                45922546|46521937             (-1.28841%) [-1.01305x]
+  Estimated Cycles:                48118240|48714691             (-1.22438%) [-1.01240x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix lazy_0:(radix_queue("lazy", 100))
+  Instructions:                  1053379744|1068435609           (-1.40915%) [-1.01429x]
+  L1 Hits:                       1451751432|1477260693           (-1.72679%) [-1.01757x]
+  LL Hits:                         15599619|15601398             (-0.01140%) [-1.00011x]
+  RAM Hits:                           18941|18935                (+0.03169%) [+1.00032x]
+  Total read+write:              1467369992|1492881026           (-1.70885%) [-1.01739x]
+  Estimated Cycles:              1530412462|1555930408           (-1.64004%) [-1.01667x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix lazy_1:(radix_queue("lazy", 50))
+  Instructions:                   489884338|496981817            (-1.42812%) [-1.01449x]
+  L1 Hits:                        676540052|688551886            (-1.74451%) [-1.01775x]
+  LL Hits:                          7313823|7310756              (+0.04195%) [+1.00042x]
+  RAM Hits:                           18564|18556                (+0.04311%) [+1.00043x]
+  Total read+write:               683872439|695881198            (-1.72569%) [-1.01756x]
+  Estimated Cycles:               713758907|725755126            (-1.65293%) [-1.01681x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix lazy_2:(radix_queue("lazy", 30))
+  Instructions:                   273221724|277176545            (-1.42682%) [-1.01447x]
+  L1 Hits:                        378369728|385052839            (-1.73563%) [-1.01766x]
+  LL Hits:                          4079547|4076968              (+0.06326%) [+1.00063x]
+  RAM Hits:                           18340|18333                (+0.03818%) [+1.00038x]
+  Total read+write:               382467615|389148140            (-1.71670%) [-1.01747x]
+  Estimated Cycles:               399409363|406079334            (-1.64253%) [-1.01670x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix lazy_3:(radix_queue("lazy", 20))
+  Instructions:                   159913122|162190368            (-1.40406%) [-1.01424x]
+  L1 Hits:                        222364504|226203203            (-1.69701%) [-1.01726x]
+  LL Hits:                          2364667|2363165              (+0.06356%) [+1.00064x]
+  RAM Hits:                           18300|18292                (+0.04373%) [+1.00044x]
+  Total read+write:               224747471|228584660            (-1.67867%) [-1.01707x]
+  Estimated Cycles:               234828339|238659248            (-1.60518%) [-1.01631x]
+rfd_0005_maintained_rank_queue_instructions::transactions::radix lazy_4:(radix_queue("lazy", 5))
+  Instructions:                    28714427|28991875             (-0.95699%) [-1.00966x]
+  L1 Hits:                         41417019|41867263             (-1.07541%) [-1.01087x]
+  LL Hits:                           375721|375181               (+0.14393%) [+1.00144x]
+  RAM Hits:                           17760|17754                (+0.03380%) [+1.00034x]
+  Total read+write:                41810500|42260198             (-1.06412%) [-1.01076x]
+  Estimated Cycles:                43917224|44364558             (-1.00831%) [-1.01019x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap settled_0:(heap_queue("settled", 100))
+  Instructions:                  1050208101|1022691911           (+2.69056%) [+1.02691x]
+  L1 Hits:                       1370779252|1319635824           (+3.87557%) [+1.03876x]
+  LL Hits:                         22586236|22599476             (-0.05859%) [-1.00059x]
+  RAM Hits:                            2003|1999                 (+0.20010%) [+1.00200x]
+  Total read+write:              1393367491|1342237299           (+3.80933%) [+1.03809x]
+  Estimated Cycles:              1483780537|1432703169           (+3.56510%) [+1.03565x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap settled_1:(heap_queue("settled", 50))
+  Instructions:                   729144145|709555166            (+2.76074%) [+1.02761x]
+  L1 Hits:                        952579129|916172302            (+3.97380%) [+1.03974x]
+  LL Hits:                         15403697|15409640             (-0.03857%) [-1.00039x]
+  RAM Hits:                            1816|1813                 (+0.16547%) [+1.00165x]
+  Total read+write:               967984642|931583755            (+3.90742%) [+1.03907x]
+  Estimated Cycles:              1029661174|993283957            (+3.66232%) [+1.03662x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap settled_2:(heap_queue("settled", 30))
+  Instructions:                   449059949|436717673            (+2.82615%) [+1.02826x]
+  L1 Hits:                        587349009|564411108            (+4.06404%) [+1.04064x]
+  LL Hits:                          9353445|9356651              (-0.03426%) [-1.00034x]
+  RAM Hits:                            1874|1871                 (+0.16034%) [+1.00160x]
+  Total read+write:               596704328|573769630            (+3.99720%) [+1.03997x]
+  Estimated Cycles:               634181824|611259848            (+3.74996%) [+1.03750x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap settled_3:(heap_queue("settled", 20))
+  Instructions:                   290996817|282784670            (+2.90403%) [+1.02904x]
+  L1 Hits:                        381169614|365907235            (+4.17111%) [+1.04171x]
+  LL Hits:                          5966546|5969166              (-0.04389%) [-1.00044x]
+  RAM Hits:                            2115|2112                 (+0.14205%) [+1.00142x]
+  Total read+write:               387138275|371878513            (+4.10343%) [+1.04103x]
+  Estimated Cycles:               411076369|395826985            (+3.85254%) [+1.03853x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap settled_4:(heap_queue("settled", 5))
+  Instructions:                    47825423|46279790             (+3.33976%) [+1.03340x]
+  L1 Hits:                         63165019|60293350             (+4.76283%) [+1.04763x]
+  LL Hits:                           889746|889991               (-0.02753%) [-1.00028x]
+  RAM Hits:                            1969|1966                 (+0.15259%) [+1.00153x]
+  Total read+write:                64056734|61185307             (+4.69300%) [+1.04693x]
+  Estimated Cycles:                67682664|64812115             (+4.42903%) [+1.04429x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap mixed_0:(heap_queue("mixed", 100))
+  Instructions:                   951402591|926762376            (+2.65874%) [+1.02659x]
+  L1 Hits:                       1242313720|1196502322           (+3.82878%) [+1.03829x]
+  LL Hits:                         20617389|20636513             (-0.09267%) [-1.00093x]
+  RAM Hits:                           10432|10431                (+0.00959%) [+1.00010x]
+  Total read+write:              1262941541|1217149266           (+3.76226%) [+1.03762x]
+  Estimated Cycles:              1345765785|1300049972           (+3.51647%) [+1.03516x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap mixed_1:(heap_queue("mixed", 50))
+  Instructions:                   606208492|590119757            (+2.72635%) [+1.02726x]
+  L1 Hits:                        793144976|763233077            (+3.91910%) [+1.03919x]
+  LL Hits:                         12780225|12790712             (-0.08199%) [-1.00082x]
+  RAM Hits:                           10240|10239                (+0.00977%) [+1.00010x]
+  Total read+write:               805935441|776034028            (+3.85311%) [+1.03853x]
+  Estimated Cycles:               857404501|827545002            (+3.60820%) [+1.03608x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap mixed_2:(heap_queue("mixed", 30))
+  Instructions:                   337889386|328704766            (+2.79419%) [+1.02794x]
+  L1 Hits:                        443521905|426447343            (+4.00391%) [+1.04004x]
+  LL Hits:                          6840220|6843817              (-0.05256%) [-1.00053x]
+  RAM Hits:                            9282|9281                 (+0.01077%) [+1.00011x]
+  Total read+write:               450371407|433300441            (+3.93975%) [+1.03940x]
+  Estimated Cycles:               478047875|460991263            (+3.69999%) [+1.03700x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap mixed_3:(heap_queue("mixed", 20))
+  Instructions:                   224030965|217808666            (+2.85677%) [+1.02857x]
+  L1 Hits:                        294963080|283395094            (+4.08193%) [+1.04082x]
+  LL Hits:                          4509015|4511277              (-0.05014%) [-1.00050x]
+  RAM Hits:                            9282|9281                 (+0.01077%) [+1.00011x]
+  Total read+write:               299481377|287915652            (+4.01705%) [+1.04017x]
+  Estimated Cycles:               317833025|306276314            (+3.77330%) [+1.03773x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap mixed_4:(heap_queue("mixed", 5))
+  Instructions:                    23497232|22731830             (+3.36709%) [+1.03367x]
+  L1 Hits:                         32846563|31422489             (+4.53202%) [+1.04532x]
+  LL Hits:                           416495|416276               (+0.05261%) [+1.00053x]
+  RAM Hits:                            9279|9277                 (+0.02156%) [+1.00022x]
+  Total read+write:                33272337|31848042             (+4.47216%) [+1.04472x]
+  Estimated Cycles:                35253803|33828564             (+4.21312%) [+1.04213x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap churn_0:(heap_queue("churn", 100))
+  Instructions:                   854881514|833107530            (+2.61359%) [+1.02614x]
+  L1 Hits:                       1115888240|1075400145           (+3.76493%) [+1.03765x]
+  LL Hits:                         17908655|17921424             (-0.07125%) [-1.00071x]
+  RAM Hits:                           12350|12344                (+0.04861%) [+1.00049x]
+  Total read+write:              1133809245|1093333913           (+3.70201%) [+1.03702x]
+  Estimated Cycles:              1205863765|1165439305           (+3.46860%) [+1.03469x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap churn_1:(heap_queue("churn", 50))
+  Instructions:                   451171024|439373514            (+2.68508%) [+1.02685x]
+  L1 Hits:                        590737316|568798290            (+3.85708%) [+1.03857x]
+  LL Hits:                          9190823|9196662              (-0.06349%) [-1.00064x]
+  RAM Hits:                           11985|11979                (+0.05009%) [+1.00050x]
+  Total read+write:               599940124|578006931            (+3.79462%) [+1.03795x]
+  Estimated Cycles:               637110906|615200865            (+3.56145%) [+1.03561x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap churn_2:(heap_queue("churn", 30))
+  Instructions:                   268559851|261391583            (+2.74235%) [+1.02742x]
+  L1 Hits:                        352807923|339475070            (+3.92749%) [+1.03927x]
+  LL Hits:                          5330554|5334130              (-0.06704%) [-1.00067x]
+  RAM Hits:                           10959|10954                (+0.04565%) [+1.00046x]
+  Total read+write:               358149436|344820154            (+3.86558%) [+1.03866x]
+  Estimated Cycles:               379844258|366529110            (+3.63277%) [+1.03633x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap churn_3:(heap_queue("churn", 20))
+  Instructions:                   164639994|160164690            (+2.79419%) [+1.02794x]
+  L1 Hits:                        217344649|209018829            (+3.98329%) [+1.03983x]
+  LL Hits:                          3141586|3143324              (-0.05529%) [-1.00055x]
+  RAM Hits:                           10960|10954                (+0.05477%) [+1.00055x]
+  Total read+write:               220497195|212173107            (+3.92325%) [+1.03923x]
+  Estimated Cycles:               233436179|225118839            (+3.69464%) [+1.03695x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap churn_4:(heap_queue("churn", 5))
+  Instructions:                    25779293|25010689             (+3.07310%) [+1.03073x]
+  L1 Hits:                         35992835|34558915             (+4.14920%) [+1.04149x]
+  LL Hits:                           435190|434734               (+0.10489%) [+1.00105x]
+  RAM Hits:                           10956|10950                (+0.05479%) [+1.00055x]
+  Total read+write:                36438981|35004599             (+4.09770%) [+1.04098x]
+  Estimated Cycles:                38552245|37115835             (+3.87007%) [+1.03870x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap lazy_0:(heap_queue("lazy", 100))
+  Instructions:                   874520086|852807855            (+2.54597%) [+1.02546x]
+  L1 Hits:                       1141170513|1100787414           (+3.66856%) [+1.03669x]
+  LL Hits:                         17042150|17051029             (-0.05207%) [-1.00052x]
+  RAM Hits:                           19975|19968                (+0.03506%) [+1.00035x]
+  Total read+write:              1158232638|1117858411           (+3.61175%) [+1.03612x]
+  Estimated Cycles:              1227080388|1186741439           (+3.39914%) [+1.03399x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap lazy_1:(heap_queue("lazy", 50))
+  Instructions:                   413325499|402893091            (+2.58937%) [+1.02589x]
+  L1 Hits:                        540958107|521547951            (+3.72164%) [+1.03722x]
+  LL Hits:                          7856827|7861017              (-0.05330%) [-1.00053x]
+  RAM Hits:                           17748|17743                (+0.02818%) [+1.00028x]
+  Total read+write:               548832682|529426711            (+3.66547%) [+1.03665x]
+  Estimated Cycles:               580863422|561474041            (+3.45330%) [+1.03453x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap lazy_2:(heap_queue("lazy", 30))
+  Instructions:                   231835754|225900489            (+2.62738%) [+1.02627x]
+  L1 Hits:                        304879901|293831928            (+3.75996%) [+1.03760x]
+  LL Hits:                          4252591|4254650              (-0.04839%) [-1.00048x]
+  RAM Hits:                           17747|17741                (+0.03382%) [+1.00034x]
+  Total read+write:               309150239|298104319            (+3.70539%) [+1.03705x]
+  Estimated Cycles:               326764001|315726113            (+3.49603%) [+1.03496x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap lazy_3:(heap_queue("lazy", 20))
+  Instructions:                   136259161|132736830            (+2.65362%) [+1.02654x]
+  L1 Hits:                        180416900|173855687            (+3.77394%) [+1.03774x]
+  LL Hits:                          2428643|2429424              (-0.03215%) [-1.00032x]
+  RAM Hits:                           17751|17746                (+0.02818%) [+1.00028x]
+  Total read+write:               182863294|176302857            (+3.72112%) [+1.03721x]
+  Estimated Cycles:               193181400|186623917            (+3.51374%) [+1.03514x]
+rfd_0005_maintained_rank_queue_instructions::transactions::heap lazy_4:(heap_queue("lazy", 5))
+  Instructions:                    24065072|23435288             (+2.68733%) [+1.02687x]
+  L1 Hits:                         34023705|32841828             (+3.59869%) [+1.03599x]
+  LL Hits:                           357686|356993               (+0.19412%) [+1.00194x]
+  RAM Hits:                           17750|17744                (+0.03381%) [+1.00034x]
+  Total read+write:                34399141|33216565             (+3.56020%) [+1.03560x]
+  Estimated Cycles:                36433385|35247833             (+3.36347%) [+1.03363x]
+rfd_0005_maintained_rank_queue_instructions::upkeep::upkeep_baseline all_0:(upkeep_walk("settled"))
+  Instructions:                    17639165|17639165             (No change)
+  L1 Hits:                         25772432|25772647             (-0.00083%) [-1.00001x]
+  LL Hits:                           668543|668329               (+0.03202%) [+1.00032x]
+  RAM Hits:                              12|11                   (+9.09091%) [+1.09091x]
+  Total read+write:                26440987|26440987             (No change)
+  Estimated Cycles:                29115567|29114677             (+0.00306%) [+1.00003x]
+rfd_0005_maintained_rank_queue_instructions::upkeep::upkeep_baseline all_1:(upkeep_walk("mixed"))
+  Instructions:                    12638531|12638531             (No change)
+  L1 Hits:                         19396934|19397177             (-0.00125%) [-1.00001x]
+  LL Hits:                           354262|354020               (+0.06836%) [+1.00068x]
+  RAM Hits:                            4469|4468                 (+0.02238%) [+1.00022x]
+  Total read+write:                19755665|19755665             (No change)
+  Estimated Cycles:                21324659|21323657             (+0.00470%) [+1.00005x]
+rfd_0005_maintained_rank_queue_instructions::upkeep::upkeep_baseline all_2:(upkeep_walk("churn"))
+  Instructions:                     9650215|9650215              (No change)
+  L1 Hits:                         14964329|14963644             (+0.00458%) [+1.00005x]
+  LL Hits:                           182534|183221               (-0.37496%) [-1.00376x]
+  RAM Hits:                            5350|5348                 (+0.03740%) [+1.00037x]
+  Total read+write:                15152213|15152213             (No change)
+  Estimated Cycles:                16064249|16066929             (-0.01668%) [-1.00017x]
+rfd_0005_maintained_rank_queue_instructions::upkeep::upkeep_baseline all_3:(upkeep_walk("lazy"))
+  Instructions:                     9259940|9259940              (No change)
+  L1 Hits:                         14290470|14290472             (-0.00001%) [-1.00000x]
+  LL Hits:                            96339|96337                (+0.00208%) [+1.00002x]
+  RAM Hits:                           12969|12969                (No change)
+  Total read+write:                14399778|14399778             (No change)
+  Estimated Cycles:                15226080|15226072             (+0.00005%) [+1.00000x]
+rfd_0005_maintained_rank_queue_instructions::upkeep::upkeep_order all_0:(upkeep_om("settled"))
+  Instructions:                      417265|417161               (+0.02493%) [+1.00025x]
+  L1 Hits:                           650467|649607               (+0.13239%) [+1.00132x]
+  LL Hits:                             9051|9015                 (+0.39933%) [+1.00399x]
+  RAM Hits:                              53|51                   (+3.92157%) [+1.03922x]
+  Total read+write:                  659571|658673               (+0.13633%) [+1.00136x]
+  Estimated Cycles:                  697577|696467               (+0.15938%) [+1.00159x]
+rfd_0005_maintained_rank_queue_instructions::upkeep::upkeep_order all_1:(upkeep_om("mixed"))
+  Instructions:                     2306151|2312292              (-0.26558%) [-1.00266x]
+  L1 Hits:                          4473136|4481909              (-0.19574%) [-1.00196x]
+  LL Hits:                            37482|37482                (No change)
+  RAM Hits:                            4862|4861                 (+0.02057%) [+1.00021x]
+  Total read+write:                 4515480|4524252              (-0.19389%) [-1.00194x]
+  Estimated Cycles:                 4830716|4839454              (-0.18056%) [-1.00181x]
+rfd_0005_maintained_rank_queue_instructions::upkeep::upkeep_order all_2:(upkeep_om("churn"))
+  Instructions:                     4092775|4110865              (-0.44005%) [-1.00442x]
+  L1 Hits:                          6928010|6955616              (-0.39689%) [-1.00398x]
+  LL Hits:                            47107|47074                (+0.07010%) [+1.00070x]
+  RAM Hits:                            5601|5596                 (+0.08935%) [+1.00089x]
+  Total read+write:                 6980718|7008286              (-0.39336%) [-1.00395x]
+  Estimated Cycles:                 7359580|7386846              (-0.36912%) [-1.00370x]
+rfd_0005_maintained_rank_queue_instructions::upkeep::upkeep_order all_3:(upkeep_om("lazy"))
+  Instructions:                     7200603|7240836              (-0.55564%) [-1.00559x]
+  L1 Hits:                         11451824|11514711             (-0.54614%) [-1.00549x]
+  LL Hits:                            65317|65346                (-0.04438%) [-1.00044x]
+  RAM Hits:                           13039|13034                (+0.03836%) [+1.00038x]
+  Total read+write:                11530180|11593091             (-0.54266%) [-1.00546x]
+  Estimated Cycles:                12234774|12297631             (-0.51113%) [-1.00514x]
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om settled_0:(flat_mark_om("settled", 100))
+  Instructions:                   513808649|N/A                  (*********)
+  L1 Hits:                        700469753|N/A                  (*********)
+  LL Hits:                          6185116|N/A                  (*********)
+  RAM Hits:                            1886|N/A                  (*********)
+  Total read+write:               706656755|N/A                  (*********)
+  Estimated Cycles:               731461343|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om settled_1:(flat_mark_om("settled", 50))
+  Instructions:                   454401727|N/A                  (*********)
+  L1 Hits:                        626437076|N/A                  (*********)
+  LL Hits:                          5493590|N/A                  (*********)
+  RAM Hits:                            1869|N/A                  (*********)
+  Total read+write:               631932535|N/A                  (*********)
+  Estimated Cycles:               653970441|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om settled_2:(flat_mark_om("settled", 30))
+  Instructions:                   399252537|N/A                  (*********)
+  L1 Hits:                        557909789|N/A                  (*********)
+  LL Hits:                          4816567|N/A                  (*********)
+  RAM Hits:                            1864|N/A                  (*********)
+  Total read+write:               562728220|N/A                  (*********)
+  Estimated Cycles:               582057864|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om settled_3:(flat_mark_om("settled", 20))
+  Instructions:                   367645522|N/A                  (*********)
+  L1 Hits:                        518654710|N/A                  (*********)
+  LL Hits:                          4428868|N/A                  (*********)
+  RAM Hits:                            1844|N/A                  (*********)
+  Total read+write:               523085422|N/A                  (*********)
+  Estimated Cycles:               540863590|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om settled_4:(flat_mark_om("settled", 5))
+  Instructions:                   316133255|N/A                  (*********)
+  L1 Hits:                        454732958|N/A                  (*********)
+  LL Hits:                          3790924|N/A                  (*********)
+  RAM Hits:                            1765|N/A                  (*********)
+  Total read+write:               458525647|N/A                  (*********)
+  Estimated Cycles:               473749353|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om mixed_0:(flat_mark_om("mixed", 100))
+  Instructions:                   462260546|N/A                  (*********)
+  L1 Hits:                        631958313|N/A                  (*********)
+  LL Hits:                          5698679|N/A                  (*********)
+  RAM Hits:                           11917|N/A                  (*********)
+  Total read+write:               637668909|N/A                  (*********)
+  Estimated Cycles:               660868803|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om mixed_1:(flat_mark_om("mixed", 50))
+  Instructions:                   397943174|N/A                  (*********)
+  L1 Hits:                        551865892|N/A                  (*********)
+  LL Hits:                          4933232|N/A                  (*********)
+  RAM Hits:                           11917|N/A                  (*********)
+  Total read+write:               556811041|N/A                  (*********)
+  Estimated Cycles:               576949147|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om mixed_2:(flat_mark_om("mixed", 30))
+  Instructions:                   345320279|N/A                  (*********)
+  L1 Hits:                        486464301|N/A                  (*********)
+  LL Hits:                          4279717|N/A                  (*********)
+  RAM Hits:                           11917|N/A                  (*********)
+  Total read+write:               490755935|N/A                  (*********)
+  Estimated Cycles:               508279981|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om mixed_3:(flat_mark_om("mixed", 20))
+  Instructions:                   322626584|N/A                  (*********)
+  L1 Hits:                        458281872|N/A                  (*********)
+  LL Hits:                          3999037|N/A                  (*********)
+  RAM Hits:                           11918|N/A                  (*********)
+  Total read+write:               462292827|N/A                  (*********)
+  Estimated Cycles:               478694187|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om mixed_4:(flat_mark_om("mixed", 5))
+  Instructions:                   280481148|N/A                  (*********)
+  L1 Hits:                        406018293|N/A                  (*********)
+  LL Hits:                          3471112|N/A                  (*********)
+  RAM Hits:                           11918|N/A                  (*********)
+  Total read+write:               409501323|N/A                  (*********)
+  Estimated Cycles:               423790983|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om churn_0:(flat_mark_om("churn", 100))
+  Instructions:                   410970718|N/A                  (*********)
+  L1 Hits:                        562199260|N/A                  (*********)
+  LL Hits:                          5191848|N/A                  (*********)
+  RAM Hits:                           14590|N/A                  (*********)
+  Total read+write:               567405698|N/A                  (*********)
+  Estimated Cycles:               588669150|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om churn_1:(flat_mark_om("churn", 50))
+  Instructions:                   335565912|N/A                  (*********)
+  L1 Hits:                        468386444|N/A                  (*********)
+  LL Hits:                          4276251|N/A                  (*********)
+  RAM Hits:                           14590|N/A                  (*********)
+  Total read+write:               472677285|N/A                  (*********)
+  Estimated Cycles:               490278349|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om churn_2:(flat_mark_om("churn", 30))
+  Instructions:                   300201465|N/A                  (*********)
+  L1 Hits:                        424307059|N/A                  (*********)
+  LL Hits:                          3832443|N/A                  (*********)
+  RAM Hits:                           15564|N/A                  (*********)
+  Total read+write:               428155066|N/A                  (*********)
+  Estimated Cycles:               444014014|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om churn_3:(flat_mark_om("churn", 20))
+  Instructions:                   279520066|N/A                  (*********)
+  L1 Hits:                        398630812|N/A                  (*********)
+  LL Hits:                          3574436|N/A                  (*********)
+  RAM Hits:                           15564|N/A                  (*********)
+  Total read+write:               402220812|N/A                  (*********)
+  Estimated Cycles:               417047732|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om churn_4:(flat_mark_om("churn", 5))
+  Instructions:                   250814978|N/A                  (*********)
+  L1 Hits:                        362977340|N/A                  (*********)
+  LL Hits:                          3206711|N/A                  (*********)
+  RAM Hits:                           15563|N/A                  (*********)
+  Total read+write:               366199614|N/A                  (*********)
+  Estimated Cycles:               379555600|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om lazy_0:(flat_mark_om("lazy", 100))
+  Instructions:                   413771676|N/A                  (*********)
+  L1 Hits:                        567023280|N/A                  (*********)
+  LL Hits:                          5377350|N/A                  (*********)
+  RAM Hits:                           32378|N/A                  (*********)
+  Total read+write:               572433008|N/A                  (*********)
+  Estimated Cycles:               595043260|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om lazy_1:(flat_mark_om("lazy", 50))
+  Instructions:                   328501321|N/A                  (*********)
+  L1 Hits:                        460983189|N/A                  (*********)
+  LL Hits:                          4319297|N/A                  (*********)
+  RAM Hits:                           32377|N/A                  (*********)
+  Total read+write:               465334863|N/A                  (*********)
+  Estimated Cycles:               483712869|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om lazy_2:(flat_mark_om("lazy", 30))
+  Instructions:                   294203927|N/A                  (*********)
+  L1 Hits:                        418385670|N/A                  (*********)
+  LL Hits:                          3879583|N/A                  (*********)
+  RAM Hits:                           32377|N/A                  (*********)
+  Total read+write:               422297630|N/A                  (*********)
+  Estimated Cycles:               438916780|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om lazy_3:(flat_mark_om("lazy", 20))
+  Instructions:                   275675804|N/A                  (*********)
+  L1 Hits:                        395386117|N/A                  (*********)
+  LL Hits:                          3644323|N/A                  (*********)
+  RAM Hits:                           32376|N/A                  (*********)
+  Total read+write:               399062816|N/A                  (*********)
+  Estimated Cycles:               414740892|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_mark_with_om lazy_4:(flat_mark_om("lazy", 5))
+  Instructions:                   253207489|N/A                  (*********)
+  L1 Hits:                        367433330|N/A                  (*********)
+  LL Hits:                          3348266|N/A                  (*********)
+  RAM Hits:                           32381|N/A                  (*********)
+  Total read+write:               370813977|N/A                  (*********)
+  Estimated Cycles:               385307995|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap settled_0:(flat_heap_queue("settled", 100))
+  Instructions:                  1079730248|N/A                  (*********)
+  L1 Hits:                       1408631397|N/A                  (*********)
+  LL Hits:                         22258142|N/A                  (*********)
+  RAM Hits:                            2068|N/A                  (*********)
+  Total read+write:              1430891607|N/A                  (*********)
+  Estimated Cycles:              1519994487|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap settled_1:(flat_heap_queue("settled", 50))
+  Instructions:                   750054616|N/A                  (*********)
+  L1 Hits:                        979869555|N/A                  (*********)
+  LL Hits:                         14716474|N/A                  (*********)
+  RAM Hits:                            1881|N/A                  (*********)
+  Total read+write:               994587910|N/A                  (*********)
+  Estimated Cycles:              1053517760|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap settled_2:(flat_heap_queue("settled", 30))
+  Instructions:                   462242608|N/A                  (*********)
+  L1 Hits:                        604580023|N/A                  (*********)
+  LL Hits:                          8920374|N/A                  (*********)
+  RAM Hits:                            1877|N/A                  (*********)
+  Total read+write:               613502274|N/A                  (*********)
+  Estimated Cycles:               649247588|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap settled_3:(flat_heap_queue("settled", 20))
+  Instructions:                   299771255|N/A                  (*********)
+  L1 Hits:                        392608378|N/A                  (*********)
+  LL Hits:                          5703415|N/A                  (*********)
+  RAM Hits:                            1861|N/A                  (*********)
+  Total read+write:               398313654|N/A                  (*********)
+  Estimated Cycles:               421190588|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap settled_4:(flat_heap_queue("settled", 5))
+  Instructions:                    49563768|N/A                  (*********)
+  L1 Hits:                         65499743|N/A                  (*********)
+  LL Hits:                           826778|N/A                  (*********)
+  RAM Hits:                            1778|N/A                  (*********)
+  Total read+write:                66328299|N/A                  (*********)
+  Estimated Cycles:                69695863|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap mixed_0:(flat_heap_queue("mixed", 100))
+  Instructions:                   978371514|N/A                  (*********)
+  L1 Hits:                       1277849400|N/A                  (*********)
+  LL Hits:                         19730130|N/A                  (*********)
+  RAM Hits:                           11053|N/A                  (*********)
+  Total read+write:              1297590583|N/A                  (*********)
+  Estimated Cycles:              1376886905|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap mixed_1:(flat_heap_queue("mixed", 50))
+  Instructions:                   623887640|N/A                  (*********)
+  L1 Hits:                        816698195|N/A                  (*********)
+  LL Hits:                         12017719|N/A                  (*********)
+  RAM Hits:                           11929|N/A                  (*********)
+  Total read+write:               828727843|N/A                  (*********)
+  Estimated Cycles:               877204305|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap mixed_2:(flat_heap_queue("mixed", 30))
+  Instructions:                   348242117|N/A                  (*********)
+  L1 Hits:                        457270128|N/A                  (*********)
+  LL Hits:                          6626479|N/A                  (*********)
+  RAM Hits:                            9874|N/A                  (*********)
+  Total read+write:               463906481|N/A                  (*********)
+  Estimated Cycles:               490748113|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap mixed_3:(flat_heap_queue("mixed", 20))
+  Instructions:                   231257142|N/A                  (*********)
+  L1 Hits:                        304786112|N/A                  (*********)
+  LL Hits:                          4294107|N/A                  (*********)
+  RAM Hits:                            9875|N/A                  (*********)
+  Total read+write:               309090094|N/A                  (*********)
+  Estimated Cycles:               326602272|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap mixed_4:(flat_heap_queue("mixed", 5))
+  Instructions:                    24948606|N/A                  (*********)
+  L1 Hits:                         35122586|N/A                  (*********)
+  LL Hits:                           401564|N/A                  (*********)
+  RAM Hits:                            9875|N/A                  (*********)
+  Total read+write:                35534025|N/A                  (*********)
+  Estimated Cycles:                37476031|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap churn_0:(flat_heap_queue("churn", 100))
+  Instructions:                   879340640|N/A                  (*********)
+  L1 Hits:                       1148329449|N/A                  (*********)
+  LL Hits:                         16999053|N/A                  (*********)
+  RAM Hits:                           16453|N/A                  (*********)
+  Total read+write:              1165344955|N/A                  (*********)
+  Estimated Cycles:              1233900569|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap churn_1:(flat_heap_queue("churn", 50))
+  Instructions:                   464946560|N/A                  (*********)
+  L1 Hits:                        609245607|N/A                  (*********)
+  LL Hits:                          8721562|N/A                  (*********)
+  RAM Hits:                           15321|N/A                  (*********)
+  Total read+write:               617982490|N/A                  (*********)
+  Estimated Cycles:               653389652|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap churn_2:(flat_heap_queue("churn", 30))
+  Instructions:                   277398699|N/A                  (*********)
+  L1 Hits:                        364849348|N/A                  (*********)
+  LL Hits:                          5058920|N/A                  (*********)
+  RAM Hits:                           15062|N/A                  (*********)
+  Total read+write:               369923330|N/A                  (*********)
+  Estimated Cycles:               390671118|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap churn_3:(flat_heap_queue("churn", 20))
+  Instructions:                   170621169|N/A                  (*********)
+  L1 Hits:                        225596090|N/A                  (*********)
+  LL Hits:                          3031045|N/A                  (*********)
+  RAM Hits:                           15062|N/A                  (*********)
+  Total read+write:               228642197|N/A                  (*********)
+  Estimated Cycles:               241278485|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap churn_4:(flat_heap_queue("churn", 5))
+  Instructions:                    27836294|N/A                  (*********)
+  L1 Hits:                         39160615|N/A                  (*********)
+  LL Hits:                           422911|N/A                  (*********)
+  RAM Hits:                           15062|N/A                  (*********)
+  Total read+write:                39598588|N/A                  (*********)
+  Estimated Cycles:                41802340|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap lazy_0:(flat_heap_queue("lazy", 100))
+  Instructions:                   900513261|N/A                  (*********)
+  L1 Hits:                       1177303367|N/A                  (*********)
+  LL Hits:                         15766720|N/A                  (*********)
+  RAM Hits:                           33459|N/A                  (*********)
+  Total read+write:              1193103546|N/A                  (*********)
+  Estimated Cycles:              1257308032|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap lazy_1:(flat_heap_queue("lazy", 50))
+  Instructions:                   427237544|N/A                  (*********)
+  L1 Hits:                        560957989|N/A                  (*********)
+  LL Hits:                          7366358|N/A                  (*********)
+  RAM Hits:                           32387|N/A                  (*********)
+  Total read+write:               568356734|N/A                  (*********)
+  Estimated Cycles:               598923324|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap lazy_2:(flat_heap_queue("lazy", 30))
+  Instructions:                   240961284|N/A                  (*********)
+  L1 Hits:                        318640535|N/A                  (*********)
+  LL Hits:                          3919251|N/A                  (*********)
+  RAM Hits:                           32388|N/A                  (*********)
+  Total read+write:               322592174|N/A                  (*********)
+  Estimated Cycles:               339370370|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap lazy_3:(flat_heap_queue("lazy", 20))
+  Instructions:                   142824160|N/A                  (*********)
+  L1 Hits:                        190751806|N/A                  (*********)
+  LL Hits:                          2267561|N/A                  (*********)
+  RAM Hits:                           32387|N/A                  (*********)
+  Total read+write:               193051754|N/A                  (*********)
+  Estimated Cycles:               203223156|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heap lazy_4:(flat_heap_queue("lazy", 5))
+  Instructions:                    27568222|N/A                  (*********)
+  L1 Hits:                         40293247|N/A                  (*********)
+  LL Hits:                           369580|N/A                  (*********)
+  RAM Hits:                           32392|N/A                  (*********)
+  Total read+write:                40695219|N/A                  (*********)
+  Estimated Cycles:                43274867|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights settled_0:(height_queue("settled", 100))
+  Instructions:                   493476798|N/A                  (*********)
+  L1 Hits:                        676986702|N/A                  (*********)
+  LL Hits:                         19117810|N/A                  (*********)
+  RAM Hits:                            1517|N/A                  (*********)
+  Total read+write:               696106029|N/A                  (*********)
+  Estimated Cycles:               772628847|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights settled_1:(height_queue("settled", 50))
+  Instructions:                   349268105|N/A                  (*********)
+  L1 Hits:                        478986682|N/A                  (*********)
+  LL Hits:                         13436403|N/A                  (*********)
+  RAM Hits:                            1442|N/A                  (*********)
+  Total read+write:               492424527|N/A                  (*********)
+  Estimated Cycles:               546219167|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights settled_2:(height_queue("settled", 30))
+  Instructions:                   219259862|N/A                  (*********)
+  L1 Hits:                        300767770|N/A                  (*********)
+  LL Hits:                          8287682|N/A                  (*********)
+  RAM Hits:                            1428|N/A                  (*********)
+  Total read+write:               309056880|N/A                  (*********)
+  Estimated Cycles:               342256160|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights settled_3:(height_queue("settled", 20))
+  Instructions:                   145295027|N/A                  (*********)
+  L1 Hits:                        199403083|N/A                  (*********)
+  LL Hits:                          5362051|N/A                  (*********)
+  RAM Hits:                            1409|N/A                  (*********)
+  Total read+write:               204766543|N/A                  (*********)
+  Estimated Cycles:               226262653|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights settled_4:(height_queue("settled", 5))
+  Instructions:                    26252654|N/A                  (*********)
+  L1 Hits:                         36189784|N/A                  (*********)
+  LL Hits:                           841596|N/A                  (*********)
+  RAM Hits:                            1290|N/A                  (*********)
+  Total read+write:                37032670|N/A                  (*********)
+  Estimated Cycles:                40442914|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights mixed_0:(height_queue("mixed", 100))
+  Instructions:                   443209254|N/A                  (*********)
+  L1 Hits:                        609177532|N/A                  (*********)
+  LL Hits:                         17294835|N/A                  (*********)
+  RAM Hits:                            6779|N/A                  (*********)
+  Total read+write:               626479146|N/A                  (*********)
+  Estimated Cycles:               695888972|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights mixed_1:(height_queue("mixed", 50))
+  Instructions:                   288275357|N/A                  (*********)
+  L1 Hits:                        396599019|N/A                  (*********)
+  LL Hits:                         11132214|N/A                  (*********)
+  RAM Hits:                            6499|N/A                  (*********)
+  Total read+write:               407737732|N/A                  (*********)
+  Estimated Cycles:               452487554|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights mixed_2:(height_queue("mixed", 30))
+  Instructions:                   164524961|N/A                  (*********)
+  L1 Hits:                        226903201|N/A                  (*********)
+  LL Hits:                          6215913|N/A                  (*********)
+  RAM Hits:                            4712|N/A                  (*********)
+  Total read+write:               233123826|N/A                  (*********)
+  Estimated Cycles:               258147686|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights mixed_3:(height_queue("mixed", 20))
+  Instructions:                   111486384|N/A                  (*********)
+  L1 Hits:                        154232059|N/A                  (*********)
+  LL Hits:                          4110462|N/A                  (*********)
+  RAM Hits:                            4713|N/A                  (*********)
+  Total read+write:               158347234|N/A                  (*********)
+  Estimated Cycles:               174949324|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights mixed_4:(height_queue("mixed", 5))
+  Instructions:                    14104836|N/A                  (*********)
+  L1 Hits:                         20720319|N/A                  (*********)
+  LL Hits:                           417187|N/A                  (*********)
+  RAM Hits:                            4711|N/A                  (*********)
+  Total read+write:                21142217|N/A                  (*********)
+  Estimated Cycles:                22971139|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights churn_0:(height_queue("churn", 100))
+  Instructions:                   393863400|N/A                  (*********)
+  L1 Hits:                        541446065|N/A                  (*********)
+  LL Hits:                         15447928|N/A                  (*********)
+  RAM Hits:                            7617|N/A                  (*********)
+  Total read+write:               556901610|N/A                  (*********)
+  Estimated Cycles:               618952300|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights churn_1:(height_queue("churn", 50))
+  Instructions:                   213920184|N/A                  (*********)
+  L1 Hits:                        294775734|N/A                  (*********)
+  LL Hits:                          8232276|N/A                  (*********)
+  RAM Hits:                            7617|N/A                  (*********)
+  Total read+write:               303015627|N/A                  (*********)
+  Estimated Cycles:               336203709|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights churn_2:(height_queue("churn", 30))
+  Instructions:                   130787014|N/A                  (*********)
+  L1 Hits:                        180665210|N/A                  (*********)
+  LL Hits:                          4905202|N/A                  (*********)
+  RAM Hits:                            6685|N/A                  (*********)
+  Total read+write:               185577097|N/A                  (*********)
+  Estimated Cycles:               205425195|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights churn_3:(height_queue("churn", 20))
+  Instructions:                    82646042|N/A                  (*********)
+  L1 Hits:                        114713658|N/A                  (*********)
+  LL Hits:                          3001128|N/A                  (*********)
+  RAM Hits:                            6686|N/A                  (*********)
+  Total read+write:               117721472|N/A                  (*********)
+  Estimated Cycles:               129953308|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights churn_4:(height_queue("churn", 5))
+  Instructions:                    16445946|N/A                  (*********)
+  L1 Hits:                         24003952|N/A                  (*********)
+  LL Hits:                           465029|N/A                  (*********)
+  RAM Hits:                            6685|N/A                  (*********)
+  Total read+write:                24475666|N/A                  (*********)
+  Estimated Cycles:                26563072|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights lazy_0:(height_queue("lazy", 100))
+  Instructions:                   392882339|N/A                  (*********)
+  L1 Hits:                        539570306|N/A                  (*********)
+  LL Hits:                         15641688|N/A                  (*********)
+  RAM Hits:                           13896|N/A                  (*********)
+  Total read+write:               555225890|N/A                  (*********)
+  Estimated Cycles:               618265106|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights lazy_1:(height_queue("lazy", 50))
+  Instructions:                   190211607|N/A                  (*********)
+  L1 Hits:                        261958737|N/A                  (*********)
+  LL Hits:                          7385641|N/A                  (*********)
+  RAM Hits:                           13857|N/A                  (*********)
+  Total read+write:               269358235|N/A                  (*********)
+  Estimated Cycles:               299371937|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights lazy_2:(height_queue("lazy", 30))
+  Instructions:                   109759922|N/A                  (*********)
+  L1 Hits:                        151810721|N/A                  (*********)
+  LL Hits:                          4115843|N/A                  (*********)
+  RAM Hits:                           13883|N/A                  (*********)
+  Total read+write:               155940447|N/A                  (*********)
+  Estimated Cycles:               172875841|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights lazy_3:(height_queue("lazy", 20))
+  Instructions:                    66674171|N/A                  (*********)
+  L1 Hits:                         92826675|N/A                  (*********)
+  LL Hits:                          2382794|N/A                  (*********)
+  RAM Hits:                           13849|N/A                  (*********)
+  Total read+write:                95223318|N/A                  (*********)
+  Estimated Cycles:               105225360|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::heights lazy_4:(height_queue("lazy", 5))
+  Instructions:                    14951388|N/A                  (*********)
+  L1 Hits:                         21930325|N/A                  (*********)
+  LL Hits:                           359435|N/A                  (*********)
+  RAM Hits:                           13684|N/A                  (*********)
+  Total read+write:                22303444|N/A                  (*********)
+  Estimated Cycles:                24206440|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights settled_0:(flat_height_queue("settled", 100))
+  Instructions:                   556037432|N/A                  (*********)
+  L1 Hits:                        758116605|N/A                  (*********)
+  LL Hits:                         18136111|N/A                  (*********)
+  RAM Hits:                             731|N/A                  (*********)
+  Total read+write:               776253447|N/A                  (*********)
+  Estimated Cycles:               848822745|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights settled_1:(flat_height_queue("settled", 50))
+  Instructions:                   393479097|N/A                  (*********)
+  L1 Hits:                        536356053|N/A                  (*********)
+  LL Hits:                         12705860|N/A                  (*********)
+  RAM Hits:                             708|N/A                  (*********)
+  Total read+write:               549062621|N/A                  (*********)
+  Estimated Cycles:               599910133|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights settled_2:(flat_height_queue("settled", 30))
+  Instructions:                   247052749|N/A                  (*********)
+  L1 Hits:                        336859668|N/A                  (*********)
+  LL Hits:                          7821572|N/A                  (*********)
+  RAM Hits:                             691|N/A                  (*********)
+  Total read+write:               344681931|N/A                  (*********)
+  Estimated Cycles:               375991713|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights settled_3:(flat_height_queue("settled", 20))
+  Instructions:                   163729483|N/A                  (*********)
+  L1 Hits:                        223388683|N/A                  (*********)
+  LL Hits:                          5028009|N/A                  (*********)
+  RAM Hits:                             686|N/A                  (*********)
+  Total read+write:               228417378|N/A                  (*********)
+  Estimated Cycles:               248552738|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights settled_4:(flat_height_queue("settled", 5))
+  Instructions:                    29698089|N/A                  (*********)
+  L1 Hits:                         40747683|N/A                  (*********)
+  LL Hits:                           762173|N/A                  (*********)
+  RAM Hits:                             632|N/A                  (*********)
+  Total read+write:                41510488|N/A                  (*********)
+  Estimated Cycles:                44580668|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights mixed_0:(flat_height_queue("mixed", 100))
+  Instructions:                   499715859|N/A                  (*********)
+  L1 Hits:                        682714212|N/A                  (*********)
+  LL Hits:                         16460675|N/A                  (*********)
+  RAM Hits:                            9616|N/A                  (*********)
+  Total read+write:               699184503|N/A                  (*********)
+  Estimated Cycles:               765354147|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights mixed_1:(flat_height_queue("mixed", 50))
+  Instructions:                   325114780|N/A                  (*********)
+  L1 Hits:                        444674743|N/A                  (*********)
+  LL Hits:                         10577141|N/A                  (*********)
+  RAM Hits:                            9590|N/A                  (*********)
+  Total read+write:               455261474|N/A                  (*********)
+  Estimated Cycles:               497896098|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights mixed_2:(flat_height_queue("mixed", 30))
+  Instructions:                   185766860|N/A                  (*********)
+  L1 Hits:                        254891176|N/A                  (*********)
+  LL Hits:                          5897951|N/A                  (*********)
+  RAM Hits:                            9148|N/A                  (*********)
+  Total read+write:               260798275|N/A                  (*********)
+  Estimated Cycles:               284701111|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights mixed_3:(flat_height_queue("mixed", 20))
+  Instructions:                   126026305|N/A                  (*********)
+  L1 Hits:                        173550102|N/A                  (*********)
+  LL Hits:                          3887666|N/A                  (*********)
+  RAM Hits:                            9148|N/A                  (*********)
+  Total read+write:               177446916|N/A                  (*********)
+  Estimated Cycles:               193308612|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights mixed_4:(flat_height_queue("mixed", 5))
+  Instructions:                    16398411|N/A                  (*********)
+  L1 Hits:                         24193136|N/A                  (*********)
+  LL Hits:                           392749|N/A                  (*********)
+  RAM Hits:                            9148|N/A                  (*********)
+  Total read+write:                24595033|N/A                  (*********)
+  Estimated Cycles:                26477061|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights churn_0:(flat_height_queue("churn", 100))
+  Instructions:                   444389088|N/A                  (*********)
+  L1 Hits:                        607212324|N/A                  (*********)
+  LL Hits:                         14809513|N/A                  (*********)
+  RAM Hits:                           12768|N/A                  (*********)
+  Total read+write:               622034605|N/A                  (*********)
+  Estimated Cycles:               681706769|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights churn_1:(flat_height_queue("churn", 50))
+  Instructions:                   241643045|N/A                  (*********)
+  L1 Hits:                        331085531|N/A                  (*********)
+  LL Hits:                          7864070|N/A                  (*********)
+  RAM Hits:                           12766|N/A                  (*********)
+  Total read+write:               338962367|N/A                  (*********)
+  Estimated Cycles:               370852691|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights churn_2:(flat_height_queue("churn", 30))
+  Instructions:                   148098733|N/A                  (*********)
+  L1 Hits:                        203667871|N/A                  (*********)
+  LL Hits:                          4679811|N/A                  (*********)
+  RAM Hits:                           12244|N/A                  (*********)
+  Total read+write:               208359926|N/A                  (*********)
+  Estimated Cycles:               227495466|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights churn_3:(flat_height_queue("churn", 20))
+  Instructions:                    93866359|N/A                  (*********)
+  L1 Hits:                        129842394|N/A                  (*********)
+  LL Hits:                          2862004|N/A                  (*********)
+  RAM Hits:                           12247|N/A                  (*********)
+  Total read+write:               132716645|N/A                  (*********)
+  Estimated Cycles:               144581059|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights churn_4:(flat_height_queue("churn", 5))
+  Instructions:                    19335031|N/A                  (*********)
+  L1 Hits:                         28354194|N/A                  (*********)
+  LL Hits:                           449425|N/A                  (*********)
+  RAM Hits:                           12252|N/A                  (*********)
+  Total read+write:                28815871|N/A                  (*********)
+  Estimated Cycles:                31030139|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights lazy_0:(flat_height_queue("lazy", 100))
+  Instructions:                   444768656|N/A                  (*********)
+  L1 Hits:                        608189606|N/A                  (*********)
+  LL Hits:                         15148841|N/A                  (*********)
+  RAM Hits:                           30788|N/A                  (*********)
+  Total read+write:               623369235|N/A                  (*********)
+  Estimated Cycles:               685011391|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights lazy_1:(flat_height_queue("lazy", 50))
+  Instructions:                   216418162|N/A                  (*********)
+  L1 Hits:                        297477921|N/A                  (*********)
+  LL Hits:                          7139534|N/A                  (*********)
+  RAM Hits:                           30788|N/A                  (*********)
+  Total read+write:               304648243|N/A                  (*********)
+  Estimated Cycles:               334253171|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights lazy_2:(flat_height_queue("lazy", 30))
+  Instructions:                   125784534|N/A                  (*********)
+  L1 Hits:                        174202355|N/A                  (*********)
+  LL Hits:                          3979919|N/A                  (*********)
+  RAM Hits:                           30788|N/A                  (*********)
+  Total read+write:               178213062|N/A                  (*********)
+  Estimated Cycles:               195179530|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights lazy_3:(flat_height_queue("lazy", 20))
+  Instructions:                    77260732|N/A                  (*********)
+  L1 Hits:                        108204609|N/A                  (*********)
+  LL Hits:                          2309571|N/A                  (*********)
+  RAM Hits:                           30788|N/A                  (*********)
+  Total read+write:               110544968|N/A                  (*********)
+  Estimated Cycles:               120830044|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat::flat_heights lazy_4:(flat_height_queue("lazy", 5))
+  Instructions:                    19064240|N/A                  (*********)
+  L1 Hits:                         28963186|N/A                  (*********)
+  LL Hits:                           367789|N/A                  (*********)
+  RAM Hits:                           30787|N/A                  (*********)
+  Total read+write:                29361762|N/A                  (*********)
+  Estimated Cycles:                31879676|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat_upkeep::upkeep_flat_order all_0:(upkeep_flat_om("settled"))
+  Instructions:                      703945|N/A                  (*********)
+  L1 Hits:                          1066140|N/A                  (*********)
+  LL Hits:                            14342|N/A                  (*********)
+  RAM Hits:                             162|N/A                  (*********)
+  Total read+write:                 1080644|N/A                  (*********)
+  Estimated Cycles:                 1143520|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat_upkeep::upkeep_flat_order all_1:(upkeep_flat_om("mixed"))
+  Instructions:                     3084644|N/A                  (*********)
+  L1 Hits:                          5789288|N/A                  (*********)
+  LL Hits:                            48152|N/A                  (*********)
+  RAM Hits:                            7685|N/A                  (*********)
+  Total read+write:                 5845125|N/A                  (*********)
+  Estimated Cycles:                 6299023|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat_upkeep::upkeep_flat_order all_2:(upkeep_flat_om("churn"))
+  Instructions:                     5519475|N/A                  (*********)
+  L1 Hits:                          9258956|N/A                  (*********)
+  LL Hits:                            62357|N/A                  (*********)
+  RAM Hits:                           10128|N/A                  (*********)
+  Total read+write:                 9331441|N/A                  (*********)
+  Estimated Cycles:                 9925221|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat_upkeep::upkeep_flat_order all_3:(upkeep_flat_om("lazy"))
+  Instructions:                    10183748|N/A                  (*********)
+  L1 Hits:                         16960824|N/A                  (*********)
+  LL Hits:                            98874|N/A                  (*********)
+  RAM Hits:                           25949|N/A                  (*********)
+  Total read+write:                17085647|N/A                  (*********)
+  Estimated Cycles:                18363409|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat_upkeep::upkeep_heights all_0:(upkeep_heights_nested("settled"))
+  Instructions:                     1390056|N/A                  (*********)
+  L1 Hits:                          2013684|N/A                  (*********)
+  LL Hits:                            30411|N/A                  (*********)
+  RAM Hits:                             113|N/A                  (*********)
+  Total read+write:                 2044208|N/A                  (*********)
+  Estimated Cycles:                 2169694|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat_upkeep::upkeep_heights all_1:(upkeep_heights_nested("mixed"))
+  Instructions:                     2811025|N/A                  (*********)
+  L1 Hits:                          4952120|N/A                  (*********)
+  LL Hits:                            52338|N/A                  (*********)
+  RAM Hits:                            4509|N/A                  (*********)
+  Total read+write:                 5008967|N/A                  (*********)
+  Estimated Cycles:                 5371625|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat_upkeep::upkeep_heights all_2:(upkeep_heights_nested("churn"))
+  Instructions:                     5183015|N/A                  (*********)
+  L1 Hits:                          8330822|N/A                  (*********)
+  LL Hits:                            88283|N/A                  (*********)
+  RAM Hits:                            5355|N/A                  (*********)
+  Total read+write:                 8424460|N/A                  (*********)
+  Estimated Cycles:                 8959662|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat_upkeep::upkeep_heights all_3:(upkeep_heights_nested("lazy"))
+  Instructions:                     6123335|N/A                  (*********)
+  L1 Hits:                          9527938|N/A                  (*********)
+  LL Hits:                            69145|N/A                  (*********)
+  RAM Hits:                           12370|N/A                  (*********)
+  Total read+write:                 9609453|N/A                  (*********)
+  Estimated Cycles:                10306613|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat_upkeep::upkeep_flat_heights all_0:(upkeep_flat_heights("settled"))
+  Instructions:                     1679755|N/A                  (*********)
+  L1 Hits:                          2433899|N/A                  (*********)
+  LL Hits:                            35739|N/A                  (*********)
+  RAM Hits:                             171|N/A                  (*********)
+  Total read+write:                 2469809|N/A                  (*********)
+  Estimated Cycles:                 2618579|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat_upkeep::upkeep_flat_heights all_1:(upkeep_flat_heights("mixed"))
+  Instructions:                     3593608|N/A                  (*********)
+  L1 Hits:                          6273623|N/A                  (*********)
+  LL Hits:                            64100|N/A                  (*********)
+  RAM Hits:                            5625|N/A                  (*********)
+  Total read+write:                 6343348|N/A                  (*********)
+  Estimated Cycles:                 6790998|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat_upkeep::upkeep_flat_heights all_2:(upkeep_flat_heights("churn"))
+  Instructions:                     6570164|N/A                  (*********)
+  L1 Hits:                         10542530|N/A                  (*********)
+  LL Hits:                           103009|N/A                  (*********)
+  RAM Hits:                            7207|N/A                  (*********)
+  Total read+write:                10652746|N/A                  (*********)
+  Estimated Cycles:                11309820|N/A                  (*********)
+rfd_0005_maintained_rank_queue_instructions::flat_upkeep::upkeep_flat_heights all_3:(upkeep_flat_heights("lazy"))
+  Instructions:                     9108311|N/A                  (*********)
+  L1 Hits:                         15037987|N/A                  (*********)
+  LL Hits:                           101784|N/A                  (*********)
+  RAM Hits:                           22053|N/A                  (*********)
+  Total read+write:                15161824|N/A                  (*********)
+  Estimated Cycles:                16318762|N/A                  (*********)
+
+Gungraun result: Ok. 180 without regressions; 0 regressed; 0 filtered; 180 benchmarks finished in 1008.07s

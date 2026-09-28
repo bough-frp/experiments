@@ -1,0 +1,50 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-maintained-rank-queue-counts-flat at experiments@b0701be - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0005_maintained_rank_queue::tests::counts_flat -- --nocapture --exact
+
+   Compiling bough-experiments v0.1.0 (/home/zefs/prog/bough/experiments)
+    Finished `release` profile [optimized] target(s) in 4.96s
+     Running unittests src/lib.rs (target/release/deps/bough_experiments-546a1df3524d36be)
+
+running 1 test
+workload pass   marked    fired  quiet%   labels  heights
+settled   100   6501.3   6501.3     0.0   6500.3   6500.3
+settled    50   6501.3   4562.2    29.8   4603.5   4603.5
+settled    30   6501.3   2841.8    56.3   2888.1   2888.1
+settled    20   6501.3   1865.9    71.3   1912.2   1912.2
+settled     5   6501.3    302.6    95.3    342.0    342.0
+mixed     100   5816.0   5816.0     0.0   5815.0   5815.0
+mixed      50   5816.0   3738.0    35.7   3775.5   3775.5
+mixed      30   5816.0   2101.4    63.9   2143.4   2143.4
+mixed      20   5816.0   1400.9    75.9   1443.7   1443.7
+mixed       5   5816.0    121.8    97.9    159.7    159.7
+churn     100   5132.2   5132.2     0.0   5131.2   5131.2
+churn      50   5132.2   2727.3    46.9   2762.1   2762.1
+churn      30   5132.2   1626.0    68.3   1667.7   1667.7
+churn      20   5132.2    990.4    80.7   1032.8   1032.8
+churn       5   5132.2    119.0    97.7    160.8    160.8
+lazy      100   5110.0   5110.0     0.0   5109.0   5109.0
+lazy       50   5110.0   2402.6    53.0   2438.4   2438.4
+lazy       30   5110.0   1334.0    73.9   1377.6   1377.6
+lazy       20   5110.0    764.1    85.0    809.6    809.6
+lazy        5   5110.0     82.7    98.4    130.1    130.1
+
+per transaction, over each workload's 300 transactions: nodes marked by
+the depth-first mark over the flat arrays, fired, the quiet share of the
+marked region, and popped by the label heap and by the height buckets over
+the flat arrays. Each equals the nested engine's, transaction by transaction.
+
+workload  moves  built refused |   live  slots  moved |   live  slots  moved  fresh
+settled    1259      0       2 |  17851  17851      0 |  17851  19199    325      0
+mixed      1261   1233       5 |  20022  20022      0 |  20022  32695   1650      0
+churn      1258   3437       2 |  23929  23929      0 |  23929  43513   3603      0
+lazy       1249   6920       6 |  30060  30060      0 |  30060  60871   6712      0
+
+the flat arrays after each workload: moves and nodes built over it, and
+transactions refused (their moves are never applied to the arrays); then
+for dependencies and for dependents, edges live, slots in the array (live,
+spare room and holes), slices moved to the end for room, and (dependents;
+dependencies had none) fresh layouts once holes were half the array.
+test rfd_0005_maintained_rank_queue::tests::counts_flat ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 62 filtered out; finished in 14.79s
+
