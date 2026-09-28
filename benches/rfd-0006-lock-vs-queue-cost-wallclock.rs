@@ -39,6 +39,10 @@
 //! those CPUs, `lock` std's mutex, `ticket` the ticket lock. The ticket
 //! lock's slope against `bytes` in each placement splits the migration cost
 //! per line into same-CCX and cross-CCX; the unpinned groups mix the two.
+//! At 0 B and 256 KiB the pinned groups also have `futex`: `FutexMutex`,
+//! std's mutex copied line for line with each futex call counted and
+//! timed, so its extra can be set beside `lock`'s and beside the time its
+//! wakes take (the table after).
 //!
 //! After Criterion, the bench prints the spread of waits under contention,
 //! which Criterion's means hide: each locked call's wait for the lock and
@@ -50,7 +54,12 @@
 //! std's mutex is unfair, so its extra per unit is its extra per hand-off
 //! times the share of units that were one. The same table follows for the
 //! pinned placements, with the workers' sleeps (voluntary context
-//! switches), since pinning can change how often std's mutex parks.
+//! switches), since pinning can change how often std's mutex parks. Last,
+//! the copy's futex calls in each placement, at 0 B and 256 KiB: wakes and
+//! woken sleeps per unit, and per call the time inside `futex_wake`,
+//! inside `futex_wait`, and from a wake's send to the woken thread running
+//! (wake-to-run), which says whether a wake crossing core complexes is
+//! what the mutex's `ccx2` extra over `ccx1` is.
 
 use std::hint::black_box;
 use std::time::{Duration, Instant};
@@ -60,14 +69,20 @@ use criterion::{BenchmarkId, Criterion, SamplingMode, criterion_group};
 use bough_experiments::rfd_0006_lock_vs_queue_cost::{
     BURST, FOOTPRINTS, Footprint, LockKind, PLACEMENTS, Single, Spread, bare, handoffs,
     handoffs_on, lock_spread, locked, queue_spread, queued, run_bare, run_bare_on, run_bare_pinned,
-    run_locked, run_locked_on, run_locked_pinned, run_queued, run_queued_on, run_ticket_on,
-    run_ticket_pinned,
+    run_futex_pinned, run_locked, run_locked_on, run_locked_pinned, run_queued, run_queued_on,
+    run_ticket_on, run_ticket_pinned,
 };
 
 const THREADS: [usize; 3] = [2, 4, 8];
 
 /// Threads in the pinned runs: at most 4 fit one CCX a core each.
 const PINNED_THREADS: [usize; 2] = [2, 4];
+
+/// Footprints the pinned `futex` variant takes: the hand-off alone, and
+/// the state too big to move.
+fn futex_footprint(bytes: usize) -> bool {
+    bytes == 0 || bytes == 256 * 1024
+}
 
 fn single(c: &mut Criterion) {
     let mut g = c.benchmark_group("single");
@@ -149,7 +164,8 @@ fn footprint_pinned(c: &mut Criterion) {
         for (placement, cpus) in PLACEMENTS {
             let mut g = c.benchmark_group(format!("footprint-{label}-{placement}"));
             g.sampling_mode(SamplingMode::Flat);
-            // Sixty more benchmarks, at the unpinned groups' two seconds.
+            // Sixty more benchmarks, and eight `futex`, at the unpinned
+            // groups' two seconds.
             g.measurement_time(Duration::from_secs(2));
             let fresh = || Footprint::new(bytes);
             for threads in PINNED_THREADS {
@@ -163,6 +179,11 @@ fn footprint_pinned(c: &mut Criterion) {
                 g.bench_function(BenchmarkId::new("ticket", threads), |b| {
                     b.iter_custom(|units| black_box(run_ticket_pinned(fresh(), cpus, units)).0)
                 });
+                if futex_footprint(bytes) {
+                    g.bench_function(BenchmarkId::new("futex", threads), |b| {
+                        b.iter_custom(|units| black_box(run_futex_pinned(fresh(), cpus, units)).0)
+                    });
+                }
             }
             g.finish();
         }
@@ -219,6 +240,59 @@ fn handoff_table(per_thread: u64) {
             }
         }
     }
+}
+
+/// The copy of std's mutex pinned: its futex calls per unit and the time
+/// each takes, per placement. One untimed-by-Criterion run each; the times
+/// are the calls' own, read inside the run.
+fn futex_pinned_table(per_thread: u64) {
+    println!();
+    println!(
+        "Pinned copy of std's mutex: futex calls per unit, and ns per call ({per_thread} units per thread, one run each)"
+    );
+    println!(
+        "{:<8} {:<5} {:>7} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8}",
+        "bytes", "where", "threads", "wakes/u", "woken/u", "slept/u", "wake", "wait", "to-run"
+    );
+    let per_call = |ns: u64, calls: u64| {
+        if calls == 0 {
+            "-".to_string()
+        } else {
+            format!("{:.0}", ns as f64 / calls as f64)
+        }
+    };
+    for (bytes, label) in FOOTPRINTS {
+        if !futex_footprint(bytes) {
+            continue;
+        }
+        for (placement, cpus) in PLACEMENTS {
+            for threads in PINNED_THREADS {
+                let h = handoffs_on(
+                    LockKind::Futex,
+                    bytes,
+                    threads,
+                    &cpus[..threads],
+                    per_thread,
+                );
+                let (f, u) = (h.futex, h.units as f64);
+                println!(
+                    "{:<8} {:<5} {:>7} {:>8.3} {:>8.3} {:>8.3} {:>8} {:>8} {:>8}",
+                    label,
+                    placement,
+                    threads,
+                    f.wakes as f64 / u,
+                    f.woken as f64 / u,
+                    f.slept as f64 / u,
+                    per_call(f.wake_ns, f.wakes),
+                    per_call(f.wait_ns, f.waits),
+                    per_call(f.wake_to_run_ns, f.slept),
+                );
+            }
+        }
+    }
+    println!("wake: inside futex_wake. wait: inside futex_wait, asleep behind the holder");
+    println!("included. to-run: a wake's send to the woken thread's return, over waits that");
+    println!("slept and were woken (exact at 2 threads, reads low at 4).");
 }
 
 /// The spread of waits under contention, printed as a table. Per-thread
@@ -280,4 +354,10 @@ fn main() {
     let started = Instant::now();
     handoff_table(if test { 200 } else { 5_000 });
     println!("(hand-offs took {:.1} s)", started.elapsed().as_secs_f64());
+    let started = Instant::now();
+    futex_pinned_table(if test { 200 } else { 20_000 });
+    println!(
+        "(pinned futex calls took {:.1} s)",
+        started.elapsed().as_secs_f64()
+    );
 }

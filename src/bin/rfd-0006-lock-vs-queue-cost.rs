@@ -17,18 +17,28 @@
 //!
 //! Three runs of each, as the counts vary run to run. Counts, not times.
 //!
+//! `--pinned` counts the copy's calls with each thread pinned to its own
+//! core, all in one core complex (`ccx1`) or split across the 2700X's two
+//! (`ccx2`), at 2 and 4 threads: the waits that slept and were woken
+//! beside the wakes, per placement, since a pinned std mutex cost about
+//! three times as much split across complexes as within one. Counts, not
+//! times, three runs each.
+//!
 //! Two other modes, neither for `results/`:
 //!
 //! - `--timed`: the same runs timed, with the time spent inside
-//!   `futex_wake`, to set the counts beside the bench's extras. Wall-clock,
-//!   so indicative only on a busy machine.
+//!   `futex_wake`, to set the counts beside the bench's extras. Then the
+//!   pinned runs timed, std's mutex and the copy, with the copy's time per
+//!   call inside `futex_wake`, inside `futex_wait`, and from a wake's send
+//!   to the woken thread's return (wake-to-run). Wall-clock, so indicative
+//!   only on a busy machine.
 //! - `--std <bytes> <threads>`: one run of std's mutex and nothing else,
 //!   for `strace -f -c -e trace=futex` to count its futex calls directly.
 
 use std::time::Instant;
 
 use bough_experiments::rfd_0006_lock_vs_queue_cost::{
-    Footprint, Handoffs, LockKind, handoffs, run_bare_on,
+    Footprint, Handoffs, LockKind, PLACEMENTS, handoffs, handoffs_on, run_bare_on, run_bare_pinned,
 };
 
 const FOOTPRINTS: [(usize, &str); 2] = [(0, "0B"), (256 * 1024, "256KiB")];
@@ -36,8 +46,26 @@ const THREADS: [usize; 3] = [2, 4, 8];
 const PER_THREAD: u64 = 20_000;
 const RUNS: usize = 3;
 
+/// Threads in the pinned runs: at most 4 fit one CCX a core each.
+const PINNED_THREADS: [usize; 2] = [2, 4];
+
 fn per(n: u64, units: u64) -> f64 {
     n as f64 / units as f64
+}
+
+/// Nanoseconds per call, or `-` with no calls.
+fn per_call(ns: u64, calls: u64) -> String {
+    if calls == 0 {
+        "-".to_string()
+    } else {
+        format!("{:.0}", ns as f64 / calls as f64)
+    }
+}
+
+fn range(v: &[f64]) -> String {
+    let lo = v.iter().copied().fold(f64::INFINITY, f64::min);
+    let hi = v.iter().copied().fold(0.0, f64::max);
+    format!("{lo:.2}–{hi:.2}")
 }
 
 fn counts() {
@@ -82,11 +110,6 @@ fn counts() {
             }
         }
     }
-    let range = |v: &[f64]| {
-        let lo = v.iter().copied().fold(f64::INFINITY, f64::min);
-        let hi = v.iter().copied().fold(0.0, f64::max);
-        format!("{lo:.2}–{hi:.2}")
-    };
     println!();
     println!("Per unit: every column is a count divided by the units run.");
     println!("changes: the lock went to another thread. sleeps: voluntary context");
@@ -141,6 +164,141 @@ fn timed() {
     }
 }
 
+/// The copy's futex calls per unit, pinned in each placement.
+fn pinned() {
+    println!(
+        "Futex calls per unit, the copy of std's mutex pinned a thread per core \
+         ({PER_THREAD} units per thread, {RUNS} runs each)"
+    );
+    println!();
+    println!(
+        "{:<7} {:<5} {:>7} {:>4} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8}",
+        "bytes", "where", "threads", "run", "changes", "sleeps", "waits", "slept", "wakes", "woken"
+    );
+    // For the verdict: wakes per unit at 256 KiB, per placement.
+    let mut wakes_256: [Vec<f64>; 2] = Default::default();
+    for (bytes, label) in FOOTPRINTS {
+        for (i, (placement, cpus)) in PLACEMENTS.into_iter().enumerate() {
+            for threads in PINNED_THREADS {
+                for run in 1..=RUNS {
+                    let h = handoffs_on(
+                        LockKind::Futex,
+                        bytes,
+                        threads,
+                        &cpus[..threads],
+                        PER_THREAD,
+                    );
+                    let u = h.units;
+                    println!(
+                        "{:<7} {:<5} {:>7} {:>4} {:>8.3} {:>8.3} {:>8.3} {:>8.3} {:>8.3} {:>8.3}",
+                        label,
+                        placement,
+                        threads,
+                        run,
+                        per(h.changes, u),
+                        per(h.sleeps, u),
+                        per(h.futex.waits, u),
+                        per(h.futex.slept, u),
+                        per(h.futex.wakes, u),
+                        per(h.futex.woken, u),
+                    );
+                    if bytes > 0 {
+                        wakes_256[i].push(per(h.futex.wakes, u));
+                    }
+                }
+            }
+        }
+    }
+    println!();
+    println!("Per unit: every column is a count divided by the units run.");
+    println!("where: ccx1 pins threads to CPUs 0, 2, 4, 6 (one core complex); ccx2 to");
+    println!("0, 8, 2, 10 (alternating between the two). changes: the lock went to another");
+    println!("thread. sleeps: voluntary context switches of the workers. waits: futex_wait");
+    println!("calls; slept: those that slept and were woken. wakes: futex_wake calls;");
+    println!("woken: wakes that woke a thread.");
+    println!();
+    println!(
+        "Verdict: at 256 KiB, the copy made {} futex_wake calls per unit within one core \
+         complex and {} split across two, over 2 and 4 threads.",
+        range(&wakes_256[0]),
+        range(&wakes_256[1]),
+    );
+}
+
+/// The pinned runs timed: extra per unit over bare pinned to the first CPU,
+/// for std's mutex and the copy, and the copy's time per futex call.
+fn timed_pinned() {
+    println!();
+    println!("INDICATIVE: pinned, wall-clock, not on an idle machine; ns per call for the copy");
+    println!(
+        "{:<7} {:<5} {:<6} {:>7} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8} {:>8}",
+        "bytes",
+        "where",
+        "lock",
+        "threads",
+        "bare ns",
+        "extra ns",
+        "wakes/u",
+        "wake",
+        "slept/u",
+        "wait",
+        "to-run"
+    );
+    for (bytes, label) in FOOTPRINTS {
+        for (placement, cpus) in PLACEMENTS {
+            for threads in PINNED_THREADS {
+                let cpus = &cpus[..threads];
+                let units = threads as u64 * PER_THREAD;
+                let bare = (0..RUNS)
+                    .map(|_| {
+                        let g = Footprint::new(bytes);
+                        run_bare_pinned(g, cpus[0], units).0.as_nanos() as f64
+                    })
+                    .fold(f64::INFINITY, f64::min)
+                    / units as f64;
+                for kind in [LockKind::Mutex, LockKind::Futex] {
+                    let (t, h): (f64, Handoffs) = (0..RUNS)
+                        .map(|_| {
+                            let start = Instant::now();
+                            let h = handoffs_on(kind, bytes, threads, cpus, PER_THREAD);
+                            (start.elapsed().as_nanos() as f64 / units as f64, h)
+                        })
+                        .min_by(|a, b| a.0.total_cmp(&b.0))
+                        .expect("at least one run");
+                    let f = h.futex;
+                    let copy = matches!(kind, LockKind::Futex);
+                    let count = |n: u64| {
+                        if copy {
+                            format!("{:.3}", per(n, h.units))
+                        } else {
+                            "-".to_string()
+                        }
+                    };
+                    println!(
+                        "{:<7} {:<5} {:<6} {:>7} {:>8.0} {:>8.0} {:>8} {:>8} {:>8} {:>8} {:>8}",
+                        label,
+                        placement,
+                        kind.name(),
+                        threads,
+                        bare,
+                        t - bare,
+                        count(f.wakes),
+                        per_call(f.wake_ns, f.wakes),
+                        count(f.slept),
+                        per_call(f.wait_ns, f.waits),
+                        per_call(f.wake_to_run_ns, f.slept),
+                    );
+                }
+            }
+        }
+    }
+    println!();
+    println!("wake: ns inside each futex_wake. wait: ns inside each futex_wait, asleep");
+    println!("behind the holder included. to-run: ns from a wake's send to the woken");
+    println!("thread's return from futex_wait, over waits that slept (exact at 2 threads,");
+    println!("reads low at 4). Timed run: the best of {RUNS}, with its own counts.");
+}
+
 /// One run of std's mutex, for strace.
 fn std_only(bytes: usize, threads: usize) {
     let h = handoffs(LockKind::Mutex, bytes, threads, PER_THREAD);
@@ -154,7 +312,11 @@ fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
     match args.first().map(String::as_str) {
         None => counts(),
-        Some("--timed") => timed(),
+        Some("--timed") => {
+            timed();
+            timed_pinned();
+        }
+        Some("--pinned") => pinned(),
         Some("--std") => {
             let arg = |i: usize| -> usize {
                 args.get(i)
@@ -163,6 +325,8 @@ fn main() {
             };
             std_only(arg(1), arg(2));
         }
-        Some(other) => panic!("unknown mode {other}: none, --timed, or --std <bytes> <threads>"),
+        Some(other) => {
+            panic!("unknown mode {other}: none, --pinned, --timed, or --std <bytes> <threads>")
+        }
     }
 }

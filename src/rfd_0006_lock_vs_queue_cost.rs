@@ -111,11 +111,32 @@
 //! anywhere, so their slope mixes the two. [`PLACEMENTS`] pins each thread
 //! to its own physical core, all in one CCX (`ccx1`) or alternating
 //! between the two (`ccx2`), through `libc::sched_setaffinity`.
+//!
+//! ## A wake, within one complex and across two
+//!
+//! Pinned, std's mutex at 256 KiB and 2 threads cost about 1.5 µs a unit
+//! over bare split across the complexes against about 0.54 µs within one,
+//! while barely changing threads, so migration can't be the gap. The
+//! candidate is the wake: nearly every unit ends in a `futex_wake` that
+//! wakes a sleeping thread, and a wake sent to a core in the other complex
+//! may cost more, to send or to land. [`FutexMutex`] times both ends of
+//! each wake, per call, in [`FutexCalls`]: `wake_ns`, the unlocking
+//! thread's time inside `futex_wake`, which it pays before it can run
+//! another unit; and for each `futex_wait` that slept and was woken,
+//! `wake_to_run_ns`, from the waking thread's clock read just before its
+//! `futex_wake` to the sleeper's just after its `futex_wait` returns. That
+//! is the wake-to-run latency: the IPI, the scheduler putting the sleeper
+//! on its core, and its return to user space. `wait_ns` is the whole time
+//! inside every `futex_wait`, asleep behind the holder's unit included.
+//! Both clocks are `CLOCK_MONOTONIC` through `Instant`, one clock across
+//! cores, read against one process-wide epoch. [`run_futex_pinned`] runs
+//! the copy pinned in either placement, for the bench to set beside the
+//! std mutex's pinned runs.
 
 use std::cell::{Cell, UnsafeCell};
 use std::collections::VecDeque;
-use std::sync::atomic::{AtomicU32, Ordering};
-use std::sync::{Arc, Barrier, Mutex, MutexGuard, PoisonError};
+use std::sync::atomic::{AtomicU32, AtomicU64, Ordering};
+use std::sync::{Arc, Barrier, Mutex, MutexGuard, OnceLock, PoisonError};
 use std::task::{Wake, Waker};
 use std::thread::{self, Thread};
 use std::time::{Duration, Instant};
@@ -469,7 +490,18 @@ impl<T: Send> Lock<T> for Ticket<T> {
 pub struct FutexMutex<T> {
     /// 0 unlocked, 1 locked, 2 locked with waiters (maybe).
     state: AtomicU32,
+    /// When the last `futex_wake` was sent, in [`clock_ns`], for the woken
+    /// thread's wake-to-run latency. Not std's; written only beside a wake.
+    woke_at: AtomicU64,
     value: UnsafeCell<T>,
+}
+
+/// Nanoseconds since a process-wide epoch, on the monotonic clock every
+/// core shares, so a time read on one thread can be subtracted from one
+/// read on another.
+fn clock_ns() -> u64 {
+    static EPOCH: OnceLock<Instant> = OnceLock::new();
+    nanos(EPOCH.get_or_init(Instant::now).elapsed())
 }
 
 const UNLOCKED: u32 = 0;
@@ -492,6 +524,29 @@ pub struct FutexCalls {
     /// Time inside those `futex_wake` calls, which the unlocking thread
     /// pays before it can take the lock again. A timing: indicative only.
     pub wake_ns: u64,
+    /// Waits that slept and were woken: returned 0 with a wake sent since
+    /// the wait began. (A wait that found the state moved returns at once
+    /// with `EAGAIN` and isn't one.)
+    pub slept: u64,
+    /// Time inside every `futex_wait`, from the call to its return.
+    pub wait_ns: u64,
+    /// Over the `slept` waits, from the last wake's send to the return.
+    /// Exact at 2 threads, where only the sleeper can mark the lock
+    /// contended, so no second wake can come before it runs. With more, a
+    /// later wake can overwrite the stamp, and this reads low.
+    pub wake_to_run_ns: u64,
+}
+
+impl FutexCalls {
+    const ZERO: FutexCalls = FutexCalls {
+        waits: 0,
+        wakes: 0,
+        woken: 0,
+        wake_ns: 0,
+        slept: 0,
+        wait_ns: 0,
+        wake_to_run_ns: 0,
+    };
 }
 
 impl std::ops::Add for FutexCalls {
@@ -502,14 +557,30 @@ impl std::ops::Add for FutexCalls {
             wakes: self.wakes + o.wakes,
             woken: self.woken + o.woken,
             wake_ns: self.wake_ns + o.wake_ns,
+            slept: self.slept + o.slept,
+            wait_ns: self.wait_ns + o.wait_ns,
+            wake_to_run_ns: self.wake_to_run_ns + o.wake_to_run_ns,
+        }
+    }
+}
+
+impl std::ops::Sub for FutexCalls {
+    type Output = FutexCalls;
+    fn sub(self, o: FutexCalls) -> FutexCalls {
+        FutexCalls {
+            waits: self.waits - o.waits,
+            wakes: self.wakes - o.wakes,
+            woken: self.woken - o.woken,
+            wake_ns: self.wake_ns - o.wake_ns,
+            slept: self.slept - o.slept,
+            wait_ns: self.wait_ns - o.wait_ns,
+            wake_to_run_ns: self.wake_to_run_ns - o.wake_to_run_ns,
         }
     }
 }
 
 thread_local! {
-    static CALLS: Cell<FutexCalls> = const {
-        Cell::new(FutexCalls { waits: 0, wakes: 0, woken: 0, wake_ns: 0 })
-    };
+    static CALLS: Cell<FutexCalls> = const { Cell::new(FutexCalls::ZERO) };
 }
 
 /// This thread's [`FutexMutex`] calls so far.
@@ -570,11 +641,7 @@ impl<T> FutexMutex<T> {
             if self.state.load(Ordering::Relaxed) != CONTENDED {
                 return;
             }
-            CALLS.with(|c| {
-                let mut v = c.get();
-                v.waits += 1;
-                c.set(v)
-            });
+            let started = clock_ns();
             // SAFETY: a futex wait on our own live atomic, as std's.
             let r = unsafe {
                 libc::syscall(
@@ -587,6 +654,19 @@ impl<T> FutexMutex<T> {
                     !0u32,
                 )
             };
+            let returned = clock_ns();
+            // Read before anything else can wake again: see `wake_to_run_ns`.
+            let woke_at = self.woke_at.load(Ordering::Relaxed);
+            CALLS.with(|c| {
+                let mut v = c.get();
+                v.waits += 1;
+                v.wait_ns += returned - started;
+                if r == 0 && woke_at >= started {
+                    v.slept += 1;
+                    v.wake_to_run_ns += returned.saturating_sub(woke_at);
+                }
+                c.set(v)
+            });
             let interrupted =
                 r < 0 && std::io::Error::last_os_error().raw_os_error() == Some(libc::EINTR);
             if !interrupted {
@@ -604,6 +684,7 @@ impl<T> FutexMutex<T> {
     #[cold]
     fn wake(&self) {
         let started = Instant::now();
+        self.woke_at.store(clock_ns(), Ordering::Relaxed);
         // SAFETY: a futex wake of one waiter on our own atomic, as std's.
         let r = unsafe {
             libc::syscall(
@@ -627,6 +708,7 @@ impl<T: Send> Lock<T> for FutexMutex<T> {
     fn new(value: T) -> Self {
         FutexMutex {
             state: AtomicU32::new(UNLOCKED),
+            woke_at: AtomicU64::new(0),
             value: UnsafeCell::new(value),
         }
     }
@@ -873,6 +955,12 @@ pub fn run_bare_pinned<S: State>(g: S, cpu: usize, units: u64) -> (Duration, u64
 /// [`run_locked_on`] with thread `t` pinned to `cpus[t]`, one per CPU.
 pub fn run_locked_pinned<S: State>(g: S, cpus: &[usize], units: u64) -> (Duration, u64) {
     run_contended_on::<Mutex<S>, S>(g, cpus.len(), units, cpus)
+}
+
+/// [`run_locked_pinned`] under [`FutexMutex`], std's mutex copied with its
+/// futex calls counted and timed.
+pub fn run_futex_pinned<S: State>(g: S, cpus: &[usize], units: u64) -> (Duration, u64) {
+    run_contended_on::<FutexMutex<S>, S>(g, cpus.len(), units, cpus)
 }
 
 /// [`run_ticket_on`] with thread `t` pinned to `cpus[t]`, one per CPU.
@@ -1191,13 +1279,7 @@ fn handoffs_under<L: Lock<Tracked>>(
                             *longest = (*longest).max(*streak);
                         });
                     }
-                    let after = futex_calls();
-                    let calls = FutexCalls {
-                        waits: after.waits - calls.waits,
-                        wakes: after.wakes - calls.wakes,
-                        woken: after.woken - calls.woken,
-                        wake_ns: after.wake_ns - calls.wake_ns,
-                    };
+                    let calls = futex_calls() - calls;
                     (voluntary_switches() - sleeps, calls)
                 })
             })
@@ -1316,6 +1398,26 @@ mod tests {
         let h = handoffs(LockKind::Futex, 0, 4, 2_000);
         assert!(h.futex.wakes > 0, "{h:?}");
         assert!(h.futex.woken <= h.futex.wakes, "{h:?}");
+        assert!(h.futex.slept <= h.futex.waits, "{h:?}");
+    }
+
+    /// The copy runs every unit once pinned in either placement, and its
+    /// woken sleeps are no more than the wakes that woke a thread.
+    #[test]
+    fn futex_pinned_agree() {
+        let want = expected(1_000);
+        for (name, cpus) in PLACEMENTS {
+            for (bytes, label) in [FOOTPRINTS[0], FOOTPRINTS[4]] {
+                for threads in [2, 4] {
+                    let cpus = &cpus[..threads];
+                    let got = run_futex_pinned(Footprint::new(bytes), cpus, 1_000).1;
+                    assert_eq!(got, want, "{name} {label} futex x{threads}");
+                    let h = handoffs_on(LockKind::Futex, bytes, threads, cpus, 250);
+                    assert_eq!(h.units, threads as u64 * 250);
+                    assert!(h.futex.slept <= h.futex.woken, "{name} {label}: {h:?}");
+                }
+            }
+        }
     }
 
     #[test]
