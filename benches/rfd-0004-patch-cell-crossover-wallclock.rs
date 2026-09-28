@@ -16,6 +16,10 @@
 //! Added later, beside the earlier IDs: `rope` in the `vec-*` groups (the
 //! delta design over ropes) and `lazy` in the `map-*` groups (the delta
 //! design with the derived cells buffering Z-sets until a read).
+//! After those, `btree` in the `vec-*` groups (the delta design over
+//! counted B-trees) and `fullylazy` in the `map-*` groups (the source map
+//! deferred too, raw upserts buffered until a read). The `vec-*` groups
+//! also take n = 1,000,000, every variant.
 //!
 //! Each fixture is checked first to give the same reads under both
 //! designs, and warmed for a cycle.
@@ -26,17 +30,19 @@ use std::time::Duration;
 use criterion::{BenchmarkId, Criterion, criterion_group, criterion_main};
 
 use bough_experiments::rfd_0004_patch_cell_crossover::{
-    APPEND, COMPOSE_K, CYCLE, Compose, Maps, ONE, RARE_READ, SIZES, TWO, Variant, Vecs, Workload,
+    APPEND, COMPOSE_K, CYCLE, Compose, MILLION, Maps, ONE, RARE_READ, SIZES, TWO, Variant, Vecs,
+    Workload,
 };
 
 fn vec_group(c: &mut Criterion, w: Workload) {
     let mut g = c.benchmark_group(format!("vec-{}", w.name));
-    for &n in &SIZES {
+    for &n in SIZES.iter().chain([&MILLION]) {
         let mut fixture = Vecs::new(n, w);
         for _ in 0..CYCLE {
             let read = fixture.step(Variant::Baseline);
             assert_eq!(read, fixture.step(Variant::Delta));
             assert_eq!(read, fixture.step(Variant::Rope));
+            assert_eq!(read, fixture.step(Variant::BTree));
         }
         for v in Variant::VEC {
             let mut f = fixture.clone();
@@ -56,6 +62,7 @@ fn map_group(c: &mut Criterion, w: Workload) {
             let read = fixture.step(Variant::Baseline);
             assert_eq!(read, fixture.step(Variant::Delta));
             assert_eq!(read, fixture.step(Variant::Lazy));
+            assert_eq!(read, fixture.step(Variant::FullyLazy));
         }
         for v in Variant::MAP {
             let mut f = fixture.clone();
@@ -92,8 +99,8 @@ fn patch_cell_crossover(c: &mut Criterion) {
 
 criterion_group! {
     name = benches;
-    // 157 benchmarks at about 1.5 s each, the slowest (map at 100k) a few
-    // seconds more: about six minutes.
+    // 222 benchmarks at about 1.5 s each, the slowest (map at 100k, vec
+    // baseline at 1M) a few seconds more: about eight and a half minutes.
     config = Criterion::default()
         .sample_size(50)
         .warm_up_time(Duration::from_millis(300))

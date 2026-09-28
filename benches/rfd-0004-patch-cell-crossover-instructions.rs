@@ -16,6 +16,12 @@
 //! vectors' O(n)) and `map_lazy` (the delta design with the filter and the
 //! count buffering Z-sets until a read).
 //!
+//! Two more were added after that, again keeping every earlier ID:
+//! `vec_btree` (the delta design over counted B-trees, O(log n) per edit)
+//! and `map_fullylazy` (the source map deferred too: raw upserts buffered,
+//! everything brought up to date on a read). Every `vec_*` bench also takes
+//! n = 1,000,000, as its eighth parameter, where O(log n) and O(√n) part.
+//!
 //! The fixture is built in `setup` and both designs run a cycle on it
 //! there, so memos, capacities and the hash maps are at their steady state,
 //! and the counted cycle starts where a cycle starts. It's handed back so
@@ -81,30 +87,39 @@ fn drop_out<T>(out: (u64, T)) {
 }
 
 #[library_benchmark]
-#[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_one, teardown = drop_out)]
-#[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_two, teardown = drop_out)]
-#[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_rare, teardown = drop_out)]
-#[benches::append(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_append, teardown = drop_out)]
+#[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_one, teardown = drop_out)]
+#[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_two, teardown = drop_out)]
+#[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_rare, teardown = drop_out)]
+#[benches::append(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_append, teardown = drop_out)]
 fn vec_baseline(mut f: Vecs) -> (u64, Vecs) {
     (black_box(f.steps(Variant::Baseline, CYCLE)), f)
 }
 
 #[library_benchmark]
-#[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_one, teardown = drop_out)]
-#[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_two, teardown = drop_out)]
-#[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_rare, teardown = drop_out)]
-#[benches::append(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_append, teardown = drop_out)]
+#[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_one, teardown = drop_out)]
+#[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_two, teardown = drop_out)]
+#[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_rare, teardown = drop_out)]
+#[benches::append(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_append, teardown = drop_out)]
 fn vec_delta(mut f: Vecs) -> (u64, Vecs) {
     (black_box(f.steps(Variant::Delta, CYCLE)), f)
 }
 
 #[library_benchmark]
-#[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_one, teardown = drop_out)]
-#[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_two, teardown = drop_out)]
-#[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_rare, teardown = drop_out)]
-#[benches::append(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_append, teardown = drop_out)]
+#[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_one, teardown = drop_out)]
+#[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_two, teardown = drop_out)]
+#[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_rare, teardown = drop_out)]
+#[benches::append(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_append, teardown = drop_out)]
 fn vec_rope(mut f: Vecs) -> (u64, Vecs) {
     (black_box(f.steps(Variant::Rope, CYCLE)), f)
+}
+
+#[library_benchmark]
+#[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_one, teardown = drop_out)]
+#[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_two, teardown = drop_out)]
+#[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_rare, teardown = drop_out)]
+#[benches::append(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_append, teardown = drop_out)]
+fn vec_btree(mut f: Vecs) -> (u64, Vecs) {
+    (black_box(f.steps(Variant::BTree, CYCLE)), f)
 }
 
 #[library_benchmark]
@@ -131,6 +146,14 @@ fn map_lazy(mut f: Maps) -> (u64, Maps) {
     (black_box(f.steps(Variant::Lazy, CYCLE)), f)
 }
 
+#[library_benchmark]
+#[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_one, teardown = drop_out)]
+#[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_two, teardown = drop_out)]
+#[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_rare, teardown = drop_out)]
+fn map_fullylazy(mut f: Maps) -> (u64, Maps) {
+    (black_box(f.steps(Variant::FullyLazy, CYCLE)), f)
+}
+
 fn run_compose(mut c: Compose, v: Variant) -> (u64, Compose) {
     let mut acc = 0u64;
     for _ in 0..CYCLE {
@@ -153,7 +176,7 @@ fn compose_delta(c: Compose) -> (u64, Compose) {
 
 library_benchmark_group!(
     name = patch_cell_crossover;
-    benchmarks = vec_baseline, vec_delta, vec_rope, map_baseline, map_delta, map_lazy, compose_baseline, compose_delta
+    benchmarks = vec_baseline, vec_delta, vec_rope, map_baseline, map_delta, map_lazy, compose_baseline, compose_delta, vec_btree, map_fullylazy
 );
 
 main!(library_benchmark_groups = patch_cell_crossover);
