@@ -1,0 +1,134 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-incremental-mark-instructions-extended at experiments@ac245d5 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0003-incremental-mark-instructions -- '*::extended_*'
+
+   Compiling bough-experiments v0.1.0 (/home/zefs/prog/bough/experiments)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 1.83s
+     Running benches/rfd-0003-incremental-mark-instructions.rs (target/release/deps/rfd_0003_incremental_mark_instructions-f1e7d46919120b9e)
+rfd_0003_incremental_mark_instructions::extended_app::ext_run k250_born:(warmed_reset(Pace :: Fixed { k : 250, sliced : tr...
+  Instructions:                   263752267|N/A                  (*********)
+  L1 Hits:                        373197254|N/A                  (*********)
+  LL Hits:                          8580476|N/A                  (*********)
+  RAM Hits:                             806|N/A                  (*********)
+  Total read+write:               381778536|N/A                  (*********)
+  Estimated Cycles:               416127844|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_run k500_born:(warmed_reset(Pace :: Fixed { k : 500, sliced : tr...
+  Instructions:                   214697557|N/A                  (*********)
+  L1 Hits:                        303602770|N/A                  (*********)
+  LL Hits:                          6676529|N/A                  (*********)
+  RAM Hits:                             668|N/A                  (*********)
+  Total read+write:               310279967|N/A                  (*********)
+  Estimated Cycles:               337008795|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_run k1000_early:(warmed_reset(Pace :: Fixed { k : 1_000, sliced : ...
+  Instructions:                   190977888|N/A                  (*********)
+  L1 Hits:                        270127078|N/A                  (*********)
+  LL Hits:                          5816130|N/A                  (*********)
+  RAM Hits:                             749|N/A                  (*********)
+  Total read+write:               275943957|N/A                  (*********)
+  Estimated Cycles:               299233943|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_run k1000_born:(warmed_reset(Pace :: Fixed { k : 1_000, sliced : ...
+  Instructions:                   191722904|N/A                  (*********)
+  L1 Hits:                        271149422|N/A                  (*********)
+  LL Hits:                          5766176|N/A                  (*********)
+  RAM Hits:                             645|N/A                  (*********)
+  Total read+write:               276916243|N/A                  (*********)
+  Estimated Cycles:               300002877|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_run k2000:(warmed_reset(Pace :: Fixed { k : 2_000, sliced : ...
+  Instructions:                   178382841|N/A                  (*********)
+  L1 Hits:                        252366587|N/A                  (*********)
+  LL Hits:                          5282738|N/A                  (*********)
+  RAM Hits:                             746|N/A                  (*********)
+  Total read+write:               257650071|N/A                  (*********)
+  Estimated Cycles:               278806387|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_run region_debt4:(warmed_reset(Pace :: RegionDebt { c : 4 }, Reset ...
+  Instructions:                   186331708|N/A                  (*********)
+  L1 Hits:                        263647831|N/A                  (*********)
+  LL Hits:                          5782106|N/A                  (*********)
+  RAM Hits:                             867|N/A                  (*********)
+  Total read+write:               269430804|N/A                  (*********)
+  Estimated Cycles:               292588706|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_run region_debt8:(warmed_reset(Pace :: RegionDebt { c : 8 }, Reset ...
+  Instructions:                   179303577|N/A                  (*********)
+  L1 Hits:                        253716731|N/A                  (*********)
+  LL Hits:                          5423306|N/A                  (*********)
+  RAM Hits:                             852|N/A                  (*********)
+  Total read+write:               259140889|N/A                  (*********)
+  Estimated Cycles:               280863081|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_pause k250_born:(worst_reset(Pace :: Fixed { k : 250, sliced : tru...
+  Instructions:                      134861|N/A                  (*********)
+  L1 Hits:                           185609|N/A                  (*********)
+  LL Hits:                             5160|N/A                  (*********)
+  RAM Hits:                               5|N/A                  (*********)
+  Total read+write:                  190774|N/A                  (*********)
+  Estimated Cycles:                  211584|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_pause k500_born:(worst_reset(Pace :: Fixed { k : 500, sliced : tru...
+  Instructions:                      122012|N/A                  (*********)
+  L1 Hits:                           164722|N/A                  (*********)
+  LL Hits:                             4772|N/A                  (*********)
+  RAM Hits:                               4|N/A                  (*********)
+  Total read+write:                  169498|N/A                  (*********)
+  Estimated Cycles:                  188722|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_pause k1000_early:(worst_reset(Pace :: Fixed { k : 1_000, sliced : t...
+  Instructions:                      156668|N/A                  (*********)
+  L1 Hits:                           208299|N/A                  (*********)
+  LL Hits:                             6084|N/A                  (*********)
+  RAM Hits:                               5|N/A                  (*********)
+  Total read+write:                  214388|N/A                  (*********)
+  Estimated Cycles:                  238894|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_pause k1000_born:(worst_reset(Pace :: Fixed { k : 1_000, sliced : t...
+  Instructions:                      147954|N/A                  (*********)
+  L1 Hits:                           196050|N/A                  (*********)
+  LL Hits:                             5710|N/A                  (*********)
+  RAM Hits:                               5|N/A                  (*********)
+  Total read+write:                  201765|N/A                  (*********)
+  Estimated Cycles:                  224775|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_pause k2000:(worst_reset(Pace :: Fixed { k : 2_000, sliced : t...
+  Instructions:                      224587|N/A                  (*********)
+  L1 Hits:                           293445|N/A                  (*********)
+  LL Hits:                             8675|N/A                  (*********)
+  RAM Hits:                               5|N/A                  (*********)
+  Total read+write:                  302125|N/A                  (*********)
+  Estimated Cycles:                  336995|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_pause region_debt4:(worst_reset(Pace :: RegionDebt { c : 4 }, Reset :...
+  Instructions:                      322384|N/A                  (*********)
+  L1 Hits:                           433077|N/A                  (*********)
+  LL Hits:                            11954|N/A                  (*********)
+  RAM Hits:                               5|N/A                  (*********)
+  Total read+write:                  445036|N/A                  (*********)
+  Estimated Cycles:                  493022|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_app::ext_pause region_debt8:(worst_reset(Pace :: RegionDebt { c : 8 }, Reset :...
+  Instructions:                      513282|N/A                  (*********)
+  L1 Hits:                           738953|N/A                  (*********)
+  LL Hits:                            17068|N/A                  (*********)
+  RAM Hits:                               5|N/A                  (*********)
+  Total read+write:                  756026|N/A                  (*********)
+  Estimated Cycles:                  824468|N/A                  (*********)
+rfd_0003_incremental_mark_instructions::extended_uneven::uneven_run_atomic atomic:(uneven_atomic())
+  Instructions:                  1025319607|1025319607           (No change)
+  L1 Hits:                       1443088624|1443087309           (+0.00009%) [+1.00000x]
+  LL Hits:                         41226293|41227608             (-0.00319%) [-1.00003x]
+  RAM Hits:                            7632|7632                 (No change)
+  Total read+write:              1484322549|1484322549           (No change)
+  Estimated Cycles:              1649487209|1649492469           (-0.00032%) [-1.00000x]
+rfd_0003_incremental_mark_instructions::extended_uneven::uneven_run k1000:(uneven_k1000())
+  Instructions:                  1044699201|1044699201           (No change)
+  L1 Hits:                       1471026221|1471023229           (+0.00020%) [+1.00000x]
+  LL Hits:                         41964430|41967423             (-0.00713%) [-1.00007x]
+  RAM Hits:                            7397|7396                 (+0.01352%) [+1.00014x]
+  Total read+write:              1512998048|1512998048           (No change)
+  Estimated Cycles:              1681107266|1681119204           (-0.00071%) [-1.00001x]
+rfd_0003_incremental_mark_instructions::extended_uneven::uneven_pause_atomic atomic:(uneven_worst_atomic())
+  Instructions:                     2831749|2831749              (No change)
+  L1 Hits:                          3989956|3989952              (+0.00010%) [+1.00000x]
+  LL Hits:                            89512|89515                (-0.00335%) [-1.00003x]
+  RAM Hits:                              18|19                   (-5.26316%) [-1.05556x]
+  Total read+write:                 4079486|4079486              (No change)
+  Estimated Cycles:                 4438146|4438192              (-0.00104%) [-1.00001x]
+rfd_0003_incremental_mark_instructions::extended_uneven::uneven_pause k1000:(uneven_worst_k1000())
+  Instructions:                     1442634|1442634              (No change)
+  L1 Hits:                          2032862|2032863              (-0.00005%) [-1.00000x]
+  LL Hits:                            58117|58116                (+0.00172%) [+1.00002x]
+  RAM Hits:                              41|41                   (No change)
+  Total read+write:                 2091020|2091020              (No change)
+  Estimated Cycles:                 2324882|2324878              (+0.00017%) [+1.00000x]
+
+Gungraun result: Ok. 18 without regressions; 0 regressed; 23 filtered; 18 benchmarks finished in 161.341s

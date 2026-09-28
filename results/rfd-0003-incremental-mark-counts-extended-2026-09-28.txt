@@ -1,0 +1,73 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-incremental-mark-counts-extended at experiments@ac245d5 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0003_incremental_mark::tests::extended_counts -- --nocapture --test-threads 1
+
+    Finished `release` profile [optimized] target(s) in 0.09s
+     Running unittests src/lib.rs (target/release/deps/bough_experiments-546a1df3524d36be)
+
+running 2 tests
+test rfd_0003_incremental_mark::tests::extended_counts_app ... app: 10089 live after a collection; 30000 units from each pace's first cycle, every third a navigation, the rest a click; worst and wcoll over the first 3900
+trigger: the work-paced probe's `excess`, reset when the cycle ends; -early: reset when the mark ends (survivors = black nodes), so the next cycle can start the unit after this one ends; -born: -early with a reference of the click's region nodes born before the cycle began; keep-dead: transactions evaluate white dependents after the mark too; region-debt<c>: c mark-nodes per region node and per node built since the cycle began, less the work done
+columns: u/cyc, maxcyc = units a cycle runs, mean and longest; coll/u = collection work a unit in mark-node equivalents; est/u = the model's estimate of a unit's instructions (100 a region node, 850 a node built, 75 marked, 40 pruned, 12 a slot tested, 400 freed), and /atom that over the atomic baseline's; worst = the costliest unit of the benches' window by the model, wcoll = the costliest collection slice alone; float = unreachable nodes alive when a cycle ends (floating garbage the next frees), per cycle, and maxfl the most; shaded = white nodes barriers shaded, born = nodes born black, per cycle
+  pace               cycles  u/cyc maxcyc  rgn/clk  coll/u   est/u  /atom    worst    wcoll   float  maxfl shaded   born
+  atomic (baseline)     471    1.0      1    279.6   308.0   48642  1.000  1556483  1500583     0.0      0    0.0    0.0
+  k250                  187   95.2     96    945.6   148.1   81009  1.665   179865    20224   718.2    765    0.0  741.7
+  k500                  278   43.5     44    582.9   199.5   60693  1.248   143565    40036   309.7    361    0.0  333.5
+  k1000                 358   21.0     21    412.0   244.2   52669  1.083   155565    80000   140.7    162    0.0  164.1
+  k2000                 404   10.7     11    332.5   269.9   49305  1.014   224865   160000    52.0     82    0.0   75.3
+  k4000                 438    5.0      5    286.5   288.9   47668  0.980   367565   309665    10.0     29    0.0   33.7
+  k250-keep-dead        187   95.2     96   1107.8   148.1   91820  1.888   196200    20224   718.2    765    0.0  741.7
+  k1000-keep-dead       358   21.0     21    451.8   244.2   55324  1.137   159600    80000   140.7    162    0.0  164.1
+  k250-early            285   86.4     87    731.0   204.8   70967  1.459   135265    20236   651.1    691    0.0  674.5
+  k1000-early           402   20.9     21    376.0   269.2   52147  1.072   148465    80000   140.7    162    0.0  164.1
+  k4000-early           459    5.0      5    274.1   300.9   47743  0.982   364565   309665     9.6     30    0.0   33.1
+  k250-born             362   82.9     84    639.2   249.1   68176  1.402   119065    20236   615.6    667    0.0  639.2
+  k500-born             455   40.1     40    418.0   300.8   57326  1.179   109465    40084   282.0    310    0.0  305.5
+  k1000-born            474   20.0     20    331.5   310.4   52284  1.075   140065    80000   130.5    158    0.0  153.8
+  k4000-born            481    5.0      5    262.9   313.3   47934  0.985   362965   309665    10.6     30    0.0   34.1
+  region-debt1          227   67.8     72    629.0   170.1   61556  1.265   208810    92710   497.3    548    0.0  520.9
+  region-debt2          274   45.8     48    494.3   196.9   54592  1.122   241125   146825   328.1    355    0.0  351.4
+  region-debt4          323   29.0     31    405.3   224.0   50701  1.042   326065   247465   194.3    216    0.0  217.9
+  region-debt8          363   19.9     22    355.8   246.8   49118  1.010   513605   441305   140.8    160    0.0  151.2
+  region-debt2-born     470   43.6     47    356.7   308.6   53825  1.107   160085    98485   310.7    337    0.0  334.0
+  region-debt4-born     478   30.0     32    300.0   312.4   50329  1.035   230505   174105   205.0    228    0.0  228.3
+ok
+test rfd_0003_incremental_mark::tests::extended_counts_uneven ... uneven (the work-paced probe's, breathing): 10076 live after the first collection; 3600 units after 2400 of warm-up; periods of 1,200 units, 900 navigating every third unit then 300 quiet; a screen kept every 30th unit; 30 kept off the tenth input through each navigating stretch, a guard released every 10th quiet unit
+inputs fire every unit, every 10th, every 100th, and at unit 5 then every 1,500th; screens hang off the three frequent ones in turn; trigger: the work-paced probe's `Excess` pacer, a release mid-cycle counted toward the next
+columns: u/cyc, maxcyc = units a cycle runs, mean and longest; coll/u = collection work a unit in mark-node equivalents; est/u = the model's estimate of a unit's instructions (100 a region node, 850 a node built, 75 marked, 40 pruned, 12 a slot tested, 400 freed), and /atom that over the atomic baseline's; worst = the costliest unit of the benches' window by the model, wcoll = the costliest collection slice alone; float = unreachable nodes alive when a cycle ends (floating garbage the next frees), per cycle, and maxfl the most; shaded = white nodes barriers shaded, born = nodes born black, per cycle
+  rgn/u = region nodes a unit, over every input
+  pace               cycles  u/cyc maxcyc    rgn/u  coll/u   est/u  /atom    worst    wcoll   float  maxfl shaded   born
+  atomic (baseline)      36    1.0      1   2544.6   263.9  280618  1.000  2805730  2210114     0.0      0    0.0    0.0
+  atomic+barriers        36    1.0      1   2544.6   263.9  280618  1.000  2805730  2210114     0.0      0    0.0    0.0
+  k250                   15  125.6    139   2886.4   130.6  304755  1.086  1451400    20188   832.3   1023    0.0  982.5
+  k1000                  28   27.8     31   2614.7   212.7  283772  1.011  1370200    80000   169.6    224    0.0  219.9
+  k4000                  34    7.2      8   2553.1   251.2  280513  1.000  1351000   320000    21.6     42    0.0   52.6
+
+per cycle: white nodes each barrier shaded (construct, switch, hold, depends, root); guards released in the window
+  atomic (baseline)    0.00   0.00   0.00   0.00   0.00   0 total, 90 released
+  atomic+barriers      0.00   0.00   0.00   0.00   0.00   0 total, 90 released
+  k250                 0.00   0.00   0.00   0.00   0.00   0 total, 90 released
+  k1000                0.00   0.00   0.00   0.00   0.00   0 total, 90 released
+  k4000                0.00   0.00   0.00   0.00   0.00   0 total, 90 released
+
+the costliest unit of the window by the model, and the costliest slice
+  pace                unit region built marked pruned  slots freed       est
+  atomic (baseline)   3167   6396     0  15074  15074  15685   611   2805730
+  atomic (baseline) slice  3252   2935    23  15190  15190  15872   682   2523164
+  atomic+barriers     3167   6396     0  15074  15074  15685   611   2805730
+  atomic+barriers slice  3252   2935    23  15190  15190  15872   682   2523164
+  k250                2800  14514     0      0      0      0     0   1451400
+  k250 slice           164   1871     0      0      0     49    49    207288
+  k1000               2800  13702     0      0      0      0     0   1370200
+  k1000 slice           89   1563     0      0   2000      0     0    236300
+  k4000               2800  13510     0      0      0      0     0   1351000
+  k4000 slice          886   1813     0      0   8000      0     0    501300
+
+exactness over 6000 units, audited at every mark's end; then the running cycle and one more: atomic leaves 14825 alive, exactly the reachable
+  atomic             63 cycles, values as atomic; live set after draining equals atomic's
+  k250               27 cycles, values as atomic; live set after draining equals atomic's
+  k1000              49 cycles, values as atomic; live set after draining equals atomic's
+  k4000              59 cycles, values as atomic; live set after draining equals atomic's
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 55 filtered out; finished in 9.17s
+
