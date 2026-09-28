@@ -101,3 +101,11 @@ harness = false
 [[bench]]
 name = "rfd-0005-maintained-rank-queue-wallclock"
 harness = false
+
+[[bench]]
+name = "rfd-0003-rebrand-cost-instructions"
+harness = false
+
+[[bench]]
+name = "rfd-0003-rebrand-cost-wallclock"
+harness = false
