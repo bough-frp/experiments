@@ -1,0 +1,57 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-bounded-relink-check-counts at experiments@39fd355 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0005_bounded_relink_check::tests::counts -- --nocapture
+
+
+running 1 test
+300 transactions per workload, 2 slots each
+
+settled (p_new 0, p_rev 0.5): 10147 nodes in 750 subgraphs, 0 built in 0 subgraphs during the transactions, 1259 moves, 2 transactions refused
+  upstream of a view inner that existed before the first transaction: median 503, max 1138 nodes
+  kind    moves        walk          pk  pk invalid   summaries
+  view      594       535.5         0.9        8.6%       627.2
+  event     596        19.1         0.1        3.9%        23.7
+  local      63       471.4         1.2       30.2%       583.1
+  bad         2       340.5         7.0      100.0%       790.5
+  f46         4         3.0         2.0       50.0%         3.5
+  all      1259       285.9         0.5        7.7%       337.6
+  summaries rebuilt at commit: 65 subgraphs, 933 nodes, 0.7 a move
+
+mixed (p_new 0.2, p_rev 0.5): 10147 nodes in 750 subgraphs, 1233 built in 105 subgraphs during the transactions, 1261 moves, 5 transactions refused
+  upstream of a view inner that existed before the first transaction: median 493, max 1138 nodes
+  kind    moves        walk          pk  pk invalid   summaries
+  view      591       345.2         4.4       26.1%       396.2
+  event     596        12.3      1194.7       20.0%        15.3
+  local      65       306.0         2.9       47.7%       365.7
+  bad         5       254.4         5.6      100.0%       353.8
+  f46         4         3.0         2.0       50.0%         3.5
+  all      1261       184.4       566.9       24.7%       213.2
+  summaries rebuilt at commit: 69 subgraphs, 973 nodes, 0.8 a move
+
+churn (p_new 0.5, p_rev 0.5): 10147 nodes in 750 subgraphs, 3437 built in 298 subgraphs during the transactions, 1258 moves, 2 transactions refused
+  upstream of a view inner that existed before the first transaction: median 510, max 1138 nodes
+  kind    moves        walk          pk  pk invalid   summaries
+  view      594       221.1         9.8       54.4%       252.5
+  event     596         6.1      3798.1       50.0%         7.7
+  local      62       193.8         1.7       32.3%       227.4
+  bad         2       419.5         5.0      100.0%       400.5
+  f46         4         3.0         2.0       50.0%         3.5
+  all      1258       117.5      1804.2       51.3%       134.7
+  summaries rebuilt at commit: 65 subgraphs, 886 nodes, 0.7 a move
+
+lazy (p_new 1, p_rev 0): 10147 nodes in 750 subgraphs, 6920 built in 596 subgraphs during the transactions, 1249 moves, 6 transactions refused
+  kind    moves        walk          pk  pk invalid   summaries
+  view      590       154.9        19.0       99.0%       174.7
+  event     596         3.1      8647.2       98.0%         4.1
+  local      53       143.9         1.1       30.2%       164.5
+  bad         6       114.3         3.7      100.0%        48.7
+  f46         4         3.0         2.0       50.0%         3.5
+  all      1249        81.3      4135.3       95.4%        91.7
+  summaries rebuilt at commit: 57 subgraphs, 789 nodes, 0.6 a move
+
+nodes visited per move: walked (walk), searched forward and back (pk),
+or outputs and sources expanded (summaries); pk invalid is the share of
+moves whose new link was against the order. A refused transaction's
+relinks are counted under their moves' kinds.
+test rfd_0005_bounded_relink_check::tests::counts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.65s
