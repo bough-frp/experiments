@@ -1,0 +1,437 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-demand-bounded-push-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0005-demand-bounded-push-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.07s
+     Running benches/rfd-0005-demand-bounded-push-wallclock.rs (target/release/deps/rfd_0005_demand_bounded_push_wallclock-238f3c98cfc8e4ce)
+Gnuplot not found, using plotters backend
+Benchmarking nav/baseline/100
+Benchmarking nav/baseline/100: Warming up for 100.00 ms
+Benchmarking nav/baseline/100: Collecting 20 samples in estimated 300.00 ms (938k iterations)
+Benchmarking nav/baseline/100: Analyzing
+nav/baseline/100        time:   [319.77 ns 320.53 ns 321.34 ns]
+Benchmarking nav/garbage/100
+Benchmarking nav/garbage/100: Warming up for 100.00 ms
+Benchmarking nav/garbage/100: Collecting 20 samples in estimated 300.08 ms (8420 iterations)
+Benchmarking nav/garbage/100: Analyzing
+nav/garbage/100         time:   [35.478 µs 35.536 µs 35.593 µs]
+Benchmarking nav/checked/100
+Benchmarking nav/checked/100: Warming up for 100.00 ms
+Benchmarking nav/checked/100: Collecting 20 samples in estimated 300.01 ms (905k iterations)
+Benchmarking nav/checked/100: Analyzing
+nav/checked/100         time:   [331.10 ns 331.86 ns 332.70 ns]
+Benchmarking nav/skip/100
+Benchmarking nav/skip/100: Warming up for 100.00 ms
+Benchmarking nav/skip/100: Collecting 20 samples in estimated 300.02 ms (180k iterations)
+Benchmarking nav/skip/100: Analyzing
+nav/skip/100            time:   [1.6672 µs 1.6721 µs 1.6778 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking nav/pruned/100
+Benchmarking nav/pruned/100: Warming up for 100.00 ms
+Benchmarking nav/pruned/100: Collecting 20 samples in estimated 300.00 ms (903k iterations)
+Benchmarking nav/pruned/100: Analyzing
+nav/pruned/100          time:   [329.13 ns 330.79 ns 332.37 ns]
+Benchmarking nav/mark/100
+Benchmarking nav/mark/100: Warming up for 100.00 ms
+Benchmarking nav/mark/100: Collecting 20 samples in estimated 300.00 ms (870k iterations)
+Benchmarking nav/mark/100: Analyzing
+nav/mark/100            time:   [341.01 ns 343.89 ns 346.63 ns]
+Benchmarking nav/census/100
+Benchmarking nav/census/100: Warming up for 100.00 ms
+Benchmarking nav/census/100: Collecting 20 samples in estimated 45.619 ms (140 iterations)
+Benchmarking nav/census/100: Analyzing
+nav/census/100          time:   [1.1633 µs 1.1709 µs 1.1788 µs]
+Benchmarking nav/collect/100
+Benchmarking nav/collect/100: Warming up for 100.00 ms
+Benchmarking nav/collect/100: Collecting 20 samples in estimated 46.377 ms (140 iterations)
+Benchmarking nav/collect/100: Analyzing
+nav/collect/100         time:   [55.877 µs 56.531 µs 57.274 µs]
+Benchmarking nav/census-one/100
+Benchmarking nav/census-one/100: Warming up for 100.00 ms
+Benchmarking nav/census-one/100: Collecting 20 samples in estimated 40.169 ms (4040 iterations)
+Benchmarking nav/census-one/100: Analyzing
+nav/census-one/100      time:   [530.93 ns 534.26 ns 538.06 ns]
+Benchmarking nav/collect-one/100
+Benchmarking nav/collect-one/100: Warming up for 100.00 ms
+Benchmarking nav/collect-one/100: Collecting 20 samples in estimated 40.160 ms (3920 iterations)
+Benchmarking nav/collect-one/100: Analyzing
+nav/collect-one/100     time:   [971.65 ns 977.83 ns 984.81 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking nav/baseline/1000
+Benchmarking nav/baseline/1000: Warming up for 100.00 ms
+Benchmarking nav/baseline/1000: Collecting 20 samples in estimated 300.00 ms (936k iterations)
+Benchmarking nav/baseline/1000: Analyzing
+nav/baseline/1000       time:   [318.90 ns 319.23 ns 319.53 ns]
+Benchmarking nav/garbage/1000
+Benchmarking nav/garbage/1000: Warming up for 100.00 ms
+Benchmarking nav/garbage/1000: Collecting 20 samples in estimated 307.86 ms (760 iterations)
+Benchmarking nav/garbage/1000: Analyzing
+nav/garbage/1000        time:   [403.11 µs 405.50 µs 407.58 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+Benchmarking nav/checked/1000
+Benchmarking nav/checked/1000: Warming up for 100.00 ms
+Benchmarking nav/checked/1000: Collecting 20 samples in estimated 300.00 ms (896k iterations)
+Benchmarking nav/checked/1000: Analyzing
+nav/checked/1000        time:   [330.97 ns 333.80 ns 337.00 ns]
+Benchmarking nav/skip/1000
+Benchmarking nav/skip/1000: Warming up for 100.00 ms
+Benchmarking nav/skip/1000: Collecting 20 samples in estimated 300.21 ms (22k iterations)
+Benchmarking nav/skip/1000: Analyzing
+nav/skip/1000           time:   [13.694 µs 13.714 µs 13.734 µs]
+Benchmarking nav/pruned/1000
+Benchmarking nav/pruned/1000: Warming up for 100.00 ms
+Benchmarking nav/pruned/1000: Collecting 20 samples in estimated 300.01 ms (943k iterations)
+Benchmarking nav/pruned/1000: Analyzing
+nav/pruned/1000         time:   [318.19 ns 318.59 ns 318.96 ns]
+Benchmarking nav/mark/1000
+Benchmarking nav/mark/1000: Warming up for 100.00 ms
+Benchmarking nav/mark/1000: Collecting 20 samples in estimated 300.01 ms (876k iterations)
+Benchmarking nav/mark/1000: Analyzing
+nav/mark/1000           time:   [353.35 ns 354.30 ns 355.25 ns]
+Benchmarking nav/census/1000
+Benchmarking nav/census/1000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 40.0ms. You may wish to increase target time to 69.8ms, or reduce sample count to 10.
+Benchmarking nav/census/1000: Collecting 20 samples in estimated 69.828 ms (20 iterations)
+Benchmarking nav/census/1000: Analyzing
+nav/census/1000         time:   [9.7564 µs 10.352 µs 11.361 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking nav/collect/1000
+Benchmarking nav/collect/1000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 40.0ms. You may wish to increase target time to 69.5ms, or reduce sample count to 10.
+Benchmarking nav/collect/1000: Collecting 20 samples in estimated 69.538 ms (20 iterations)
+Benchmarking nav/collect/1000: Analyzing
+nav/collect/1000        time:   [584.60 µs 589.94 µs 595.08 µs]
+Benchmarking nav/census-one/1000
+Benchmarking nav/census-one/1000: Warming up for 100.00 ms
+Benchmarking nav/census-one/1000: Collecting 20 samples in estimated 40.007 ms (3960 iterations)
+Benchmarking nav/census-one/1000: Analyzing
+nav/census-one/1000     time:   [429.52 ns 433.85 ns 439.43 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high severe
+Benchmarking nav/collect-one/1000
+Benchmarking nav/collect-one/1000: Warming up for 100.00 ms
+Benchmarking nav/collect-one/1000: Collecting 20 samples in estimated 40.096 ms (3860 iterations)
+Benchmarking nav/collect-one/1000: Analyzing
+nav/collect-one/1000    time:   [858.31 ns 865.76 ns 874.67 ns]
+Found 4 outliers among 20 measurements (20.00%)
+  3 (15.00%) high mild
+  1 (5.00%) high severe
+Benchmarking nav/baseline/9000
+Benchmarking nav/baseline/9000: Warming up for 100.00 ms
+Benchmarking nav/baseline/9000: Collecting 20 samples in estimated 300.00 ms (927k iterations)
+Benchmarking nav/baseline/9000: Analyzing
+nav/baseline/9000       time:   [320.19 ns 320.92 ns 321.69 ns]
+Benchmarking nav/garbage/9000
+Benchmarking nav/garbage/9000: Warming up for 100.00 ms
+Benchmarking nav/garbage/9000: Collecting 20 samples in estimated 368.18 ms (80 iterations)
+Benchmarking nav/garbage/9000: Analyzing
+nav/garbage/9000        time:   [4.5332 ms 4.5525 ms 4.5707 ms]
+Benchmarking nav/checked/9000
+Benchmarking nav/checked/9000: Warming up for 100.00 ms
+Benchmarking nav/checked/9000: Collecting 20 samples in estimated 300.00 ms (896k iterations)
+Benchmarking nav/checked/9000: Analyzing
+nav/checked/9000        time:   [330.00 ns 331.01 ns 332.16 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking nav/skip/9000
+Benchmarking nav/skip/9000: Warming up for 100.00 ms
+Benchmarking nav/skip/9000: Collecting 20 samples in estimated 300.08 ms (2480 iterations)
+Benchmarking nav/skip/9000: Analyzing
+nav/skip/9000           time:   [120.87 µs 121.02 µs 121.16 µs]
+Benchmarking nav/pruned/9000
+Benchmarking nav/pruned/9000: Warming up for 100.00 ms
+Benchmarking nav/pruned/9000: Collecting 20 samples in estimated 300.00 ms (938k iterations)
+Benchmarking nav/pruned/9000: Analyzing
+nav/pruned/9000         time:   [319.78 ns 321.29 ns 323.33 ns]
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) high severe
+Benchmarking nav/mark/9000
+Benchmarking nav/mark/9000: Warming up for 100.00 ms
+Benchmarking nav/mark/9000: Collecting 20 samples in estimated 300.00 ms (875k iterations)
+Benchmarking nav/mark/9000: Analyzing
+nav/mark/9000           time:   [350.63 ns 353.67 ns 356.36 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+Benchmarking nav/census/9000
+Benchmarking nav/census/9000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 40.0ms. You may wish to increase target time to 681.8ms, or reduce sample count to 10.
+Benchmarking nav/census/9000: Collecting 20 samples in estimated 681.82 ms (20 iterations)
+Benchmarking nav/census/9000: Analyzing
+nav/census/9000         time:   [91.270 µs 93.582 µs 96.017 µs]
+Benchmarking nav/collect/9000
+Benchmarking nav/collect/9000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 40.0ms. You may wish to increase target time to 684.1ms, or reduce sample count to 10.
+Benchmarking nav/collect/9000: Collecting 20 samples in estimated 684.10 ms (20 iterations)
+Benchmarking nav/collect/9000: Analyzing
+nav/collect/9000        time:   [5.1207 ms 5.1470 ms 5.1756 ms]
+Benchmarking nav/census-one/9000
+Benchmarking nav/census-one/9000: Warming up for 100.00 ms
+Benchmarking nav/census-one/9000: Collecting 20 samples in estimated 40.183 ms (3760 iterations)
+Benchmarking nav/census-one/9000: Analyzing
+nav/census-one/9000     time:   [590.58 ns 596.31 ns 602.57 ns]
+Benchmarking nav/collect-one/9000
+Benchmarking nav/collect-one/9000: Warming up for 100.00 ms
+Benchmarking nav/collect-one/9000: Collecting 20 samples in estimated 40.077 ms (3660 iterations)
+Benchmarking nav/collect-one/9000: Analyzing
+nav/collect-one/9000    time:   [1.0434 µs 1.0470 µs 1.0513 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+
+Benchmarking app/baseline/100
+Benchmarking app/baseline/100: Warming up for 100.00 ms
+Benchmarking app/baseline/100: Collecting 20 samples in estimated 300.00 ms (920k iterations)
+Benchmarking app/baseline/100: Analyzing
+app/baseline/100        time:   [325.01 ns 325.63 ns 326.41 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking app/garbage/100
+Benchmarking app/garbage/100: Warming up for 100.00 ms
+Benchmarking app/garbage/100: Collecting 20 samples in estimated 300.17 ms (8180 iterations)
+Benchmarking app/garbage/100: Analyzing
+app/garbage/100         time:   [36.601 µs 36.624 µs 36.648 µs]
+Benchmarking app/checked/100
+Benchmarking app/checked/100: Warming up for 100.00 ms
+Benchmarking app/checked/100: Collecting 20 samples in estimated 300.01 ms (888k iterations)
+Benchmarking app/checked/100: Analyzing
+app/checked/100         time:   [334.96 ns 335.79 ns 336.65 ns]
+Benchmarking app/skip/100
+Benchmarking app/skip/100: Warming up for 100.00 ms
+Benchmarking app/skip/100: Collecting 20 samples in estimated 300.01 ms (175k iterations)
+Benchmarking app/skip/100: Analyzing
+app/skip/100            time:   [1.7096 µs 1.7117 µs 1.7138 µs]
+Benchmarking app/pruned/100
+Benchmarking app/pruned/100: Warming up for 100.00 ms
+Benchmarking app/pruned/100: Collecting 20 samples in estimated 300.00 ms (937k iterations)
+Benchmarking app/pruned/100: Analyzing
+app/pruned/100          time:   [322.80 ns 323.69 ns 324.56 ns]
+Benchmarking app/mark/100
+Benchmarking app/mark/100: Warming up for 100.00 ms
+Benchmarking app/mark/100: Collecting 20 samples in estimated 300.25 ms (2860 iterations)
+Benchmarking app/mark/100: Analyzing
+app/mark/100            time:   [104.89 µs 104.95 µs 105.01 µs]
+Benchmarking app/census/100
+Benchmarking app/census/100: Warming up for 100.00 ms
+Benchmarking app/census/100: Collecting 20 samples in estimated 76.259 ms (40 iterations)
+Benchmarking app/census/100: Analyzing
+app/census/100          time:   [131.06 µs 131.86 µs 132.82 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking app/collect/100
+Benchmarking app/collect/100: Warming up for 100.00 ms
+Benchmarking app/collect/100: Collecting 20 samples in estimated 76.344 ms (40 iterations)
+Benchmarking app/collect/100: Analyzing
+app/collect/100         time:   [197.44 µs 198.58 µs 199.83 µs]
+Benchmarking app/census-one/100
+Benchmarking app/census-one/100: Warming up for 100.00 ms
+Benchmarking app/census-one/100: Collecting 20 samples in estimated 62.090 ms (40 iterations)
+Benchmarking app/census-one/100: Analyzing
+app/census-one/100      time:   [130.55 µs 131.15 µs 131.81 µs]
+Benchmarking app/collect-one/100
+Benchmarking app/collect-one/100: Warming up for 100.00 ms
+Benchmarking app/collect-one/100: Collecting 20 samples in estimated 62.561 ms (40 iterations)
+Benchmarking app/collect-one/100: Analyzing
+app/collect-one/100     time:   [141.14 µs 141.88 µs 142.66 µs]
+Benchmarking app/baseline/1000
+Benchmarking app/baseline/1000: Warming up for 100.00 ms
+Benchmarking app/baseline/1000: Collecting 20 samples in estimated 300.00 ms (897k iterations)
+Benchmarking app/baseline/1000: Analyzing
+app/baseline/1000       time:   [324.94 ns 326.50 ns 328.10 ns]
+Benchmarking app/garbage/1000
+Benchmarking app/garbage/1000: Warming up for 100.00 ms
+Benchmarking app/garbage/1000: Collecting 20 samples in estimated 304.64 ms (840 iterations)
+Benchmarking app/garbage/1000: Analyzing
+app/garbage/1000        time:   [361.42 µs 361.88 µs 362.22 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) low severe
+Benchmarking app/checked/1000
+Benchmarking app/checked/1000: Warming up for 100.00 ms
+Benchmarking app/checked/1000: Collecting 20 samples in estimated 300.00 ms (885k iterations)
+Benchmarking app/checked/1000: Analyzing
+app/checked/1000        time:   [329.35 ns 329.66 ns 330.02 ns]
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) high mild
+  2 (10.00%) high severe
+Benchmarking app/skip/1000
+Benchmarking app/skip/1000: Warming up for 100.00 ms
+Benchmarking app/skip/1000: Collecting 20 samples in estimated 300.23 ms (22k iterations)
+Benchmarking app/skip/1000: Analyzing
+app/skip/1000           time:   [13.953 µs 13.990 µs 14.024 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+Benchmarking app/pruned/1000
+Benchmarking app/pruned/1000: Warming up for 100.00 ms
+Benchmarking app/pruned/1000: Collecting 20 samples in estimated 300.00 ms (924k iterations)
+Benchmarking app/pruned/1000: Analyzing
+app/pruned/1000         time:   [325.55 ns 326.21 ns 326.88 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking app/mark/1000
+Benchmarking app/mark/1000: Warming up for 100.00 ms
+Benchmarking app/mark/1000: Collecting 20 samples in estimated 300.68 ms (2820 iterations)
+Benchmarking app/mark/1000: Analyzing
+app/mark/1000           time:   [106.21 µs 106.24 µs 106.27 µs]
+Benchmarking app/census/1000
+Benchmarking app/census/1000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 40.0ms. You may wish to increase target time to 103.7ms, or reduce sample count to 10.
+Benchmarking app/census/1000: Collecting 20 samples in estimated 103.67 ms (20 iterations)
+Benchmarking app/census/1000: Analyzing
+app/census/1000         time:   [162.42 µs 163.93 µs 165.81 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking app/collect/1000
+Benchmarking app/collect/1000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 40.0ms. You may wish to increase target time to 103.0ms, or reduce sample count to 10.
+Benchmarking app/collect/1000: Collecting 20 samples in estimated 102.98 ms (20 iterations)
+Benchmarking app/collect/1000: Analyzing
+app/collect/1000        time:   [733.27 µs 735.77 µs 738.12 µs]
+Benchmarking app/census-one/1000
+Benchmarking app/census-one/1000: Warming up for 100.00 ms
+Benchmarking app/census-one/1000: Collecting 20 samples in estimated 62.073 ms (40 iterations)
+Benchmarking app/census-one/1000: Analyzing
+app/census-one/1000     time:   [130.79 µs 131.29 µs 131.88 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) high mild
+Benchmarking app/collect-one/1000
+Benchmarking app/collect-one/1000: Warming up for 100.00 ms
+Benchmarking app/collect-one/1000: Collecting 20 samples in estimated 62.620 ms (40 iterations)
+Benchmarking app/collect-one/1000: Analyzing
+app/collect-one/1000    time:   [141.57 µs 142.30 µs 143.09 µs]
+Benchmarking app/baseline/9000
+Benchmarking app/baseline/9000: Warming up for 100.00 ms
+Benchmarking app/baseline/9000: Collecting 20 samples in estimated 300.00 ms (919k iterations)
+Benchmarking app/baseline/9000: Analyzing
+app/baseline/9000       time:   [325.10 ns 326.00 ns 326.94 ns]
+Benchmarking app/garbage/9000
+Benchmarking app/garbage/9000: Warming up for 100.00 ms
+Benchmarking app/garbage/9000: Collecting 20 samples in estimated 343.97 ms (80 iterations)
+Benchmarking app/garbage/9000: Analyzing
+app/garbage/9000        time:   [4.2639 ms 4.2761 ms 4.2894 ms]
+Benchmarking app/checked/9000
+Benchmarking app/checked/9000: Warming up for 100.00 ms
+Benchmarking app/checked/9000: Collecting 20 samples in estimated 300.01 ms (882k iterations)
+Benchmarking app/checked/9000: Analyzing
+app/checked/9000        time:   [329.22 ns 330.05 ns 331.05 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking app/skip/9000
+Benchmarking app/skip/9000: Warming up for 100.00 ms
+Benchmarking app/skip/9000: Collecting 20 samples in estimated 302.04 ms (2460 iterations)
+Benchmarking app/skip/9000: Analyzing
+app/skip/9000           time:   [121.89 µs 122.26 µs 122.60 µs]
+Benchmarking app/pruned/9000
+Benchmarking app/pruned/9000: Warming up for 100.00 ms
+Benchmarking app/pruned/9000: Collecting 20 samples in estimated 300.00 ms (941k iterations)
+Benchmarking app/pruned/9000: Analyzing
+app/pruned/9000         time:   [318.96 ns 319.57 ns 320.16 ns]
+Benchmarking app/mark/9000
+Benchmarking app/mark/9000: Warming up for 100.00 ms
+Benchmarking app/mark/9000: Collecting 20 samples in estimated 300.45 ms (2860 iterations)
+Benchmarking app/mark/9000: Analyzing
+app/mark/9000           time:   [105.01 µs 105.10 µs 105.16 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) low severe
+  1 (5.00%) high mild
+Benchmarking app/census/9000
+Benchmarking app/census/9000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 40.0ms. You may wish to increase target time to 698.3ms, or reduce sample count to 10.
+Benchmarking app/census/9000: Collecting 20 samples in estimated 698.31 ms (20 iterations)
+Benchmarking app/census/9000: Analyzing
+app/census/9000         time:   [242.40 µs 244.83 µs 247.70 µs]
+Found 4 outliers among 20 measurements (20.00%)
+  2 (10.00%) high mild
+  2 (10.00%) high severe
+Benchmarking app/collect/9000
+Benchmarking app/collect/9000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 40.0ms. You may wish to increase target time to 696.2ms, or reduce sample count to 10.
+Benchmarking app/collect/9000: Collecting 20 samples in estimated 696.19 ms (20 iterations)
+Benchmarking app/collect/9000: Analyzing
+app/collect/9000        time:   [5.2712 ms 5.2774 ms 5.2836 ms]
+Benchmarking app/census-one/9000
+Benchmarking app/census-one/9000: Warming up for 100.00 ms
+Benchmarking app/census-one/9000: Collecting 20 samples in estimated 62.160 ms (40 iterations)
+Benchmarking app/census-one/9000: Analyzing
+app/census-one/9000     time:   [130.58 µs 131.29 µs 132.09 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking app/collect-one/9000
+Benchmarking app/collect-one/9000: Warming up for 100.00 ms
+Benchmarking app/collect-one/9000: Collecting 20 samples in estimated 62.535 ms (40 iterations)
+Benchmarking app/collect-one/9000: Analyzing
+app/collect-one/9000    time:   [140.45 µs 141.13 µs 141.92 µs]
+Found 4 outliers among 20 measurements (20.00%)
+  3 (15.00%) high mild
+  1 (5.00%) high severe
+
+
+$ python3 scripts/ratios.py nav app
+
+benchmark             ratio   95% interval       baseline mean
+app/census-one/100    402.740  [400.736, 404.908]         325.6 ns
+app/census-one/1000   402.111  [399.626, 404.679]         326.5 ns
+app/census-one/9000   402.727  [400.286, 405.405]         326.0 ns
+app/census/100        404.876  [402.261, 407.890]         325.6 ns
+app/census/1000       501.943  [496.825, 508.295]         326.5 ns
+app/census/9000       750.808  [743.136, 760.093]         326.0 ns
+app/checked/100        1.031  [ 1.028,  1.035]         325.6 ns
+app/checked/1000       1.010  [ 1.005,  1.015]         326.5 ns
+app/checked/9000       1.012  [ 1.009,  1.016]         326.0 ns
+app/collect-one/100   435.704  [433.189, 438.204]         325.6 ns
+app/collect-one/1000  435.771  [432.615, 438.980]         326.5 ns
+app/collect-one/9000  432.881  [430.470, 435.600]         326.0 ns
+app/collect/100       609.777  [606.063, 613.965]         325.6 ns
+app/collect/1000      2253.503  [2240.370, 2266.558]         326.5 ns
+app/collect/9000      16188.335  [16138.732, 16237.176]         326.0 ns
+app/garbage/100       112.479  [112.201, 112.702]         325.6 ns
+app/garbage/1000      1108.347  [1102.671, 1113.819]         326.5 ns
+app/garbage/9000      13116.220  [13063.468, 13170.936]         326.0 ns
+app/mark/100          322.314  [321.498, 322.940]         325.6 ns
+app/mark/1000         325.394  [323.773, 326.962]         326.5 ns
+app/mark/9000         322.397  [321.414, 323.315]         326.0 ns
+app/pruned/100         0.994  [ 0.991,  0.997]         325.6 ns
+app/pruned/1000        0.999  [ 0.994,  1.004]         326.5 ns
+app/pruned/9000        0.980  [ 0.977,  0.983]         326.0 ns
+app/skip/100           5.257  [ 5.242,  5.269]         325.6 ns
+app/skip/1000         42.852  [42.613, 43.081]         326.5 ns
+app/skip/9000         375.048  [373.522, 376.536]         326.0 ns
+nav/census-one/100     1.667  [ 1.656,  1.679]         320.5 ns
+nav/census-one/1000    1.358  [ 1.346,  1.377]         319.2 ns
+nav/census-one/9000    1.858  [ 1.840,  1.878]         320.9 ns
+nav/census/100         3.653  [ 3.628,  3.679]         320.5 ns
+nav/census/1000       32.330  [30.561, 35.589]         319.2 ns
+nav/census/9000       291.521  [284.392, 299.226]         320.9 ns
+nav/checked/100        1.035  [ 1.032,  1.039]         320.5 ns
+nav/checked/1000       1.045  [ 1.037,  1.056]         319.2 ns
+nav/checked/9000       1.031  [ 1.027,  1.036]         320.9 ns
+nav/collect-one/100    3.050  [ 3.030,  3.073]         320.5 ns
+nav/collect-one/1000   2.711  [ 2.689,  2.740]         319.2 ns
+nav/collect-one/9000   3.262  [ 3.249,  3.278]         320.9 ns
+nav/collect/100       176.316  [174.301, 178.764]         320.5 ns
+nav/collect/1000      1847.988  [1831.081, 1864.244]         319.2 ns
+nav/collect/9000      16036.172  [15948.022, 16131.572]         320.9 ns
+nav/garbage/100       110.866  [110.533, 111.202]         320.5 ns
+nav/garbage/1000      1270.394  [1262.720, 1276.950]         319.2 ns
+nav/garbage/9000      14186.047  [14116.856, 14249.799]         320.9 ns
+nav/mark/100           1.073  [ 1.063,  1.082]         320.5 ns
+nav/mark/1000          1.110  [ 1.107,  1.113]         319.2 ns
+nav/mark/9000          1.102  [ 1.092,  1.111]         320.9 ns
+nav/pruned/100         1.032  [ 1.026,  1.038]         320.5 ns
+nav/pruned/1000        0.998  [ 0.996,  1.000]         319.2 ns
+nav/pruned/9000        1.001  [ 0.996,  1.008]         320.9 ns
+nav/skip/100           5.217  [ 5.196,  5.238]         320.5 ns
+nav/skip/1000         42.959  [42.886, 43.035]         319.2 ns
+nav/skip/9000         377.095  [376.074, 378.081]         320.9 ns
+
