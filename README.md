@@ -72,6 +72,11 @@ Every wall-clock probe measures its own baseline in the same run. What
 a note quotes is the ratio to that baseline, with its interval, never an
 absolute time.
 
+`scripts/ratios.py` computes those ratios after a Criterion run. It
+compares each `<group>/<variant>/<param>` with `<group>/baseline/<param>`
+and bootstraps a 95% interval from Criterion's samples, with a fixed
+seed.
+
 Results go in `results/`, one file per run of a target, named
 `<target>-<date>.txt`. Each starts with its provenance line, then the
 command, then the output as it came:
