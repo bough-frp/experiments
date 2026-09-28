@@ -17,6 +17,12 @@
 //!   `Instantaneous`; `close` requires `Decoupled`.
 //! - `rows`: Cuoq and Pouzet's presence rows as a four-slot type-level
 //!   bitset, the fallback for what the bit is too coarse for.
+//! - `marker-close`: the marker, with `close` returning the loop's token
+//!   re-marked `Decoupled`, for code after the close to read instead of
+//!   the forward. Its fixtures check against `baseline-close.rs`, the
+//!   baseline with the same `close`. A fixture written for `marker` is
+//!   compiled against it too, unchanged but for the API path, through a
+//!   copy under `target/`; diagnostics are remapped to the fixture's path.
 //!
 //! All three model `gate`, `sample`, `split`, `defer` and `depends` as
 //! RFDs 2 and 5 rule them: `gate` and `sample` read a cell from before the
@@ -24,6 +30,10 @@
 //! plain value, which carries none); `split` and `defer` emit in child
 //! instants, so their output starts unmarked; `depends` is a reach
 //! declaration, which takes its tokens by reference and marks nothing.
+//!
+//! The `nested-` fixtures put loops, splits and switches inside `construct`
+//! closures that run at a child instant (RFD 5's `t ++ [n]`), and the
+//! `switch-smuggle` fixtures pass tokens through a switch as data.
 //!
 //! Each fixture is a program with a `//@ legal yes|no` line, whether
 //! Bough's run-time rule accepts it, and a `//@ designs` line. The
@@ -48,10 +58,11 @@ use std::time::Instant;
 
 const NAME: &str = "rfd-0002-decoupled-marker";
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 enum Design {
     Baseline,
     Marker,
+    MarkerClose,
     Rows,
 }
 
@@ -60,6 +71,7 @@ impl Design {
         match self {
             Design::Baseline => "baseline",
             Design::Marker => "marker",
+            Design::MarkerClose => "marker-close",
             Design::Rows => "rows",
         }
     }
@@ -68,6 +80,7 @@ impl Design {
         match name {
             "baseline" => Design::Baseline,
             "marker" => Design::Marker,
+            "marker-close" => Design::MarkerClose,
             "rows" => Design::Rows,
             other => panic!("unknown design {other}"),
         }
@@ -84,7 +97,7 @@ struct Fixture {
 /// Reads every fixture and its `//@` lines, in name order.
 fn fixtures(root: &Path) -> Vec<Fixture> {
     // Relative to the root, so diagnostics show the paths a user would.
-    let dir = Path::new("fixtures").join(NAME);
+    let dir = fixture_dir();
     let mut paths = std::fs::read_dir(root.join(&dir))
         .expect("the fixture directory")
         .map(|entry| dir.join(entry.expect("a directory entry").file_name()))
@@ -163,6 +176,40 @@ fn out_dir(root: &Path) -> PathBuf {
     out
 }
 
+fn fixture_dir() -> PathBuf {
+    Path::new("fixtures").join(NAME)
+}
+
+/// Where a marker fixture's marker-close copy goes, relative to the root.
+fn copies() -> PathBuf {
+    Path::new("target").join(NAME).join("close")
+}
+
+/// A fixture written for `marker`, with its API path pointed at
+/// marker-close's and nothing else changed, so line numbers match. The
+/// copy sits beside a copy of the API, as the fixture sits beside it.
+fn close_copy(root: &Path, fixture: &Fixture) -> PathBuf {
+    let api = Path::new("api").join("marker-close.rs");
+    std::fs::create_dir_all(root.join(copies()).join("api")).expect("the copies' directory");
+    std::fs::copy(
+        root.join(fixture_dir()).join(&api),
+        root.join(copies()).join(&api),
+    )
+    .expect("the marker-close API");
+    let text = std::fs::read_to_string(root.join(&fixture.path)).expect("a fixture");
+    assert!(
+        text.contains("\"api/marker.rs\""),
+        "{} names the marker API",
+        fixture.name
+    );
+    let text = text
+        .replace("design = \"marker\",", "design = \"marker-close\",")
+        .replace("\"api/marker.rs\"", "\"api/marker-close.rs\"");
+    let path = copies().join(fixture.path.file_name().unwrap());
+    std::fs::write(root.join(&path), text).expect("the copy");
+    path
+}
+
 /// Compiles one source with the pinned `rustc`: from the repository root,
 /// `rustc` resolves through rust-toolchain.toml.
 fn compile(root: &Path, source: &Path, design: Design, emit: Emit) -> Outcome {
@@ -174,7 +221,15 @@ fn compile(root: &Path, source: &Path, design: Design, emit: Emit) -> Outcome {
         .arg("--cfg")
         .arg(format!("design=\"{}\"", design.name()))
         // Warnings are noise here; errors are what the probe reads.
-        .args(["--cap-lints", "allow", "--color", "never"]);
+        .args(["--cap-lints", "allow", "--color", "never"])
+        // A marker fixture's copy for marker-close reports the fixture's
+        // own path; no other source is under the copies' directory.
+        .arg("--remap-path-prefix")
+        .arg(format!(
+            "{}={}",
+            copies().display(),
+            fixture_dir().display()
+        ));
     match emit {
         Emit::Check => command.arg("--emit=metadata"),
         Emit::Debug => command.args(["--emit=link", "-C", "opt-level=0"]),
@@ -182,7 +237,7 @@ fn compile(root: &Path, source: &Path, design: Design, emit: Emit) -> Outcome {
     };
     let output = command
         .arg("--crate-name")
-        .arg(format!("{}_{}", design.name(), stem.replace('-', "_")))
+        .arg(format!("{}_{}", design.name(), stem).replace('-', "_"))
         .arg("--out-dir")
         .arg(out_dir(root))
         .arg(source)
@@ -218,15 +273,20 @@ fn version(root: &Path) -> String {
 
 /// The fixtures whose full first diagnostic is printed: F3 as the user
 /// meets it, a stream loop, the two helper signatures, the rows'
-/// declaration refusal, and the loop closed through a defer whose forward
-/// the bit can't clear.
-const SHOWN: [(&str, Design); 6] = [
+/// declaration refusal, the loop closed through a defer whose forward
+/// the bit can't clear; then marker-close on a second loop that keeps
+/// reading the first's forward, and on that defer loop threaded, and the
+/// marker on a loop inside a `construct` reading the parent's forward.
+const SHOWN: [(&str, Design); 9] = [
     ("f3-steps-cycle", Design::Marker),
     ("map-only", Design::Marker),
     ("helper-opaque", Design::Marker),
     ("helper-token", Design::Marker),
     ("rows-two-loops-undeclared", Design::Rows),
     ("defer-forward-feeds-loop", Design::Marker),
+    ("two-loops-reset", Design::MarkerClose),
+    ("close-defer-forward-feeds-loop", Design::MarkerClose),
+    ("nested-loop-reads-parent-forward", Design::Marker),
 ];
 
 /// The fixtures that loop through `gate`, `sample`, `split`, `defer` or
@@ -245,6 +305,14 @@ const EXTENDED: [&str; 11] = [
     "depends-illegal",
 ];
 
+/// The designs, in column order.
+const DESIGNS: [Design; 4] = [
+    Design::Baseline,
+    Design::Marker,
+    Design::MarkerClose,
+    Design::Rows,
+];
+
 /// What one checked design got wrong against the run-time rule.
 #[derive(Default)]
 struct Tally {
@@ -254,79 +322,86 @@ struct Tally {
     false_acceptances: Vec<String>,
 }
 
+impl Tally {
+    fn add(&mut self, fixture: &Fixture, built: bool) {
+        if fixture.legal {
+            self.legal += 1;
+            if !built {
+                self.false_refusals.push(fixture.name.clone());
+            }
+        } else {
+            self.illegal += 1;
+            if built {
+                self.false_acceptances.push(fixture.name.clone());
+            }
+        }
+    }
+
+    fn summary(&self) -> String {
+        format!(
+            "built {} of {} legal loops, refused {} of {} illegal ones",
+            self.legal - self.false_refusals.len(),
+            self.legal,
+            self.illegal - self.false_acceptances.len(),
+            self.illegal,
+        )
+    }
+}
+
 fn run_fixtures(root: &Path) {
     println!("rustc: {}  (rust-toolchain.toml)", version(root));
     println!("check: rustc --emit=metadata per design; the baseline must build every fixture,");
-    println!("       marker and rows must build exactly the legal loops");
+    println!("       marker, close and rows must build exactly the legal loops");
+    println!("close: marker-close; a fixture written for marker is compiled against it unchanged,");
+    println!("       ignoring what `close` returns, so it still reads the forward after the close");
     println!();
     println!(
-        "{:<30} {:<6} {:<9} {:<9} {:<9} first error (marker, else rows)",
-        "fixture", "legal", "baseline", "marker", "rows"
+        "{:<33} {:<6} {:<9} {:<9} {:<9} {:<9} first error (first design with one)",
+        "fixture", "legal", "baseline", "marker", "close", "rows"
     );
 
     let mut shown = Vec::new();
-    let mut marker = Tally::default();
-    let mut rows = Tally::default();
+    let mut tallies = [(); 4].map(|_| Tally::default());
     let mut extended = Tally::default();
+    let mut nested = [(); 2].map(|_| Tally::default());
+    let mut built = std::collections::HashMap::new();
     let mut baseline_broken = Vec::new();
-    let (mut f1_built, mut f3_refused) = (false, false);
     for fixture in fixtures(root) {
         let mut cells = Vec::new();
         let mut headline = String::new();
-        for design in [Design::Baseline, Design::Marker, Design::Rows] {
-            if !fixture.designs.contains(&design) {
+        for (column, design) in DESIGNS.into_iter().enumerate() {
+            let source = if fixture.designs.contains(&design) {
+                fixture.path.clone()
+            } else if design == Design::MarkerClose && fixture.designs.contains(&Design::Marker) {
+                close_copy(root, &fixture)
+            } else {
                 cells.push("-".to_string());
                 continue;
-            }
-            let outcome = compile(root, &fixture.path, design, Emit::Check);
+            };
+            let outcome = compile(root, &source, design, Emit::Check);
             let expected = design == Design::Baseline || fixture.legal;
             // A star marks a result that disagrees with the run-time rule.
             let star = if outcome.built == expected { "" } else { " *" };
             let word = if outcome.built { "built" } else { "refused" };
             cells.push(format!("{word}{star}"));
-            let tally = match design {
-                Design::Baseline => {
-                    if !outcome.built {
-                        baseline_broken.push(fixture.name.clone());
-                    }
-                    None
+            built.insert((fixture.name.clone(), design), outcome.built);
+            if design == Design::Baseline {
+                if !outcome.built {
+                    baseline_broken.push(fixture.name.clone());
                 }
-                Design::Marker => Some(&mut marker),
-                Design::Rows => Some(&mut rows),
-            };
-            if let Some(tally) = tally {
-                if fixture.legal {
-                    tally.legal += 1;
-                    if !outcome.built {
-                        tally.false_refusals.push(fixture.name.clone());
-                    }
-                } else {
-                    tally.illegal += 1;
-                    if outcome.built {
-                        tally.false_acceptances.push(fixture.name.clone());
-                    }
-                }
+            } else {
+                tallies[column].add(&fixture, outcome.built);
                 if headline.is_empty() {
                     headline = outcome.headline();
                 }
             }
             if design == Design::Marker && EXTENDED.contains(&fixture.name.as_str()) {
-                if fixture.legal {
-                    extended.legal += 1;
-                    if !outcome.built {
-                        extended.false_refusals.push(fixture.name.clone());
-                    }
-                } else {
-                    extended.illegal += 1;
-                    if outcome.built {
-                        extended.false_acceptances.push(fixture.name.clone());
-                    }
-                }
+                extended.add(&fixture, outcome.built);
             }
-            if design == Design::Marker {
-                match fixture.name.as_str() {
-                    "f1-counter" => f1_built = outcome.built,
-                    "f3-steps-cycle" => f3_refused = !outcome.built,
+            if fixture.name.starts_with("nested-") {
+                match design {
+                    Design::Marker => nested[0].add(&fixture, outcome.built),
+                    Design::MarkerClose => nested[1].add(&fixture, outcome.built),
                     _ => {}
                 }
             }
@@ -335,12 +410,13 @@ fn run_fixtures(root: &Path) {
             }
         }
         println!(
-            "{:<30} {:<6} {:<9} {:<9} {:<9} {headline}",
+            "{:<33} {:<6} {:<9} {:<9} {:<9} {:<9} {headline}",
             fixture.name,
             if fixture.legal { "yes" } else { "no" },
             cells[0],
             cells[1],
             cells[2],
+            cells[3],
         );
     }
     println!();
@@ -361,32 +437,68 @@ fn run_fixtures(root: &Path) {
     if !baseline_broken.is_empty() {
         println!("the baseline refused {baseline_broken:?}: those fixtures are broken");
     }
-    for (design, tally) in [("marker", marker), ("rows", rows)] {
-        println!(
-            "{design}: built {} of {} legal loops, refused {} of {} illegal ones",
-            tally.legal - tally.false_refusals.len(),
-            tally.legal,
-            tally.illegal - tally.false_acceptances.len(),
-            tally.illegal,
-        );
+    for (design, tally) in DESIGNS.iter().zip(&tallies).skip(1) {
+        println!("{}: {}", design.name(), tally.summary());
         println!(
             "  false refusals {:?}; false acceptances {:?}",
             tally.false_refusals, tally.false_acceptances
         );
     }
     println!(
-        "marker through gate, sample, split, defer and depends: built {} of {} legal loops, \
-         refused {} of {} illegal ones; false refusals {:?}",
-        extended.legal - extended.false_refusals.len(),
-        extended.legal,
-        extended.illegal - extended.false_acceptances.len(),
-        extended.illegal,
+        "marker through gate, sample, split, defer and depends: {}; false refusals {:?}",
+        extended.summary(),
         extended.false_refusals,
     );
+    for (design, tally) in [Design::Marker, Design::MarkerClose].iter().zip(&nested) {
+        println!(
+            "{} inside construct closures at child instants: {}; false refusals {:?}; \
+             false acceptances {:?}",
+            design.name(),
+            tally.summary(),
+            tally.false_refusals,
+            tally.false_acceptances,
+        );
+    }
+
+    // The marker's fixtures, run unchanged against marker-close.
+    let (mut same, mut both) = (0, 0);
+    for ((name, design), marker) in &built {
+        if *design == Design::Marker
+            && let Some(close) = built.get(&(name.clone(), Design::MarkerClose))
+        {
+            both += 1;
+            same += usize::from(close == marker);
+        }
+    }
+    println!("marker-close on the marker's fixtures: the marker's result on {same} of {both}");
+
+    let word = |name: &str, design: Design| match built.get(&(name.to_string(), design)) {
+        Some(true) => "built",
+        Some(false) => "refused",
+        None => "not run",
+    };
     println!(
         "verdict: the marker {} F3 and {} F1's counter",
-        if f3_refused { "refused" } else { "built" },
-        if f1_built { "built" } else { "refused" },
+        word("f3-steps-cycle", Design::Marker),
+        word("f1-counter", Design::Marker),
+    );
+    println!(
+        "verdict (close): marker-close {} two-loops-reset threading the returned token and {} it \
+         reading the forward; it {} defer-forward-feeds-loop threaded and {} it as written",
+        word("close-two-loops-reset", Design::MarkerClose),
+        word("two-loops-reset", Design::MarkerClose),
+        word("close-defer-forward-feeds-loop", Design::MarkerClose),
+        word("defer-forward-feeds-loop", Design::MarkerClose),
+    );
+    println!(
+        "verdict (switch): a switch fed its own consumer's steps as data: marker {}, \
+         marker-close {} (through the returned token: {}), rows {}, marker inside a construct \
+         at a child instant {}",
+        word("switch-smuggle", Design::Marker),
+        word("switch-smuggle", Design::MarkerClose),
+        word("close-switch-smuggle", Design::MarkerClose),
+        word("rows-switch-smuggle", Design::Rows),
+        word("nested-switch-smuggle", Design::Marker),
     );
 }
 
@@ -412,7 +524,7 @@ fn generated(root: &Path, design: Design, copies: usize) -> PathBuf {
     writeln!(text, "#[path = {api:?}]\nmod bough;\nuse bough::*;\n").unwrap();
     let declare = match design {
         Design::Rows => "b.cell_loop::<u32, L0, Empty>()",
-        Design::Baseline | Design::Marker => "b.cell_loop::<u32>()",
+        Design::Baseline | Design::Marker | Design::MarkerClose => "b.cell_loop::<u32>()",
     };
     let mut n = 0;
     for _ in 0..copies {
@@ -531,6 +643,9 @@ fn run_compile_time(root: &Path, runs: usize, copies: usize) {
     let both = fixtures(root)
         .into_iter()
         .filter(|f| f.designs.contains(&Design::Baseline) && f.designs.contains(&Design::Marker))
+        // Only legal loops: an illegal one the marker builds is a finding,
+        // not a program to time.
+        .filter(|f| f.legal)
         .filter(|f| compile(root, &f.path, Design::Marker, Emit::Check).built)
         .collect::<Vec<_>>();
     let generated = [Design::Baseline, Design::Marker, Design::Rows]
