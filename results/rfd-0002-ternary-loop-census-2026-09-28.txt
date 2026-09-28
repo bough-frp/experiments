@@ -1,0 +1,121 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0002-ternary-loop-census at experiments@ef7bb53 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0002-ternary-loop-census
+
+ternary-loop-census: constructive cycles among those RFD 2's acyclicity rule refuses
+
+Random programs over map, filter, gate (on c0, c1, !c0, !c1, read before the
+instant), merge (+), or_else and hold(0).steps(); values mod 4; 2 free
+bool cells. Each kept program has a same-instant cycle. 50000 per size,
+2 inputs, seed 2026.
+(a)  gates: acyclic in every cell state once closed gates are cut.
+(b1) dead branch: acyclic only once an or_else's right edge is cut too, where
+     its left is present in every instant of that state.
+(b2) per instant: the cycle is live; what breaks it varies by instant.
+val: of (b), constructive only because of filter predicates on values.
+out: (b1 + b2) as a share of the constructive programs.
+
+input model `any`: any presence combination, including the quiet instant
+size programs constructive       %      (a)   (b1)   (b2)       val       out
+   1    50000            0   0.00%        0      0      0         0         -
+   2    50000           55   0.11%       55      0      0         0     0.00%
+   3    50000           82   0.16%       82      0      0         0     0.00%
+   4    50000           90   0.18%       90      0      0         0     0.00%
+   5    50000          115   0.23%      115      0      0         0     0.00%
+   6    50000          115   0.23%      115      0      0         0     0.00%
+   7    50000          117   0.23%      117      0      0         0     0.00%
+   8    50000          113   0.23%      113      0      0         0     0.00%
+ all   400000          687   0.17%      687      0      0         0     0.00%
+
+input model `>=1`: at least one input fires
+size programs constructive       %      (a)   (b1)   (b2)       val       out
+   1    50000            0   0.00%        0      0      0         0         -
+   2    50000          129   0.26%       55     60     14         0    57.36%
+   3    50000          190   0.38%       82     94     14         0    56.84%
+   4    50000          208   0.42%       90     94     24         0    56.73%
+   5    50000          306   0.61%      115    152     39         0    62.42%
+   6    50000          297   0.59%      115    147     35         0    61.28%
+   7    50000          329   0.66%      117    155     57         1    64.44%
+   8    50000          339   0.68%      113    192     34         1    66.67%
+ all   400000         1798   0.45%      687    894    217         2    61.79%
+
+input model `one`: exactly one input fires
+size programs constructive       %      (a)   (b1)   (b2)       val       out
+   1    50000            0   0.00%        0      0      0         0         -
+   2    50000          129   0.26%       55     60     14         0    57.36%
+   3    50000          190   0.38%       82     94     14         0    56.84%
+   4    50000          208   0.42%       90     94     24         0    56.73%
+   5    50000          306   0.61%      115    152     39         0    62.42%
+   6    50000          297   0.59%      115    147     35         0    61.28%
+   7    50000          329   0.66%      117    155     57         1    64.44%
+   8    50000          339   0.68%      113    192     34         1    66.67%
+ all   400000         1798   0.45%      687    894    217         2    61.79%
+
+Sensitivity to the number of inputs (10000 per size, all sizes):
+inputs model programs constructive      (a)    (b)    val
+     1   any    80000          123      123      0      0
+     1   >=1    80000         4860      123   4737      5
+     1   one    80000         4860      123   4737      5
+     3   any    80000          128      128      0      0
+     3   >=1    80000          139      128     11      0
+     3   one    80000          139      128     11      0
+
+control: 16000 of 16000 acyclic programs constructive under `any`
+control: 0 instants where forward and reverse sweeps disagreed
+
+Minimal examples, 2 inputs: every stream fires in some instant if any such
+was found, then fewest nodes once those downstream of every cycle are dropped.
+Each is re-judged after dropping them, to check it kept its class.
+
+(a) gates, model `any` (class kept: yes; every stream fires: yes):
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = s3.merge(i1, |x, y| x + y);
+    let s1 = s2.merge(i1, |x, y| x + y);
+    s2_loop.close(s0.gate(c0));
+    s3_loop.close(s1.gate(!c0));
+
+(b1) dead branch, model `any`: none found
+
+(b1) dead branch, model `>=1` (class kept: yes; every stream fires: yes):
+    let (s0, s0_loop) = b.stream_loop();
+    let (s1, s1_loop) = b.stream_loop();
+    s0_loop.close(s1.or_else(s0));
+    s1_loop.close(i1.merge(i0, |x, y| x + y));
+
+(b1) dead branch, model `one` (class kept: yes; every stream fires: yes):
+    let (s0, s0_loop) = b.stream_loop();
+    let (s1, s1_loop) = b.stream_loop();
+    s0_loop.close(s1.or_else(s0));
+    s1_loop.close(i1.merge(i0, |x, y| x + y));
+
+(b2) per instant, model `any`: none found
+
+(b2) per instant, model `>=1` (class kept: yes; every stream fires: yes):
+    let (s1, s1_loop) = b.stream_loop();
+    let s0 = i0.or_else(s1);
+    s1_loop.close(i1.or_else(s0));
+
+(b2) per instant, model `one` (class kept: yes; every stream fires: yes):
+    let (s1, s1_loop) = b.stream_loop();
+    let s0 = i0.or_else(s1);
+    s1_loop.close(i1.or_else(s0));
+
+(b) value-dependent, model `any`: none found
+
+(b) value-dependent, model `>=1` (class kept: yes; every stream fires: yes):
+    let (s1, s1_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = i0.or_else(s3);
+    s1_loop.close(s0.or_else(s1));
+    let s2 = i1.map(|v| v * 2);
+    s3_loop.close(s2.filter(|v| v % 2 == 0));
+
+(b) value-dependent, model `one` (class kept: yes; every stream fires: yes):
+    let (s1, s1_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = i0.or_else(s3);
+    s1_loop.close(s0.or_else(s1));
+    let s2 = i1.map(|v| v * 2);
+    s3_loop.close(s2.filter(|v| v % 2 == 0));
+
+verdict: of 400000 refused programs, 687 were constructive under `any`, 0 of them outside (a); 1798 under `>=1`, 1111 outside (a), 2 value-dependent; 1798 under `one`, 1111 outside (a), 2 value-dependent.
