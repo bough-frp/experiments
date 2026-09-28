@@ -1,0 +1,280 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-sweep-cost-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0003-sweep-cost-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.07s
+     Running benches/rfd-0003-sweep-cost-wallclock.rs (target/release/deps/rfd_0003_sweep_cost_wallclock-adcd213e3d093a93)
+Gnuplot not found, using plotters backend
+Benchmarking live10/baseline/1000
+Benchmarking live10/baseline/1000: Warming up for 100.00 ms
+Benchmarking live10/baseline/1000: Collecting 20 samples in estimated 300.00 ms (1.2M iterations)
+Benchmarking live10/baseline/1000: Analyzing
+live10/baseline/1000    time:   [253.72 ns 253.84 ns 253.96 ns]
+Benchmarking live10/collect/1000
+Benchmarking live10/collect/1000: Warming up for 100.00 ms
+Benchmarking live10/collect/1000: Collecting 20 samples in estimated 300.33 ms (2080 iterations)
+Benchmarking live10/collect/1000: Analyzing
+live10/collect/1000     time:   [23.708 µs 23.747 µs 23.783 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+Benchmarking live10/mark/1000
+Benchmarking live10/mark/1000: Warming up for 100.00 ms
+Benchmarking live10/mark/1000: Collecting 20 samples in estimated 302.01 ms (2140 iterations)
+Benchmarking live10/mark/1000: Analyzing
+live10/mark/1000        time:   [1.1579 µs 1.1627 µs 1.1702 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking live10/sweep/1000
+Benchmarking live10/sweep/1000: Warming up for 100.00 ms
+Benchmarking live10/sweep/1000: Collecting 20 samples in estimated 300.27 ms (2140 iterations)
+Benchmarking live10/sweep/1000: Analyzing
+live10/sweep/1000       time:   [21.725 µs 21.746 µs 21.767 µs]
+Benchmarking live10/prune/1000
+Benchmarking live10/prune/1000: Warming up for 100.00 ms
+Benchmarking live10/prune/1000: Collecting 20 samples in estimated 300.45 ms (2780 iterations)
+Benchmarking live10/prune/1000: Analyzing
+live10/prune/1000       time:   [786.27 ns 789.34 ns 793.19 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking live10/pass/1000
+Benchmarking live10/pass/1000: Warming up for 100.00 ms
+Benchmarking live10/pass/1000: Collecting 20 samples in estimated 300.00 ms (651k iterations)
+Benchmarking live10/pass/1000: Analyzing
+live10/pass/1000        time:   [459.06 ns 459.54 ns 460.08 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking live10/baseline/10000
+Benchmarking live10/baseline/10000: Warming up for 100.00 ms
+Benchmarking live10/baseline/10000: Collecting 20 samples in estimated 300.00 ms (1.2M iterations)
+Benchmarking live10/baseline/10000: Analyzing
+live10/baseline/10000   time:   [254.36 ns 254.48 ns 254.61 ns]
+Benchmarking live10/collect/10000
+Benchmarking live10/collect/10000: Warming up for 100.00 ms
+Benchmarking live10/collect/10000: Collecting 20 samples in estimated 318.36 ms (220 iterations)
+Benchmarking live10/collect/10000: Analyzing
+live10/collect/10000    time:   [243.09 µs 243.59 µs 244.09 µs]
+Benchmarking live10/mark/10000
+Benchmarking live10/mark/10000: Warming up for 100.00 ms
+Benchmarking live10/mark/10000: Collecting 20 samples in estimated 313.51 ms (220 iterations)
+Benchmarking live10/mark/10000: Analyzing
+live10/mark/10000       time:   [10.309 µs 10.418 µs 10.545 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) high mild
+Benchmarking live10/sweep/10000
+Benchmarking live10/sweep/10000: Warming up for 100.00 ms
+Benchmarking live10/sweep/10000: Collecting 20 samples in estimated 308.38 ms (220 iterations)
+Benchmarking live10/sweep/10000: Analyzing
+live10/sweep/10000      time:   [221.39 µs 221.77 µs 222.11 µs]
+Found 4 outliers among 20 measurements (20.00%)
+  4 (20.00%) low mild
+Benchmarking live10/prune/10000
+Benchmarking live10/prune/10000: Warming up for 100.00 ms
+Benchmarking live10/prune/10000: Collecting 20 samples in estimated 309.77 ms (160 iterations)
+Benchmarking live10/prune/10000: Analyzing
+live10/prune/10000      time:   [8.0959 µs 8.3258 µs 8.6635 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking live10/pass/10000
+Benchmarking live10/pass/10000: Warming up for 100.00 ms
+Benchmarking live10/pass/10000: Collecting 20 samples in estimated 300.07 ms (67k iterations)
+Benchmarking live10/pass/10000: Analyzing
+live10/pass/10000       time:   [4.4693 µs 4.4716 µs 4.4737 µs]
+Benchmarking live10/baseline/100000
+Benchmarking live10/baseline/100000: Warming up for 100.00 ms
+Benchmarking live10/baseline/100000: Collecting 20 samples in estimated 300.00 ms (1.2M iterations)
+Benchmarking live10/baseline/100000: Analyzing
+live10/baseline/100000  time:   [257.39 ns 257.63 ns 257.90 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking live10/collect/100000
+Benchmarking live10/collect/100000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 300.0ms. You may wish to increase target time to 420.6ms, or reduce sample count to 10.
+Benchmarking live10/collect/100000: Collecting 20 samples in estimated 420.57 ms (20 iterations)
+Benchmarking live10/collect/100000: Analyzing
+live10/collect/100000   time:   [2.9311 ms 2.9354 ms 2.9400 ms]
+Benchmarking live10/mark/100000
+Benchmarking live10/mark/100000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 300.0ms. You may wish to increase target time to 368.9ms, or reduce sample count to 10.
+Benchmarking live10/mark/100000: Collecting 20 samples in estimated 368.93 ms (20 iterations)
+Benchmarking live10/mark/100000: Analyzing
+live10/mark/100000      time:   [321.99 µs 325.71 µs 329.70 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking live10/sweep/100000
+Benchmarking live10/sweep/100000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 300.0ms. You may wish to increase target time to 347.7ms, or reduce sample count to 10.
+Benchmarking live10/sweep/100000: Collecting 20 samples in estimated 347.70 ms (20 iterations)
+Benchmarking live10/sweep/100000: Analyzing
+live10/sweep/100000     time:   [2.4092 ms 2.4132 ms 2.4172 ms]
+Benchmarking live10/prune/100000
+Benchmarking live10/prune/100000: Warming up for 100.00 ms
+Benchmarking live10/prune/100000: Collecting 20 samples in estimated 498.63 ms (40 iterations)
+Benchmarking live10/prune/100000: Analyzing
+live10/prune/100000     time:   [173.50 µs 174.68 µs 175.88 µs]
+Benchmarking live10/pass/100000
+Benchmarking live10/pass/100000: Warming up for 100.00 ms
+Benchmarking live10/pass/100000: Collecting 20 samples in estimated 300.13 ms (6760 iterations)
+Benchmarking live10/pass/100000: Analyzing
+live10/pass/100000      time:   [44.254 µs 44.317 µs 44.369 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) low severe
+
+Benchmarking live90/baseline/1000
+Benchmarking live90/baseline/1000: Warming up for 100.00 ms
+Benchmarking live90/baseline/1000: Collecting 20 samples in estimated 300.00 ms (1.2M iterations)
+Benchmarking live90/baseline/1000: Analyzing
+live90/baseline/1000    time:   [254.10 ns 254.30 ns 254.51 ns]
+Benchmarking live90/collect/1000
+Benchmarking live90/collect/1000: Warming up for 100.00 ms
+Benchmarking live90/collect/1000: Collecting 20 samples in estimated 302.48 ms (1980 iterations)
+Benchmarking live90/collect/1000: Analyzing
+live90/collect/1000     time:   [13.127 µs 13.146 µs 13.164 µs]
+Benchmarking live90/mark/1000
+Benchmarking live90/mark/1000: Warming up for 100.00 ms
+Benchmarking live90/mark/1000: Collecting 20 samples in estimated 301.68 ms (2040 iterations)
+Benchmarking live90/mark/1000: Analyzing
+live90/mark/1000        time:   [7.7488 µs 7.7704 µs 7.7937 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+Benchmarking live90/sweep/1000
+Benchmarking live90/sweep/1000: Warming up for 100.00 ms
+Benchmarking live90/sweep/1000: Collecting 20 samples in estimated 300.29 ms (2120 iterations)
+Benchmarking live90/sweep/1000: Analyzing
+live90/sweep/1000       time:   [2.7708 µs 2.7847 µs 2.7994 µs]
+Benchmarking live90/prune/1000
+Benchmarking live90/prune/1000: Warming up for 100.00 ms
+Benchmarking live90/prune/1000: Collecting 20 samples in estimated 301.00 ms (2080 iterations)
+Benchmarking live90/prune/1000: Analyzing
+live90/prune/1000       time:   [2.4358 µs 2.4576 µs 2.4806 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking live90/pass/1000
+Benchmarking live90/pass/1000: Warming up for 100.00 ms
+Benchmarking live90/pass/1000: Collecting 20 samples in estimated 300.00 ms (652k iterations)
+Benchmarking live90/pass/1000: Analyzing
+live90/pass/1000        time:   [459.09 ns 459.52 ns 459.97 ns]
+Benchmarking live90/baseline/10000
+Benchmarking live90/baseline/10000: Warming up for 100.00 ms
+Benchmarking live90/baseline/10000: Collecting 20 samples in estimated 300.00 ms (1.2M iterations)
+Benchmarking live90/baseline/10000: Analyzing
+live90/baseline/10000   time:   [254.63 ns 254.77 ns 254.90 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+Benchmarking live90/collect/10000
+Benchmarking live90/collect/10000: Warming up for 100.00 ms
+Benchmarking live90/collect/10000: Collecting 20 samples in estimated 305.39 ms (200 iterations)
+Benchmarking live90/collect/10000: Analyzing
+live90/collect/10000    time:   [142.96 µs 143.37 µs 143.82 µs]
+Benchmarking live90/mark/10000
+Benchmarking live90/mark/10000: Warming up for 100.00 ms
+Benchmarking live90/mark/10000: Collecting 20 samples in estimated 302.99 ms (200 iterations)
+Benchmarking live90/mark/10000: Analyzing
+live90/mark/10000       time:   [83.661 µs 84.037 µs 84.499 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking live90/sweep/10000
+Benchmarking live90/sweep/10000: Warming up for 100.00 ms
+Benchmarking live90/sweep/10000: Collecting 20 samples in estimated 309.49 ms (220 iterations)
+Benchmarking live90/sweep/10000: Analyzing
+live90/sweep/10000      time:   [33.338 µs 33.450 µs 33.595 µs]
+Found 4 outliers among 20 measurements (20.00%)
+  3 (15.00%) high mild
+  1 (5.00%) high severe
+Benchmarking live90/prune/10000
+Benchmarking live90/prune/10000: Warming up for 100.00 ms
+Benchmarking live90/prune/10000: Collecting 20 samples in estimated 312.15 ms (220 iterations)
+Benchmarking live90/prune/10000: Analyzing
+live90/prune/10000      time:   [22.459 µs 22.589 µs 22.732 µs]
+Benchmarking live90/pass/10000
+Benchmarking live90/pass/10000: Warming up for 100.00 ms
+Benchmarking live90/pass/10000: Collecting 20 samples in estimated 300.03 ms (67k iterations)
+Benchmarking live90/pass/10000: Analyzing
+live90/pass/10000       time:   [4.4571 µs 4.4606 µs 4.4641 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low mild
+  1 (5.00%) high mild
+Benchmarking live90/baseline/100000
+Benchmarking live90/baseline/100000: Warming up for 100.00 ms
+Benchmarking live90/baseline/100000: Collecting 20 samples in estimated 300.00 ms (1.2M iterations)
+Benchmarking live90/baseline/100000: Analyzing
+live90/baseline/100000  time:   [254.10 ns 254.22 ns 254.33 ns]
+Benchmarking live90/collect/100000
+Benchmarking live90/collect/100000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 300.0ms. You may wish to increase target time to 449.0ms, or reduce sample count to 10.
+Benchmarking live90/collect/100000: Collecting 20 samples in estimated 448.97 ms (20 iterations)
+Benchmarking live90/collect/100000: Analyzing
+live90/collect/100000   time:   [3.0049 ms 3.0196 ms 3.0372 ms]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) high mild
+  1 (5.00%) high severe
+Benchmarking live90/mark/100000
+Benchmarking live90/mark/100000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 300.0ms. You may wish to increase target time to 619.5ms, or reduce sample count to 10.
+Benchmarking live90/mark/100000: Collecting 20 samples in estimated 619.50 ms (20 iterations)
+Benchmarking live90/mark/100000: Analyzing
+live90/mark/100000      time:   [2.1994 ms 2.2133 ms 2.2263 ms]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) low mild
+Benchmarking live90/sweep/100000
+Benchmarking live90/sweep/100000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 300.0ms. You may wish to increase target time to 371.3ms, or reduce sample count to 10.
+Benchmarking live90/sweep/100000: Collecting 20 samples in estimated 371.34 ms (20 iterations)
+Benchmarking live90/sweep/100000: Analyzing
+live90/sweep/100000     time:   [442.30 µs 445.10 µs 448.19 µs]
+Benchmarking live90/prune/100000
+Benchmarking live90/prune/100000: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 300.0ms. You may wish to increase target time to 559.5ms, or reduce sample count to 10.
+Benchmarking live90/prune/100000: Collecting 20 samples in estimated 559.55 ms (20 iterations)
+Benchmarking live90/prune/100000: Analyzing
+live90/prune/100000     time:   [461.99 µs 464.80 µs 467.54 µs]
+Benchmarking live90/pass/100000
+Benchmarking live90/pass/100000: Warming up for 100.00 ms
+Benchmarking live90/pass/100000: Collecting 20 samples in estimated 300.25 ms (6760 iterations)
+Benchmarking live90/pass/100000: Analyzing
+live90/pass/100000      time:   [44.339 µs 44.399 µs 44.449 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) low severe
+
+
+$ python3 scripts/ratios.py live10 live90
+
+benchmark              ratio   95% interval       baseline mean
+live10/collect/1000    93.553  [93.391, 93.700]         253.8 ns
+live10/collect/10000   957.179  [955.151, 959.212]         254.5 ns
+live10/collect/100000  11394.065  [11373.515, 11414.536]         257.6 ns
+live10/mark/1000        4.579  [ 4.561,  4.610]         253.8 ns
+live10/mark/10000      40.927  [40.503, 41.444]         254.5 ns
+live10/mark/100000     1263.961  [1249.767, 1279.741]         257.6 ns
+live10/pass/1000        1.810  [ 1.808,  1.813]         253.8 ns
+live10/pass/10000      17.571  [17.559, 17.583]         254.5 ns
+live10/pass/100000     172.024  [171.713, 172.286]         257.6 ns
+live10/prune/1000       3.109  [ 3.097,  3.125]         253.8 ns
+live10/prune/10000     32.654  [31.804, 34.006]         254.5 ns
+live10/prune/100000    677.925  [673.445, 682.740]         257.6 ns
+live10/sweep/1000      85.668  [85.575, 85.760]         253.8 ns
+live10/sweep/10000     871.475  [869.892, 872.859]         254.5 ns
+live10/sweep/100000    9366.907  [9348.668, 9385.060]         257.6 ns
+live90/collect/1000    51.695  [51.612, 51.780]         254.3 ns
+live90/collect/10000   562.717  [561.095, 564.493]         254.8 ns
+live90/collect/100000  11876.062  [11821.302, 11948.370]         254.2 ns
+live90/mark/1000       30.554  [30.469, 30.648]         254.3 ns
+live90/mark/10000      329.779  [328.369, 331.602]         254.8 ns
+live90/mark/100000     8706.851  [8650.788, 8757.829]         254.2 ns
+live90/pass/1000        1.807  [ 1.805,  1.809]         254.3 ns
+live90/pass/10000      17.508  [17.492, 17.525]         254.8 ns
+live90/pass/100000     174.658  [174.406, 174.865]         254.2 ns
+live90/prune/1000       9.663  [ 9.577,  9.757]         254.3 ns
+live90/prune/10000     88.654  [88.147, 89.240]         254.8 ns
+live90/prune/100000    1828.450  [1817.222, 1839.141]         254.2 ns
+live90/sweep/1000      10.950  [10.896, 11.009]         254.3 ns
+live90/sweep/10000     131.274  [130.850, 131.884]         254.8 ns
+live90/sweep/100000    1750.830  [1739.706, 1762.913]         254.2 ns
+
