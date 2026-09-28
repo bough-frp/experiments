@@ -9,7 +9,17 @@
 //! binary heap. The parameter is the filters' pass rate in percent; the
 //! quiet fraction it gives is in the counts. `upkeep/<variant>/<workload>`
 //! runs only the builds and commits, for the walk (`baseline`) and the
-//! small-side order (`om`).
+//! small-side order (`om`), and for Incremental's heights (`heights`) and
+//! each with flat adjacency following (`flat-om`, `flat-heights`).
+//!
+//! `flat-<workload>/<variant>/<pass>` runs the same transactions with the
+//! scheduler reading flat adjacency, one edge array per direction with a
+//! slice per node, patched as nodes are built and switches move. Its
+//! `baseline` is the mark and flat loop with the small-side order over the
+//! flat arrays; `nested-mark-om` the same over the nested lists (the ratio
+//! is what the layout costs the mark); `heap` the binary heap over the
+//! order's labels, and `heights` Incremental's heights and a bucket per
+//! height, both over the flat arrays.
 //!
 //! Each fixture is first checked to give the same results through every
 //! engine. Each iteration runs on a clone of one prepared engine, made in
@@ -23,8 +33,10 @@ use criterion::{BatchSize, BenchmarkGroup, BenchmarkId, Criterion, SamplingMode}
 use criterion::{criterion_group, criterion_main};
 
 use bough_experiments::rfd_0005_bounded_relink_check::{Baseline, Checker, Run};
+use bough_experiments::rfd_0005_height_queue::Heights;
 use bough_experiments::rfd_0005_maintained_rank_queue::{
-    Engine, Fixture, HeapQueue, MarkOm, PASS, RadixQueue, Schedule, WORKLOADS, Walked, agree,
+    Engine, Fixture, Flat, FlatEngine, FlatHeapQueue, FlatHeightQueue, FlatMarkOm, FlatSchedule,
+    HeapQueue, MarkOm, PASS, RadixQueue, Schedule, WORKLOADS, Walked, agree, agree_flat,
 };
 use bough_experiments::rfd_0005_small_side_order::TwoWay;
 
@@ -40,6 +52,45 @@ fn one<C: Checker, S: Schedule<C>>(
             |mut e| {
                 black_box(e.all(black_box(&f.txs), black_box(&f.events)));
                 e
+            },
+            BatchSize::LargeInput,
+        )
+    });
+}
+
+fn one_flat<C: Checker, S: FlatSchedule<C>>(
+    g: &mut BenchmarkGroup<'_, WallTime>,
+    variant: &str,
+    fresh: FlatEngine<C, S>,
+    f: &Fixture,
+) {
+    g.bench_function(BenchmarkId::new(variant, f.pass), |b| {
+        b.iter_batched(
+            || fresh.clone(),
+            |mut e| {
+                black_box(e.all(black_box(&f.txs), black_box(&f.events)));
+                e
+            },
+            BatchSize::LargeInput,
+        )
+    });
+}
+
+fn upkeep_flat<C: Checker>(g: &mut BenchmarkGroup<'_, WallTime>, variant: &str, name: &str) {
+    let f = Fixture::new(name, 0);
+    let fresh = (
+        Run {
+            graph: f.graph.clone(),
+            checker: C::new(&f.graph),
+        },
+        Flat::new(&f.graph),
+    );
+    g.bench_function(BenchmarkId::new(variant, name), |b| {
+        b.iter_batched(
+            || fresh.clone(),
+            |(mut r, mut flat)| {
+                black_box(flat.all(&mut r, black_box(&f.txs)));
+                (r, flat)
             },
             BatchSize::LargeInput,
         )
@@ -93,7 +144,25 @@ fn maintained_rank_queue(c: &mut Criterion) {
         upkeep_one::<Baseline>(&mut g, "baseline", name);
         upkeep_one::<TwoWay>(&mut g, "om", name);
     }
+    for name in WORKLOADS {
+        upkeep_flat::<TwoWay>(&mut g, "flat-om", name);
+        upkeep_one::<Heights>(&mut g, "heights", name);
+        upkeep_flat::<Heights>(&mut g, "flat-heights", name);
+    }
     g.finish();
+    for name in WORKLOADS {
+        let mut g = c.benchmark_group(format!("flat-{name}"));
+        setup(&mut g);
+        for pass in PASS {
+            let f = Fixture::new(name, pass);
+            agree_flat(&f);
+            one_flat(&mut g, "baseline", FlatMarkOm::new(&f), &f);
+            one(&mut g, "nested-mark-om", MarkOm::new(&f), &f);
+            one_flat(&mut g, "heap", FlatHeapQueue::new(&f), &f);
+            one_flat(&mut g, "heights", FlatHeightQueue::new(&f), &f);
+        }
+        g.finish();
+    }
 }
 
 criterion_group!(benches, maintained_rank_queue);
