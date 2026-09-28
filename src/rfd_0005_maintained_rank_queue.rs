@@ -189,7 +189,7 @@ impl State {
     /// same code for every scheduler, so they differ only in which nodes
     /// they call it on and in what order.
     #[inline]
-    fn eval(&mut self, g: &Graph, n: Id) -> bool {
+    pub fn eval(&mut self, g: &Graph, n: Id) -> bool {
         let deps = &g.deps[n as usize];
         // The cheap check a quiet node does and nothing else.
         if !deps.iter().any(|&d| self.has_fired(d)) {
