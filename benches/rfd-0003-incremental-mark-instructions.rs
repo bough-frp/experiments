@@ -19,13 +19,28 @@
 //! hundreds to thousands of units while garbage builds, so their windows
 //! measure garbage, not the collector.
 //!
+//! The follow-ups, groups `extended_app` and `extended_uneven`; run them
+//! alone with the filter `*::extended_*`:
+//!
+//! - `ext_run`, `ext_pause`: `run` and `pause` for the variants the
+//!   extended counts compare against `atomic` and `k1000` above: a fixed
+//!   budget with the trigger reset when the mark ends (`Reset::Early`) or
+//!   counting floating garbage (`Reset::Born`), `k2000` for the frontier,
+//!   and the debt on the whole region (`Pace::RegionDebt`).
+//! - `uneven_run_atomic`, `uneven_run`, `uneven_pause_atomic`,
+//!   `uneven_pause`: the work-paced probe's uneven workload with guards
+//!   dropped, `UNEVEN_WINDOW` units after its warm-up, atomic without
+//!   barriers against `k1000`. Divide the runs by 3,600 for a unit.
+//!
 //! Every run is built and replayed in setup, outside what is counted, and
 //! handed back so that its drop runs in teardown.
 
 use gungraun::{library_benchmark, library_benchmark_group, main};
 use std::hint::black_box;
 
-use bough_experiments::rfd_0003_incremental_mark::{APP_KEPT, Pace, Phase, Run, WINDOW};
+use bough_experiments::rfd_0003_incremental_mark::{
+    APP_KEPT, Pace, Phase, Reset, Run, UNEVEN_UNITS, Uneven, WINDOW,
+};
 
 fn warmed_atomic() -> Run<false> {
     Run::new(APP_KEPT, Pace::Atomic).warmed()
@@ -49,6 +64,40 @@ fn fast_atomic(navigate: bool) -> Run<false> {
 
 fn fast(phase: Phase, navigate: bool) -> Run<true> {
     Run::fast_path(APP_KEPT, phase, navigate)
+}
+
+fn warmed_reset(p: Pace, reset: Reset) -> Run<true> {
+    Run::with_reset(APP_KEPT, p, reset).warmed()
+}
+
+fn worst_reset(p: Pace, reset: Reset) -> Run<true> {
+    Run::before_worst_reset(APP_KEPT, p, reset, WINDOW)
+}
+
+fn uneven_atomic() -> Uneven<false> {
+    Uneven::new(Pace::Atomic).warmed()
+}
+
+fn uneven_k1000() -> Uneven<true> {
+    Uneven::new(Pace::Fixed {
+        k: 1_000,
+        sliced: true,
+    })
+    .warmed()
+}
+
+fn uneven_worst_atomic() -> Uneven<false> {
+    Uneven::before_worst(Pace::Atomic, UNEVEN_UNITS)
+}
+
+fn uneven_worst_k1000() -> Uneven<true> {
+    Uneven::before_worst(
+        Pace::Fixed {
+            k: 1_000,
+            sliced: true,
+        },
+        UNEVEN_UNITS,
+    )
 }
 
 fn drop_run<T, R>(out: (T, R)) {
@@ -124,9 +173,71 @@ fn fast_path(mut r: Run<true>) -> ((usize, usize, usize), Run<true>) {
     (black_box(r.step()), r)
 }
 
+#[library_benchmark]
+#[bench::k250_born(args = (Pace::Fixed { k: 250, sliced: true }, Reset::Born), setup = warmed_reset, teardown = drop_run)]
+#[bench::k500_born(args = (Pace::Fixed { k: 500, sliced: true }, Reset::Born), setup = warmed_reset, teardown = drop_run)]
+#[bench::k1000_early(args = (Pace::Fixed { k: 1_000, sliced: true }, Reset::Early), setup = warmed_reset, teardown = drop_run)]
+#[bench::k1000_born(args = (Pace::Fixed { k: 1_000, sliced: true }, Reset::Born), setup = warmed_reset, teardown = drop_run)]
+#[bench::k2000(args = (Pace::Fixed { k: 2_000, sliced: true }, Reset::End), setup = warmed_reset, teardown = drop_run)]
+#[bench::region_debt4(args = (Pace::RegionDebt { c: 4 }, Reset::End), setup = warmed_reset, teardown = drop_run)]
+#[bench::region_debt8(args = (Pace::RegionDebt { c: 8 }, Reset::End), setup = warmed_reset, teardown = drop_run)]
+fn ext_run(mut r: Run<true>) -> (i64, Run<true>) {
+    (black_box(r.run(black_box(WINDOW))), r)
+}
+
+#[library_benchmark]
+#[bench::k250_born(args = (Pace::Fixed { k: 250, sliced: true }, Reset::Born), setup = worst_reset, teardown = drop_run)]
+#[bench::k500_born(args = (Pace::Fixed { k: 500, sliced: true }, Reset::Born), setup = worst_reset, teardown = drop_run)]
+#[bench::k1000_early(args = (Pace::Fixed { k: 1_000, sliced: true }, Reset::Early), setup = worst_reset, teardown = drop_run)]
+#[bench::k1000_born(args = (Pace::Fixed { k: 1_000, sliced: true }, Reset::Born), setup = worst_reset, teardown = drop_run)]
+#[bench::k2000(args = (Pace::Fixed { k: 2_000, sliced: true }, Reset::End), setup = worst_reset, teardown = drop_run)]
+#[bench::region_debt4(args = (Pace::RegionDebt { c: 4 }, Reset::End), setup = worst_reset, teardown = drop_run)]
+#[bench::region_debt8(args = (Pace::RegionDebt { c: 8 }, Reset::End), setup = worst_reset, teardown = drop_run)]
+fn ext_pause(mut r: Run<true>) -> (usize, Run<true>) {
+    (black_box(r.unit().slice.marked), r)
+}
+
+#[library_benchmark]
+#[bench::atomic(setup = uneven_atomic, teardown = drop_run)]
+fn uneven_run_atomic(mut r: Uneven<false>) -> (i64, Uneven<false>) {
+    (black_box(r.run(black_box(UNEVEN_UNITS))), r)
+}
+
+#[library_benchmark]
+#[bench::k1000(setup = uneven_k1000, teardown = drop_run)]
+fn uneven_run(mut r: Uneven<true>) -> (i64, Uneven<true>) {
+    (black_box(r.run(black_box(UNEVEN_UNITS))), r)
+}
+
+#[library_benchmark]
+#[bench::atomic(setup = uneven_worst_atomic, teardown = drop_run)]
+fn uneven_pause_atomic(mut r: Uneven<false>) -> (usize, Uneven<false>) {
+    (black_box(r.unit().slice.marked), r)
+}
+
+#[library_benchmark]
+#[bench::k1000(setup = uneven_worst_k1000, teardown = drop_run)]
+fn uneven_pause(mut r: Uneven<true>) -> (usize, Uneven<true>) {
+    (black_box(r.unit().slice.marked), r)
+}
+
 library_benchmark_group!(
     name = incremental_mark;
     benchmarks = run_atomic, run, pause_atomic, pause, fast_path_atomic, fast_path
 );
 
-main!(library_benchmark_groups = incremental_mark);
+library_benchmark_group!(
+    name = extended_app;
+    benchmarks = ext_run, ext_pause
+);
+
+library_benchmark_group!(
+    name = extended_uneven;
+    benchmarks = uneven_run_atomic, uneven_run, uneven_pause_atomic, uneven_pause
+);
+
+main!(
+    library_benchmark_groups = incremental_mark,
+    extended_app,
+    extended_uneven
+);

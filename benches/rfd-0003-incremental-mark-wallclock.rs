@@ -19,6 +19,15 @@
 //!   no garbage, on the barriered arena with no cycle (`idle`), mid-mark
 //!   (`mark`) and mid-sweep (`sweep`, where transactions test colour).
 //!   Each ratio is what the barriers cost that unit.
+//! - `incremental-ext-run`, `incremental-ext-pause`: the follow-ups on
+//!   `app`, as `incremental-run` and `incremental-pause`: `k1000` again, and
+//!   the variants the extended counts compare: the trigger reset when the
+//!   mark ends (`-early`) or counting floating garbage (`-born`), `k2000`,
+//!   and the debt on the whole region (`region-debt<c>`).
+//! - `incremental-uneven-run`, `incremental-uneven-pause`: the work-paced
+//!   probe's uneven workload with guards dropped, `UNEVEN_UNITS` units after
+//!   its warm-up (divide by 3,600 for a unit), and its costliest unit;
+//!   `baseline` the atomic collection with no barriers compiled in.
 //!
 //! Every run is cloned in `iter_batched`'s setup and handed back so that
 //! neither the clone nor its drop is timed.
@@ -28,7 +37,9 @@ use std::time::Duration;
 
 use criterion::{BatchSize, BenchmarkId, Criterion, SamplingMode, criterion_group, criterion_main};
 
-use bough_experiments::rfd_0003_incremental_mark::{APP_KEPT, PACES, Pace, Phase, Run, WINDOW};
+use bough_experiments::rfd_0003_incremental_mark::{
+    APP_KEPT, PACES, Pace, Phase, Reset, Run, UNEVEN_UNITS, Uneven, WINDOW,
+};
 
 fn batched<R: Clone, T>(
     g: &mut criterion::BenchmarkGroup<'_, criterion::measurement::WallTime>,
@@ -101,11 +112,82 @@ fn incremental_mark(c: &mut Criterion) {
     }
 }
 
+/// The follow-ups' variants on `app`, each a pace and a trigger reset.
+fn extended() -> [(Pace, Reset); 8] {
+    let fixed = |k| Pace::Fixed { k, sliced: true };
+    [
+        (fixed(1_000), Reset::End),
+        (fixed(250), Reset::Born),
+        (fixed(500), Reset::Born),
+        (fixed(1_000), Reset::Early),
+        (fixed(1_000), Reset::Born),
+        (fixed(2_000), Reset::End),
+        (Pace::RegionDebt { c: 4 }, Reset::End),
+        (Pace::RegionDebt { c: 8 }, Reset::End),
+    ]
+}
+
+fn incremental_extended(c: &mut Criterion) {
+    let mut g = c.benchmark_group("incremental-ext-run");
+    g.sampling_mode(SamplingMode::Flat);
+    g.sample_size(10);
+    g.measurement_time(Duration::from_secs(6));
+    let r = Run::<false>::new(APP_KEPT, Pace::Atomic).warmed();
+    batched(&mut g, "baseline", WINDOW, &r, |r| r.run(black_box(WINDOW)));
+    for (p, reset) in extended() {
+        let r = Run::<true>::with_reset(APP_KEPT, p, reset).warmed();
+        batched(&mut g, &r.name(), WINDOW, &r, |r| r.run(black_box(WINDOW)));
+    }
+    g.finish();
+
+    let mut g = c.benchmark_group("incremental-ext-pause");
+    g.sampling_mode(SamplingMode::Flat);
+    g.measurement_time(Duration::from_millis(500));
+    let r = Run::<false>::before_worst(APP_KEPT, Pace::Atomic, WINDOW);
+    batched(&mut g, "baseline", WINDOW, &r, Run::unit);
+    for (p, reset) in extended() {
+        let r = Run::<true>::before_worst_reset(APP_KEPT, p, reset, WINDOW);
+        batched(&mut g, &r.name(), WINDOW, &r, Run::unit);
+    }
+    g.finish();
+
+    let k1000 = Pace::Fixed {
+        k: 1_000,
+        sliced: true,
+    };
+    let mut g = c.benchmark_group("incremental-uneven-run");
+    g.sampling_mode(SamplingMode::Flat);
+    g.sample_size(10);
+    g.measurement_time(Duration::from_secs(10));
+    let r = Uneven::<false>::new(Pace::Atomic).warmed();
+    batched(&mut g, "baseline", UNEVEN_UNITS, &r, |r| {
+        r.run(black_box(UNEVEN_UNITS))
+    });
+    let r = Uneven::<true>::new(Pace::Atomic).warmed();
+    batched(&mut g, "atomic-barriers", UNEVEN_UNITS, &r, |r| {
+        r.run(black_box(UNEVEN_UNITS))
+    });
+    let r = Uneven::<true>::new(k1000).warmed();
+    batched(&mut g, "k1000", UNEVEN_UNITS, &r, |r| {
+        r.run(black_box(UNEVEN_UNITS))
+    });
+    g.finish();
+
+    let mut g = c.benchmark_group("incremental-uneven-pause");
+    g.sampling_mode(SamplingMode::Flat);
+    g.measurement_time(Duration::from_millis(500));
+    let r = Uneven::<false>::before_worst(Pace::Atomic, UNEVEN_UNITS);
+    batched(&mut g, "baseline", UNEVEN_UNITS, &r, Uneven::unit);
+    let r = Uneven::<true>::before_worst(k1000, UNEVEN_UNITS);
+    batched(&mut g, "k1000", UNEVEN_UNITS, &r, Uneven::unit);
+    g.finish();
+}
+
 criterion_group! {
     name = benches;
     config = Criterion::default()
         .sample_size(20)
         .warm_up_time(Duration::from_millis(200));
-    targets = incremental_mark
+    targets = incremental_mark, incremental_extended
 }
 criterion_main!(benches);
