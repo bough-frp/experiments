@@ -51,8 +51,47 @@
 //! are wall-clock only: throughput (`run_*`, timed from a barrier) and the
 //! spread of waits (`lock_spread`, `queue_spread`), since an unfair lock
 //! shows up in the tail, not the mean.
+//!
+//! ## Where a contended lock's extra time goes
+//!
+//! The first run found the contended lock costing 1.6–1.9× bare per unit
+//! and couldn't say why. Two candidates: the graph's state migrating
+//! between cores' caches with the lock (every hand-off to another thread
+//! means that thread's first touch of each line the last owner wrote
+//! misses to the other core), or the lock's hand-off itself (the futex
+//! wake of a parked waiter, and the lock word's own line). A single-owner
+//! queue avoids the first by design; it pays its own hand-off per call.
+//!
+//! [`Footprint`] separates them. It is a second runtime stand-in whose
+//! work per unit is fixed (the same 50-node, `ROUNDS`-round chain as
+//! [`Graph`], computed in a stack array that stays in the running core's
+//! cache) and whose state is a parameter: `bytes` of heap, every 64-byte
+//! line of it read-modified-written once per unit. So between footprints
+//! only the lines a unit dirties change, and with them what a hand-off
+//! must migrate. One word per line is the least that touches a line, so
+//! the unit's own cost still grows with the footprint (4,096 extra
+//! read-modify-writes at 256 KiB); each footprint has its own bare
+//! baseline, and what's compared is the extra over it. The lines are
+//! visited in a fixed stride-permuted order, as a graph walk isn't a
+//! sequential stream the prefetcher could run ahead of from another
+//! core's cache.
+//!
+//! At 0 bytes the unit touches no state but the struct beside the lock
+//! word (its stamp and sum), so a lock's extra there is its hand-off
+//! alone. The contended runs take two locks and the queue over every
+//! footprint: `std::sync::Mutex` (spins briefly, then parks on a futex)
+//! and [`Ticket`] (a fair spin lock: never parks, so no futex wake, and
+//! hands off every unit, so the state migrates every unit). The ticket
+//! lock's extra over bare, against the footprint, is the migration cost
+//! per hand-off, its slope, on top of a bare hand-off, its intercept. The
+//! mutex's extra is its share of units that were hand-offs times (a
+//! futex wake plus that migration): [`handoffs`] counts the share, since
+//! an unfair lock that lets one thread run a thousand units in a row
+//! migrates the state once per thousand units, not once per unit.
 
+use std::cell::UnsafeCell;
 use std::collections::VecDeque;
+use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::{Arc, Barrier, Mutex, MutexGuard, PoisonError};
 use std::task::{Wake, Waker};
 use std::thread::{self, Thread};
@@ -151,6 +190,149 @@ impl Graph {
     }
 }
 
+/// A runtime stand-in the variants can run: one unit is a pure function
+/// of its input, added into a running sum.
+pub trait State: Send {
+    fn propagate(&mut self, input: u64) -> u64;
+    /// The sum of every result so far.
+    fn sink(&self) -> u64;
+    /// How many units have run.
+    fn units(&self) -> u64;
+}
+
+impl State for Graph {
+    fn propagate(&mut self, input: u64) -> u64 {
+        Graph::propagate(self, input)
+    }
+
+    fn sink(&self) -> u64 {
+        Graph::sink(self)
+    }
+
+    fn units(&self) -> u64 {
+        Graph::units(self)
+    }
+}
+
+/// The graph's dependencies, as [`Graph::new`] sets them, for
+/// [`Footprint`]'s chain: a table, so the chain doesn't divide per node.
+const DEPS: [[u8; 2]; NODES] = {
+    let mut deps = [[0; 2]; NODES];
+    let mut i = 1;
+    while i < NODES {
+        deps[i] = [(i - 1) as u8, ((i * 37 + 11) % i) as u8];
+        i += 1;
+    }
+    deps
+};
+
+/// The 50-node chain on the stack: the same work as [`Graph::propagate`],
+/// but the values are the running thread's own, so they never migrate.
+#[inline(never)]
+pub fn chain(input: u64) -> u64 {
+    let mut values = [0u64; NODES];
+    values[0] = input;
+    for i in 1..NODES {
+        let [a, b] = DEPS[i];
+        let mut v = values[a as usize] ^ values[b as usize].rotate_left(17);
+        for _ in 0..ROUNDS {
+            v = (v ^ (v >> 29)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
+        }
+        values[i] = v;
+    }
+    values[NODES - 1]
+}
+
+/// One cache line of [`Footprint`]'s state. Only word 0 is touched.
+#[derive(Clone, Copy)]
+#[repr(align(64))]
+struct Line([u64; 8]);
+
+/// The runtime stand-in with a footprint: the chain's fixed work, then
+/// every line of `bytes` of state read-modified-written once.
+pub struct Footprint {
+    lines: Vec<Line>,
+    /// The visiting order's step: coprime with the line count, so one
+    /// pass visits every line once, not in address order.
+    step: usize,
+    stamp: u64,
+    sink: u64,
+}
+
+/// The footprints the benches take: none (the hand-off alone), one line,
+/// the 50-node graph's 1.2 KB (19 lines, as [`Graph`]'s 50 × 24 B), and
+/// two beyond it, 16 KiB (in L1, 32 KiB on Zen+) and 256 KiB (in L2,
+/// 512 KiB).
+pub const FOOTPRINTS: [(usize, &str); 5] = [
+    (0, "0B"),
+    (64, "64B"),
+    (1216, "1216B"),
+    (16 * 1024, "16KiB"),
+    (256 * 1024, "256KiB"),
+];
+
+fn gcd(a: usize, b: usize) -> usize {
+    if b == 0 { a } else { gcd(b, a % b) }
+}
+
+impl Footprint {
+    /// `bytes`, a multiple of 64, of state.
+    pub fn new(bytes: usize) -> Footprint {
+        assert_eq!(bytes % 64, 0, "a footprint is whole lines");
+        let n = bytes / 64;
+        // A non-zero word per line, so the allocation is written now and
+        // not a lazily zeroed mapping whose first touch page-faults inside
+        // a timed run.
+        let lines = vec![Line([0, 0, 0, 0, 0, 0, 0, !0]); n];
+        // About 5/8 of the way round, the first step from there coprime
+        // with `n`.
+        let mut step = (n * 5 / 8).max(1);
+        while n > 1 && gcd(step, n) != 1 {
+            step += 1;
+        }
+        Footprint {
+            lines,
+            step,
+            stamp: 0,
+            sink: 0,
+        }
+    }
+
+    /// Whether every line has seen every unit: each line's word is a sum
+    /// of results, in whatever order they came, so it equals the sink.
+    pub fn consistent(&self) -> bool {
+        self.lines.iter().all(|l| l.0[0] == self.sink)
+    }
+}
+
+impl State for Footprint {
+    #[inline(never)]
+    fn propagate(&mut self, input: u64) -> u64 {
+        self.stamp += 1;
+        let out = chain(input);
+        let n = self.lines.len();
+        let mut l = 0;
+        for _ in 0..n {
+            let w = &mut self.lines[l].0[0];
+            *w = w.wrapping_add(out);
+            l += self.step;
+            if l >= n {
+                l -= n;
+            }
+        }
+        self.sink = self.sink.wrapping_add(out);
+        out
+    }
+
+    fn sink(&self) -> u64 {
+        self.sink
+    }
+
+    fn units(&self) -> u64 {
+        self.stamp
+    }
+}
+
 /// The sum the inputs `0..units` give, run bare.
 pub fn expected(units: u64) -> u64 {
     let mut g = Graph::new();
@@ -159,7 +341,7 @@ pub fn expected(units: u64) -> u64 {
 }
 
 /// Units `first..first + n` on the owner thread.
-pub fn bare(g: &mut Graph, first: u64, n: u64) -> u64 {
+pub fn bare<S: State>(g: &mut S, first: u64, n: u64) -> u64 {
     for k in first..first + n {
         g.propagate(k);
     }
@@ -172,30 +354,108 @@ fn lock<T>(m: &Mutex<T>) -> MutexGuard<'_, T> {
 }
 
 /// Units `first..first + n`, each under its own lock.
-pub fn locked(m: &Mutex<Graph>, first: u64, n: u64) -> u64 {
+pub fn locked<S: State>(m: &Mutex<S>, first: u64, n: u64) -> u64 {
     for k in first..first + n {
         lock(m).propagate(k);
     }
     lock(m).sink()
 }
 
+/// Units `first..first + n`, each under its own ticket lock.
+pub fn ticketed<S: State>(m: &Ticket<S>, first: u64, n: u64) -> u64 {
+    for k in first..first + n {
+        m.with(|g| g.propagate(k));
+    }
+    m.with(|g| g.sink())
+}
+
+/// A lock the contended runs can take: std's mutex or [`Ticket`].
+pub trait Lock<T>: Sync {
+    fn new(value: T) -> Self;
+    fn with<R>(&self, f: impl FnOnce(&mut T) -> R) -> R;
+    fn into_inner(self) -> T;
+}
+
+impl<T: Send> Lock<T> for Mutex<T> {
+    fn new(value: T) -> Self {
+        Mutex::new(value)
+    }
+
+    fn with<R>(&self, f: impl FnOnce(&mut T) -> R) -> R {
+        f(&mut lock(self))
+    }
+
+    fn into_inner(self) -> T {
+        Mutex::into_inner(self).unwrap_or_else(PoisonError::into_inner)
+    }
+}
+
+/// A ticket lock: a spin lock that never parks, and is fair. A caller
+/// takes the next ticket and spins until the lock serves it, so under
+/// contention the lock goes to a different thread every unit, in turn.
+/// Beside std's mutex, which spins a little and then sleeps on a futex, it
+/// has no wake-ups, and every unit is a hand-off: its extra over bare is
+/// the lock word's line and the state's lines crossing cores once per
+/// unit. (A test-and-set spin lock was tried first and handed off to
+/// another thread about once in 200 units: the releasing thread takes it
+/// straight back, so it measured no migration at all.) It is only sound
+/// for timing because no thread waits on it that isn't running: the
+/// contended runs use at most 8 of the 16 hardware threads, and a ticket
+/// holder descheduled by other load stalls every thread behind it.
+pub struct Ticket<T> {
+    next: AtomicU32,
+    serving: AtomicU32,
+    value: UnsafeCell<T>,
+}
+
+// SAFETY: the value is reached only through `with`, by the one thread
+// whose ticket is being served, as a `Mutex` would.
+unsafe impl<T: Send> Sync for Ticket<T> {}
+
+impl<T: Send> Lock<T> for Ticket<T> {
+    fn new(value: T) -> Self {
+        Ticket {
+            next: AtomicU32::new(0),
+            serving: AtomicU32::new(0),
+            value: UnsafeCell::new(value),
+        }
+    }
+
+    fn with<R>(&self, f: impl FnOnce(&mut T) -> R) -> R {
+        let mine = self.next.fetch_add(1, Ordering::Relaxed);
+        while self.serving.load(Ordering::Acquire) != mine {
+            std::hint::spin_loop();
+        }
+        // SAFETY: only the holder of the served ticket gets here, and the
+        // next ticket isn't served until the store below. No unit panics;
+        // if one did, the lock would stay held, which only stops the run.
+        let out = f(unsafe { &mut *self.value.get() });
+        self.serving.store(mine.wrapping_add(1), Ordering::Release);
+        out
+    }
+
+    fn into_inner(self) -> T {
+        self.value.into_inner()
+    }
+}
+
 /// A queued unit, as the spike's: a boxed closure the driver runs.
-pub type Unit = Box<dyn FnOnce(&mut Graph) + Send>;
+pub type Unit<S = Graph> = Box<dyn FnOnce(&mut S) + Send>;
 
 /// The `RemoteIo`'s inbox: calls, the driver's waker, and whether a call
 /// has woken it since the last pump began, all under one lock.
-pub struct Inbox {
-    state: Mutex<InboxState>,
+pub struct Inbox<S = Graph> {
+    state: Mutex<InboxState<S>>,
 }
 
-struct InboxState {
-    calls: VecDeque<Unit>,
+struct InboxState<S> {
+    calls: VecDeque<Unit<S>>,
     waker: Option<Waker>,
     woken: bool,
 }
 
-impl Inbox {
-    pub fn new(waker: Waker) -> Inbox {
+impl<S: State> Inbox<S> {
+    pub fn new(waker: Waker) -> Inbox<S> {
         Inbox {
             state: Mutex::new(InboxState {
                 calls: VecDeque::new(),
@@ -209,7 +469,7 @@ impl Inbox {
     /// queue it, and wake the driver after the lock is released, unless a
     /// call has since the last pump began.
     pub fn send(&self, k: u64) {
-        let unit: Unit = Box::new(move |g: &mut Graph| {
+        let unit: Unit<S> = Box::new(move |g: &mut S| {
             g.propagate(k);
         });
         let waker = {
@@ -236,14 +496,14 @@ impl Inbox {
     }
 
     /// The oldest call, taken under the lock and run after it.
-    fn pop(&self) -> Option<Unit> {
+    fn pop(&self) -> Option<Unit<S>> {
         lock(&self.state).calls.pop_front()
     }
 }
 
 /// The driver's pump: runs the units queued when it began, one lock per
 /// unit. Returns how many ran.
-pub fn pump(inbox: &Inbox, g: &mut Graph) -> usize {
+pub fn pump<S: State>(inbox: &Inbox<S>, g: &mut S) -> usize {
     let limit = inbox.begin_pump();
     for _ in 0..limit {
         let unit = inbox.pop().expect("a unit counted at the pump's start");
@@ -254,7 +514,7 @@ pub fn pump(inbox: &Inbox, g: &mut Graph) -> usize {
 
 /// Units `first..first + n` sent through the inbox in bursts of `burst`,
 /// the driver pumping after each burst, all on one thread.
-pub fn queued(inbox: &Inbox, g: &mut Graph, first: u64, n: u64, burst: u64) -> u64 {
+pub fn queued<S: State>(inbox: &Inbox<S>, g: &mut S, first: u64, n: u64, burst: u64) -> u64 {
     let mut k = first;
     while k < first + n {
         let end = (k + burst).min(first + n);
@@ -287,10 +547,11 @@ pub fn thread_waker() -> Waker {
 
 /// Everything the single-threaded runs need, warmed: the inbox has grown
 /// to a burst once, so a counted run doesn't include its growth.
-pub struct Single {
-    pub graph: Graph,
-    pub mutex: Mutex<Graph>,
-    pub inbox: Inbox,
+pub struct Single<S = Graph> {
+    pub graph: S,
+    pub mutex: Mutex<S>,
+    pub ticket: Ticket<S>,
+    pub inbox: Inbox<S>,
 }
 
 impl Default for Single {
@@ -301,15 +562,24 @@ impl Default for Single {
 
 impl Single {
     pub fn new() -> Single {
+        Single::of(Graph::new)
+    }
+}
+
+impl<S: State> Single<S> {
+    /// Each variant's own state from `make`, warmed.
+    pub fn of(make: impl Fn() -> S) -> Single<S> {
         let mut s = Single {
-            graph: Graph::new(),
-            mutex: Mutex::new(Graph::new()),
+            graph: make(),
+            mutex: Mutex::new(make()),
+            ticket: Lock::new(make()),
             inbox: Inbox::new(thread_waker()),
         };
-        let mut warm = Graph::new();
+        let mut warm = make();
         queued(&s.inbox, &mut warm, 0, BURST, BURST);
         bare(&mut s.graph, 0, 1);
         locked(&s.mutex, 0, 1);
+        ticketed(&s.ticket, 0, 1);
         s
     }
 }
@@ -324,7 +594,11 @@ fn share(t: usize, threads: usize, units: u64) -> std::ops::Range<u64> {
 /// baseline: the engine runs units one at a time whoever calls, so the
 /// best any design can do is this.
 pub fn run_bare(units: u64) -> (Duration, u64) {
-    let mut g = Graph::new();
+    run_bare_on(Graph::new(), units)
+}
+
+/// [`run_bare`] on any state.
+pub fn run_bare_on<S: State>(mut g: S, units: u64) -> (Duration, u64) {
     let start = Instant::now();
     let sink = bare(&mut g, 0, units);
     (start.elapsed(), sink)
@@ -333,7 +607,21 @@ pub fn run_bare(units: u64) -> (Duration, u64) {
 /// `threads` threads each lock-and-run their share of `units`, back to
 /// back. Timed from the barrier that releases them to the last one's end.
 pub fn run_locked(threads: usize, units: u64) -> (Duration, u64) {
-    let m = Mutex::new(Graph::new());
+    run_contended::<Mutex<Graph>, Graph>(Graph::new(), threads, units)
+}
+
+/// [`run_locked`] on any state, under std's mutex.
+pub fn run_locked_on<S: State>(g: S, threads: usize, units: u64) -> (Duration, u64) {
+    run_contended::<Mutex<S>, S>(g, threads, units)
+}
+
+/// [`run_locked`] on any state, under the ticket lock.
+pub fn run_ticket_on<S: State>(g: S, threads: usize, units: u64) -> (Duration, u64) {
+    run_contended::<Ticket<S>, S>(g, threads, units)
+}
+
+fn run_contended<L: Lock<S>, S: State>(g: S, threads: usize, units: u64) -> (Duration, u64) {
+    let m = L::new(g);
     let barrier = Barrier::new(threads + 1);
     let start = thread::scope(|s| {
         for t in 0..threads {
@@ -342,7 +630,7 @@ pub fn run_locked(threads: usize, units: u64) -> (Duration, u64) {
                 let range = share(t, threads, units);
                 barrier.wait();
                 for k in range {
-                    lock(m).propagate(k);
+                    m.with(|g| g.propagate(k));
                 }
             });
         }
@@ -351,11 +639,7 @@ pub fn run_locked(threads: usize, units: u64) -> (Duration, u64) {
     });
     // The scope has joined every thread by here.
     let elapsed = start.elapsed();
-    let sink = m
-        .into_inner()
-        .unwrap_or_else(PoisonError::into_inner)
-        .sink();
-    (elapsed, sink)
+    (elapsed, m.into_inner().sink())
 }
 
 /// `producers` threads each send their share of `units` through the inbox
@@ -363,8 +647,12 @@ pub fn run_locked(threads: usize, units: u64) -> (Duration, u64) {
 /// anything queued, parks when there isn't. Timed from the barrier to the
 /// last unit run.
 pub fn run_queued(producers: usize, units: u64) -> (Duration, u64) {
+    run_queued_on(Graph::new(), producers, units)
+}
+
+/// [`run_queued`] on any state.
+pub fn run_queued_on<S: State>(mut g: S, producers: usize, units: u64) -> (Duration, u64) {
     let inbox = Inbox::new(thread_waker());
-    let mut g = Graph::new();
     let barrier = Barrier::new(producers + 1);
     let elapsed = thread::scope(|s| {
         for t in 0..producers {
@@ -536,6 +824,70 @@ pub fn queue_spread(producers: usize, per_thread: u64) -> QueueSpread {
     }
 }
 
+/// Which lock [`handoffs`] takes.
+#[derive(Clone, Copy, Debug)]
+pub enum LockKind {
+    Mutex,
+    Ticket,
+}
+
+/// How often a contended lock changed hands, which is how often the state
+/// could have migrated: `changes` of `units` went to a different thread
+/// from the unit before.
+#[derive(Clone, Copy, Debug)]
+pub struct Handoffs {
+    pub units: u64,
+    pub changes: u64,
+    pub longest_streak: u64,
+}
+
+/// `threads` threads each run `per_thread` units on a fresh `bytes`
+/// footprint under `kind`, counting hand-offs. Untimed.
+pub fn handoffs(kind: LockKind, bytes: usize, threads: usize, per_thread: u64) -> Handoffs {
+    match kind {
+        LockKind::Mutex => handoffs_under::<Mutex<Tracked>>(bytes, threads, per_thread),
+        LockKind::Ticket => handoffs_under::<Ticket<Tracked>>(bytes, threads, per_thread),
+    }
+}
+
+/// The footprint and, riding in the lock with it, the last unit's thread,
+/// the current streak, the longest, and the count of changes.
+type Tracked = (Footprint, usize, u64, u64, u64);
+
+fn handoffs_under<L: Lock<Tracked>>(bytes: usize, threads: usize, per_thread: u64) -> Handoffs {
+    let m = L::new((Footprint::new(bytes), usize::MAX, 0, 0, 0));
+    let barrier = Barrier::new(threads);
+    thread::scope(|s| {
+        for t in 0..threads {
+            let (m, barrier) = (&m, &barrier);
+            s.spawn(move || {
+                barrier.wait();
+                for k in t as u64 * per_thread..(t as u64 + 1) * per_thread {
+                    m.with(|(g, owner, streak, longest, changes)| {
+                        g.propagate(k);
+                        if *owner == t {
+                            *streak += 1;
+                        } else {
+                            *streak = 1;
+                            *changes += 1;
+                        }
+                        *owner = t;
+                        *longest = (*longest).max(*streak);
+                    });
+                }
+            });
+        }
+    });
+    let (g, _, _, longest, changes) = m.into_inner();
+    assert!(g.consistent());
+    Handoffs {
+        units: g.units(),
+        // The first unit's "change" is from nobody.
+        changes: changes - 1,
+        longest_streak: longest,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -558,6 +910,40 @@ mod tests {
         for threads in [1, 2, 4, 8] {
             assert_eq!(run_locked(threads, 1_000).1, want, "lock x{threads}");
             assert_eq!(run_queued(threads, 1_000).1, want, "queue x{threads}");
+        }
+    }
+
+    /// The footprint's chain is the graph's propagation, and every
+    /// footprint and lock runs every unit once, touching every line.
+    #[test]
+    fn footprints_agree() {
+        let want = expected(1_000);
+        for (bytes, label) in FOOTPRINTS {
+            let mut f = Footprint::new(bytes);
+            assert_eq!(bare(&mut f, 0, 1_000), want, "{label} bare");
+            assert!(f.consistent(), "{label} bare");
+            let s = Single::of(|| Footprint::new(bytes));
+            let mut f = Footprint::new(bytes);
+            assert_eq!(queued(&s.inbox, &mut f, 0, 1_000, BURST), want);
+            assert!(f.consistent(), "{label} queue");
+            let m = Mutex::new(Footprint::new(bytes));
+            assert_eq!(locked(&m, 0, 1_000), want, "{label} lock");
+            let m: Ticket<Footprint> = Lock::new(Footprint::new(bytes));
+            assert_eq!(ticketed(&m, 0, 1_000), want, "{label} ticket");
+            assert_eq!(run_bare_on(Footprint::new(bytes), 1_000).1, want);
+            for threads in [1, 2, 4, 8] {
+                let f = || Footprint::new(bytes);
+                assert_eq!(run_locked_on(f(), threads, 1_000).1, want);
+                assert_eq!(run_ticket_on(f(), threads, 1_000).1, want);
+                assert_eq!(run_queued_on(f(), threads, 1_000).1, want);
+            }
+            // The ticket lock is fair: with every thread queued, nearly
+            // every unit goes to another thread.
+            let h = handoffs(LockKind::Ticket, bytes, 4, 250);
+            assert_eq!(h.units, 1_000);
+            assert!(h.changes > 500, "{label}: {h:?}");
+            let h = handoffs(LockKind::Mutex, bytes, 4, 250);
+            assert_eq!(h.units, 1_000);
         }
     }
 

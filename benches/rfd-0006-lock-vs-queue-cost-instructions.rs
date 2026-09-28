@@ -17,12 +17,25 @@
 //! The fixture is built and warmed in `setup` (every variant has run once
 //! and the inbox has grown to a burst), and handed back so its drop isn't
 //! counted.
+//!
+//! The `footprint` group is the same comparison on the probe's
+//! `Footprint` stand-in, the chain's fixed work plus a read-modify-write of
+//! every line of `bytes` of state, at `(bytes, n)`: `bytes` of 0, 64,
+//! 1,216 (the graph's 1.2 KB), 16 KiB and 256 KiB, and `n` of 1 and 64.
+//! It adds `ticket`, an uncontended ticket lock, the fair spin lock the
+//! wall-clock bench sets beside std's to take the futex out. On one thread nothing migrates,
+//! so what this shows is that each variant's own cost doesn't grow with
+//! the footprint, and the cache simulation's misses as the state outgrows
+//! L1; what the footprint does to a contended lock is in the wall-clock
+//! bench.
 
 use std::hint::black_box;
 
 use gungraun::{library_benchmark, library_benchmark_group, main};
 
-use bough_experiments::rfd_0006_lock_vs_queue_cost::{Single, bare, locked, queued};
+use bough_experiments::rfd_0006_lock_vs_queue_cost::{
+    Footprint, Single, bare, locked, queued, ticketed,
+};
 
 fn fixture(n: u64) -> (Single, u64) {
     (Single::new(), n)
@@ -58,4 +71,48 @@ library_benchmark_group!(
     benchmarks = baseline, lock, queue
 );
 
-main!(library_benchmark_groups = lock_vs_queue);
+fn footprint_fixture(bytes: usize, n: u64) -> (Single<Footprint>, u64) {
+    (Single::of(|| Footprint::new(bytes)), n)
+}
+
+fn drop_footprint(out: (u64, Single<Footprint>)) {
+    black_box(out.0);
+}
+
+#[library_benchmark]
+#[benches::one(args = [(0, 1), (64, 1), (1216, 1), (16384, 1), (262144, 1)], setup = footprint_fixture, teardown = drop_footprint)]
+#[benches::burst(args = [(0, 64), (64, 64), (1216, 64), (16384, 64), (262144, 64)], setup = footprint_fixture, teardown = drop_footprint)]
+fn fp_baseline((mut s, n): (Single<Footprint>, u64)) -> (u64, Single<Footprint>) {
+    (black_box(bare(&mut s.graph, black_box(1), n)), s)
+}
+
+#[library_benchmark]
+#[benches::one(args = [(0, 1), (64, 1), (1216, 1), (16384, 1), (262144, 1)], setup = footprint_fixture, teardown = drop_footprint)]
+#[benches::burst(args = [(0, 64), (64, 64), (1216, 64), (16384, 64), (262144, 64)], setup = footprint_fixture, teardown = drop_footprint)]
+fn fp_lock((s, n): (Single<Footprint>, u64)) -> (u64, Single<Footprint>) {
+    (black_box(locked(&s.mutex, black_box(1), n)), s)
+}
+
+#[library_benchmark]
+#[benches::one(args = [(0, 1), (64, 1), (1216, 1), (16384, 1), (262144, 1)], setup = footprint_fixture, teardown = drop_footprint)]
+#[benches::burst(args = [(0, 64), (64, 64), (1216, 64), (16384, 64), (262144, 64)], setup = footprint_fixture, teardown = drop_footprint)]
+fn fp_ticket((s, n): (Single<Footprint>, u64)) -> (u64, Single<Footprint>) {
+    (black_box(ticketed(&s.ticket, black_box(1), n)), s)
+}
+
+#[library_benchmark]
+#[benches::one(args = [(0, 1), (64, 1), (1216, 1), (16384, 1), (262144, 1)], setup = footprint_fixture, teardown = drop_footprint)]
+#[benches::burst(args = [(0, 64), (64, 64), (1216, 64), (16384, 64), (262144, 64)], setup = footprint_fixture, teardown = drop_footprint)]
+fn fp_queue((mut s, n): (Single<Footprint>, u64)) -> (u64, Single<Footprint>) {
+    (
+        black_box(queued(&s.inbox, &mut s.graph, black_box(1), n, n)),
+        s,
+    )
+}
+
+library_benchmark_group!(
+    name = footprint;
+    benchmarks = fp_baseline, fp_lock, fp_ticket, fp_queue
+);
+
+main!(library_benchmark_groups = lock_vs_queue, footprint);

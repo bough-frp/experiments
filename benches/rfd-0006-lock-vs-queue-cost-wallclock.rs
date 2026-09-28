@@ -17,11 +17,29 @@
 //! one unit at a time. These are multi-threaded, so they are wall-clock
 //! only; the instruction bench leaves them out.
 //!
+//! `footprint-<bytes>/<variant>/<threads>` asks where the contended lock's
+//! extra time goes. The unit is the `Footprint` stand-in: the same chain
+//! of work, plus one read-modify-write of every line of `bytes` of state
+//! (0 B, 64 B, 1,216 B as the graph's, 16 KiB, 256 KiB). One unit per
+//! iteration over `threads` threads, as in `contended`: `baseline` bare on
+//! one thread at that footprint, `lock` std's mutex, `ticket` a fair spin
+//! lock that never parks and hands off every unit, and `queue` producers
+//! sending to a driver. The ticket lock's extra over bare against `bytes`
+//! gives migration per hand-off (slope) and a bare hand-off (intercept);
+//! the mutex's extra, over its share of units that were hand-offs (printed
+//! after), against the ticket lock's, gives the futex. Compare extras in
+//! absolute time across footprints, not ratios: the bare unit grows with
+//! the footprint too.
+//!
 //! After Criterion, the bench prints the spread of waits under contention,
 //! which Criterion's means hide: each locked call's wait for the lock and
 //! the longest run of units one thread got in a row (F78: std's mutex is
 //! unfair), and for the queue each send's time and each of the driver's
 //! pops. Under `--test` it prints them from a short run, as a check only.
+//! Then, for each footprint, how often each lock changed threads: a unit
+//! can only migrate the state when the lock went to another thread, and
+//! std's mutex is unfair, so its extra per unit is its extra per hand-off
+//! times the share of units that were one.
 
 use std::hint::black_box;
 use std::time::{Duration, Instant};
@@ -29,8 +47,9 @@ use std::time::{Duration, Instant};
 use criterion::{BenchmarkId, Criterion, SamplingMode, criterion_group};
 
 use bough_experiments::rfd_0006_lock_vs_queue_cost::{
-    BURST, Single, Spread, bare, lock_spread, locked, queue_spread, queued, run_bare, run_locked,
-    run_queued,
+    BURST, FOOTPRINTS, Footprint, LockKind, Single, Spread, bare, handoffs, lock_spread, locked,
+    queue_spread, queued, run_bare, run_bare_on, run_locked, run_locked_on, run_queued,
+    run_queued_on, run_ticket_on,
 };
 
 const THREADS: [usize; 3] = [2, 4, 8];
@@ -82,6 +101,59 @@ fn contended(c: &mut Criterion) {
     g.finish();
 }
 
+fn footprint(c: &mut Criterion) {
+    for (bytes, label) in FOOTPRINTS {
+        let mut g = c.benchmark_group(format!("footprint-{label}"));
+        g.sampling_mode(SamplingMode::Flat);
+        // Sixty benchmarks here: two seconds each keeps the whole bench
+        // under ten minutes.
+        g.measurement_time(Duration::from_secs(2));
+        // A fresh state per sample, built outside the timed run; each run
+        // times from its barrier.
+        let fresh = || Footprint::new(bytes);
+        for threads in THREADS {
+            g.bench_function(BenchmarkId::new("baseline", threads), |b| {
+                b.iter_custom(|units| black_box(run_bare_on(fresh(), units)).0)
+            });
+            g.bench_function(BenchmarkId::new("lock", threads), |b| {
+                b.iter_custom(|units| black_box(run_locked_on(fresh(), threads, units)).0)
+            });
+            g.bench_function(BenchmarkId::new("ticket", threads), |b| {
+                b.iter_custom(|units| black_box(run_ticket_on(fresh(), threads, units)).0)
+            });
+            g.bench_function(BenchmarkId::new("queue", threads), |b| {
+                b.iter_custom(|units| black_box(run_queued_on(fresh(), threads, units)).0)
+            });
+        }
+        g.finish();
+    }
+}
+
+/// How often each lock changed threads, per footprint, as a table.
+fn handoff_table(per_thread: u64) {
+    println!();
+    println!("Lock hand-offs ({per_thread} units per thread, one run each, untimed)");
+    println!(
+        "{:<8} {:<6} {:>7} {:>9} {:>9} {:>9}",
+        "bytes", "lock", "threads", "units", "changes", "longest"
+    );
+    for (bytes, label) in FOOTPRINTS {
+        for kind in [LockKind::Mutex, LockKind::Ticket] {
+            for threads in THREADS {
+                let h = handoffs(kind, bytes, threads, per_thread);
+                let name = match kind {
+                    LockKind::Mutex => "mutex",
+                    LockKind::Ticket => "ticket",
+                };
+                println!(
+                    "{:<8} {:<6} {:>7} {:>9} {:>9} {:>9}",
+                    label, name, threads, h.units, h.changes, h.longest_streak
+                );
+            }
+        }
+    }
+}
+
 /// The spread of waits under contention, printed as a table. Per-thread
 /// counts: a full run, or a short one under `--test`.
 fn spreads(per_thread: u64) {
@@ -122,12 +194,13 @@ criterion_group! {
     name = benches;
     // A unit is 500 ns, so a contended sample of a tenth of a second is
     // about 200,000 units: thread start-up (tens of microseconds) is
-    // well under 1%. About two minutes in all, with the spreads.
+    // well under 1%. About two minutes in all, with the spreads, before
+    // the footprint groups, which set their own measurement time.
     config = Criterion::default()
         .sample_size(30)
         .warm_up_time(Duration::from_millis(500))
         .measurement_time(Duration::from_secs(3));
-    targets = single, contended
+    targets = single, contended, footprint
 }
 
 fn main() {
@@ -137,4 +210,7 @@ fn main() {
     let started = Instant::now();
     spreads(if test { 1_000 } else { 50_000 });
     println!("(spreads took {:.1} s)", started.elapsed().as_secs_f64());
+    let started = Instant::now();
+    handoff_table(if test { 200 } else { 5_000 });
+    println!("(hand-offs took {:.1} s)", started.elapsed().as_secs_f64());
 }
