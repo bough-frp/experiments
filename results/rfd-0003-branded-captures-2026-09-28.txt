@@ -1,0 +1,211 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-branded-captures at experiments@754b931 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0003-branded-captures
+
+stable:  rustc 1.98.1 (48a229cea 2026-09-01)  (rust-toolchain.toml)
+nightly: rustc 1.100.0-nightly (1303417c4 2026-09-21)  (pinned as nightly-2026-09-22, auto-trait only)
+
+design      fixture          expected result  first error
+baseline    map              build    built   
+baseline    snapshot         build    built   
+baseline    hold-struct      build    built   
+baseline    construct-three  build    built   
+baseline    anchor           build    built   
+baseline    screens          build    built   
+baseline    switch-choice    build    built   
+baseline    capture-foreign  build    built   
+baseline    generic-helper   build    built   
+baseline    forgot-capture   fail     built   
+baseline    forgot-helper    fail     built   
+baseline    forgot-switch    fail     built   
+baseline    forgot-inner     fail     built   
+baseline    map-to-token     fail     built   
+baseline    thread-local     fail     built   
+
+brand       map              build    built   
+brand       snapshot         build    built   
+brand       hold-struct      build    built   
+brand       construct-three  build    built   
+brand       anchor           build    built   
+brand       screens          build    built   
+brand       switch-choice    build    built   
+brand       capture-foreign  build    built   
+brand       generic-helper   build    built   
+brand       forgot-capture   fail     failed  E0521 borrowed data escapes outside of closure
+brand       forgot-helper    fail     failed  E0521 borrowed data escapes outside of function
+brand       forgot-switch    fail     failed  E0521 borrowed data escapes outside of closure
+brand       forgot-inner     fail     failed  E0521 borrowed data escapes outside of closure
+brand       map-to-token     fail     built   
+brand       thread-local     fail     failed  E0521 borrowed data escapes outside of closure
+
+era         map              build    built   
+era         snapshot         build    built   
+era         hold-struct      build    built   
+era         construct-three  build    built   
+era         anchor           build    built   
+era         screens          build    built   
+era         switch-choice    build    built   
+era         capture-foreign  build    built   
+era         generic-helper   build    built   
+era         forgot-capture   fail     built   
+era         forgot-helper    fail     built   
+era         forgot-switch    fail     built   
+era         forgot-inner     fail     failed  E0521 borrowed data escapes outside of closure
+era         map-to-token     fail     built   
+era         thread-local     fail     built   
+
+auto-trait  map              build    built   
+auto-trait  snapshot         build    built   
+auto-trait  hold-struct      build    built   
+auto-trait  construct-three  build    built   
+auto-trait  anchor           build    built   
+auto-trait  screens          build    built   
+auto-trait  switch-choice    build    built   
+auto-trait  capture-foreign  build    failed  E0277 `dyn Fn(u32) -> u32` may hold a token, so a graph closure can't capture it
+auto-trait  generic-helper   build    failed  E0277 `T` may hold a token, so a graph closure can't capture it
+auto-trait  forgot-capture   fail     failed  E0277 `bough::Shared<u32>` may hold a token, so a graph closure can't capture it
+auto-trait  forgot-helper    fail     failed  E0277 `bough::Shared<u32>` may hold a token, so a graph closure can't capture it
+auto-trait  forgot-switch    fail     failed  E0277 `bough::Cell<u32>` may hold a token, so a graph closure can't capture it
+auto-trait  forgot-inner     fail     failed  E0277 `bough::Cell<u32>` may hold a token, so a graph closure can't capture it
+auto-trait  map-to-token     fail     built   
+auto-trait  thread-local     fail     built   
+
+map-to-token: spike F94 made map_to trace its value, so a build there is
+safe; it is listed as 'fail' because F62 lists it.
+
+--- baseline: forgot-capture.rs, first diagnostic
+(built: no diagnostic)
+
+--- baseline: forgot-helper.rs, first diagnostic
+(built: no diagnostic)
+
+--- brand: forgot-capture.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-branded-captures/brand/forgot-capture.rs:23:23
+   |
+18 |     let _ = rt.mutate(|b| {
+   |                        -
+   |                        |
+   |                        `b` is a reference that is only valid in the closure body
+   |                        has type `&mut bough::Build<'1>`
+...
+23 |         let screens = navigate.construct(b, move |b, n| screen(b, clicks, n));
+   |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |                       |
+   |                       `b` escapes the closure body here
+   |                       argument requires that `'1` must outlive `'static`
+   |
+   = note: requirement occurs because of a mutable reference to `bough::Build<'_>`
+   = note: mutable references are invariant over their type parameter
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- brand: forgot-helper.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of function
+  --> fixtures/rfd-0003-branded-captures/brand/forgot-helper.rs:19:19
+   |
+16 | fn navigation<'g>(b: &mut Build<'g>, clicks: Shared<'g, u32>) -> Shared<'g, Shown> {
+   |               --  - `b` is a reference that is only valid in the function body
+   |               |
+   |               lifetime `'g` defined here
+...
+19 |     let screens = navigate.construct(b, move |b, n| screen(b, clicks, n));
+   |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |                   |
+   |                   `b` escapes the function body here
+   |                   argument requires that `'g` must outlive `'static`
+   |
+   = note: requirement occurs because of a mutable reference to `bough::Build<'_>`
+   = note: mutable references are invariant over their type parameter
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- era: forgot-capture.rs, first diagnostic
+(built: no diagnostic)
+
+--- era: forgot-helper.rs, first diagnostic
+(built: no diagnostic)
+
+--- auto-trait: forgot-capture.rs, first diagnostic
+error[E0277]: `bough::Shared<u32>` may hold a token, so a graph closure can't capture it
+   --> fixtures/rfd-0003-branded-captures/auto-trait/forgot-capture.rs:25:45
+    |
+ 25 |         let screens = navigate.construct(b, move |b, n| screen(b, clicks, n));
+    |                                ---------    -----------^^^^^^^^^^^^^^^^^^^^^
+    |                                |            |
+    |                                |            captured by this closure
+    |                                |            within this `{closure@fixtures/rfd-0003-branded-captures/auto-trait/forgot-capture.rs:25:45: 25:56}`
+    |                                required by a bound introduced by this call
+    |
+   ::: fixtures/rfd-0003-branded-captures/auto-trait/api.rs:80
+    |
+ 80 | macro_rules! token {
+    |
+help: within `{closure@fixtures/rfd-0003-branded-captures/auto-trait/forgot-capture.rs:25:45: 25:56}`, the trait `Stable` is not implemented for `bough::Shared<u32>`
+   --> fixtures/rfd-0003-branded-captures/auto-trait/api.rs:82:9
+    |
+ 82 | /         pub struct $name<A> {
+ 83 | |             id: Id,
+ 84 | |             event: PhantomData<fn() -> A>,
+ 85 | |         }
+    | |_________^
+...
+104 |   token!(Shared);
+    |   -------------- in this macro invocation
+    = note: pass it with `.with(..)` so the node traces it, or wrap a value that holds no token in `Leaf`
+note: required because `clicks` is used within this closure
+   --> fixtures/rfd-0003-branded-captures/auto-trait/forgot-capture.rs:25:67
+    |
+ 25 |         let screens = navigate.construct(b, move |b, n| screen(b, clicks, n));
+    |                                                                   ^^^^^^
+note: required by a bound in `bough::Source::construct`
+   --> fixtures/rfd-0003-branded-captures/auto-trait/api.rs:271:68
+    |
+190 | pub trait Source: Sized {
+...
+271 |     fn construct<B: 'static, F: Fn(&mut Build, Self::Event) -> B + Stable + 'static>(
+    |                                                                    ^^^^^^ required by this bound in `Source::construct`
+
+--- auto-trait: forgot-helper.rs, first diagnostic
+error[E0277]: `bough::Shared<u32>` may hold a token, so a graph closure can't capture it
+   --> fixtures/rfd-0003-branded-captures/auto-trait/forgot-helper.rs:20:41
+    |
+ 20 |     let screens = navigate.construct(b, move |b, n| screen(b, clicks, n));
+    |                            ---------    -----------^^^^^^^^^^^^^^^^^^^^^
+    |                            |            |
+    |                            |            captured by this closure
+    |                            |            within this `{closure@fixtures/rfd-0003-branded-captures/auto-trait/forgot-helper.rs:20:41: 20:52}`
+    |                            required by a bound introduced by this call
+    |
+   ::: fixtures/rfd-0003-branded-captures/auto-trait/api.rs:80
+    |
+ 80 | macro_rules! token {
+    |
+help: within `{closure@fixtures/rfd-0003-branded-captures/auto-trait/forgot-helper.rs:20:41: 20:52}`, the trait `Stable` is not implemented for `bough::Shared<u32>`
+   --> fixtures/rfd-0003-branded-captures/auto-trait/api.rs:82:9
+    |
+ 82 | /         pub struct $name<A> {
+ 83 | |             id: Id,
+ 84 | |             event: PhantomData<fn() -> A>,
+ 85 | |         }
+    | |_________^
+...
+104 |   token!(Shared);
+    |   -------------- in this macro invocation
+    = note: pass it with `.with(..)` so the node traces it, or wrap a value that holds no token in `Leaf`
+note: required because `clicks` is used within this closure
+   --> fixtures/rfd-0003-branded-captures/auto-trait/forgot-helper.rs:20:63
+    |
+ 20 |     let screens = navigate.construct(b, move |b, n| screen(b, clicks, n));
+    |                                                               ^^^^^^
+note: required by a bound in `bough::Source::construct`
+   --> fixtures/rfd-0003-branded-captures/auto-trait/api.rs:271:68
+    |
+190 | pub trait Source: Sized {
+...
+271 |     fn construct<B: 'static, F: Fn(&mut Build, Self::Event) -> B + Stable + 'static>(
+    |                                                                    ^^^^^^ required by this bound in `Source::construct`
+
+baseline: F62 a compile error: no; 9 of 9 must-build programs built, 0 of 6 must-fail programs failed
+brand: F62 a compile error: yes; 9 of 9 must-build programs built, 5 of 6 must-fail programs failed
+era: F62 a compile error: no; 9 of 9 must-build programs built, 1 of 6 must-fail programs failed
+auto-trait: F62 a compile error: yes; 7 of 9 must-build programs built, 4 of 6 must-fail programs failed
+(each design's must-build programs are written as that design needs them;
+the fixtures show what that costs)
