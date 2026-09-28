@@ -88,8 +88,31 @@
 //! futex wake plus that migration): [`handoffs`] counts the share, since
 //! an unfair lock that lets one thread run a thousand units in a row
 //! migrates the state once per thousand units, not once per unit.
+//!
+//! ## Futex calls, and which cores the state crosses
+//!
+//! The footprint sweep found migration small and the mutex's extra mostly
+//! something else: at 256 KiB it almost never changes threads and still
+//! costs 1.1–1.4 µs a unit. The guess was a `futex_wake` on each unlock
+//! while other threads sleep. Std's mutex is private, so it can't be asked
+//! how often it calls the kernel; two things can be counted instead.
+//! [`FutexMutex`] is std's Linux futex mutex copied line for line (the same
+//! three states, the same 100-load spin, the same syscalls) with a count of
+//! each `futex_wait` and `futex_wake` it makes and how many threads each
+//! wake woke. And for std's own mutex, each worker's voluntary context
+//! switches from `getrusage(RUSAGE_THREAD)`: a thread that sleeps on a
+//! futex switches out voluntarily, so this counts the sleeps a wake then
+//! has to end, without touching the lock. [`handoffs`] reports both.
+//!
+//! The Ryzen 7 2700X's 8 cores are two core complexes (CCXs) of 4, each
+//! with its own L3 (CPUs 0–7 and 8–15 here, SMT siblings adjacent). A line
+//! moving between cores in one CCX is an L3 hit; between CCXs it crosses
+//! the Infinity Fabric. The unpinned runs let the scheduler place threads
+//! anywhere, so their slope mixes the two. [`PLACEMENTS`] pins each thread
+//! to its own physical core, all in one CCX (`ccx1`) or alternating
+//! between the two (`ccx2`), through `libc::sched_setaffinity`.
 
-use std::cell::UnsafeCell;
+use std::cell::{Cell, UnsafeCell};
 use std::collections::VecDeque;
 use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::{Arc, Barrier, Mutex, MutexGuard, PoisonError};
@@ -439,6 +462,220 @@ impl<T: Send> Lock<T> for Ticket<T> {
     }
 }
 
+/// A copy of std's futex mutex on Linux (`library/std/src/sys/sync/mutex/
+/// futex.rs` and `sys/pal/unix/futex.rs` at 1.98.1), counting the calls it
+/// makes into the kernel in the calling thread's [`FutexCalls`]. Only the
+/// counting is added, and it is a thread-local add beside a syscall.
+pub struct FutexMutex<T> {
+    /// 0 unlocked, 1 locked, 2 locked with waiters (maybe).
+    state: AtomicU32,
+    value: UnsafeCell<T>,
+}
+
+const UNLOCKED: u32 = 0;
+const LOCKED: u32 = 1;
+const CONTENDED: u32 = 2;
+
+// SAFETY: as `Ticket`: the value is reached only through `with`, by the
+// thread that holds the lock.
+unsafe impl<T: Send> Sync for FutexMutex<T> {}
+
+/// A thread's calls into the kernel through [`FutexMutex`].
+#[derive(Clone, Copy, Debug, Default)]
+pub struct FutexCalls {
+    /// `futex_wait` syscalls, whether they slept or returned at once.
+    pub waits: u64,
+    /// `futex_wake` syscalls: an unlock that found the lock contended.
+    pub wakes: u64,
+    /// Threads those wakes woke (0 or 1 each).
+    pub woken: u64,
+    /// Time inside those `futex_wake` calls, which the unlocking thread
+    /// pays before it can take the lock again. A timing: indicative only.
+    pub wake_ns: u64,
+}
+
+impl std::ops::Add for FutexCalls {
+    type Output = FutexCalls;
+    fn add(self, o: FutexCalls) -> FutexCalls {
+        FutexCalls {
+            waits: self.waits + o.waits,
+            wakes: self.wakes + o.wakes,
+            woken: self.woken + o.woken,
+            wake_ns: self.wake_ns + o.wake_ns,
+        }
+    }
+}
+
+thread_local! {
+    static CALLS: Cell<FutexCalls> = const {
+        Cell::new(FutexCalls { waits: 0, wakes: 0, woken: 0, wake_ns: 0 })
+    };
+}
+
+/// This thread's [`FutexMutex`] calls so far.
+pub fn futex_calls() -> FutexCalls {
+    CALLS.with(Cell::get)
+}
+
+impl<T> FutexMutex<T> {
+    fn lock(&self) {
+        if self
+            .state
+            .compare_exchange(UNLOCKED, LOCKED, Ordering::Acquire, Ordering::Relaxed)
+            .is_err()
+        {
+            self.lock_contended();
+        }
+    }
+
+    #[cold]
+    fn lock_contended(&self) {
+        let mut state = self.spin();
+        if state == UNLOCKED {
+            match self.state.compare_exchange(
+                UNLOCKED,
+                LOCKED,
+                Ordering::Acquire,
+                Ordering::Relaxed,
+            ) {
+                Ok(_) => return,
+                Err(s) => state = s,
+            }
+        }
+        loop {
+            if state != CONTENDED && self.state.swap(CONTENDED, Ordering::Acquire) == UNLOCKED {
+                return;
+            }
+            self.wait();
+            state = self.spin();
+        }
+    }
+
+    fn spin(&self) -> u32 {
+        let mut spin = 100;
+        loop {
+            let state = self.state.load(Ordering::Relaxed);
+            if state != LOCKED || spin == 0 {
+                return state;
+            }
+            std::hint::spin_loop();
+            spin -= 1;
+        }
+    }
+
+    /// Std's `futex_wait(&state, CONTENDED, None)`: no timeout, retried on
+    /// EINTR, skipped if the state already moved.
+    fn wait(&self) {
+        loop {
+            if self.state.load(Ordering::Relaxed) != CONTENDED {
+                return;
+            }
+            CALLS.with(|c| {
+                let mut v = c.get();
+                v.waits += 1;
+                c.set(v)
+            });
+            // SAFETY: a futex wait on our own live atomic, as std's.
+            let r = unsafe {
+                libc::syscall(
+                    libc::SYS_futex,
+                    self.state.as_ptr(),
+                    libc::FUTEX_WAIT_BITSET | libc::FUTEX_PRIVATE_FLAG,
+                    CONTENDED,
+                    std::ptr::null::<libc::timespec>(),
+                    std::ptr::null::<u32>(),
+                    !0u32,
+                )
+            };
+            let interrupted =
+                r < 0 && std::io::Error::last_os_error().raw_os_error() == Some(libc::EINTR);
+            if !interrupted {
+                return;
+            }
+        }
+    }
+
+    fn unlock(&self) {
+        if self.state.swap(UNLOCKED, Ordering::Release) == CONTENDED {
+            self.wake();
+        }
+    }
+
+    #[cold]
+    fn wake(&self) {
+        let started = Instant::now();
+        // SAFETY: a futex wake of one waiter on our own atomic, as std's.
+        let r = unsafe {
+            libc::syscall(
+                libc::SYS_futex,
+                self.state.as_ptr(),
+                libc::FUTEX_WAKE | libc::FUTEX_PRIVATE_FLAG,
+                1,
+            )
+        };
+        CALLS.with(|c| {
+            let mut v = c.get();
+            v.wakes += 1;
+            v.woken += (r > 0) as u64;
+            v.wake_ns += nanos(started.elapsed());
+            c.set(v)
+        });
+    }
+}
+
+impl<T: Send> Lock<T> for FutexMutex<T> {
+    fn new(value: T) -> Self {
+        FutexMutex {
+            state: AtomicU32::new(UNLOCKED),
+            value: UnsafeCell::new(value),
+        }
+    }
+
+    fn with<R>(&self, f: impl FnOnce(&mut T) -> R) -> R {
+        self.lock();
+        // SAFETY: we hold the lock until the unlock below. No unit panics;
+        // if one did, the lock would stay held, which only stops the run.
+        let out = f(unsafe { &mut *self.value.get() });
+        self.unlock();
+        out
+    }
+
+    fn into_inner(self) -> T {
+        self.value.into_inner()
+    }
+}
+
+/// This thread's voluntary context switches so far: each is a sleep, on a
+/// futex or anything else that blocks.
+pub fn voluntary_switches() -> u64 {
+    // SAFETY: getrusage fills the struct it is given.
+    unsafe {
+        let mut u: libc::rusage = std::mem::zeroed();
+        let r = libc::getrusage(libc::RUSAGE_THREAD, &mut u);
+        assert_eq!(r, 0, "getrusage(RUSAGE_THREAD)");
+        u.ru_nvcsw as u64
+    }
+}
+
+/// Pins the calling thread to one CPU.
+pub fn pin_to(cpu: usize) {
+    // SAFETY: a zeroed `cpu_set_t` is an empty set, and `CPU_SET` stays
+    // inside it for any CPU below 1024.
+    unsafe {
+        let mut set: libc::cpu_set_t = std::mem::zeroed();
+        libc::CPU_SET(cpu, &mut set);
+        let r = libc::sched_setaffinity(0, size_of::<libc::cpu_set_t>(), &set);
+        assert_eq!(r, 0, "sched_setaffinity to CPU {cpu}");
+    }
+}
+
+/// Where the pinned runs put their threads, one per physical core, thread
+/// `t` on `cpus[t]`: `ccx1` all in the first CCX (CPUs 0–7), `ccx2`
+/// alternating between it and the second (8–15), so 2 threads are one in
+/// each and 4 are two in each. SMT siblings are adjacent CPUs on this
+/// machine (`lscpu -e`), so even CPUs are distinct cores.
+pub const PLACEMENTS: [(&str, [usize; 4]); 2] = [("ccx1", [0, 2, 4, 6]), ("ccx2", [0, 8, 2, 10])];
+
 /// A queued unit, as the spike's: a boxed closure the driver runs.
 pub type Unit<S = Graph> = Box<dyn FnOnce(&mut S) + Send>;
 
@@ -620,13 +857,55 @@ pub fn run_ticket_on<S: State>(g: S, threads: usize, units: u64) -> (Duration, u
     run_contended::<Ticket<S>, S>(g, threads, units)
 }
 
+/// [`run_bare_on`] on a thread pinned to `cpu`, the pinned runs'
+/// baseline.
+pub fn run_bare_pinned<S: State>(g: S, cpu: usize, units: u64) -> (Duration, u64) {
+    thread::scope(|s| {
+        s.spawn(move || {
+            pin_to(cpu);
+            run_bare_on(g, units)
+        })
+        .join()
+        .expect("no unit panics")
+    })
+}
+
+/// [`run_locked_on`] with thread `t` pinned to `cpus[t]`, one per CPU.
+pub fn run_locked_pinned<S: State>(g: S, cpus: &[usize], units: u64) -> (Duration, u64) {
+    run_contended_on::<Mutex<S>, S>(g, cpus.len(), units, cpus)
+}
+
+/// [`run_ticket_on`] with thread `t` pinned to `cpus[t]`, one per CPU.
+pub fn run_ticket_pinned<S: State>(g: S, cpus: &[usize], units: u64) -> (Duration, u64) {
+    run_contended_on::<Ticket<S>, S>(g, cpus.len(), units, cpus)
+}
+
 fn run_contended<L: Lock<S>, S: State>(g: S, threads: usize, units: u64) -> (Duration, u64) {
+    run_contended_on::<L, S>(g, threads, units, &[])
+}
+
+/// Pins thread `t` to `cpus[t]` before it starts, if `cpus` is not empty.
+fn pin_nth(cpus: &[usize], t: usize) {
+    if let Some(&cpu) = cpus.get(t) {
+        pin_to(cpu);
+    }
+}
+
+/// The contended run, with thread `t` pinned to `cpus[t]` when `cpus` has
+/// one for it. Pinning happens before the barrier, outside the timing.
+fn run_contended_on<L: Lock<S>, S: State>(
+    g: S,
+    threads: usize,
+    units: u64,
+    cpus: &[usize],
+) -> (Duration, u64) {
     let m = L::new(g);
     let barrier = Barrier::new(threads + 1);
     let start = thread::scope(|s| {
         for t in 0..threads {
             let (m, barrier) = (&m, &barrier);
             s.spawn(move || {
+                pin_nth(cpus, t);
                 let range = share(t, threads, units);
                 barrier.wait();
                 for k in range {
@@ -829,24 +1108,52 @@ pub fn queue_spread(producers: usize, per_thread: u64) -> QueueSpread {
 pub enum LockKind {
     Mutex,
     Ticket,
+    /// [`FutexMutex`], std's mutex copied with its syscalls counted.
+    Futex,
+}
+
+impl LockKind {
+    pub fn name(self) -> &'static str {
+        match self {
+            LockKind::Mutex => "mutex",
+            LockKind::Ticket => "ticket",
+            LockKind::Futex => "futex",
+        }
+    }
 }
 
 /// How often a contended lock changed hands, which is how often the state
 /// could have migrated: `changes` of `units` went to a different thread
-/// from the unit before.
+/// from the unit before. And what the workers asked of the kernel while
+/// they ran: their voluntary context switches (sleeps), and for
+/// [`LockKind::Futex`] its futex calls (zero for the other two).
 #[derive(Clone, Copy, Debug)]
 pub struct Handoffs {
     pub units: u64,
     pub changes: u64,
     pub longest_streak: u64,
+    pub sleeps: u64,
+    pub futex: FutexCalls,
 }
 
 /// `threads` threads each run `per_thread` units on a fresh `bytes`
 /// footprint under `kind`, counting hand-offs. Untimed.
 pub fn handoffs(kind: LockKind, bytes: usize, threads: usize, per_thread: u64) -> Handoffs {
+    handoffs_on(kind, bytes, threads, &[], per_thread)
+}
+
+/// [`handoffs`] with thread `t` pinned to `cpus[t]`, if `cpus` is not empty.
+pub fn handoffs_on(
+    kind: LockKind,
+    bytes: usize,
+    threads: usize,
+    cpus: &[usize],
+    per_thread: u64,
+) -> Handoffs {
     match kind {
-        LockKind::Mutex => handoffs_under::<Mutex<Tracked>>(bytes, threads, per_thread),
-        LockKind::Ticket => handoffs_under::<Ticket<Tracked>>(bytes, threads, per_thread),
+        LockKind::Mutex => handoffs_under::<Mutex<Tracked>>(bytes, threads, cpus, per_thread),
+        LockKind::Ticket => handoffs_under::<Ticket<Tracked>>(bytes, threads, cpus, per_thread),
+        LockKind::Futex => handoffs_under::<FutexMutex<Tracked>>(bytes, threads, cpus, per_thread),
     }
 }
 
@@ -854,29 +1161,53 @@ pub fn handoffs(kind: LockKind, bytes: usize, threads: usize, per_thread: u64) -
 /// the current streak, the longest, and the count of changes.
 type Tracked = (Footprint, usize, u64, u64, u64);
 
-fn handoffs_under<L: Lock<Tracked>>(bytes: usize, threads: usize, per_thread: u64) -> Handoffs {
+fn handoffs_under<L: Lock<Tracked>>(
+    bytes: usize,
+    threads: usize,
+    cpus: &[usize],
+    per_thread: u64,
+) -> Handoffs {
     let m = L::new((Footprint::new(bytes), usize::MAX, 0, 0, 0));
     let barrier = Barrier::new(threads);
-    thread::scope(|s| {
-        for t in 0..threads {
-            let (m, barrier) = (&m, &barrier);
-            s.spawn(move || {
-                barrier.wait();
-                for k in t as u64 * per_thread..(t as u64 + 1) * per_thread {
-                    m.with(|(g, owner, streak, longest, changes)| {
-                        g.propagate(k);
-                        if *owner == t {
-                            *streak += 1;
-                        } else {
-                            *streak = 1;
-                            *changes += 1;
-                        }
-                        *owner = t;
-                        *longest = (*longest).max(*streak);
-                    });
-                }
-            });
-        }
+    let (sleeps, futex) = thread::scope(|s| {
+        let handles: Vec<_> = (0..threads)
+            .map(|t| {
+                let (m, barrier) = (&m, &barrier);
+                s.spawn(move || {
+                    pin_nth(cpus, t);
+                    barrier.wait();
+                    // Counted from here: the barrier's own sleep is before.
+                    let (sleeps, calls) = (voluntary_switches(), futex_calls());
+                    for k in t as u64 * per_thread..(t as u64 + 1) * per_thread {
+                        m.with(|(g, owner, streak, longest, changes)| {
+                            g.propagate(k);
+                            if *owner == t {
+                                *streak += 1;
+                            } else {
+                                *streak = 1;
+                                *changes += 1;
+                            }
+                            *owner = t;
+                            *longest = (*longest).max(*streak);
+                        });
+                    }
+                    let after = futex_calls();
+                    let calls = FutexCalls {
+                        waits: after.waits - calls.waits,
+                        wakes: after.wakes - calls.wakes,
+                        woken: after.woken - calls.woken,
+                        wake_ns: after.wake_ns - calls.wake_ns,
+                    };
+                    (voluntary_switches() - sleeps, calls)
+                })
+            })
+            .collect();
+        handles
+            .into_iter()
+            .map(|h| h.join().expect("no unit panics"))
+            .fold((0, FutexCalls::default()), |(s, c), (s1, c1)| {
+                (s + s1, c + c1)
+            })
     });
     let (g, _, _, longest, changes) = m.into_inner();
     assert!(g.consistent());
@@ -885,6 +1216,8 @@ fn handoffs_under<L: Lock<Tracked>>(bytes: usize, threads: usize, per_thread: u6
         // The first unit's "change" is from nobody.
         changes: changes - 1,
         longest_streak: longest,
+        sleeps,
+        futex,
     }
 }
 
@@ -944,7 +1277,45 @@ mod tests {
             assert!(h.changes > 500, "{label}: {h:?}");
             let h = handoffs(LockKind::Mutex, bytes, 4, 250);
             assert_eq!(h.units, 1_000);
+            assert_eq!(h.futex.waits + h.futex.wakes, 0, "std's isn't counted");
+            let h = handoffs(LockKind::Futex, bytes, 4, 250);
+            assert_eq!(h.units, 1_000);
+            // A wake wakes at most one thread.
+            assert!(h.futex.woken <= h.futex.wakes, "{label}: {h:?}");
         }
+    }
+
+    /// The pinned runs run every unit once, wherever they are placed.
+    #[test]
+    fn pinned_agree() {
+        let want = expected(1_000);
+        for (name, cpus) in PLACEMENTS {
+            for (bytes, label) in [FOOTPRINTS[0], FOOTPRINTS[2]] {
+                let f = || Footprint::new(bytes);
+                assert_eq!(run_bare_pinned(f(), cpus[0], 1_000).1, want);
+                for threads in [2, 4] {
+                    let cpus = &cpus[..threads];
+                    let got = run_locked_pinned(f(), cpus, 1_000).1;
+                    assert_eq!(got, want, "{name} {label} lock x{threads}");
+                    let got = run_ticket_pinned(f(), cpus, 1_000).1;
+                    assert_eq!(got, want, "{name} {label} ticket x{threads}");
+                    let h = handoffs_on(LockKind::Ticket, bytes, threads, cpus, 250);
+                    assert_eq!(h.units, threads as u64 * 250);
+                }
+            }
+        }
+    }
+
+    /// The copy of std's mutex excludes: every unit runs once, and under
+    /// contention it sleeps and wakes, as the counts claim.
+    #[test]
+    fn futex_mutex_counts() {
+        let want = expected(4_000);
+        let got = run_contended::<FutexMutex<Graph>, Graph>(Graph::new(), 4, 4_000).1;
+        assert_eq!(got, want);
+        let h = handoffs(LockKind::Futex, 0, 4, 2_000);
+        assert!(h.futex.wakes > 0, "{h:?}");
+        assert!(h.futex.woken <= h.futex.wakes, "{h:?}");
     }
 
     #[test]

@@ -31,6 +31,15 @@
 //! absolute time across footprints, not ratios: the bare unit grows with
 //! the footprint too.
 //!
+//! `footprint-<bytes>-<placement>/<variant>/<threads>` is the same at 2
+//! and 4 threads with each thread pinned to its own physical core: `ccx1`
+//! all in one core complex (CPUs 0, 2, 4, 6), `ccx2` alternating between
+//! the two (0, 8, 2, 10), so a hand-off stays in one L3 or crosses the
+//! Infinity Fabric. `baseline` is bare on a thread pinned to the first of
+//! those CPUs, `lock` std's mutex, `ticket` the ticket lock. The ticket
+//! lock's slope against `bytes` in each placement splits the migration cost
+//! per line into same-CCX and cross-CCX; the unpinned groups mix the two.
+//!
 //! After Criterion, the bench prints the spread of waits under contention,
 //! which Criterion's means hide: each locked call's wait for the lock and
 //! the longest run of units one thread got in a row (F78: std's mutex is
@@ -39,7 +48,9 @@
 //! Then, for each footprint, how often each lock changed threads: a unit
 //! can only migrate the state when the lock went to another thread, and
 //! std's mutex is unfair, so its extra per unit is its extra per hand-off
-//! times the share of units that were one.
+//! times the share of units that were one. The same table follows for the
+//! pinned placements, with the workers' sleeps (voluntary context
+//! switches), since pinning can change how often std's mutex parks.
 
 use std::hint::black_box;
 use std::time::{Duration, Instant};
@@ -47,12 +58,16 @@ use std::time::{Duration, Instant};
 use criterion::{BenchmarkId, Criterion, SamplingMode, criterion_group};
 
 use bough_experiments::rfd_0006_lock_vs_queue_cost::{
-    BURST, FOOTPRINTS, Footprint, LockKind, Single, Spread, bare, handoffs, lock_spread, locked,
-    queue_spread, queued, run_bare, run_bare_on, run_locked, run_locked_on, run_queued,
-    run_queued_on, run_ticket_on,
+    BURST, FOOTPRINTS, Footprint, LockKind, PLACEMENTS, Single, Spread, bare, handoffs,
+    handoffs_on, lock_spread, locked, queue_spread, queued, run_bare, run_bare_on, run_bare_pinned,
+    run_locked, run_locked_on, run_locked_pinned, run_queued, run_queued_on, run_ticket_on,
+    run_ticket_pinned,
 };
 
 const THREADS: [usize; 3] = [2, 4, 8];
+
+/// Threads in the pinned runs: at most 4 fit one CCX a core each.
+const PINNED_THREADS: [usize; 2] = [2, 4];
 
 fn single(c: &mut Criterion) {
     let mut g = c.benchmark_group("single");
@@ -129,6 +144,31 @@ fn footprint(c: &mut Criterion) {
     }
 }
 
+fn footprint_pinned(c: &mut Criterion) {
+    for (bytes, label) in FOOTPRINTS {
+        for (placement, cpus) in PLACEMENTS {
+            let mut g = c.benchmark_group(format!("footprint-{label}-{placement}"));
+            g.sampling_mode(SamplingMode::Flat);
+            // Sixty more benchmarks, at the unpinned groups' two seconds.
+            g.measurement_time(Duration::from_secs(2));
+            let fresh = || Footprint::new(bytes);
+            for threads in PINNED_THREADS {
+                let cpus = &cpus[..threads];
+                g.bench_function(BenchmarkId::new("baseline", threads), |b| {
+                    b.iter_custom(|units| black_box(run_bare_pinned(fresh(), cpus[0], units)).0)
+                });
+                g.bench_function(BenchmarkId::new("lock", threads), |b| {
+                    b.iter_custom(|units| black_box(run_locked_pinned(fresh(), cpus, units)).0)
+                });
+                g.bench_function(BenchmarkId::new("ticket", threads), |b| {
+                    b.iter_custom(|units| black_box(run_ticket_pinned(fresh(), cpus, units)).0)
+                });
+            }
+            g.finish();
+        }
+    }
+}
+
 /// How often each lock changed threads, per footprint, as a table.
 fn handoff_table(per_thread: u64) {
     println!();
@@ -141,14 +181,41 @@ fn handoff_table(per_thread: u64) {
         for kind in [LockKind::Mutex, LockKind::Ticket] {
             for threads in THREADS {
                 let h = handoffs(kind, bytes, threads, per_thread);
-                let name = match kind {
-                    LockKind::Mutex => "mutex",
-                    LockKind::Ticket => "ticket",
-                };
                 println!(
                     "{:<8} {:<6} {:>7} {:>9} {:>9} {:>9}",
-                    label, name, threads, h.units, h.changes, h.longest_streak
+                    label,
+                    kind.name(),
+                    threads,
+                    h.units,
+                    h.changes,
+                    h.longest_streak
                 );
+            }
+        }
+    }
+    println!();
+    println!("Pinned: the same, with the workers' sleeps (voluntary context switches)");
+    println!(
+        "{:<8} {:<5} {:<6} {:>7} {:>9} {:>9} {:>9} {:>9}",
+        "bytes", "where", "lock", "threads", "units", "changes", "longest", "sleeps"
+    );
+    for (bytes, label) in FOOTPRINTS {
+        for (placement, cpus) in PLACEMENTS {
+            for kind in [LockKind::Mutex, LockKind::Ticket] {
+                for threads in PINNED_THREADS {
+                    let h = handoffs_on(kind, bytes, threads, &cpus[..threads], per_thread);
+                    println!(
+                        "{:<8} {:<5} {:<6} {:>7} {:>9} {:>9} {:>9} {:>9}",
+                        label,
+                        placement,
+                        kind.name(),
+                        threads,
+                        h.units,
+                        h.changes,
+                        h.longest_streak,
+                        h.sleeps
+                    );
+                }
             }
         }
     }
@@ -200,7 +267,7 @@ criterion_group! {
         .sample_size(30)
         .warm_up_time(Duration::from_millis(500))
         .measurement_time(Duration::from_secs(3));
-    targets = single, contended, footprint
+    targets = single, contended, footprint, footprint_pinned
 }
 
 fn main() {
