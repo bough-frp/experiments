@@ -1,0 +1,440 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-brand-erasure at experiments@b924d3f - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0003-brand-erasure -- entry
+
+stable:  rustc 1.98.1 (48a229cea 2026-09-01)  (rust-toolchain.toml)
+derive:  rfd-0003-rebrand-derive, built by cargo, once per feature set:
+         open   --features views               entry/bough.rs
+         entry  --features views               entry/bough.rs --cfg bough_entry
+         at     --features views               entry/bough.rs --cfg bough_entry --cfg bough_entry_at
+         plain  (no features)                  entry/bough.rs --cfg bough_entry
+         sealed --features bare-unsafe-views   entry/bough.rs --cfg bough_seal_views
+api:     entry/api.rs = borrow/api.rs + 304 lines - 68 lines, all under the cfgs
+lints:   not capped: every #![forbid(unsafe_code)] is enforced
+
+q  bough  fixture                         expected result  first error
+2  open   entry/stash-dead                build    built   
+2  open   entry/stash-sample              fail     failed  E0521 borrowed data escapes outside of closure
+2  open   entry/stash-anchor              fail?    built   
+2  open   entry/stash-send                fail?    built   
+2  open   entry/stash-runtime-send        fail?    built   
+2  open   entry/stash-remote-send         fail?    built   
+2  open   entry/stash-remote-anchor       fail?    built   
+2  open   entry/stash-reinject            fail?    built   
+2  entry  --cfg bough_entry_eq            try      failed  E0308 mismatched types
+2  entry  entry/stash-dead                build    built   
+2  entry  entry/stash-sample              fail     failed  E0521 borrowed data escapes outside of closure
+2  entry  entry/stash-anchor              fail?    failed  E0521 borrowed data escapes outside of closure
+2  entry  entry/stash-send                fail?    failed  E0521 borrowed data escapes outside of closure
+2  entry  entry/stash-runtime-send        fail?    failed  E0308 mismatched types
+2  entry  entry/stash-remote-send         fail?    failed  E0308 mismatched types
+2  entry  entry/stash-remote-anchor       fail?    built   
+2  entry  entry/stash-reinject            fail?    built   
+2  at     entry/stash-remote-anchor       fail?    failed  E0521 borrowed data escapes outside of closure
+2  at     entry/stash-reinject            fail?    built   
+2  entry  derive-shapes                   build    built   
+2  entry  wrong-rebrand                   fail     failed  E0277 the trait bound `Input<'_, Kelvin>: Same<Input<'_, Celsius>>` is not satisfied
+2  entry  screens                         build    built   
+2  entry  screens-io                      build    built   
+2  entry  switch-choice                   build    built   
+2  entry  generic-helper                  build    built   
+2  entry  remote-chat                     build    built   
+2  entry  remote-listen                   build    built   
+2  at     derive-shapes                   build    built   
+2  at     wrong-rebrand                   fail     failed  E0277 the trait bound `Input<'_, Kelvin>: Same<Input<'_, Celsius>>` is not satisfied
+2  at     screens                         build    built   
+2  at     screens-io                      build    failed  E0061 this method takes 2 arguments but 1 argument was supplied
+2  at     switch-choice                   build    built   
+2  at     generic-helper                  build    built   
+2  at     remote-chat                     build    built   
+2  at     remote-listen                   build    failed  E0593 closure is expected to take 2 distinct arguments, but it takes a single 2-tuple as argument
+2  at     entry/remote-listen-at          build    built   
+2  plain  derive/panels                   build    built   
+2  plain  derive/choice                   build    built   
+2  plain  derive/tagged                   build    built   
+2  plain  derive/view                     build    built   
+2  plain  derive/leaf                     build    built   
+2  plain  derive/bounded                  build    built   
+2  entry  borrow/sample-struct            build    built   
+2  entry  borrow/sample-vec               build    built   
+2  entry  borrow/sample-tagged            build    built   
+2  entry  borrow/sample-lazy              build    built   
+2  entry  borrow/plain-own                build    built   
+2  entry  borrow/mut-struct               build    built   
+2  entry  borrow/mut-generic              build    built   
+3  sealed --cfg bough_core_forbid         try      failed  E0453 allow(unsafe_code) incompatible with previous forbid
+3  sealed borrow/stash-in-borrow          fail?    failed  E0200 the trait `bough::Borrow` requires an `unsafe impl` declaration
+3  sealed entry/stash-borrow-unsafe       fail?    failed  implementation of an `unsafe` trait
+3  sealed entry/stash-borrow-unforbidden  fail?    built   
+3  sealed borrow/stash-in-view            fail?    built   
+3  sealed entry/stash-reinject            fail?    built   
+3  sealed borrow/sample-struct            build    failed  E0200 the trait `bough::Borrow` requires an `unsafe impl` declaration
+3  sealed borrow/sample-vec               build    built   
+3  sealed borrow/sample-tagged            build    built   
+3  sealed borrow/sample-lazy              build    built   
+3  sealed borrow/plain-own                build    built   
+3  sealed borrow/mut-struct               build    built   
+3  sealed borrow/mut-generic              build    built   
+
+fail?: a stashed token put to use, which builds in the committed design,
+or a stash that builds against the sealed views; a failure is what's asked for.
+try:   the library built another way, to show what that costs.
+
+--- open: entry/stash-dead.rs, run
+stashed:   a token naming slot 2
+collected: 7 nodes
+a new hold reuses slot 2; the stash still names slot 2
+
+--- open: entry/stash-anchor.rs, run
+anchored, opened:  Ok(3)
+collected:         7 nodes
+after:             Err(Stale)
+
+--- open: entry/stash-send.rs, run
+sent, held, opened: Ok(3)
+
+--- open: entry/stash-runtime-send.rs, run
+sent from outside, read live: Ok(3)
+
+--- open: entry/stash-remote-send.rs, run
+sent from a thread, read live: Ok(3)
+
+--- open: entry/stash-remote-anchor.rs, run
+anchored from a thread: Ok(3)
+collected:              4 nodes
+after:                  Ok(3)
+
+--- open: entry/stash-reinject.rs, run
+opened, swapped in: Ok(3)
+collected:          7 nodes
+after:              Err(Stale)
+
+--- entry: entry/stash-dead.rs, run
+stashed:   a token naming slot 2
+collected: 7 nodes
+a new hold reuses slot 2; the stash still names slot 2
+
+--- entry: entry/stash-remote-anchor.rs, run
+anchored from a thread: Ok(3)
+collected:              4 nodes
+after:                  Ok(3)
+
+--- entry: entry/stash-reinject.rs, run
+opened, swapped in: Ok(3)
+collected:          7 nodes
+after:              Err(Stale)
+
+--- at: entry/stash-reinject.rs, run
+opened, swapped in: Ok(3)
+collected:          7 nodes
+after:              Err(Stale)
+
+--- at: entry/remote-listen-at.rs, run
+row for ada anchored by the listener at its At; a worker's send through it made the total Ok(5)
+
+--- sealed: entry/stash-borrow-unforbidden.rs, run
+sampled:             pair Ok(3)
+stashed, anchored:   Ok(3)
+collected:           5 nodes
+stashed, after:      Err(Stale)
+
+--- sealed: borrow/stash-in-view.rs, run
+mapped:              Ok(4)
+stashed, anchored:   Ok(3)
+collected:           6 nodes
+stashed, after:      Err(Stale)
+
+--- sealed: entry/stash-reinject.rs, run
+opened, swapped in: Ok(3)
+collected:          7 nodes
+after:              Err(Stale)
+
+--- open: entry/stash-sample, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/entry/stash-sample.rs:13:26
+   |
+11 |     let (stashed, _pair) = stash::stash(&mut rt);
+   |          ------- `stashed` declared here, outside of the closure body
+12 |     rt.mutate(move |b| {
+   |                     - `b` is a reference that is only valid in the closure body
+13 |         println!("{:?}", b.sample(stashed));
+   |                          ^^^^^^^^^^^^^^^^^ `b` escapes the closure body here
+   |
+   = note: requirement occurs because of the type `bough::Cell<'_, u32>`, which makes the generic argument `'_` invariant
+   = note: the struct `bough::Cell<'g, A>` is invariant over the parameter `'g`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- entry: --cfg bough_entry_eq, first diagnostic
+error[E0308]: mismatched types
+   --> fixtures/rfd-0003-brand-erasure/entry/api.rs:838:14
+    |
+838 |         ) -> Anchored<T::Of<'static>> {
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^ lifetime mismatch
+...
+909 |     io_methods!();
+    |     ------------- in this macro invocation
+    |
+    = note: expected associated type `<T as runtime::Rebrand>::Of<'g>`
+               found associated type `<T as runtime::Rebrand>::Of<'static>`
+note: the lifetime `'g` as defined here...
+   --> fixtures/rfd-0003-brand-erasure/entry/api.rs:908:6
+    |
+908 | impl<'g> Build<'g> {
+    |      ^^
+    = note: ...does not necessarily outlive the static lifetime
+    = note: this error originates in the macro `io_methods` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+--- entry: entry/stash-sample, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/entry/stash-sample.rs:13:26
+   |
+11 |     let (stashed, _pair) = stash::stash(&mut rt);
+   |          ------- `stashed` declared here, outside of the closure body
+12 |     rt.mutate(move |b| {
+   |                     - `b` is a reference that is only valid in the closure body
+13 |         println!("{:?}", b.sample(stashed));
+   |                          ^^^^^^^^^^^^^^^^^ `b` escapes the closure body here
+   |
+   = note: requirement occurs because of the type `bough::Cell<'_, u32>`, which makes the generic argument `'_` invariant
+   = note: the struct `bough::Cell<'g, A>` is invariant over the parameter `'g`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- entry: entry/stash-anchor, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/entry/stash-anchor.rs:14:24
+   |
+12 |     let (stashed, pair) = stash::stash(&mut rt);
+   |          ------- `stashed` declared here, outside of the closure body
+13 |     rt.mutate(move |b| {
+   |                     - `b` is a reference that is only valid in the closure body
+14 |         let anchored = b.anchor(stashed);
+   |                        ^^^^^^^^^^^^^^^^^ `b` escapes the closure body here
+   |
+   = note: requirement occurs because of the type `bough::Cell<'_, u32>`, which makes the generic argument `'_` invariant
+   = note: the struct `bough::Cell<'g, A>` is invariant over the parameter `'g`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- entry: entry/stash-send, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/entry/stash-send.rs:16:20
+   |
+15 |     let held = rt.mutate(move |b| {
+   |                                -
+   |                                |
+   |                                `b` is a reference that is only valid in the closure body
+   |                                has type `&mut Mutate<'1>`
+16 |         let (sent, sent_in) = b.input::<Option<Cell<'static, u32>>>();
+   |                    ^^^^^^^
+   |                    |
+   |                    `b` escapes the closure body here
+   |                    assignment requires that `'1` must outlive `'static`
+   |
+   = note: requirement occurs because of the type `Input<'_, Option<bough::Cell<'_, u32>>>`, which makes the generic argument `'_` invariant
+   = note: the struct `Input<'g, A>` is invariant over the parameter `'g`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- entry: entry/stash-runtime-send, first diagnostic
+error[E0308]: mismatched types
+    --> fixtures/rfd-0003-brand-erasure/entry/stash-runtime-send.rs:19:5
+     |
+  19 |     rt.send(&input, Some(stashed));
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ one type is more general than the other
+     |
+     = note: expected enum `Option<bough::Cell<'x, _>>`
+                found enum `Option<bough::Cell<'_, _>>`
+note: the lifetime requirement is introduced here
+    --> fixtures/rfd-0003-brand-erasure/entry/api.rs:1005:28
+     |
+1005 |         for<'x> A: Rebrand<Of<'x> = A>,
+     |                            ^^^^^^^^^^
+
+--- entry: entry/stash-remote-send, first diagnostic
+error[E0308]: mismatched types
+    --> fixtures/rfd-0003-brand-erasure/entry/stash-remote-send.rs:19:32
+     |
+  19 |     std::thread::spawn(move || remote.send(&input, Some(stashed)))
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ one type is more general than the other
+     |
+     = note: expected enum `Option<bough::Cell<'x, _>>`
+                found enum `Option<bough::Cell<'_, _>>`
+note: the lifetime requirement is introduced here
+    --> fixtures/rfd-0003-brand-erasure/entry/api.rs:1081:28
+     |
+1081 |         for<'x> A: Rebrand<Of<'x> = A>,
+     |                            ^^^^^^^^^^
+
+--- at: entry/stash-remote-anchor, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/entry/stash-remote-anchor.rs:43:29
+   |
+32 |     let (stashed, _pair) = stash::stash(&mut rt);
+   |          ------- `stashed` declared here, outside of the closure body
+...
+42 |         .listen(&pings, move |_, at| {
+   |                                  -- `at` is a reference that is only valid in the closure body
+43 |             let _ = tx.send(handle.anchor(at, stashed));
+   |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^ `at` escapes the closure body here
+   |
+   = note: requirement occurs because of the type `bough::Cell<'_, u32>`, which makes the generic argument `'_` invariant
+   = note: the struct `bough::Cell<'g, A>` is invariant over the parameter `'g`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- entry: wrong-rebrand, first diagnostic
+error[E0277]: the trait bound `Input<'_, Kelvin>: Same<Input<'_, Celsius>>` is not satisfied
+   --> target/rfd-0003-brand-erasure/entry/src/wrong-rebrand.rs:182:18
+    |
+182 |         b.anchor(heat_in)
+    |           ------ ^^^^^^^ unsatisfied trait bound
+    |           |
+    |           required by a bound introduced by this call
+    |
+help: the trait `Same<Input<'_, Celsius>>` is not implemented for `Input<'_, Kelvin>`
+   --> target/rfd-0003-brand-erasure/entry/src/api.rs:342:9
+    |
+342 | /         pub struct $name<'g, A> {
+343 | |             id: Id,
+344 | |             event: PhantomData<fn() -> A>,
+345 | |             brand: Brand<'g>,
+346 | |         }
+    | |_________^
+...
+392 |   token!(Input);
+    |   ------------- in this macro invocation
+note: required by a bound in `Build::<'g>::anchor`
+   --> target/rfd-0003-brand-erasure/entry/src/api.rs:825:24
+    |
+823 |         pub fn anchor<T: Trace + Rebrand>(&mut self, value: T) -> Anchored<T::Of<'static>>
+    |                ------ required by a bound in this associated function
+824 |         where
+825 |             T::Of<'g>: Same<T>,
+    |                        ^^^^^^^ required by this bound in `Build::<'g>::anchor`
+...
+909 |     io_methods!();
+    |     ------------- in this macro invocation
+    = note: this error originates in the macro `token` which comes from the expansion of the macro `io_methods` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+--- at: wrong-rebrand, first diagnostic
+error[E0277]: the trait bound `Input<'_, Kelvin>: Same<Input<'_, Celsius>>` is not satisfied
+   --> target/rfd-0003-brand-erasure/entry/src/wrong-rebrand.rs:182:18
+    |
+182 |         b.anchor(heat_in)
+    |           ------ ^^^^^^^ unsatisfied trait bound
+    |           |
+    |           required by a bound introduced by this call
+    |
+help: the trait `Same<Input<'_, Celsius>>` is not implemented for `Input<'_, Kelvin>`
+   --> target/rfd-0003-brand-erasure/entry/src/api.rs:342:9
+    |
+342 | /         pub struct $name<'g, A> {
+343 | |             id: Id,
+344 | |             event: PhantomData<fn() -> A>,
+345 | |             brand: Brand<'g>,
+346 | |         }
+    | |_________^
+...
+392 |   token!(Input);
+    |   ------------- in this macro invocation
+note: required by a bound in `Build::<'g>::anchor`
+   --> target/rfd-0003-brand-erasure/entry/src/api.rs:825:24
+    |
+823 |         pub fn anchor<T: Trace + Rebrand>(&mut self, value: T) -> Anchored<T::Of<'static>>
+    |                ------ required by a bound in this associated function
+824 |         where
+825 |             T::Of<'g>: Same<T>,
+    |                        ^^^^^^^ required by this bound in `Build::<'g>::anchor`
+...
+909 |     io_methods!();
+    |     ------------- in this macro invocation
+    = note: this error originates in the macro `token` which comes from the expansion of the macro `io_methods` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+--- at: screens-io, first diagnostic
+error[E0061]: this method takes 2 arguments but 1 argument was supplied
+    --> target/rfd-0003-brand-erasure/entry/src/screens-io.rs:28:47
+     |
+  28 |             to_io.lock().unwrap().push(remote.anchor(keys_in));
+     |                                               ^^^^^^ ------- argument #1 of type `At<'_>` is missing
+     |
+note: method defined here
+    --> target/rfd-0003-brand-erasure/entry/src/api.rs:1147:12
+     |
+1147 |     pub fn anchor<'x, T: Trace + Rebrand>(&self, at: At<'x>, value: T) -> Anchored<T::Of<'static>>
+     |            ^^^^^^                                ----------
+help: provide the argument
+     |
+  28 |             to_io.lock().unwrap().push(remote.anchor(/* At<'_> */, keys_in));
+     |                                                      +++++++++++++
+
+--- at: remote-listen, first diagnostic
+error[E0593]: closure is expected to take 2 distinct arguments, but it takes a single 2-tuple as argument
+  --> target/rfd-0003-brand-erasure/entry/src/remote-listen.rs:31:10
+   |
+31 |         .listen(&rows, move |(who, input)| {
+   |          ^^^^^^        ------------------- takes a single 2-tuple as argument
+   |          |
+   |          expected closure that takes 2 distinct arguments
+   |
+help: change the closure to take multiple arguments instead of a single tuple
+   |
+31 -         .listen(&rows, move |(who, input)| {
+31 +         .listen(&rows, |who, input| {
+   |
+
+--- sealed: --cfg bough_core_forbid, first diagnostic
+error[E0453]: allow(unsafe_code) incompatible with previous forbid
+    --> fixtures/rfd-0003-brand-erasure/entry/api.rs:1495:9
+     |
+  66 | #![cfg_attr(any(not(bough_seal_views), bough_core_forbid), forbid(unsafe_code))]
+     |                                                                   ----------- `forbid` level set here
+...
+1495 | #[allow(unsafe_code)]
+     |         ^^^^^^^^^^^ overruled by previous forbid
+
+--- sealed: borrow/stash-in-borrow, first diagnostic
+error[E0200]: the trait `bough::Borrow` requires an `unsafe impl` declaration
+  --> fixtures/rfd-0003-brand-erasure/borrow/stash-in-borrow.rs:46:1
+   |
+46 | impl<'g> Borrow for Pair<'g> {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: the trait `bough::Borrow` enforces invariants that the compiler can't check. Review the trait documentation and make sure this implementation upholds those invariants before adding the `unsafe` keyword
+help: add `unsafe` to this trait implementation
+   |
+46 | unsafe impl<'g> Borrow for Pair<'g> {
+   | ++++++
+
+--- sealed: entry/stash-borrow-unsafe, first diagnostic
+error: implementation of an `unsafe` trait
+  --> fixtures/rfd-0003-brand-erasure/entry/stash-borrow-body.rs:42:1
+   |
+42 | / unsafe impl<'g> Borrow for Pair<'g> {
+43 | |     type Ref<'a> = PairRef<'a, 'g>;
+44 | |     fn borrow<'a>(from: &'a Pair<'static>, at: Loan<'a>) -> PairRef<'a, 'g> {
+45 | |         STASH.set(Some(from.left));
+...  |
+51 | | }
+   | |_^
+   |
+note: the lint level is defined here
+  --> fixtures/rfd-0003-brand-erasure/entry/stash-borrow-unsafe.rs:4:11
+   |
+ 4 | #![forbid(unsafe_code)]
+   |           ^^^^^^^^^^^
+
+--- sealed: borrow/sample-struct, first diagnostic
+error[E0200]: the trait `bough::Borrow` requires an `unsafe impl` declaration
+  --> fixtures/rfd-0003-brand-erasure/borrow/sample-struct.rs:27:1
+   |
+27 | impl Borrow for Counted {
+   | ^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: the trait `bough::Borrow` enforces invariants that the compiler can't check. Review the trait documentation and make sure this implementation upholds those invariants before adding the `unsafe` keyword
+help: add `unsafe` to this trait implementation
+   |
+27 | unsafe impl Borrow for Counted {
+   | ++++++
+
+question 2, open  : 1 of 1 must-build programs built, 1 of 1 must-fail programs failed, 0 of 6 stash routes refused
+question 2, entry : 15 of 15 must-build programs built, 2 of 2 must-fail programs failed, 4 of 6 stash routes refused, 0 of 1 other library builds built
+question 2, at    : 6 of 8 must-build programs built, 1 of 1 must-fail programs failed, 1 of 2 stash routes refused
+question 2, plain : 6 of 6 must-build programs built
+question 3, sealed: 6 of 7 must-build programs built, 2 of 5 stash routes refused, 0 of 1 other library builds built
+(every fixture is #![forbid(unsafe_code)] but entry/stash-borrow-unforbidden.rs, and every library but the sealed one, which denies it)
