@@ -1,0 +1,36 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0004-erased-materializer-instructions at experiments@98178b3 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0004-erased-materializer-instructions
+
+   Compiling bough-experiments v0.1.0 (/home/zefs/prog/bough/experiments)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.90s
+     Running benches/rfd-0004-erased-materializer-instructions.rs (target/release/deps/rfd_0004_erased_materializer_instructions-6a5314ae2042d496)
+rfd_0004_erased_materializer_instructions::event::baseline three:(ThreeAdapters :: new(Design :: Baseline))
+  Instructions:                      268517|N/A                  (*********)
+  L1 Hits:                           419009|N/A                  (*********)
+  LL Hits:                                3|N/A                  (*********)
+  RAM Hits:                              28|N/A                  (*********)
+  Total read+write:                  419040|N/A                  (*********)
+  Estimated Cycles:                  420004|N/A                  (*********)
+rfd_0004_erased_materializer_instructions::event::boxed three:(ThreeAdapters :: new(Design :: Boxed))
+  Instructions:                      272013|N/A                  (*********)
+  L1 Hits:                           424999|N/A                  (*********)
+  LL Hits:                                5|N/A                  (*********)
+  RAM Hits:                              28|N/A                  (*********)
+  Total read+write:                  425032|N/A                  (*********)
+  Estimated Cycles:                  426004|N/A                  (*********)
+rfd_0004_erased_materializer_instructions::event::fnptr three:(ThreeAdapters :: new(Design :: Fnptr))
+  Instructions:                      271013|N/A                  (*********)
+  L1 Hits:                           423001|N/A                  (*********)
+  LL Hits:                                4|N/A                  (*********)
+  RAM Hits:                              27|N/A                  (*********)
+  Total read+write:                  423032|N/A                  (*********)
+  Estimated Cycles:                  423966|N/A                  (*********)
+rfd_0004_erased_materializer_instructions::event::flat three:(ThreeAdapters :: new(Design :: Flat))
+  Instructions:                      257517|N/A                  (*********)
+  L1 Hits:                           404253|N/A                  (*********)
+  LL Hits:                                3|N/A                  (*********)
+  RAM Hits:                              28|N/A                  (*********)
+  Total read+write:                  404284|N/A                  (*********)
+  Estimated Cycles:                  405248|N/A                  (*********)
+
+Gungraun result: Ok. 4 without regressions; 0 regressed; 0 filtered; 4 benchmarks finished in 1.00542s
