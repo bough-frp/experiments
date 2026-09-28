@@ -1,0 +1,415 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-brand-erasure at experiments@754b070 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0003-brand-erasure -- trace
+
+stable:  rustc 1.98.1 (48a229cea 2026-09-01)  (rust-toolchain.toml)
+derive:  rfd-0003-rebrand-derive, built by cargo, once per library:
+         bough  --features trace         trace/bough.rs
+         plain  (no features)            derive/bough.rs
+         seal   --features seal          trace/seal.rs
+         unsafe --features unsafe-seal   trace/seal.rs --cfg unsafe_seal
+         bare   --features bare-unsafe   trace/seal.rs --cfg unsafe_seal
+api:     trace/api.rs = ../api.rs (1272 lines, unchanged) + 57 lines of question 2 reads
+lints:   not capped: every #![forbid(unsafe_code)] is enforced
+
+q  bough   fixture             expected result  first error
+1  bough   traced              build    built   
+1  plain   skip-static         fail?    built   
+1  bough   skip-static         fail     failed  E0080 evaluation panicked: #[rebrand(skip)] on `count`: its type implements Rebrand, so it may hold a token, and a skipped token is hidden from the collector and from rebranding; drop the skip, and the field rebrands through its own impl
+1  bough   skip-nested         fail     failed  E0080 evaluation panicked: #[rebrand(skip)] on `counts`: its type implements Rebrand, so it may hold a token, and a skipped token is hidden from the collector and from rebranding; drop the skip, and the field rebrands through its own impl
+1  bough   skip-untyped        fail     failed  E0080 evaluation panicked: #[rebrand(skip)] on `reading`: its type implements Trace, so it may hold a token, and a skipped token is hidden from the collector and from rebranding
+1  bough   skip-brand          fail     failed  #[rebrand(skip)] on `count`: its type names the lifetime `'g`, so it may hold a token, and a skipped token is hidden from the collector and from rebranding
+1  bough   skip-param          fail     failed  #[rebrand(skip)] on `value`: its type names the type parameter `T`, so it may hold a token, and a skipped token is hidden from the collector and from rebranding
+1  bough   skip-plain          fail     failed  E0080 evaluation panicked: #[rebrand(skip)] on `text`: its type implements Rebrand, so it may hold a token, and a skipped token is hidden from the collector and from rebranding; drop the skip, and the field rebrands through its own impl
+1  bough   trace-anchored      fail     failed  E0277 the trait bound `bough::Anchored<bough::Input<'static, u32>>: bough::Trace` is not satisfied
+1  bough   skip-hidden         fail?    built   
+1  bough   leaf-static         fail?    built   
+2  bough   view-downcast       try      failed  E0310 the parameter type `T` may not live long enough
+2  bough   view-const          try      failed  E0308 mismatched types
+2  bough   view-marker         try      failed  E0271 type mismatch resolving `<T as Rebrand>::Of<'static> == T`
+2  bough   view-marker-impl    try      failed  E0308 mismatched types
+2  bough   view-marker-own     try      failed  E0521 borrowed data escapes outside of closure
+2  bough   plain-read          build    built   
+2  bough   plain-read-token    fail     failed  E0521 borrowed data escapes outside of closure
+2  bough   static-read-token   fail     failed  E0521 borrowed data escapes outside of closure
+3  seal    seal-derive         build    built   
+3  seal    seal-hand           fail     failed  E0277 the trait bound `Pair<'g>: bough::__private::Sealed` is not satisfied
+3  seal    seal-forged         fail?    built   
+3  seal    seal-leaf           fail     failed  E0277 the trait bound `Counted: bough::__private::Sealed` is not satisfied
+3  unsafe  --cfg core_forbid   build    failed  E0453 allow(unsafe_code) incompatible with previous forbid
+3  unsafe  seal-derive         build    failed  E0453 allow(unsafe_code) incompatible with previous forbid
+3  unsafe  unsafe-deny         build    built   
+3  bare    seal-derive         build    built   
+3  bare    unsafe-hand-forbid  fail     failed  implementation of an `unsafe` trait
+3  bare    unsafe-hand         fail?    built   
+3  bare    unsafe-macro        fail?    built   
+3  none    loan-lent           fail     failed  lifetime may not live long enough
+3  none    loan-covariant      build    built   
+
+fail?: a token hidden from the collector (question 1) or stashed by a
+hand-written impl (question 3); it builds, and a failure is what's asked for.
+try:   an attempt at a copy-free `view` for a generic type (question 2).
+
+--- bough: traced.rs, run
+skipped field:                     Celsius(21.5)
+Panels, derived, anchored:         9 of 9 tokens live, 2 nodes freed
+Forgetful, by hand, anchored:      1 of 2 tokens live, 2 nodes freed
+                                   [Ok(901), Err(Stale)]
+Panels, derived, in a cell:        9 of 9 tokens live, 2 nodes freed
+Forgetful, by hand, in a cell:     1 of 2 tokens live, 2 nodes freed
+                                   [Ok(901), Err(Stale)]
+
+--- plain: skip-static.rs, run
+stashed, anchored directly:    Ok(3)
+stashed, in a skipped field:   Err(Stale)
+
+--- bough: plain-read.rs, run
+Stats                    listen_cell         5 reads, 0 restores: borrowed
+Tagged<Counted>          listen_cell         5 reads, 5 restores: copied
+Tagged<Tagged<Counted>>  listen_cell         5 reads, 5 restores: copied
+Stats                    listen_cell_plain   5 reads, 0 restores: borrowed
+Tagged<Counted>          listen_cell_plain   5 reads, 0 restores: borrowed
+Tagged<Tagged<Counted>>  listen_cell_plain   5 reads, 0 restores: borrowed
+Stats                    listen_cell_static  5 reads, 0 restores: borrowed
+Tagged<Counted>          listen_cell_static  5 reads, 0 restores: borrowed
+Tagged<Tagged<Counted>>  listen_cell_static  5 reads, 0 restores: borrowed
+
+--- seal: seal-derive.rs, run
+pair 1
+
+--- bare: seal-derive.rs, run
+pair 1
+
+--- bough: skip-static, first diagnostic
+error[E0080]: evaluation panicked: #[rebrand(skip)] on `count`: its type implements Rebrand, so it may hold a token, and a skipped token is hidden from the collector and from rebranding; drop the skip, and the field rebrands through its own impl
+  --> fixtures/rfd-0003-brand-erasure/trace/skip-static.rs:49:12
+   |
+49 |     count: Cell<'static, u32>,
+   |            ^^^^ evaluation of `_` failed here
+
+--- bough: skip-nested, first diagnostic
+error[E0080]: evaluation panicked: #[rebrand(skip)] on `counts`: its type implements Rebrand, so it may hold a token, and a skipped token is hidden from the collector and from rebranding; drop the skip, and the field rebrands through its own impl
+  --> fixtures/rfd-0003-brand-erasure/trace/skip-nested.rs:11:13
+   |
+11 |     counts: Option<Vec<Cell<'static, u32>>>,
+   |             ^^^^^^ evaluation of `_` failed here
+
+--- bough: skip-untyped, first diagnostic
+error[E0080]: evaluation panicked: #[rebrand(skip)] on `reading`: its type implements Trace, so it may hold a token, and a skipped token is hidden from the collector and from rebranding
+  --> fixtures/rfd-0003-brand-erasure/trace/skip-untyped.rs:14:14
+   |
+14 |     reading: Option<Cell<'static, Celsius>>,
+   |              ^^^^^^ evaluation of `_` failed here
+
+--- bough: skip-brand, first diagnostic
+error: #[rebrand(skip)] on `count`: its type names the lifetime `'g`, so it may hold a token, and a skipped token is hidden from the collector and from rebranding
+  --> fixtures/rfd-0003-brand-erasure/trace/skip-brand.rs:10:12
+   |
+10 |     count: Cell<'g, u32>,
+   |            ^^^^
+
+--- bough: skip-param, first diagnostic
+error: #[rebrand(skip)] on `value`: its type names the type parameter `T`, so it may hold a token, and a skipped token is hidden from the collector and from rebranding
+  --> fixtures/rfd-0003-brand-erasure/trace/skip-param.rs:10:12
+   |
+10 |     value: T,
+   |            ^
+
+--- bough: skip-plain, first diagnostic
+error[E0080]: evaluation panicked: #[rebrand(skip)] on `text`: its type implements Rebrand, so it may hold a token, and a skipped token is hidden from the collector and from rebranding; drop the skip, and the field rebrands through its own impl
+  --> fixtures/rfd-0003-brand-erasure/trace/skip-plain.rs:11:11
+   |
+11 |     text: String,
+   |           ^^^^^^ evaluation of `_` failed here
+
+--- bough: trace-anchored, first diagnostic
+error[E0277]: the trait bound `bough::Anchored<bough::Input<'static, u32>>: bough::Trace` is not satisfied
+  --> fixtures/rfd-0003-brand-erasure/trace/trace-anchored.rs:10:12
+   |
+10 |     input: Anchored<Input<'static, u32>>,
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `bough::Trace` is not implemented for `bough::Anchored<bough::Input<'static, u32>>`
+   |
+   = help: the following other types implement trait `bough::Trace`:
+             ()
+             (A, B)
+             (A, B, C)
+             Box<T>
+             HashMap<K, V>
+             Holder
+             Leaf<T>
+             Option<T>
+           and 10 others
+
+--- bough: view-downcast, first diagnostic
+error[E0310]: the parameter type `T` may not live long enough
+  --> fixtures/rfd-0003-brand-erasure/trace/view-downcast.rs:31:28
+   |
+31 |         (from as &dyn Any).downcast_ref::<Self>()
+   |                            ^^^^^^^^^^^^
+   |                            |
+   |                            the parameter type `T` must be valid for the static lifetime...
+   |                            ...so that the type `T` will meet its required lifetime bounds
+   |
+help: consider adding an explicit lifetime bound
+   |
+16 | impl<T: Rebrand + 'static> Rebrand for Tagged<T> {
+   |                 +++++++++
+
+--- bough: view-const, first diagnostic
+error[E0308]: mismatched types
+  --> fixtures/rfd-0003-brand-erasure/trace/view-const.rs:42:33
+   |
+27 | impl<T: Rebrand + BrandFree> Rebrand for Tagged<T> {
+   |      - expected this type parameter
+...
+42 |         if T::BRAND_FREE { Some(from) } else { None }
+   |                            ---- ^^^^ expected `&Tagged<T>`, found `&Tagged<<T as Rebrand>::Of<'_>>`
+   |                            |
+   |                            arguments to this enum variant are incorrect
+   |
+   = note: expected reference `&Tagged<T>`
+              found reference `&'a Tagged<<T as bough::Rebrand>::Of<'static>>`
+help: the type constructed contains `&'a Tagged<<T as bough::Rebrand>::Of<'static>>` due to the type of the argument passed
+  --> fixtures/rfd-0003-brand-erasure/trace/view-const.rs:42:28
+   |
+42 |         if T::BRAND_FREE { Some(from) } else { None }
+   |                            ^^^^^----^
+   |                                 |
+   |                                 this argument influences the type of `Some`
+note: tuple variant defined here
+  --> /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library/core/src/option.rs:606:4
+help: consider further restricting this bound
+   |
+27 | impl<T: Rebrand<Of<'static> = T> + BrandFree> Rebrand for Tagged<T> {
+   |                +++++++++++++++++
+
+--- bough: view-marker, first diagnostic
+error[E0271]: type mismatch resolving `<T as Rebrand>::Of<'static> == T`
+  --> fixtures/rfd-0003-brand-erasure/trace/view-marker.rs:33:20
+   |
+17 | impl<T: Rebrand> Rebrand for Tagged<T> {
+   |      - expected this type parameter
+...
+33 |         T: Rebrand<Of<'static> = T>,
+   |                    ^^^^^^^^^^^^^^^ expected type parameter `T`, found associated type
+   |
+   = note: expected type parameter `T`
+             found associated type `<T as bough::Rebrand>::Of<'static>`
+note: the requirement `<T as bough::Rebrand>::Of<'static> == T` appears on the `impl`'s associated function `view` but not on the corresponding trait's associated function
+  --> fixtures/rfd-0003-brand-erasure/trace/api.rs:96:8
+   |
+84 | pub trait Rebrand: Sized {
+   |           ------- in this trait
+...
+96 |     fn view<'a>(from: &'a Self::Of<'static>) -> Option<&'a Self> {
+   |        ^^^^ this trait's associated function doesn't have the requirement `<T as bough::Rebrand>::Of<'static> == T`
+help: consider further restricting this bound
+   |
+17 | impl<T: Rebrand<Of<'static> = T>> Rebrand for Tagged<T> {
+   |                +++++++++++++++++
+
+--- bough: view-marker-impl, first diagnostic
+error[E0308]: mismatched types
+  --> fixtures/rfd-0003-brand-erasure/trace/view-marker-impl.rs:17:19
+   |
+17 |     type Of<'x> = Tagged<T::Of<'x>>;
+   |                   ^^^^^^^^^^^^^^^^^ lifetime mismatch
+   |
+   = note: expected associated type `<T as bough::Rebrand>::Of<'static>`
+              found associated type `<T as bough::Rebrand>::Of<'x>`
+note: the lifetime `'x` as defined here...
+  --> fixtures/rfd-0003-brand-erasure/trace/view-marker-impl.rs:17:13
+   |
+17 |     type Of<'x> = Tagged<T::Of<'x>>;
+   |             ^^
+   = note: ...does not necessarily outlive the static lifetime
+
+--- bough: view-marker-own, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/trace/view-marker-own.rs:44:21
+   |
+37 |       rt.mutate(|b| {
+   |                  -
+   |                  |
+   |                  `b` is a reference that is only valid in the closure body
+   |                  has type `&mut Mutate<'1>`
+...
+44 |           let token = b.anchor(Tagged {
+   |  _____________________^
+45 | |             tag: "token".to_string(),
+46 | |             value: cell,
+47 | |         });
+   | |          ^
+   | |          |
+   | |__________`b` escapes the closure body here
+   |            argument requires that `'1` must outlive `'static`
+   |
+   = note: requirement occurs because of the type `bough::Cell<'static, u32>`, which makes the generic argument `'static` invariant
+   = note: the struct `bough::Cell<'g, A>` is invariant over the parameter `'g`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- bough: plain-read-token, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/trace/plain-read-token.rs:31:9
+   |
+15 |     rt.mutate(|b| {
+   |                -
+   |                |
+   |                `b` is a reference that is only valid in the closure body
+   |                has type `&mut Mutate<'1>`
+...
+31 |         b.listen_cell_plain(held, |t| println!("{}", t.tag)).keep();
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |         |
+   |         `b` escapes the closure body here
+   |         argument requires that `'1` must outlive `'static`
+   |
+   = note: requirement occurs because of the type `bough::Cell<'_, Tagged<bough::Cell<'_, u32>>>`, which makes the generic argument `'_` invariant
+   = note: the struct `bough::Cell<'g, A>` is invariant over the parameter `'g`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- bough: static-read-token, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/trace/static-read-token.rs:30:9
+   |
+14 |     rt.mutate(|b| {
+   |                -
+   |                |
+   |                `b` is a reference that is only valid in the closure body
+   |                has type `&mut Mutate<'1>`
+...
+30 |         b.listen_cell_static(held, |t| println!("{}", t.tag)).keep();
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |         |
+   |         `b` escapes the closure body here
+   |         argument requires that `'1` must outlive `'static`
+   |
+   = note: requirement occurs because of the type `bough::Cell<'_, Tagged<bough::Cell<'_, u32>>>`, which makes the generic argument `'_` invariant
+   = note: the struct `bough::Cell<'g, A>` is invariant over the parameter `'g`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- seal: seal-hand, first diagnostic
+error[E0277]: the trait bound `Pair<'g>: bough::__private::Sealed` is not satisfied
+   --> fixtures/rfd-0003-brand-erasure/trace/seal-hand.rs:15:22
+    |
+ 15 | impl<'g> Rebrand for Pair<'g> {
+    |                      ^^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `bough::__private::Sealed` is not implemented for `Pair<'g>`
+   --> fixtures/rfd-0003-brand-erasure/trace/seal-hand.rs:11:1
+    |
+ 11 | struct Pair<'g> {
+    | ^^^^^^^^^^^^^^^
+help: the following other types implement trait `bough::__private::Sealed`
+   --> fixtures/rfd-0003-brand-erasure/trace/seal.rs:90:9
+    |
+ 90 |           impl$(<$($g),*>)? Seal for $t {}
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |           |
+    |           `String`
+    |           `bough::Cell<'g, A>`
+    |           `u32`
+...
+107 | / seal! {
+108 | |     impl for u32;
+109 | |     impl for String;
+110 | |     impl<'g, A> for Cell<'g, A>;
+111 | | }
+    | |_- in this macro invocation
+note: required by a bound in `bough::Rebrand`
+   --> fixtures/rfd-0003-brand-erasure/trace/seal.rs:97:28
+    |
+ 97 | pub trait Rebrand: Sized + Seal {
+    |                            ^^^^ required by this bound in `Rebrand`
+    = note: this error originates in the macro `seal` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+--- seal: seal-leaf, first diagnostic
+error[E0277]: the trait bound `Counted: bough::__private::Sealed` is not satisfied
+   --> fixtures/rfd-0003-brand-erasure/trace/seal-leaf.rs:11:18
+    |
+ 11 | impl Rebrand for Counted {
+    |                  ^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `bough::__private::Sealed` is not implemented for `Counted`
+   --> fixtures/rfd-0003-brand-erasure/trace/seal-leaf.rs:9:1
+    |
+  9 | struct Counted(u32);
+    | ^^^^^^^^^^^^^^
+help: the following other types implement trait `bough::__private::Sealed`
+   --> fixtures/rfd-0003-brand-erasure/trace/seal.rs:90:9
+    |
+ 90 |           impl$(<$($g),*>)? Seal for $t {}
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |           |
+    |           `String`
+    |           `bough::Cell<'g, A>`
+    |           `u32`
+...
+107 | / seal! {
+108 | |     impl for u32;
+109 | |     impl for String;
+110 | |     impl<'g, A> for Cell<'g, A>;
+111 | | }
+    | |_- in this macro invocation
+note: required by a bound in `bough::Rebrand`
+   --> fixtures/rfd-0003-brand-erasure/trace/seal.rs:97:28
+    |
+ 97 | pub trait Rebrand: Sized + Seal {
+    |                            ^^^^ required by this bound in `Rebrand`
+    = note: this error originates in the macro `seal` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+--- unsafe: --cfg core_forbid, first diagnostic
+error[E0453]: allow(unsafe_code) incompatible with previous forbid
+  --> fixtures/rfd-0003-brand-erasure/trace/seal.rs:77:13
+   |
+16 | #![cfg_attr(any(not(unsafe_seal), core_forbid), forbid(unsafe_code))]
+   |                                                        ----------- `forbid` level set here
+...
+77 |     #[allow(unsafe_code)]
+   |             ^^^^^^^^^^^ overruled by previous forbid
+
+--- unsafe: seal-derive, first diagnostic
+error[E0453]: allow(unsafe_code) incompatible with previous forbid
+ --> fixtures/rfd-0003-brand-erasure/trace/seal-derive.rs:8:10
+  |
+5 | #![forbid(unsafe_code)]
+  |           ----------- `forbid` level set here
+...
+8 | #[derive(Rebrand)]
+  |          ^^^^^^^ overruled by previous forbid
+  |
+  = note: this error originates in the derive macro `Rebrand` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+--- bare: unsafe-hand-forbid, first diagnostic
+error: implementation of an `unsafe` trait
+  --> fixtures/rfd-0003-brand-erasure/trace/unsafe-hand-forbid.rs:34:1
+   |
+34 | unsafe impl bough::__private::Sound for Pair<'_> {}
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+note: the lint level is defined here
+  --> fixtures/rfd-0003-brand-erasure/trace/unsafe-hand-forbid.rs:5:11
+   |
+ 5 | #![forbid(unsafe_code)]
+   |           ^^^^^^^^^^^
+
+warning: struct `Pair` is never constructed
+  --> fixtures/rfd-0003-brand-erasure/trace/unsafe-hand-forbid.rs:12:8
+   |
+12 | struct Pair<'g> {
+   |        ^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+--- none: loan-lent, first diagnostic
+error: lifetime may not live long enough
+  --> fixtures/rfd-0003-brand-erasure/trace/loan-lent.rs:27:5
+   |
+26 | fn lend<'a, T: Rebrand>(stored: &'a T::Of<'static>) -> &'a T::Of<'a> {
+   |         -- lifetime `'a` defined here
+27 |     stored
+   |     ^^^^^^ returning this value requires that `'a` must outlive `'static`
+
+question 1: 1 of 1 must-build programs built, 7 of 7 must-fail programs failed, 0 of 3 routes refused
+question 2: 1 of 1 must-build programs built, 2 of 2 must-fail programs failed, 0 of 5 copy-free view attempts built
+question 3: 4 of 6 must-build programs built, 4 of 4 must-fail programs failed, 0 of 3 routes refused
+(every fixture is #![forbid(unsafe_code)] but unsafe-deny.rs and unsafe-hand.rs, and every library but helper.rs, and seal.rs under unsafe_seal, which denies it)
