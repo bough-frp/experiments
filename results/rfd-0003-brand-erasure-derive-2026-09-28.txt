@@ -1,0 +1,218 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-brand-erasure at experiments@f3d3949 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0003-brand-erasure -- derive
+
+stable:  rustc 1.98.1 (48a229cea 2026-09-01)  (rust-toolchain.toml)
+derive:  rfd-0003-rebrand-derive, built by cargo; libraries: bough, foreign, blanket
+
+bough    fixture           expected result  first error
+bough    panels            build    built   
+bough    choice            build    built   
+bough    tagged            build    built   
+bough    view              build    built   
+bough    leaf              build    built   
+bough    bounded           build    built   
+bough    missing-impl      fail     failed  E0277 the trait bound `Label: bough::Rebrand` is not satisfied
+bough    foreign-field     fail     failed  E0277 the trait bound `Celsius: bough::Rebrand` is not satisfied
+bough    foreign-stream    fail     failed  E0277 the trait bound `Celsius: Rebrand` is not satisfied
+bough    skip-token        fail     failed  lifetime may not live long enough
+bough    skip-param        fail     failed  E0277 the trait bound `T: Clone` is not satisfied
+bough    brand-free-token  fail     failed  E0521 borrowed data escapes outside of method
+bough    two-lifetimes     fail     failed  Rebrand: a type may have one lifetime, its brand; `'a` is a second. A value is stored at brand 'static, so it can't hold a borrow
+bough    orphan-impl       fail     failed  E0117 only traits defined in the current crate can be implemented for types defined outside of the crate
+blanket  blanket-plain     build    built   
+blanket  blanket-clone     fail     failed  E0119 conflicting implementations of trait `bough::Rebrand` for type `Reading`
+blanket  blanket-token     fail     failed  E0119 conflicting implementations of trait `bough::Rebrand` for type `Reading<'_>`
+blanket  --cfg with_token  fail     failed  E0119 conflicting implementations of trait `Rebrand` for type `Cell<'_, _>`
+
+--- bough: panels.rs, run
+built:   left 3 history [3, 5] pinned Some(7) boxed 5 named [("plus", 7)]
+opened:  left 3 history [3, 5] pinned Some(7) boxed 5 named [("plus", 7)]
+held:    left 3 history [3, 5] pinned Some(7) boxed 5 named [("plus", 7)]
+values:  left Ok(3) history [Ok(3), Ok(6)] pinned Some(Ok(103)) boxed Ok(6) named [Ok(103)]
+
+--- bough: choice.rs, run
+before:  current Login { user: Ok(1) }
+opened:  Login { user: Ok(5) }, Chat(Ok(5), Ok(15)), Closed
+after:   current Chat(Ok(5), Ok(15))
+
+--- bough: tagged.rs, run
+tagged:  total = Ok(7)
+keyed:   source Ok(7) all [Ok(7)] first Some(Ok(7)) boxed Ok(7) by_name Some(Ok(7))
+labels:  last = 4
+
+--- bough: view.rs, run
+Stats            5 reads, 0 restores: borrowed
+Branded<'g>      5 reads, 5 restores: copied
+Tagged<Counted>  5 reads, 5 restores: copied
+
+--- bough: leaf.rs, run
+anchored: sensor Ok(215) wrapped Celsius(-1.0) skipped Celsius(-2.0)
+latest:   sensor Ok(215) wrapped Celsius(21.5) skipped Celsius(21.5)
+
+--- bough: missing-impl, first diagnostic
+error[E0277]: the trait bound `Label: bough::Rebrand` is not satisfied
+  --> fixtures/rfd-0003-brand-erasure/derive/missing-impl.rs:12:12
+   |
+12 |     label: Label,
+   |            ^^^^^ unsatisfied trait bound
+   |
+help: the trait `bough::Rebrand` is not implemented for `Label`
+  --> fixtures/rfd-0003-brand-erasure/derive/missing-impl.rs:7:1
+   |
+ 7 | struct Label(String);
+   | ^^^^^^^^^^^^
+   = help: the following other types implement trait `bough::Rebrand`:
+             ()
+             (A, B)
+             (A, B, C)
+             Anchored<T>
+             Box<T>
+             HashMap<K, V>
+             Input<'g, A>
+             Leaf<T>
+           and 11 others
+
+--- bough: foreign-field, first diagnostic
+error[E0277]: the trait bound `Celsius: bough::Rebrand` is not satisfied
+  --> fixtures/rfd-0003-brand-erasure/derive/foreign-field.rs:10:18
+   |
+10 |     temperature: Celsius,
+   |                  ^^^^^^^ the trait `bough::Rebrand` is not implemented for `Celsius`
+   |
+   = help: the following other types implement trait `bough::Rebrand`:
+             ()
+             (A, B)
+             (A, B, C)
+             Anchored<T>
+             Box<T>
+             HashMap<K, V>
+             Input<'g, A>
+             Leaf<T>
+           and 11 others
+
+--- bough: foreign-stream, first diagnostic
+error[E0277]: the trait bound `Celsius: Rebrand` is not satisfied
+   --> fixtures/rfd-0003-brand-erasure/derive/foreign-stream.rs:9:37
+    |
+  9 |         let (_t, _t_in) = b.input::<Celsius>();
+    |                             -----   ^^^^^^^ the trait `Rebrand` is not implemented for `Celsius`
+    |                             |
+    |                             required by a bound introduced by this call
+    |
+    = help: the following other types implement trait `Rebrand`:
+              ()
+              (A, B)
+              (A, B, C)
+              Anchored<T>
+              Box<T>
+              HashMap<K, V>
+              Input<'g, A>
+              Leaf<T>
+            and 10 others
+note: required by a bound in `Build::<'g>::input`
+   --> fixtures/rfd-0003-brand-erasure/derive/../api.rs:764:21
+    |
+764 |     pub fn input<A: Rebrand>(&mut self) -> (Stream<'g, A>, Input<'g, A>) {
+    |                     ^^^^^^^ required by this bound in `Build::<'g>::input`
+
+--- bough: skip-token, first diagnostic
+error: lifetime may not live long enough
+ --> fixtures/rfd-0003-brand-erasure/derive/skip-token.rs:7:10
+  |
+7 | #[derive(Rebrand)]
+  |          ^^^^^^^
+  |          |
+  |          lifetime `'x` defined here
+  |          method was supposed to return data with lifetime `'x` but it is returning data with lifetime `'g`
+8 | struct Sneaky<'g> {
+  |               -- lifetime `'g` defined here
+  |
+  = help: consider adding the following bound: `'g: 'x`
+  = note: requirement occurs because of the type `Sneaky<'_>`, which makes the generic argument `'_` invariant
+  = note: the struct `Sneaky<'g>` is invariant over the parameter `'g`
+  = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+  = note: this error originates in the derive macro `Rebrand` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+--- bough: skip-param, first diagnostic
+error[E0277]: the trait bound `T: Clone` is not satisfied
+ --> fixtures/rfd-0003-brand-erasure/derive/skip-param.rs:9:12
+  |
+9 |     value: T,
+  |            ^ the trait `Clone` is not implemented for `T`
+
+--- bough: brand-free-token, first diagnostic
+error[E0521]: borrowed data escapes outside of method
+ --> fixtures/rfd-0003-brand-erasure/derive/brand-free-token.rs:9:12
+  |
+7 | #[derive(Rebrand)]
+  |          -------
+  |          |
+  |          `to` is a reference that is only valid in the method body
+  |          lifetime `'x` defined here
+8 | struct Pinned {
+9 |     count: Cell<'static, u32>,
+  |            ^^^^
+  |            |
+  |            `to` escapes the method body here
+  |            argument requires that `'x` must outlive `'static`
+  |
+  = note: requirement occurs because of the type `Witness<'_>`, which makes the generic argument `'_` invariant
+  = note: the struct `Witness<'x>` is invariant over the parameter `'x`
+  = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- bough: two-lifetimes, first diagnostic
+error: Rebrand: a type may have one lifetime, its brand; `'a` is a second. A value is stored at brand 'static, so it can't hold a borrow
+ --> fixtures/rfd-0003-brand-erasure/derive/two-lifetimes.rs:8:22
+  |
+8 | struct Borrowing<'g, 'a> {
+  |                      ^^
+
+--- bough: orphan-impl, first diagnostic
+error[E0117]: only traits defined in the current crate can be implemented for types defined outside of the crate
+ --> fixtures/rfd-0003-brand-erasure/derive/orphan-impl.rs:8:1
+  |
+8 | impl Rebrand for Celsius {
+  | ^^^^^^^^^^^^^^^^^-------
+  |                  |
+  |                  `Celsius` is not defined in the current crate
+  |
+  = note: impl doesn't have any local type before any uncovered type parameters
+  = note: for more information see https://doc.rust-lang.org/reference/items/implementations.html#orphan-rules
+  = note: define and implement a trait or new type instead
+
+--- blanket: blanket-clone, first diagnostic
+error[E0119]: conflicting implementations of trait `bough::Rebrand` for type `Reading`
+ --> fixtures/rfd-0003-brand-erasure/derive/blanket-clone.rs:8:17
+  |
+8 | #[derive(Clone, Rebrand)]
+  |                 ^^^^^^^
+  |
+  = note: conflicting implementation in crate `bough`:
+          - impl<T> bough::Rebrand for T
+            where T: Clone, T: 'static;
+  = note: this error originates in the derive macro `Rebrand` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+--- blanket: blanket-token, first diagnostic
+error[E0119]: conflicting implementations of trait `bough::Rebrand` for type `Reading<'_>`
+ --> fixtures/rfd-0003-brand-erasure/derive/blanket-token.rs:7:17
+  |
+7 | #[derive(Clone, Rebrand)]
+  |                 ^^^^^^^
+  |
+  = note: conflicting implementation in crate `bough`:
+          - impl<T> bough::Rebrand for T
+            where T: Clone, T: 'static;
+  = note: this error originates in the derive macro `Rebrand` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+--- blanket: --cfg with_token, first diagnostic
+error[E0119]: conflicting implementations of trait `Rebrand` for type `Cell<'_, _>`
+  --> fixtures/rfd-0003-brand-erasure/derive/blanket.rs:59:1
+   |
+30 | impl<T: Clone + 'static> Rebrand for T {
+   | -------------------------------------- first implementation here
+...
+59 | impl<'g, A: Rebrand> Rebrand for Cell<'g, A> {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ conflicting implementation for `Cell<'_, _>`
+
+derive: 7 of 7 must-build programs built, 11 of 11 must-fail programs failed
+(every fixture and library is #![forbid(unsafe_code)]; no Rebrand impl in a fixture is hand-written but view.rs's Counted and orphan-impl.rs's)
