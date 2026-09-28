@@ -1,0 +1,49 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0006-lock-vs-queue-cost at experiments@44fad84 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0006-lock-vs-queue-cost
+
+Futex calls per unit, contended (20000 units per thread, 3 runs each)
+
+bytes   lock   threads  run  changes   sleeps    waits    wakes    woken
+0B      mutex        2    1    0.072    0.100        -        -        -
+0B      mutex        2    2    0.078    0.109        -        -        -
+0B      mutex        2    3    0.078    0.092        -        -        -
+0B      mutex        4    1    0.344    0.312        -        -        -
+0B      mutex        4    2    0.344    0.295        -        -        -
+0B      mutex        4    3    0.383    0.292        -        -        -
+0B      mutex        8    1    0.825    0.616        -        -        -
+0B      mutex        8    2    0.842    0.630        -        -        -
+0B      mutex        8    3    0.825    0.615        -        -        -
+0B      futex        2    1    0.097    0.097    0.220    0.220    0.097
+0B      futex        2    2    0.094    0.094    0.210    0.210    0.094
+0B      futex        2    3    0.083    0.089    0.196    0.196    0.089
+0B      futex        4    1    0.382    0.235    0.512    0.546    0.235
+0B      futex        4    2    0.381    0.236    0.513    0.546    0.236
+0B      futex        4    3    0.384    0.238    0.510    0.550    0.238
+0B      futex        8    1    0.841    0.567    1.213    0.867    0.567
+0B      futex        8    2    0.854    0.576    1.228    0.877    0.576
+0B      futex        8    3    0.838    0.566    1.208    0.861    0.566
+256KiB  mutex        2    1    0.006    0.776        -        -        -
+256KiB  mutex        2    2    0.008    0.802        -        -        -
+256KiB  mutex        2    3    0.005    0.941        -        -        -
+256KiB  mutex        4    1    0.002    0.817        -        -        -
+256KiB  mutex        4    2    0.001    0.892        -        -        -
+256KiB  mutex        4    3    0.003    0.815        -        -        -
+256KiB  mutex        8    1    0.005    0.879        -        -        -
+256KiB  mutex        8    2    0.007    0.929        -        -        -
+256KiB  mutex        8    3    0.007    0.923        -        -        -
+256KiB  futex        2    1    0.008    0.963    0.972    0.972    0.963
+256KiB  futex        2    2    0.009    0.924    0.935    0.935    0.924
+256KiB  futex        2    3    0.007    0.909    0.917    0.917    0.909
+256KiB  futex        4    1    0.001    0.792    0.794    0.792    0.792
+256KiB  futex        4    2    0.004    0.833    0.837    0.833    0.833
+256KiB  futex        4    3    0.003    0.725    0.725    0.725    0.725
+256KiB  futex        8    1    0.009    0.889    0.891    0.889    0.889
+256KiB  futex        8    2    0.009    0.887    0.890    0.887    0.887
+256KiB  futex        8    3    0.006    0.962    0.965    0.963    0.962
+
+Per unit: every column is a count divided by the units run.
+changes: the lock went to another thread. sleeps: voluntary context
+switches of the workers. waits, wakes: futex_wait and futex_wake syscalls
+of the copy; woken: wakes that woke a thread. '-': not countable for std's.
+
+Verdict: at 256 KiB, the copy of std's mutex made 0.73–0.97 futex_wake calls per unit over 2-8 threads, and std's own mutex's workers slept 0.78–0.94 times per unit.
