@@ -1,0 +1,502 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-heap-vs-mark-on-quiet-regions-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0005-heap-vs-mark-on-quiet-regions-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.10s
+     Running benches/rfd-0005-heap-vs-mark-on-quiet-regions-wallclock.rs (target/release/deps/rfd_0005_heap_vs_mark_on_quiet_regions_wallclock-c0bba39f8ce4755f)
+Gnuplot not found, using plotters backend
+Benchmarking ui-small/baseline/100
+Benchmarking ui-small/baseline/100: Warming up for 500.00 ms
+Benchmarking ui-small/baseline/100: Collecting 50 samples in estimated 2.0057 s (413k iterations)
+Benchmarking ui-small/baseline/100: Analyzing
+ui-small/baseline/100   time:   [4.8368 µs 4.8432 µs 4.8496 µs]
+Benchmarking ui-small/heap/100
+Benchmarking ui-small/heap/100: Warming up for 500.00 ms
+Benchmarking ui-small/heap/100: Collecting 50 samples in estimated 2.0057 s (263k iterations)
+Benchmarking ui-small/heap/100: Analyzing
+ui-small/heap/100       time:   [7.5701 µs 7.5826 µs 7.5953 µs]
+Benchmarking ui-small/bucket/100
+Benchmarking ui-small/bucket/100: Warming up for 500.00 ms
+Benchmarking ui-small/bucket/100: Collecting 50 samples in estimated 2.0032 s (340k iterations)
+Benchmarking ui-small/bucket/100: Analyzing
+ui-small/bucket/100     time:   [5.8676 µs 5.8772 µs 5.8873 µs]
+Found 7 outliers among 50 measurements (14.00%)
+  5 (10.00%) low severe
+  2 (4.00%) high severe
+Benchmarking ui-small/baseline/90
+Benchmarking ui-small/baseline/90: Warming up for 500.00 ms
+Benchmarking ui-small/baseline/90: Collecting 50 samples in estimated 2.0043 s (426k iterations)
+Benchmarking ui-small/baseline/90: Analyzing
+ui-small/baseline/90    time:   [4.6783 µs 4.6847 µs 4.6923 µs]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking ui-small/heap/90
+Benchmarking ui-small/heap/90: Warming up for 500.00 ms
+Benchmarking ui-small/heap/90: Collecting 50 samples in estimated 2.0086 s (288k iterations)
+Benchmarking ui-small/heap/90: Analyzing
+ui-small/heap/90        time:   [6.9989 µs 7.0261 µs 7.0534 µs]
+Benchmarking ui-small/bucket/90
+Benchmarking ui-small/bucket/90: Warming up for 500.00 ms
+Benchmarking ui-small/bucket/90: Collecting 50 samples in estimated 2.0065 s (371k iterations)
+Benchmarking ui-small/bucket/90: Analyzing
+ui-small/bucket/90      time:   [5.5914 µs 5.6035 µs 5.6159 µs]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) low severe
+  6 (12.00%) low mild
+Benchmarking ui-small/baseline/75
+Benchmarking ui-small/baseline/75: Warming up for 500.00 ms
+Benchmarking ui-small/baseline/75: Collecting 50 samples in estimated 2.0008 s (446k iterations)
+Benchmarking ui-small/baseline/75: Analyzing
+ui-small/baseline/75    time:   [4.5439 µs 4.5489 µs 4.5527 µs]
+Benchmarking ui-small/heap/75
+Benchmarking ui-small/heap/75: Warming up for 500.00 ms
+Benchmarking ui-small/heap/75: Collecting 50 samples in estimated 2.0019 s (337k iterations)
+Benchmarking ui-small/heap/75: Analyzing
+ui-small/heap/75        time:   [5.9625 µs 5.9707 µs 5.9809 µs]
+Benchmarking ui-small/bucket/75
+Benchmarking ui-small/bucket/75: Warming up for 500.00 ms
+Benchmarking ui-small/bucket/75: Collecting 50 samples in estimated 2.0014 s (427k iterations)
+Benchmarking ui-small/bucket/75: Analyzing
+ui-small/bucket/75      time:   [4.7585 µs 4.7985 µs 4.8333 µs]
+Found 14 outliers among 50 measurements (28.00%)
+  8 (16.00%) low severe
+  1 (2.00%) low mild
+  2 (4.00%) high mild
+  3 (6.00%) high severe
+Benchmarking ui-small/baseline/50
+Benchmarking ui-small/baseline/50: Warming up for 500.00 ms
+Benchmarking ui-small/baseline/50: Collecting 50 samples in estimated 2.0044 s (481k iterations)
+Benchmarking ui-small/baseline/50: Analyzing
+ui-small/baseline/50    time:   [4.1841 µs 4.1929 µs 4.2021 µs]
+Found 6 outliers among 50 measurements (12.00%)
+  3 (6.00%) high mild
+  3 (6.00%) high severe
+Benchmarking ui-small/heap/50
+Benchmarking ui-small/heap/50: Warming up for 500.00 ms
+Benchmarking ui-small/heap/50: Collecting 50 samples in estimated 2.0039 s (492k iterations)
+Benchmarking ui-small/heap/50: Analyzing
+ui-small/heap/50        time:   [4.0456 µs 4.0485 µs 4.0514 µs]
+Benchmarking ui-small/bucket/50
+Benchmarking ui-small/bucket/50: Warming up for 500.00 ms
+Benchmarking ui-small/bucket/50: Collecting 50 samples in estimated 2.0013 s (574k iterations)
+Benchmarking ui-small/bucket/50: Analyzing
+ui-small/bucket/50      time:   [3.4960 µs 3.5091 µs 3.5222 µs]
+Found 12 outliers among 50 measurements (24.00%)
+  1 (2.00%) low severe
+  3 (6.00%) low mild
+  4 (8.00%) high mild
+  4 (8.00%) high severe
+Benchmarking ui-small/baseline/25
+Benchmarking ui-small/baseline/25: Warming up for 500.00 ms
+Benchmarking ui-small/baseline/25: Collecting 50 samples in estimated 2.0047 s (524k iterations)
+Benchmarking ui-small/baseline/25: Analyzing
+ui-small/baseline/25    time:   [3.7956 µs 3.8005 µs 3.8062 µs]
+Found 7 outliers among 50 measurements (14.00%)
+  7 (14.00%) high mild
+Benchmarking ui-small/heap/25
+Benchmarking ui-small/heap/25: Warming up for 500.00 ms
+Benchmarking ui-small/heap/25: Collecting 50 samples in estimated 2.0009 s (921k iterations)
+Benchmarking ui-small/heap/25: Analyzing
+ui-small/heap/25        time:   [2.1729 µs 2.1755 µs 2.1775 µs]
+Benchmarking ui-small/bucket/25
+Benchmarking ui-small/bucket/25: Warming up for 500.00 ms
+Benchmarking ui-small/bucket/25: Collecting 50 samples in estimated 2.0011 s (961k iterations)
+Benchmarking ui-small/bucket/25: Analyzing
+ui-small/bucket/25      time:   [2.0692 µs 2.0725 µs 2.0753 µs]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) low severe
+Benchmarking ui-small/baseline/10
+Benchmarking ui-small/baseline/10: Warming up for 500.00 ms
+Benchmarking ui-small/baseline/10: Collecting 50 samples in estimated 2.0044 s (569k iterations)
+Benchmarking ui-small/baseline/10: Analyzing
+ui-small/baseline/10    time:   [3.5332 µs 3.5396 µs 3.5450 µs]
+Benchmarking ui-small/heap/10
+Benchmarking ui-small/heap/10: Warming up for 500.00 ms
+Benchmarking ui-small/heap/10: Collecting 50 samples in estimated 2.0002 s (2.2M iterations)
+Benchmarking ui-small/heap/10: Analyzing
+ui-small/heap/10        time:   [911.43 ns 912.56 ns 913.97 ns]
+Benchmarking ui-small/bucket/10
+Benchmarking ui-small/bucket/10: Warming up for 500.00 ms
+Benchmarking ui-small/bucket/10: Collecting 50 samples in estimated 2.0002 s (2.2M iterations)
+Benchmarking ui-small/bucket/10: Analyzing
+ui-small/bucket/10      time:   [926.90 ns 935.61 ns 943.56 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  7 (14.00%) low severe
+Benchmarking ui-small/baseline/5
+Benchmarking ui-small/baseline/5: Warming up for 500.00 ms
+Benchmarking ui-small/baseline/5: Collecting 50 samples in estimated 2.0002 s (580k iterations)
+Benchmarking ui-small/baseline/5: Analyzing
+ui-small/baseline/5     time:   [3.4186 µs 3.4218 µs 3.4256 µs]
+Benchmarking ui-small/heap/5
+Benchmarking ui-small/heap/5: Warming up for 500.00 ms
+Benchmarking ui-small/heap/5: Collecting 50 samples in estimated 2.0001 s (3.9M iterations)
+Benchmarking ui-small/heap/5: Analyzing
+ui-small/heap/5         time:   [506.71 ns 508.06 ns 509.56 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high severe
+Benchmarking ui-small/bucket/5
+Benchmarking ui-small/bucket/5: Warming up for 500.00 ms
+Benchmarking ui-small/bucket/5: Collecting 50 samples in estimated 2.0002 s (3.9M iterations)
+Benchmarking ui-small/bucket/5: Analyzing
+ui-small/bucket/5       time:   [531.06 ns 531.49 ns 531.84 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) low severe
+  1 (2.00%) high mild
+Benchmarking ui-small/baseline/2
+Benchmarking ui-small/baseline/2: Warming up for 500.00 ms
+Benchmarking ui-small/baseline/2: Collecting 50 samples in estimated 2.0022 s (594k iterations)
+Benchmarking ui-small/baseline/2: Analyzing
+ui-small/baseline/2     time:   [3.3427 µs 3.3463 µs 3.3497 µs]
+Benchmarking ui-small/heap/2
+Benchmarking ui-small/heap/2: Warming up for 500.00 ms
+Benchmarking ui-small/heap/2: Collecting 50 samples in estimated 2.0003 s (6.6M iterations)
+Benchmarking ui-small/heap/2: Analyzing
+ui-small/heap/2         time:   [300.84 ns 301.16 ns 301.55 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking ui-small/bucket/2
+Benchmarking ui-small/bucket/2: Warming up for 500.00 ms
+Benchmarking ui-small/bucket/2: Collecting 50 samples in estimated 2.0001 s (6.5M iterations)
+Benchmarking ui-small/bucket/2: Analyzing
+ui-small/bucket/2       time:   [314.47 ns 315.75 ns 316.87 ns]
+Benchmarking ui-small/baseline/1
+Benchmarking ui-small/baseline/1: Warming up for 500.00 ms
+Benchmarking ui-small/baseline/1: Collecting 50 samples in estimated 2.0022 s (601k iterations)
+Benchmarking ui-small/baseline/1: Analyzing
+ui-small/baseline/1     time:   [3.3395 µs 3.3414 µs 3.3435 µs]
+Found 13 outliers among 50 measurements (26.00%)
+  9 (18.00%) low mild
+  4 (8.00%) high mild
+Benchmarking ui-small/heap/1
+Benchmarking ui-small/heap/1: Warming up for 500.00 ms
+Benchmarking ui-small/heap/1: Collecting 50 samples in estimated 2.0002 s (10.0M iterations)
+Benchmarking ui-small/heap/1: Analyzing
+ui-small/heap/1         time:   [200.74 ns 200.84 ns 200.93 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high severe
+Benchmarking ui-small/bucket/1
+Benchmarking ui-small/bucket/1: Warming up for 500.00 ms
+Benchmarking ui-small/bucket/1: Collecting 50 samples in estimated 2.0000 s (10M iterations)
+Benchmarking ui-small/bucket/1: Analyzing
+ui-small/bucket/1       time:   [197.19 ns 197.85 ns 198.76 ns]
+Benchmarking ui-small/baseline/0
+Benchmarking ui-small/baseline/0: Warming up for 500.00 ms
+Benchmarking ui-small/baseline/0: Collecting 50 samples in estimated 2.0032 s (606k iterations)
+Benchmarking ui-small/baseline/0: Analyzing
+ui-small/baseline/0     time:   [3.3232 µs 3.3298 µs 3.3368 µs]
+Benchmarking ui-small/heap/0
+Benchmarking ui-small/heap/0: Warming up for 500.00 ms
+Benchmarking ui-small/heap/0: Collecting 50 samples in estimated 2.0001 s (17M iterations)
+Benchmarking ui-small/heap/0: Analyzing
+ui-small/heap/0         time:   [116.75 ns 116.96 ns 117.18 ns]
+Benchmarking ui-small/bucket/0
+Benchmarking ui-small/bucket/0: Warming up for 500.00 ms
+Benchmarking ui-small/bucket/0: Collecting 50 samples in estimated 2.0001 s (18M iterations)
+Benchmarking ui-small/bucket/0: Analyzing
+ui-small/bucket/0       time:   [109.27 ns 109.41 ns 109.54 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+
+Benchmarking ui-large/baseline/100
+Benchmarking ui-large/baseline/100: Warming up for 500.00 ms
+Benchmarking ui-large/baseline/100: Collecting 50 samples in estimated 2.1484 s (11k iterations)
+Benchmarking ui-large/baseline/100: Analyzing
+ui-large/baseline/100   time:   [185.58 µs 185.66 µs 185.77 µs]
+Benchmarking ui-large/heap/100
+Benchmarking ui-large/heap/100: Warming up for 500.00 ms
+Benchmarking ui-large/heap/100: Collecting 50 samples in estimated 2.4419 s (5100 iterations)
+Benchmarking ui-large/heap/100: Analyzing
+ui-large/heap/100       time:   [480.52 µs 480.61 µs 480.70 µs]
+Found 4 outliers among 50 measurements (8.00%)
+  4 (8.00%) high mild
+Benchmarking ui-large/bucket/100
+Benchmarking ui-large/bucket/100: Warming up for 500.00 ms
+Benchmarking ui-large/bucket/100: Collecting 50 samples in estimated 2.0614 s (8925 iterations)
+Benchmarking ui-large/bucket/100: Analyzing
+ui-large/bucket/100     time:   [230.29 µs 230.54 µs 230.89 µs]
+Benchmarking ui-large/baseline/90
+Benchmarking ui-large/baseline/90: Warming up for 500.00 ms
+Benchmarking ui-large/baseline/90: Collecting 50 samples in estimated 2.0732 s (11k iterations)
+Benchmarking ui-large/baseline/90: Analyzing
+ui-large/baseline/90    time:   [179.49 µs 179.92 µs 180.46 µs]
+Benchmarking ui-large/heap/90
+Benchmarking ui-large/heap/90: Warming up for 500.00 ms
+Benchmarking ui-large/heap/90: Collecting 50 samples in estimated 2.1571 s (5100 iterations)
+Benchmarking ui-large/heap/90: Analyzing
+ui-large/heap/90        time:   [423.25 µs 424.08 µs 424.94 µs]
+Found 9 outliers among 50 measurements (18.00%)
+  1 (2.00%) low severe
+  1 (2.00%) low mild
+  2 (4.00%) high mild
+  5 (10.00%) high severe
+Benchmarking ui-large/bucket/90
+Benchmarking ui-large/bucket/90: Warming up for 500.00 ms
+Benchmarking ui-large/bucket/90: Collecting 50 samples in estimated 2.1175 s (10k iterations)
+Benchmarking ui-large/bucket/90: Analyzing
+ui-large/bucket/90      time:   [206.61 µs 206.67 µs 206.72 µs]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low severe
+  1 (2.00%) high severe
+Benchmarking ui-large/baseline/75
+Benchmarking ui-large/baseline/75: Warming up for 500.00 ms
+Benchmarking ui-large/baseline/75: Collecting 50 samples in estimated 2.1750 s (13k iterations)
+Benchmarking ui-large/baseline/75: Analyzing
+ui-large/baseline/75    time:   [170.41 µs 170.58 µs 170.81 µs]
+Benchmarking ui-large/heap/75
+Benchmarking ui-large/heap/75: Warming up for 500.00 ms
+Benchmarking ui-large/heap/75: Collecting 50 samples in estimated 2.2179 s (6375 iterations)
+Benchmarking ui-large/heap/75: Analyzing
+ui-large/heap/75        time:   [347.40 µs 347.65 µs 347.92 µs]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low severe
+  1 (2.00%) high severe
+Benchmarking ui-large/bucket/75
+Benchmarking ui-large/bucket/75: Warming up for 500.00 ms
+Benchmarking ui-large/bucket/75: Collecting 50 samples in estimated 2.2214 s (13k iterations)
+Benchmarking ui-large/bucket/75: Analyzing
+ui-large/bucket/75      time:   [173.67 µs 173.90 µs 174.17 µs]
+Found 9 outliers among 50 measurements (18.00%)
+  6 (12.00%) low mild
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking ui-large/baseline/50
+Benchmarking ui-large/baseline/50: Warming up for 500.00 ms
+Benchmarking ui-large/baseline/50: Collecting 50 samples in estimated 2.1813 s (14k iterations)
+Benchmarking ui-large/baseline/50: Analyzing
+ui-large/baseline/50    time:   [155.45 µs 155.53 µs 155.63 µs]
+Found 5 outliers among 50 measurements (10.00%)
+  2 (4.00%) low mild
+  1 (2.00%) high mild
+  2 (4.00%) high severe
+Benchmarking ui-large/heap/50
+Benchmarking ui-large/heap/50: Warming up for 500.00 ms
+Benchmarking ui-large/heap/50: Collecting 50 samples in estimated 2.0270 s (8925 iterations)
+Benchmarking ui-large/heap/50: Analyzing
+ui-large/heap/50        time:   [226.35 µs 226.59 µs 226.93 µs]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking ui-large/bucket/50
+Benchmarking ui-large/bucket/50: Warming up for 500.00 ms
+Benchmarking ui-large/bucket/50: Collecting 50 samples in estimated 2.1403 s (18k iterations)
+Benchmarking ui-large/bucket/50: Analyzing
+ui-large/bucket/50      time:   [123.66 µs 124.63 µs 125.30 µs]
+Benchmarking ui-large/baseline/25
+Benchmarking ui-large/baseline/25: Warming up for 500.00 ms
+Benchmarking ui-large/baseline/25: Collecting 50 samples in estimated 2.1655 s (15k iterations)
+Benchmarking ui-large/baseline/25: Analyzing
+ui-large/baseline/25    time:   [141.19 µs 141.25 µs 141.29 µs]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+Benchmarking ui-large/heap/25
+Benchmarking ui-large/heap/25: Warming up for 500.00 ms
+Benchmarking ui-large/heap/25: Collecting 50 samples in estimated 2.0469 s (18k iterations)
+Benchmarking ui-large/heap/25: Analyzing
+ui-large/heap/25        time:   [115.31 µs 115.35 µs 115.40 µs]
+Found 6 outliers among 50 measurements (12.00%)
+  3 (6.00%) low mild
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking ui-large/bucket/25
+Benchmarking ui-large/bucket/25: Warming up for 500.00 ms
+Benchmarking ui-large/bucket/25: Collecting 50 samples in estimated 2.0562 s (32k iterations)
+Benchmarking ui-large/bucket/25: Analyzing
+ui-large/bucket/25      time:   [67.408 µs 67.828 µs 68.090 µs]
+Benchmarking ui-large/baseline/10
+Benchmarking ui-large/baseline/10: Warming up for 500.00 ms
+Benchmarking ui-large/baseline/10: Collecting 50 samples in estimated 2.0084 s (15k iterations)
+Benchmarking ui-large/baseline/10: Analyzing
+ui-large/baseline/10    time:   [131.11 µs 131.16 µs 131.20 µs]
+Found 3 outliers among 50 measurements (6.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+  1 (2.00%) high severe
+Benchmarking ui-large/heap/10
+Benchmarking ui-large/heap/10: Warming up for 500.00 ms
+Benchmarking ui-large/heap/10: Collecting 50 samples in estimated 2.0526 s (46k iterations)
+Benchmarking ui-large/heap/10: Analyzing
+ui-large/heap/10        time:   [44.543 µs 44.637 µs 44.743 µs]
+Found 10 outliers among 50 measurements (20.00%)
+  7 (14.00%) low mild
+  1 (2.00%) high mild
+  2 (4.00%) high severe
+Benchmarking ui-large/bucket/10
+Benchmarking ui-large/bucket/10: Warming up for 500.00 ms
+Benchmarking ui-large/bucket/10: Collecting 50 samples in estimated 2.0017 s (74k iterations)
+Benchmarking ui-large/bucket/10: Analyzing
+ui-large/bucket/10      time:   [27.283 µs 27.432 µs 27.637 µs]
+Benchmarking ui-large/baseline/5
+Benchmarking ui-large/baseline/5: Warming up for 500.00 ms
+Benchmarking ui-large/baseline/5: Collecting 50 samples in estimated 2.1192 s (17k iterations)
+Benchmarking ui-large/baseline/5: Analyzing
+ui-large/baseline/5     time:   [128.34 µs 128.58 µs 128.82 µs]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) high mild
+Benchmarking ui-large/heap/5
+Benchmarking ui-large/heap/5: Warming up for 500.00 ms
+Benchmarking ui-large/heap/5: Collecting 50 samples in estimated 2.0135 s (87k iterations)
+Benchmarking ui-large/heap/5: Analyzing
+ui-large/heap/5         time:   [23.048 µs 23.099 µs 23.148 µs]
+Benchmarking ui-large/bucket/5
+Benchmarking ui-large/bucket/5: Warming up for 500.00 ms
+Benchmarking ui-large/bucket/5: Collecting 50 samples in estimated 2.0024 s (131k iterations)
+Benchmarking ui-large/bucket/5: Analyzing
+ui-large/bucket/5       time:   [15.379 µs 15.457 µs 15.513 µs]
+Found 7 outliers among 50 measurements (14.00%)
+  5 (10.00%) low severe
+  2 (4.00%) low mild
+Benchmarking ui-large/baseline/2
+Benchmarking ui-large/baseline/2: Warming up for 500.00 ms
+Benchmarking ui-large/baseline/2: Collecting 50 samples in estimated 2.1070 s (17k iterations)
+Benchmarking ui-large/baseline/2: Analyzing
+ui-large/baseline/2     time:   [125.40 µs 125.76 µs 126.11 µs]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking ui-large/heap/2
+Benchmarking ui-large/heap/2: Warming up for 500.00 ms
+Benchmarking ui-large/heap/2: Collecting 50 samples in estimated 2.0009 s (199k iterations)
+Benchmarking ui-large/heap/2: Analyzing
+ui-large/heap/2         time:   [10.033 µs 10.050 µs 10.068 µs]
+Found 6 outliers among 50 measurements (12.00%)
+  3 (6.00%) low mild
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking ui-large/bucket/2
+Benchmarking ui-large/bucket/2: Warming up for 500.00 ms
+Benchmarking ui-large/bucket/2: Collecting 50 samples in estimated 2.0026 s (306k iterations)
+Benchmarking ui-large/bucket/2: Analyzing
+ui-large/bucket/2       time:   [6.5577 µs 6.5964 µs 6.6463 µs]
+Benchmarking ui-large/baseline/1
+Benchmarking ui-large/baseline/1: Warming up for 500.00 ms
+Benchmarking ui-large/baseline/1: Collecting 50 samples in estimated 2.0736 s (17k iterations)
+Benchmarking ui-large/baseline/1: Analyzing
+ui-large/baseline/1     time:   [125.09 µs 125.26 µs 125.47 µs]
+Found 11 outliers among 50 measurements (22.00%)
+  11 (22.00%) high mild
+Benchmarking ui-large/heap/1
+Benchmarking ui-large/heap/1: Warming up for 500.00 ms
+Benchmarking ui-large/heap/1: Collecting 50 samples in estimated 2.0060 s (310k iterations)
+Benchmarking ui-large/heap/1: Analyzing
+ui-large/heap/1         time:   [6.4808 µs 6.4957 µs 6.5121 µs]
+Found 5 outliers among 50 measurements (10.00%)
+  2 (4.00%) high mild
+  3 (6.00%) high severe
+Benchmarking ui-large/bucket/1
+Benchmarking ui-large/bucket/1: Warming up for 500.00 ms
+Benchmarking ui-large/bucket/1: Collecting 50 samples in estimated 2.0007 s (487k iterations)
+Benchmarking ui-large/bucket/1: Analyzing
+ui-large/bucket/1       time:   [4.0874 µs 4.1043 µs 4.1243 µs]
+Found 15 outliers among 50 measurements (30.00%)
+  9 (18.00%) low mild
+  1 (2.00%) high mild
+  5 (10.00%) high severe
+Benchmarking ui-large/baseline/0
+Benchmarking ui-large/baseline/0: Warming up for 500.00 ms
+Benchmarking ui-large/baseline/0: Collecting 50 samples in estimated 2.0521 s (17k iterations)
+Benchmarking ui-large/baseline/0: Analyzing
+ui-large/baseline/0     time:   [124.25 µs 124.47 µs 124.67 µs]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking ui-large/heap/0
+Benchmarking ui-large/heap/0: Warming up for 500.00 ms
+Benchmarking ui-large/heap/0: Collecting 50 samples in estimated 2.0009 s (667k iterations)
+Benchmarking ui-large/heap/0: Analyzing
+ui-large/heap/0         time:   [2.9647 µs 2.9687 µs 2.9739 µs]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking ui-large/bucket/0
+Benchmarking ui-large/bucket/0: Warming up for 500.00 ms
+Benchmarking ui-large/bucket/0: Collecting 50 samples in estimated 2.0001 s (1.4M iterations)
+Benchmarking ui-large/bucket/0: Analyzing
+ui-large/bucket/0       time:   [1.4207 µs 1.4224 µs 1.4242 µs]
+Found 10 outliers among 50 measurements (20.00%)
+  6 (12.00%) high mild
+  4 (8.00%) high severe
+
+Benchmarking frame/baseline/64
+Benchmarking frame/baseline/64: Warming up for 500.00 ms
+Benchmarking frame/baseline/64: Collecting 50 samples in estimated 2.0092 s (168k iterations)
+Benchmarking frame/baseline/64: Analyzing
+frame/baseline/64       time:   [11.915 µs 11.938 µs 11.963 µs]
+Benchmarking frame/heap/64
+Benchmarking frame/heap/64: Warming up for 500.00 ms
+Benchmarking frame/heap/64: Collecting 50 samples in estimated 2.0204 s (113k iterations)
+Benchmarking frame/heap/64: Analyzing
+frame/heap/64           time:   [17.882 µs 17.934 µs 17.990 µs]
+Benchmarking frame/bucket/64
+Benchmarking frame/bucket/64: Warming up for 500.00 ms
+Benchmarking frame/bucket/64: Collecting 50 samples in estimated 2.0043 s (156k iterations)
+Benchmarking frame/bucket/64: Analyzing
+frame/bucket/64         time:   [12.850 µs 12.877 µs 12.902 µs]
+Benchmarking frame/baseline/1024
+Benchmarking frame/baseline/1024: Warming up for 500.00 ms
+Benchmarking frame/baseline/1024: Collecting 50 samples in estimated 2.0620 s (7650 iterations)
+Benchmarking frame/baseline/1024: Analyzing
+frame/baseline/1024     time:   [269.83 µs 270.27 µs 270.80 µs]
+Found 5 outliers among 50 measurements (10.00%)
+  5 (10.00%) high mild
+Benchmarking frame/heap/1024
+Benchmarking frame/heap/1024: Warming up for 500.00 ms
+Benchmarking frame/heap/1024: Collecting 50 samples in estimated 2.0596 s (5100 iterations)
+Benchmarking frame/heap/1024: Analyzing
+frame/heap/1024         time:   [403.91 µs 405.27 µs 406.49 µs]
+Found 20 outliers among 50 measurements (40.00%)
+  8 (16.00%) low severe
+  3 (6.00%) low mild
+  9 (18.00%) high severe
+Benchmarking frame/bucket/1024
+Benchmarking frame/bucket/1024: Warming up for 500.00 ms
+Benchmarking frame/bucket/1024: Collecting 50 samples in estimated 2.2332 s (8925 iterations)
+Benchmarking frame/bucket/1024: Analyzing
+frame/bucket/1024       time:   [253.14 µs 253.57 µs 253.92 µs]
+
+
+$ python3 scripts/ratios.py ui-small ui-large frame
+
+benchmark            ratio   95% interval       baseline mean
+frame/bucket/1024     0.936  [ 0.933,  0.938]      270285.4 ns
+frame/bucket/64       1.085  [ 1.082,  1.088]       11935.5 ns
+frame/heap/1024       1.497  [ 1.493,  1.500]      270285.4 ns
+frame/heap/64         1.500  [ 1.495,  1.504]       11935.5 ns
+ui-large/bucket/0     0.012  [ 0.011,  0.012]      124147.6 ns
+ui-large/bucket/1     0.033  [ 0.033,  0.033]      125295.1 ns
+ui-large/bucket/10    0.212  [ 0.210,  0.213]      131151.6 ns
+ui-large/bucket/100   1.245  [ 1.242,  1.248]      186042.2 ns
+ui-large/bucket/2     0.053  [ 0.053,  0.053]      125909.6 ns
+ui-large/bucket/25    0.474  [ 0.470,  0.477]      141225.6 ns
+ui-large/bucket/5     0.120  [ 0.119,  0.121]      128221.3 ns
+ui-large/bucket/50    0.785  [ 0.779,  0.791]      155568.2 ns
+ui-large/bucket/75    1.018  [ 1.017,  1.019]      170927.1 ns
+ui-large/bucket/90    1.146  [ 1.144,  1.148]      180337.1 ns
+ui-large/heap/0       0.024  [ 0.024,  0.024]      124147.6 ns
+ui-large/heap/1       0.052  [ 0.052,  0.052]      125295.1 ns
+ui-large/heap/10      0.341  [ 0.340,  0.341]      131151.6 ns
+ui-large/heap/100     2.584  [ 2.581,  2.586]      186042.2 ns
+ui-large/heap/2       0.080  [ 0.079,  0.080]      125909.6 ns
+ui-large/heap/25      0.817  [ 0.816,  0.818]      141225.6 ns
+ui-large/heap/5       0.181  [ 0.180,  0.181]      128221.3 ns
+ui-large/heap/50      1.461  [ 1.458,  1.464]      155568.2 ns
+ui-large/heap/75      2.036  [ 2.033,  2.039]      170927.1 ns
+ui-large/heap/90      2.348  [ 2.343,  2.353]      180337.1 ns
+ui-small/bucket/0     0.033  [ 0.033,  0.033]        3325.3 ns
+ui-small/bucket/1     0.060  [ 0.059,  0.060]        3338.8 ns
+ui-small/bucket/10    0.267  [ 0.265,  0.268]        3529.7 ns
+ui-small/bucket/100   1.218  [ 1.215,  1.222]        4838.3 ns
+ui-small/bucket/2     0.093  [ 0.092,  0.094]        3343.8 ns
+ui-small/bucket/25    0.545  [ 0.543,  0.546]        3809.6 ns
+ui-small/bucket/5     0.154  [ 0.154,  0.155]        3432.4 ns
+ui-small/bucket/50    0.838  [ 0.835,  0.841]        4184.2 ns
+ui-small/bucket/75    1.063  [ 1.057,  1.068]        4530.8 ns
+ui-small/bucket/90    1.194  [ 1.188,  1.200]        4685.1 ns
+ui-small/heap/0       0.035  [ 0.035,  0.035]        3325.3 ns
+ui-small/heap/1       0.060  [ 0.060,  0.060]        3338.8 ns
+ui-small/heap/10      0.258  [ 0.258,  0.259]        3529.7 ns
+ui-small/heap/100     1.570  [ 1.567,  1.572]        4838.3 ns
+ui-small/heap/2       0.090  [ 0.090,  0.090]        3343.8 ns
+ui-small/heap/25      0.569  [ 0.568,  0.570]        3809.6 ns
+ui-small/heap/5       0.148  [ 0.148,  0.148]        3432.4 ns
+ui-small/heap/50      0.967  [ 0.965,  0.968]        4184.2 ns
+ui-small/heap/75      1.322  [ 1.319,  1.326]        4530.8 ns
+ui-small/heap/90      1.499  [ 1.496,  1.503]        4685.1 ns
+
