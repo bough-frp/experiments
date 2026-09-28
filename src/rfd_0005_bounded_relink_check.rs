@@ -94,8 +94,8 @@ impl Rng {
 /// same instant. A switch has exactly one dependency, its inner.
 #[derive(Clone, Default)]
 pub struct Graph {
-    deps: Vec<Vec<Id>>,
-    dependents: Vec<Vec<Id>>,
+    pub deps: Vec<Vec<Id>>,
+    pub dependents: Vec<Vec<Id>>,
     /// The `construct`-style subgraph each node was built in.
     sub: Vec<u32>,
     switch: Vec<bool>,
@@ -124,12 +124,12 @@ impl Graph {
         n
     }
 
-    fn link(&mut self, from: Id, to: Id) {
+    pub fn link(&mut self, from: Id, to: Id) {
         self.deps[to as usize].push(from);
         self.dependents[from as usize].push(to);
     }
 
-    fn unlink(&mut self, from: Id, to: Id) {
+    pub fn unlink(&mut self, from: Id, to: Id) {
         let deps = &mut self.deps[to as usize];
         let k = deps.iter().position(|&d| d == from).expect("no such edge");
         deps.swap_remove(k);
