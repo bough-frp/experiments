@@ -1,0 +1,346 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0002-ternary-loop-census at experiments@5a6b1a1 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0002-ternary-loop-census -- --enumerate
+
+ternary-loop-census --enumerate: every program of 2 to 4 nodes, every cell binding
+
+Every program of 2 to 4 nodes over the reachable-state mode's subset that has a
+same-instant cycle, counted once per orbit under renaming nodes, permuting
+inputs, swapping the two cells and negating a cell. Each cell a gate reads is
+`c = src.map(pred).hold(init)`, and every binding is tried: src any input or
+stream, pred one of four, init false or true, per cell. Classes as in the
+reachable-state mode.
+free: constructive over free cells. mixed: some cell states settle in every
+instant and some don't; only these can be new. new: some binding makes it
+constructive over reachable states. (a'd) (a'i) (c1) (c2): some binding of
+that class. chg: some (c) binding with a changing cell: a gate on or upstream
+of a cycle is open in one reachable state and closed in another. val: some (c)
+binding that is value-dependent. bindings, new-b, (c)-b, chg-b: (program, binding) pairs
+over the mixed programs.
+
+2 inputs, model `any`: any presence combination, including the quiet instant
+size  programs   free    mixed     new  (a'd)  (a'i)  (c1)  (c2)  chg  val    bindings     new-b  (c)-b  chg-b
+   2       782      1       48      48     48      1     0     0    0    0        5504      1248      0      0
+   3     46484     47     2480    2480   2480     47     0     0    0    0      581240    132869      0      0
+   4   3100013   3161   146277  146277 146277   3224     0     0    0    0    63094176  14520107      0      0
+ all   3147279   3209   148805  148805 148805   3272     0     0    0    0    63680920  14654224      0      0
+
+2 inputs, model `>=1`: at least one input fires
+size  programs   free    mixed     new  (a'd)  (a'i)  (c1)  (c2)  chg  val    bindings     new-b  (c)-b  chg-b
+   2       782      4       48      48     48      1     0     0    0    0        5504      1248      0      0
+   3     46484    292     2486    2480   2477     47     2     1    0    0      581480    132869     12      0
+   4   3100013  23483   147222  146650 145831   3220   653   176   13  192    63245568  14522529  10804   3498
+ all   3147279  23779   149756  149178 148356   3268   655   177   13  192    63832552  14656646  10816   3498
+
+2 inputs, model `one`: exactly one input fires
+size  programs   free    mixed     new  (a'd)  (a'i)  (c1)  (c2)  chg  val    bindings     new-b  (c)-b  chg-b
+   2       782      4       48      48     48      1     0     0    0    0        5504      1248      0      0
+   3     46484    292     2486    2480   2477     47     2     1    0    0      581480    132869     12      0
+   4   3100013  23483   147222  146651 145831   3220   653   177   13  192    63245568  14523895  11208   3900
+ all   3147279  23779   149756  149179 148356   3268   655   178   13  192    63832552  14658012  11220   3900
+
+3 inputs, model `any`: any presence combination, including the quiet instant
+size  programs   free    mixed     new  (a'd)  (a'i)  (c1)  (c2)  chg  val    bindings     new-b  (c)-b  chg-b
+   2       788      1       48      48     48      1     0     0    0    0        8160      1490      0      0
+   3     48710     47     2530    2530   2530     47     0     0    0    0      823056    155499      0      0
+   4   3418536   3209   155749  155749 155749   3272     0     0    0    0    88198264  16981079      0      0
+ all   3468034   3257   158327  158327 158327   3320     0     0    0    0    89029480  17138068      0      0
+
+3 inputs, model `>=1`: at least one input fires
+size  programs   free    mixed     new  (a'd)  (a'i)  (c1)  (c2)  chg  val    bindings     new-b  (c)-b  chg-b
+   2       788      1       48      48     48      1     0     0    0    0        8160      1490      0      0
+   3     48710     56     2530    2530   2530     47     0     0    0    0      823056    155499      0      0
+   4   3418536   4650   155782  155747 155738   3272     6     3    0    0    88200112  16981071     36      0
+ all   3468034   4707   158360  158325 158316   3320     6     3    0    0    89031328  17138060     36      0
+
+3 inputs, model `one`: exactly one input fires
+size  programs   free    mixed     new  (a'd)  (a'i)  (c1)  (c2)  chg  val    bindings     new-b  (c)-b  chg-b
+   2       788      1       48      48     48      1     0     0    0    0        8160      1490      0      0
+   3     48710     56     2530    2530   2530     47     0     0    0    0      823056    155499      0      0
+   4   3418536   4650   155782  155747 155738   3272     6     3    0    0    88200112  16982081     36      0
+ all   3468034   4707   158360  158325 158316   3320     6     3    0    0    89031328  17139070     36      0
+
+control: 1 inputs, size 2: enumerator found 915 programs, brute force 915 orbits
+control: 1 inputs, size 3: enumerator found 41680 programs, brute force 41680 orbits
+control: 2 inputs, size 2: enumerator found 1175 programs, brute force 1175 orbits
+control: 2 inputs, size 3: enumerator found 60453 programs, brute force 60453 orbits
+control: 3 inputs, size 2: enumerator found 1215 programs, brute force 1215 orbits
+control: 0 free-constructive programs `judge` refused
+control: `judge_reach` agreed on 2173519 of 2173519 sampled non-(c) bindings
+control: `judge_reach` agreed on 22108 of 22108 (c) bindings
+control: 0 instants where forward and reverse sweeps disagreed
+
+Every (c) program with a changing cell, grouped by minimal form: the nodes
+on or upstream of a cycle, up to symmetry. bindings: enumerated (program,
+binding) pairs in the group. Then the smallest example with its cells, pruned
+as in the reachable-state mode; reachable states listed as c1c0.
+
+2 inputs, #1: (c2) under >=1, one; value-dependent: no; bindings: 390; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = i0.gate(c0);
+    let s1 = s2.gate(c1);
+    s2_loop.close(i1.or_else(s3));
+    s3_loop.close(s0.or_else(s1));
+
+  smallest example (reachable: 00 11):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = i0.gate(c0);
+    let s1 = s2.gate(c1);
+    s2_loop.close(i1.or_else(s3));
+    s3_loop.close(s0.or_else(s1));
+    c0_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+
+2 inputs, #2: (c2) under >=1, one; value-dependent: no; bindings: 354; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = i0.gate(c0);
+    let s1 = s2.gate(c1);
+    s2_loop.close(s0.or_else(s3));
+    s3_loop.close(i1.or_else(s1));
+
+  smallest example (reachable: 00 11):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = i0.gate(c0);
+    let s1 = s2.gate(c1);
+    s2_loop.close(s0.or_else(s3));
+    s3_loop.close(i1.or_else(s1));
+    c0_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+
+2 inputs, #3: (c1) under >=1, one; value-dependent: no; bindings: 366; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = i0.gate(c0);
+    let s1 = s2.gate(c1);
+    s2_loop.close(s3.or_else(s1));
+    s3_loop.close(i1.merge(s0, |x, y| x + y));
+
+  smallest example (reachable: 00 11):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = i0.gate(c0);
+    let s1 = s2.gate(c1);
+    s2_loop.close(s3.or_else(s1));
+    s3_loop.close(i1.merge(s0, |x, y| x + y));
+    c0_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+
+2 inputs, #4: (c1) under >=1, one; value-dependent: no; bindings: 408; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = i0.gate(c0);
+    let s1 = s2.gate(c1);
+    s2_loop.close(s3.or_else(s1));
+    s3_loop.close(i1.or_else(s0));
+
+  smallest example (reachable: 00 11):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = i0.gate(c0);
+    let s1 = s2.gate(c1);
+    s2_loop.close(s3.or_else(s1));
+    s3_loop.close(i1.or_else(s0));
+    c0_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+
+2 inputs, #5: (c1) under >=1, one; value-dependent: no; bindings: 378; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = i0.gate(c0);
+    let s1 = s2.gate(c1);
+    s2_loop.close(s3.or_else(s1));
+    s3_loop.close(s0.or_else(i1));
+
+  smallest example (reachable: 00 11):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = i0.gate(c0);
+    let s1 = s2.gate(c1);
+    s2_loop.close(s3.or_else(s1));
+    s3_loop.close(s0.or_else(i1));
+    c0_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+
+2 inputs, #6: (c2) under >=1, one; value-dependent: no; bindings: 288; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s0, s0_loop) = b.stream_loop();
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    s0_loop.close(s0.gate(c0));
+    let s1 = s2.gate(c1);
+    s2_loop.close(i0.or_else(s3));
+    s3_loop.close(i1.or_else(s1));
+
+  smallest example (reachable: 00 10):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s0, s0_loop) = b.stream_loop();
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    s0_loop.close(s0.gate(c0));
+    let s1 = s2.gate(c1);
+    s2_loop.close(i0.or_else(s3));
+    s3_loop.close(i1.or_else(s1));
+    c0_loop.close(s0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+
+2 inputs, #7: (c1) under >=1, one; value-dependent: no; bindings: 288; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s0, s0_loop) = b.stream_loop();
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    s0_loop.close(s0.gate(c0));
+    let s1 = s2.gate(c1);
+    s2_loop.close(s3.or_else(s1));
+    s3_loop.close(i0.merge(i1, |x, y| x + y));
+
+  smallest example (reachable: 00 10):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s0, s0_loop) = b.stream_loop();
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    s0_loop.close(s0.gate(c0));
+    let s1 = s2.gate(c1);
+    s2_loop.close(s3.or_else(s1));
+    s3_loop.close(i0.merge(i1, |x, y| x + y));
+    c0_loop.close(s0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+
+2 inputs, #8: (c1) under >=1, one; value-dependent: no; bindings: 288; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s0, s0_loop) = b.stream_loop();
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    s0_loop.close(s0.gate(c0));
+    let s1 = s2.gate(c1);
+    s2_loop.close(s3.or_else(s1));
+    s3_loop.close(i0.or_else(i1));
+
+  smallest example (reachable: 00 10):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s0, s0_loop) = b.stream_loop();
+    let (s2, s2_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    s0_loop.close(s0.gate(c0));
+    let s1 = s2.gate(c1);
+    s2_loop.close(s3.or_else(s1));
+    s3_loop.close(i0.or_else(i1));
+    c0_loop.close(s0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+
+2 inputs, #9: (c1) under >=1, one; value-dependent: no; bindings: 1240; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s1, s1_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = s1.gate(c0);
+    s1_loop.close(s0.gate(c1));
+    let s2 = i0.merge(i1, |x, y| x + y);
+    s3_loop.close(s2.or_else(s3));
+
+  smallest example (reachable: 00 01 10):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s1, s1_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = s1.gate(c0);
+    s1_loop.close(s0.gate(c1));
+    let s2 = i0.merge(i1, |x, y| x + y);
+    s3_loop.close(s2.or_else(s3));
+    c0_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 1).hold(false));
+
+2 inputs, #10: (c1) under >=1, one; value-dependent: no; bindings: 1240; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s1, s1_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = s1.gate(c0);
+    s1_loop.close(s0.gate(c1));
+    let s2 = i0.or_else(i1);
+    s3_loop.close(s2.or_else(s3));
+
+  smallest example (reachable: 00 01 10):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s1, s1_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = s1.gate(c0);
+    s1_loop.close(s0.gate(c1));
+    let s2 = i0.or_else(i1);
+    s3_loop.close(s2.or_else(s3));
+    c0_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 1).hold(false));
+
+2 inputs, #11: (c2) under >=1, one; value-dependent: no; bindings: 1204; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s1, s1_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = s1.gate(c0);
+    s1_loop.close(s0.gate(c1));
+    let s2 = i0.or_else(s3);
+    s3_loop.close(i1.or_else(s2));
+
+  smallest example (reachable: 00 01 10):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s1, s1_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = s1.gate(c0);
+    s1_loop.close(s0.gate(c1));
+    let s2 = i0.or_else(s3);
+    s3_loop.close(i1.or_else(s2));
+    c0_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 1).hold(false));
+
+2 inputs, #12: (c1) under >=1, one; value-dependent: no; bindings: 456; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s1, s1_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = s1.gate(c0);
+    s1_loop.close(i0.merge(i1, |x, y| x + y));
+    let s2 = s3.gate(c1);
+    s3_loop.close(s0.or_else(s2));
+
+  smallest example (reachable: 00 11):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s1, s1_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = s1.gate(c0);
+    s1_loop.close(i0.merge(i1, |x, y| x + y));
+    let s2 = s3.gate(c1);
+    s3_loop.close(s0.or_else(s2));
+    c0_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+
+2 inputs, #13: (c1) under >=1, one; value-dependent: no; bindings: 498; from size 4; example with a 3rd input under `>=1`: not constructive:
+    let (s1, s1_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = s1.gate(c0);
+    s1_loop.close(i0.or_else(i1));
+    let s2 = s3.gate(c1);
+    s3_loop.close(s0.or_else(s2));
+
+  smallest example (reachable: 00 11):
+    let (c0, c0_loop) = b.cell_loop();
+    let (c1, c1_loop) = b.cell_loop();
+    let (s1, s1_loop) = b.stream_loop();
+    let (s3, s3_loop) = b.stream_loop();
+    let s0 = s1.gate(c0);
+    s1_loop.close(i0.or_else(i1));
+    let s2 = s3.gate(c1);
+    s3_loop.close(s0.or_else(s2));
+    c0_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+    c1_loop.close(i0.map(|v| v % 2 == 0).hold(false));
+
+3 inputs: none found
+
+verdict (2 inputs, 3147279 refused programs of 2-4 nodes, every binding): `any` 148805 programs new, (c1) 0, (c2) 0, 0 with a changing cell; `>=1` 149178 programs new, (c1) 655, (c2) 177, 13 with a changing cell; `one` 149179 programs new, (c1) 655, (c2) 178, 13 with a changing cell; 13 minimal forms of (c) with a changing cell.
+verdict (3 inputs, 3468034 refused programs of 2-4 nodes, every binding): `any` 158327 programs new, (c1) 0, (c2) 0, 0 with a changing cell; `>=1` 158325 programs new, (c1) 6, (c2) 3, 0 with a changing cell; `one` 158325 programs new, (c1) 6, (c2) 3, 0 with a changing cell; 0 minimal forms of (c) with a changing cell.
