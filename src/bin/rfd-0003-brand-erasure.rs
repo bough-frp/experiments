@@ -28,12 +28,16 @@
 //! the same `api.rs` with its `Rebrand` impls written by a real proc macro.
 //! `-- borrow` runs another, in `rfd-0003-brand-erasure/borrow.rs`: that
 //! derive also writing borrowed read and write views, and `sample` returning
-//! one.
+//! one. `-- trace` runs a third, in `rfd-0003-brand-erasure/trace.rs`:
+//! `Trace` derived beside `Rebrand` and skipped fields checked, copy-free
+//! reads of generic brand-free types, and seals against the stash route.
 
 #[path = "rfd-0003-brand-erasure/borrow.rs"]
 mod borrow;
 #[path = "rfd-0003-brand-erasure/derive.rs"]
 mod derive;
+#[path = "rfd-0003-brand-erasure/trace.rs"]
+mod trace;
 
 use std::path::Path;
 use std::process::{Command, Stdio};
@@ -300,6 +304,12 @@ fn main() {
     // `-- borrow` runs the follow-up on derived borrowed views.
     if std::env::args().nth(1).as_deref() == Some("borrow") {
         borrow::main(root);
+        return;
+    }
+    // `-- trace` runs the follow-up on derived `Trace`, brand-free reads and
+    // seals.
+    if std::env::args().nth(1).as_deref() == Some("trace") {
+        trace::main(root);
         return;
     }
     println!("stable:  {}  (rust-toolchain.toml)", version(root, None));

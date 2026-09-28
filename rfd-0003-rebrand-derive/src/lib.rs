@@ -53,7 +53,10 @@
 //!   level `Leaf`, for another crate's type in a struct.
 //!
 //! With the `views` feature it also writes the borrowed views of
-//! `rfd-0003-brand-erasure -- borrow`; `views.rs` says how.
+//! `rfd-0003-brand-erasure -- borrow`; `views.rs` says how. With `trace` it
+//! also exports `#[derive(Trace)]` and refuses a skipped field that may hold a
+//! token, and with `seal` or `unsafe-seal` it implements a seal next to
+//! `Rebrand`, for `rfd-0003-brand-erasure -- trace`; `trace.rs` says how.
 use proc_macro::TokenStream;
 use proc_macro2::{Span, TokenStream as Tokens};
 use quote::{format_ident, quote, quote_spanned};
@@ -199,11 +202,48 @@ fn expand(input: &DeriveInput) -> Result<Tokens> {
         let views = views::expand(input, &generics, brand.as_ref(), has_type_param)?;
         quote!(#rebrand_impl #views)
     };
+    #[cfg(feature = "trace")]
+    let rebrand_impl = {
+        let checks = trace::skip_checks(input)?;
+        quote!(#rebrand_impl #checks)
+    };
+    // The seals of question 3 of `-- trace`: the derive implements a trait
+    // that `Rebrand` requires, so that a hand-written impl lacks it.
+    #[cfg(feature = "seal")]
+    let rebrand_impl = quote! {
+        #rebrand_impl
+        impl #impl_generics ::bough::__private::Sealed for #name #ty_generics #where_clause {}
+    };
+    // `bare-unsafe` leaves out the `allow`, which a `forbid` in the user's
+    // crate rejects.
+    #[cfg(feature = "unsafe-seal")]
+    let rebrand_impl = {
+        let allow = (!cfg!(feature = "bare-unsafe")).then(|| quote!(#[allow(unsafe_code)]));
+        quote! {
+            #rebrand_impl
+            #allow
+            unsafe impl #impl_generics ::bough::__private::Sound for #name #ty_generics #where_clause {}
+        }
+    };
     Ok(rebrand_impl)
 }
 
 #[cfg(feature = "views")]
 mod views;
+
+#[cfg(feature = "trace")]
+mod trace;
+
+/// `#[derive(Trace)]`, from the same `#[rebrand(skip)]` attributes as
+/// `Rebrand`: every field traced but the skipped ones. `trace.rs` says how.
+#[cfg(feature = "trace")]
+#[proc_macro_derive(Trace, attributes(rebrand))]
+pub fn derive_trace(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    trace::expand(&input)
+        .unwrap_or_else(Error::into_compile_error)
+        .into()
+}
 
 /// The brand: the type's one lifetime parameter, or none.
 fn brand(input: &DeriveInput) -> Result<Option<Lifetime>> {

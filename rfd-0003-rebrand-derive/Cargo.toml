@@ -21,3 +21,13 @@ syn = { version = "2", features = ["full"] }
 # mode's Bough, which has neither trait, gets what it always got.
 [features]
 views = []
+# `trace` also exports `#[derive(Trace)]` and refuses a `#[rebrand(skip)]`
+# field that may hold a token, in both derives; `seal` and `unsafe-seal` make
+# the `Rebrand` derive also implement a seal, `unsafe` for the second, under
+# `#[allow(unsafe_code)]` unless `bare-unsafe` is on too. All four are for
+# `rfd-0003-brand-erasure -- trace`, and off by default so the other modes get
+# what they always got.
+trace = []
+seal = []
+unsafe-seal = []
+bare-unsafe = ["unsafe-seal"]
