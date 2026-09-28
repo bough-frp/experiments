@@ -1,0 +1,779 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-rebrand-write-cost-instructions at experiments@2813ee0 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0003-rebrand-write-cost-instructions
+
+    Blocking waiting for file lock on build directory
+   Compiling bough-experiments v0.1.0 (/home/zefs/prog/bough/experiments)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 8.47s
+     Running benches/rfd-0003-rebrand-write-cost-instructions.rs (target/release/deps/rfd_0003_rebrand_write_cost_instructions-a9132b6f68e8b185)
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline store_0:(baseline_probe(Op :: Store, Shape :: U64))
+  Instructions:                       37045|37045                (No change)
+  L1 Hits:                            55061|55063                (-0.00363%) [-1.00004x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              11|10                   (+10.0000%) [+1.10000x]
+  Total read+write:                   55075|55075                (No change)
+  Estimated Cycles:                   55461|55423                (+0.06856%) [+1.00069x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline store_1:(baseline_probe(Op :: Store, Shape :: Three))
+  Instructions:                       51045|51045                (No change)
+  L1 Hits:                            77060|77061                (-0.00130%) [-1.00001x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              12|12                   (No change)
+  Total read+write:                   77075|77075                (No change)
+  Estimated Cycles:                   77495|77491                (+0.00516%) [+1.00005x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline store_2:(baseline_probe(Op :: Store, Shape :: Vec10))
+  Instructions:                      158268|158268               (No change)
+  L1 Hits:                           230313|230313               (No change)
+  LL Hits:                                2|2                    (No change)
+  RAM Hits:                              14|14                   (No change)
+  Total read+write:                  230329|230329               (No change)
+  Estimated Cycles:                  230813|230813               (No change)
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline store_3:(baseline_probe(Op :: Store, Shape :: Vec1000))
+  Instructions:                     3826545|3826545              (No change)
+  L1 Hits:                          4445306|4445305              (+0.00002%) [+1.00000x]
+  LL Hits:                              129|129                  (No change)
+  RAM Hits:                             139|140                  (-0.71429%) [-1.00719x]
+  Total read+write:                 4445574|4445574              (No change)
+  Estimated Cycles:                 4450816|4450850              (-0.00076%) [-1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline store_4:(baseline_probe(Op :: Store, Shape :: Nested))
+  Instructions:                      437320|437320               (No change)
+  L1 Hits:                           636378|636381               (-0.00047%) [-1.00000x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              24|22                   (+9.09091%) [+1.09091x]
+  Total read+write:                  636405|636405               (No change)
+  Estimated Cycles:                  637233|637161               (+0.01130%) [+1.00011x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline update_0:(baseline_probe(Op :: Update, Shape :: U64))
+  Instructions:                       41045|41045                (No change)
+  L1 Hits:                            61060|61063                (-0.00491%) [-1.00005x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              12|10                   (+20.0000%) [+1.20000x]
+  Total read+write:                   61075|61075                (No change)
+  Estimated Cycles:                   61495|61423                (+0.11722%) [+1.00117x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline update_1:(baseline_probe(Op :: Update, Shape :: Three))
+  Instructions:                       43045|43045                (No change)
+  L1 Hits:                            65061|65062                (-0.00154%) [-1.00002x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              11|11                   (No change)
+  Total read+write:                   65075|65075                (No change)
+  Estimated Cycles:                   65461|65457                (+0.00611%) [+1.00006x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline update_2:(baseline_probe(Op :: Update, Shape :: Vec10))
+  Instructions:                       52044|52044                (No change)
+  L1 Hits:                            75060|75061                (-0.00133%) [-1.00001x]
+  LL Hits:                                2|2                    (No change)
+  RAM Hits:                              11|10                   (+10.0000%) [+1.10000x]
+  Total read+write:                   75073|75073                (No change)
+  Estimated Cycles:                   75455|75421                (+0.04508%) [+1.00045x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline update_3:(baseline_probe(Op :: Update, Shape :: Vec1000))
+  Instructions:                       53045|53045                (No change)
+  L1 Hits:                            76031|76031                (No change)
+  LL Hits:                               33|33                   (No change)
+  RAM Hits:                              10|10                   (No change)
+  Total read+write:                   76074|76074                (No change)
+  Estimated Cycles:                   76546|76546                (No change)
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline update_4:(baseline_probe(Op :: Update, Shape :: Nested))
+  Instructions:                       62045|62045                (No change)
+  L1 Hits:                            92059|92061                (-0.00217%) [-1.00002x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              13|12                   (+8.33333%) [+1.08333x]
+  Total read+write:                   92075|92075                (No change)
+  Estimated Cycles:                   92529|92491                (+0.04109%) [+1.00041x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline hold_0:(baseline_probe(Op :: Hold, Shape :: U64))
+  Instructions:                     3327391|3327391              (No change)
+  L1 Hits:                          4727448|4727449              (-0.00002%) [-1.00000x]
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              38|37                   (+2.70270%) [+1.02703x]
+  Total read+write:                 4727494|4727494              (No change)
+  Estimated Cycles:                 4728818|4728784              (+0.00072%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline hold_1:(baseline_probe(Op :: Hold, Shape :: Three))
+  Instructions:                     3349391|3349391              (No change)
+  L1 Hits:                          4765445|4765445              (No change)
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              41|41                   (No change)
+  Total read+write:                 4765494|4765494              (No change)
+  Estimated Cycles:                 4766920|4766920              (No change)
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline hold_2:(baseline_probe(Op :: Hold, Shape :: Vec10))
+  Instructions:                     3461523|3461523              (No change)
+  L1 Hits:                          4925601|4925603              (-0.00004%) [-1.00000x]
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              44|42                   (+4.76190%) [+1.04762x]
+  Total read+write:                 4925653|4925653              (No change)
+  Estimated Cycles:                 4927181|4927113              (+0.00138%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline hold_3:(baseline_probe(Op :: Hold, Shape :: Vec1000))
+  Instructions:                     7127891|7127891              (No change)
+  L1 Hits:                          9138691|9136693              (+0.02187%) [+1.00022x]
+  LL Hits:                              135|2131                 (-93.6649%) [-15.7852x]
+  RAM Hits:                             167|169                  (-1.18343%) [-1.01198x]
+  Total read+write:                 9138993|9138993              (No change)
+  Estimated Cycles:                 9145211|9153263              (-0.08797%) [-1.00088x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline hold_4:(baseline_probe(Op :: Hold, Shape :: Nested))
+  Instructions:                     3753600|3753600              (No change)
+  L1 Hits:                          5357692|5357694              (-0.00004%) [-1.00000x]
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              54|52                   (+3.84615%) [+1.03846x]
+  Total read+write:                 5357754|5357754              (No change)
+  Estimated Cycles:                 5359622|5359554              (+0.00127%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline accumulate_0:(baseline_probe(Op :: Accumulate, Shape :: U64))
+  Instructions:                     3282391|3282391              (No change)
+  L1 Hits:                          4651449|4651452              (-0.00006%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              37|35                   (+5.71429%) [+1.05714x]
+  Total read+write:                 4651494|4651494              (No change)
+  Estimated Cycles:                 4652784|4652712              (+0.00155%) [+1.00002x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline accumulate_1:(baseline_probe(Op :: Accumulate, Shape :: Three))
+  Instructions:                     3284391|3284391              (No change)
+  L1 Hits:                          4655449|4655452              (-0.00006%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              37|35                   (+5.71429%) [+1.05714x]
+  Total read+write:                 4655494|4655494              (No change)
+  Estimated Cycles:                 4656784|4656712              (+0.00155%) [+1.00002x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline accumulate_2:(baseline_probe(Op :: Accumulate, Shape :: Vec10))
+  Instructions:                     3293390|3293390              (No change)
+  L1 Hits:                          4666449|4666452              (-0.00006%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              35|33                   (+6.06061%) [+1.06061x]
+  Total read+write:                 4666492|4666492              (No change)
+  Estimated Cycles:                 4667714|4667642              (+0.00154%) [+1.00002x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline accumulate_3:(baseline_probe(Op :: Accumulate, Shape :: Vec1000...
+  Instructions:                     3294391|3294391              (No change)
+  L1 Hits:                          4667423|4667421              (+0.00004%) [+1.00000x]
+  LL Hits:                               36|38                   (-5.26316%) [-1.05556x]
+  RAM Hits:                              34|34                   (No change)
+  Total read+write:                 4667493|4667493              (No change)
+  Estimated Cycles:                 4668793|4668801              (-0.00017%) [-1.00000x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline accumulate_4:(baseline_probe(Op :: Accumulate, Shape :: Nested)...
+  Instructions:                     3301391|3301391              (No change)
+  L1 Hits:                          4680448|4680452              (-0.00009%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              38|35                   (+8.57143%) [+1.08571x]
+  Total read+write:                 4680494|4680494              (No change)
+  Estimated Cycles:                 4681818|4681712              (+0.00226%) [+1.00002x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline switch_cell_0:(baseline_probe(Op :: SwitchCell, Shape :: U64))
+  Instructions:                     3394391|3394391              (No change)
+  L1 Hits:                          4833437|4833441              (-0.00008%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              48|45                   (+6.66667%) [+1.06667x]
+  Total read+write:                 4833494|4833494              (No change)
+  Estimated Cycles:                 4835162|4835056              (+0.00219%) [+1.00002x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline switch_cell_1:(baseline_probe(Op :: SwitchCell, Shape :: Three))
+  Instructions:                     3396391|3396391              (No change)
+  L1 Hits:                          4836440|4836443              (-0.00006%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              45|43                   (+4.65116%) [+1.04651x]
+  Total read+write:                 4836494|4836494              (No change)
+  Estimated Cycles:                 4838060|4837988              (+0.00149%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline switch_cell_2:(baseline_probe(Op :: SwitchCell, Shape :: Vec10))
+  Instructions:                     3406390|3406390              (No change)
+  L1 Hits:                          4848437|4848441              (-0.00008%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              46|43                   (+6.97674%) [+1.06977x]
+  Total read+write:                 4848492|4848492              (No change)
+  Estimated Cycles:                 4850092|4849986              (+0.00219%) [+1.00002x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline switch_cell_3:(baseline_probe(Op :: SwitchCell, Shape :: Vec1000...
+  Instructions:                     3407391|3407391              (No change)
+  L1 Hits:                          4849436|4849438              (-0.00004%) [-1.00000x]
+  LL Hits:                               12|11                   (+9.09091%) [+1.09091x]
+  RAM Hits:                              45|44                   (+2.27273%) [+1.02273x]
+  Total read+write:                 4849493|4849493              (No change)
+  Estimated Cycles:                 4851071|4851033              (+0.00078%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::baseline switch_cell_4:(baseline_probe(Op :: SwitchCell, Shape :: Nested)...
+  Instructions:                     3419391|3419391              (No change)
+  L1 Hits:                          4866438|4866441              (-0.00006%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              47|45                   (+4.44444%) [+1.04444x]
+  Total read+write:                 4866494|4866494              (No change)
+  Estimated Cycles:                 4868128|4868056              (+0.00148%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand store_0:(rebrand_probe(Op :: Store, Shape :: U64))
+  Instructions:                       37045|37045                (No change)
+  L1 Hits:                            55061|55062                (-0.00182%) [-1.00002x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              11|11                   (No change)
+  Total read+write:                   55075|55075                (No change)
+  Estimated Cycles:                   55461|55457                (+0.00721%) [+1.00007x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand store_1:(rebrand_probe(Op :: Store, Shape :: Three))
+  Instructions:                       51045|48045                (+6.24415%) [+1.06244x]
+  L1 Hits:                            77060|74062                (+4.04796%) [+1.04048x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              12|11                   (+9.09091%) [+1.09091x]
+  Total read+write:                   77075|74075                (+4.04995%) [+1.04050x]
+  Estimated Cycles:                   77495|74457                (+4.08021%) [+1.04080x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand store_2:(rebrand_probe(Op :: Store, Shape :: Vec10))
+  Instructions:                      340402|340402               (No change)
+  L1 Hits:                           481466|481466               (No change)
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              23|24                   (-4.16667%) [-1.04348x]
+  Total read+write:                  481492|481492               (No change)
+  Estimated Cycles:                  482286|482316               (-0.00622%) [-1.00006x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand store_3:(rebrand_probe(Op :: Store, Shape :: Vec1000))
+  Instructions:                     5912797|5913796              (-0.01689%) [-1.00017x]
+  L1 Hits:                          7655423|7653427              (+0.02608%) [+1.00026x]
+  LL Hits:                              133|3128                 (-95.7481%) [-23.5188x]
+  RAM Hits:                             272|271                  (+0.36900%) [+1.00369x]
+  Total read+write:                 7655828|7656826              (-0.01303%) [-1.00013x]
+  Estimated Cycles:                 7665608|7678552              (-0.16857%) [-1.00169x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand store_4:(rebrand_probe(Op :: Store, Shape :: Nested))
+  Instructions:                      769586|769588               (-0.00026%) [-1.00000x]
+  L1 Hits:                          1138687|1137691              (+0.08755%) [+1.00088x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              37|37                   (No change)
+  Total read+write:                 1138727|1137730              (+0.08763%) [+1.00088x]
+  Estimated Cycles:                 1139997|1138996              (+0.08788%) [+1.00088x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand update_0:(rebrand_probe(Op :: Update, Shape :: U64))
+  Instructions:                       46045|46045                (No change)
+  L1 Hits:                            71061|71062                (-0.00141%) [-1.00001x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              11|11                   (No change)
+  Total read+write:                   71075|71075                (No change)
+  Estimated Cycles:                   71461|71457                (+0.00560%) [+1.00006x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand update_1:(rebrand_probe(Op :: Update, Shape :: Three))
+  Instructions:                       67045|72045                (-6.94011%) [-1.07458x]
+  L1 Hits:                           108059|119059               (-9.23912%) [-1.10180x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              13|14                   (-7.14286%) [-1.07692x]
+  Total read+write:                  108075|119075               (-9.23788%) [-1.10178x]
+  Estimated Cycles:                  108529|119559               (-9.22557%) [-1.10163x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand update_2:(rebrand_probe(Op :: Update, Shape :: Vec10))
+  Instructions:                      397402|395402               (+0.50581%) [+1.00506x]
+  L1 Hits:                           536463|534463               (+0.37421%) [+1.00374x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              26|27                   (-3.70370%) [-1.03846x]
+  Total read+write:                  536492|534492               (+0.37419%) [+1.00374x]
+  Estimated Cycles:                  537388|535418               (+0.36794%) [+1.00368x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand update_3:(rebrand_probe(Op :: Update, Shape :: Vec1000))
+  Instructions:                     4210797|4204796              (+0.14272%) [+1.00143x]
+  L1 Hits:                          6456483|6444489              (+0.18611%) [+1.00186x]
+  LL Hits:                               71|5064                 (-98.5979%) [-71.3239x]
+  RAM Hits:                             274|273                  (+0.36630%) [+1.00366x]
+  Total read+write:                 6456828|6449826              (+0.10856%) [+1.00109x]
+  Estimated Cycles:                 6466428|6479364              (-0.19965%) [-1.00200x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand update_4:(rebrand_probe(Op :: Update, Shape :: Nested))
+  Instructions:                      718586|714588               (+0.55948%) [+1.00559x]
+  L1 Hits:                          1077683|1073686              (+0.37227%) [+1.00372x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              41|42                   (-2.38095%) [-1.02439x]
+  Total read+write:                 1077727|1073730              (+0.37225%) [+1.00372x]
+  Estimated Cycles:                 1079133|1075166              (+0.36897%) [+1.00369x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand hold_0:(rebrand_probe(Op :: Hold, Shape :: U64))
+  Instructions:                     3327391|3327391              (No change)
+  L1 Hits:                          4727449|4727448              (+0.00002%) [+1.00000x]
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              37|38                   (-2.63158%) [-1.02703x]
+  Total read+write:                 4727494|4727494              (No change)
+  Estimated Cycles:                 4728784|4728818              (-0.00072%) [-1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand hold_1:(rebrand_probe(Op :: Hold, Shape :: Three))
+  Instructions:                     3349391|3349391              (No change)
+  L1 Hits:                          4765445|4765445              (No change)
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              41|41                   (No change)
+  Total read+write:                 4765494|4765494              (No change)
+  Estimated Cycles:                 4766920|4766920              (No change)
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand hold_2:(rebrand_probe(Op :: Hold, Shape :: Vec10))
+  Instructions:                     3645657|3645657              (No change)
+  L1 Hits:                          5175756|5175755              (+0.00002%) [+1.00000x]
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              52|53                   (-1.88679%) [-1.01923x]
+  Total read+write:                 5175816|5175816              (No change)
+  Estimated Cycles:                 5177616|5177650              (-0.00066%) [-1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand hold_3:(rebrand_probe(Op :: Hold, Shape :: Vec1000))
+  Instructions:                     9238393|9238392              (+0.00001%) [+1.00000x]
+  L1 Hits:                         12361090|12357096             (+0.03232%) [+1.00032x]
+  LL Hits:                            17606|21598                (-18.4832%) [-1.22674x]
+  RAM Hits:                             301|301                  (No change)
+  Total read+write:                12378997|12378995             (+0.00002%) [+1.00000x]
+  Estimated Cycles:                12459655|12475621             (-0.12798%) [-1.00128x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand hold_4:(rebrand_probe(Op :: Hold, Shape :: Nested))
+  Instructions:                     4092866|4093868              (-0.02448%) [-1.00024x]
+  L1 Hits:                          5869000|5870002              (-0.01707%) [-1.00017x]
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              68|69                   (-1.44928%) [-1.01471x]
+  Total read+write:                 5869076|5870079              (-0.01709%) [-1.00017x]
+  Estimated Cycles:                 5871420|5872457              (-0.01766%) [-1.00018x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand accumulate_0:(rebrand_probe(Op :: Accumulate, Shape :: U64))
+  Instructions:                     3287391|3287391              (No change)
+  L1 Hits:                          4661449|4661451              (-0.00004%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              37|36                   (+2.77778%) [+1.02778x]
+  Total read+write:                 4661494|4661494              (No change)
+  Estimated Cycles:                 4662784|4662746              (+0.00081%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand accumulate_1:(rebrand_probe(Op :: Accumulate, Shape :: Three))
+  Instructions:                     3307391|3307391              (No change)
+  L1 Hits:                          4697448|4697449              (-0.00002%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              38|38                   (No change)
+  Total read+write:                 4697494|4697494              (No change)
+  Estimated Cycles:                 4698818|4698814              (+0.00009%) [+1.00000x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand accumulate_2:(rebrand_probe(Op :: Accumulate, Shape :: Vec10))
+  Instructions:                     3640657|3630657              (+0.27543%) [+1.00275x]
+  L1 Hits:                          5128757|5112759              (+0.31290%) [+1.00313x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              51|50                   (+2.00000%) [+1.02000x]
+  Total read+write:                 5128816|5112816              (+0.31294%) [+1.00313x]
+  Estimated Cycles:                 5130582|5114544              (+0.31358%) [+1.00314x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand accumulate_3:(rebrand_probe(Op :: Accumulate, Shape :: Vec1000)...
+  Instructions:                     7450143|7440142              (+0.13442%) [+1.00134x]
+  L1 Hits:                         11015381|10993389             (+0.20005%) [+1.00200x]
+  LL Hits:                            28567|34559                (-17.3385%) [-1.20975x]
+  RAM Hits:                             299|297                  (+0.67340%) [+1.00673x]
+  Total read+write:                11044247|11028245             (+0.14510%) [+1.00145x]
+  Estimated Cycles:                11168681|11176579             (-0.07067%) [-1.00071x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand accumulate_4:(rebrand_probe(Op :: Accumulate, Shape :: Nested))
+  Instructions:                     3956866|3950868              (+0.15181%) [+1.00152x]
+  L1 Hits:                          5665003|5653007              (+0.21221%) [+1.00212x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              65|65                   (No change)
+  Total read+write:                 5665076|5653079              (+0.21222%) [+1.00212x]
+  Estimated Cycles:                 5667318|5655317              (+0.21221%) [+1.00212x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand switch_cell_0:(rebrand_probe(Op :: SwitchCell, Shape :: U64))
+  Instructions:                     3394391|3394391              (No change)
+  L1 Hits:                          4833438|4833440              (-0.00004%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              47|46                   (+2.17391%) [+1.02174x]
+  Total read+write:                 4833494|4833494              (No change)
+  Estimated Cycles:                 4835128|4835090              (+0.00079%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand switch_cell_1:(rebrand_probe(Op :: SwitchCell, Shape :: Three))
+  Instructions:                     3396391|3396391              (No change)
+  L1 Hits:                          4836440|4836443              (-0.00006%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              45|43                   (+4.65116%) [+1.04651x]
+  Total read+write:                 4836494|4836494              (No change)
+  Estimated Cycles:                 4838060|4837988              (+0.00149%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand switch_cell_2:(rebrand_probe(Op :: SwitchCell, Shape :: Vec10))
+  Instructions:                     3406391|3406391              (No change)
+  L1 Hits:                          4847440|4847442              (-0.00004%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              45|44                   (+2.27273%) [+1.02273x]
+  Total read+write:                 4847494|4847494              (No change)
+  Estimated Cycles:                 4849060|4849022              (+0.00078%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand switch_cell_3:(rebrand_probe(Op :: SwitchCell, Shape :: Vec1000)...
+  Instructions:                     3407393|3407392              (+0.00003%) [+1.00000x]
+  L1 Hits:                          4848441|4848440              (+0.00002%) [+1.00000x]
+  LL Hits:                               10|11                   (-9.09091%) [-1.10000x]
+  RAM Hits:                              46|44                   (+4.54545%) [+1.04545x]
+  Total read+write:                 4848497|4848495              (+0.00004%) [+1.00000x]
+  Estimated Cycles:                 4850101|4850035              (+0.00136%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::rebrand switch_cell_4:(rebrand_probe(Op :: SwitchCell, Shape :: Nested))
+  Instructions:                     3419391|3420393              (-0.02929%) [-1.00029x]
+  L1 Hits:                          4866440|4867444              (-0.02063%) [-1.00021x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              45|45                   (No change)
+  Total read+write:                 4866494|4867497              (-0.02061%) [-1.00021x]
+  Estimated Cycles:                 4868060|4869059              (-0.02052%) [-1.00021x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view store_0:(view_probe(Op :: Store, Shape :: U64))
+  Instructions:                       37045|37045                (No change)
+  L1 Hits:                            55062|55062                (No change)
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              10|11                   (-9.09091%) [-1.10000x]
+  Total read+write:                   55075|55075                (No change)
+  Estimated Cycles:                   55427|55457                (-0.05410%) [-1.00054x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view store_1:(view_probe(Op :: Store, Shape :: Three))
+  Instructions:                       51045|50045                (+1.99820%) [+1.01998x]
+  L1 Hits:                            77061|76061                (+1.31473%) [+1.01315x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              11|12                   (-8.33333%) [-1.09091x]
+  Total read+write:                   77075|76075                (+1.31449%) [+1.01314x]
+  Estimated Cycles:                   77461|76491                (+1.26812%) [+1.01268x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view store_2:(view_probe(Op :: Store, Shape :: Vec10))
+  Instructions:                      340402|339402               (+0.29464%) [+1.00295x]
+  L1 Hits:                           481466|480466               (+0.20813%) [+1.00208x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              23|24                   (-4.16667%) [-1.04348x]
+  Total read+write:                  481492|480492               (+0.20812%) [+1.00208x]
+  Estimated Cycles:                  482286|481316               (+0.20153%) [+1.00202x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view store_3:(view_probe(Op :: Store, Shape :: Vec1000))
+  Instructions:                     5912797|5912797              (No change)
+  L1 Hits:                          7655423|7652430              (+0.03911%) [+1.00039x]
+  LL Hits:                              133|3128                 (-95.7481%) [-23.5188x]
+  RAM Hits:                             272|270                  (+0.74074%) [+1.00741x]
+  Total read+write:                 7655828|7655828              (No change)
+  Estimated Cycles:                 7665608|7677520              (-0.15515%) [-1.00155x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view store_4:(view_probe(Op :: Store, Shape :: Nested))
+  Instructions:                      769586|769586               (No change)
+  L1 Hits:                          1138687|1138687              (No change)
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              37|38                   (-2.63158%) [-1.02703x]
+  Total read+write:                 1138727|1138727              (No change)
+  Estimated Cycles:                 1139997|1140027              (-0.00263%) [-1.00003x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view update_0:(view_probe(Op :: Update, Shape :: U64))
+  Instructions:                       41045|41045                (No change)
+  L1 Hits:                            61062|61062                (No change)
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              10|11                   (-9.09091%) [-1.10000x]
+  Total read+write:                   61075|61075                (No change)
+  Estimated Cycles:                   61427|61457                (-0.04881%) [-1.00049x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view update_1:(view_probe(Op :: Update, Shape :: Three))
+  Instructions:                       69045|94045                (-26.5830%) [-1.36208x]
+  L1 Hits:                           111060|149058               (-25.4921%) [-1.34214x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              12|15                   (-20.0000%) [-1.25000x]
+  Total read+write:                  111075|149075               (-25.4905%) [-1.34211x]
+  Estimated Cycles:                  111495|149593               (-25.4678%) [-1.34170x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view update_2:(view_probe(Op :: Update, Shape :: Vec10))
+  Instructions:                      399402|414402               (-3.61967%) [-1.03756x]
+  L1 Hits:                           539463|561462               (-3.91816%) [-1.04078x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              26|28                   (-7.14286%) [-1.07692x]
+  Total read+write:                  539492|561492               (-3.91813%) [-1.04078x]
+  Estimated Cycles:                  540388|562452               (-3.92282%) [-1.04083x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view update_3:(view_probe(Op :: Update, Shape :: Vec1000))
+  Instructions:                     4212797|4222797              (-0.23681%) [-1.00237x]
+  L1 Hits:                          6459483|6470491              (-0.17013%) [-1.00170x]
+  LL Hits:                               71|6064                 (-98.8292%) [-85.4085x]
+  RAM Hits:                             274|273                  (+0.36630%) [+1.00366x]
+  Total read+write:                 6459828|6476828              (-0.26247%) [-1.00263x]
+  Estimated Cycles:                 6469428|6510366              (-0.62881%) [-1.00633x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view update_4:(view_probe(Op :: Update, Shape :: Nested))
+  Instructions:                      720586|735586               (-2.03919%) [-1.02082x]
+  L1 Hits:                          1080683|1102681              (-1.99496%) [-1.02036x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              41|44                   (-6.81818%) [-1.07317x]
+  Total read+write:                 1080727|1102727              (-1.99505%) [-1.02036x]
+  Estimated Cycles:                 1082133|1104231              (-2.00121%) [-1.02042x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view hold_0:(view_probe(Op :: Hold, Shape :: U64))
+  Instructions:                     3327391|3327391              (No change)
+  L1 Hits:                          4727450|4727449              (+0.00002%) [+1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              36|38                   (-5.26316%) [-1.05556x]
+  Total read+write:                 4727494|4727494              (No change)
+  Estimated Cycles:                 4728750|4728814              (-0.00135%) [-1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view hold_1:(view_probe(Op :: Hold, Shape :: Three))
+  Instructions:                     3349391|3349391              (No change)
+  L1 Hits:                          4765447|4765446              (+0.00002%) [+1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              39|41                   (-4.87805%) [-1.05128x]
+  Total read+write:                 4765494|4765494              (No change)
+  Estimated Cycles:                 4766852|4766916              (-0.00134%) [-1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view hold_2:(view_probe(Op :: Hold, Shape :: Vec10))
+  Instructions:                     3645657|3645657              (No change)
+  L1 Hits:                          5175756|5175755              (+0.00002%) [+1.00000x]
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              52|53                   (-1.88679%) [-1.01923x]
+  Total read+write:                 5175816|5175816              (No change)
+  Estimated Cycles:                 5177616|5177650              (-0.00066%) [-1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view hold_3:(view_probe(Op :: Hold, Shape :: Vec1000))
+  Instructions:                     9238393|9238393              (No change)
+  L1 Hits:                         12361090|12359097             (+0.01613%) [+1.00016x]
+  LL Hits:                            17606|19601                (-10.1781%) [-1.11331x]
+  RAM Hits:                             301|299                  (+0.66890%) [+1.00669x]
+  Total read+write:                12378997|12378997             (No change)
+  Estimated Cycles:                12459655|12467567             (-0.06346%) [-1.00064x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view hold_4:(view_probe(Op :: Hold, Shape :: Nested))
+  Instructions:                     4092866|4092866              (No change)
+  L1 Hits:                          5869000|5868999              (+0.00002%) [+1.00000x]
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              68|69                   (-1.44928%) [-1.01471x]
+  Total read+write:                 5869076|5869076              (No change)
+  Estimated Cycles:                 5871420|5871454              (-0.00058%) [-1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view accumulate_0:(view_probe(Op :: Accumulate, Shape :: U64))
+  Instructions:                     3282391|3282391              (No change)
+  L1 Hits:                          4651450|4651452              (-0.00004%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              36|35                   (+2.85714%) [+1.02857x]
+  Total read+write:                 4651494|4651494              (No change)
+  Estimated Cycles:                 4652750|4652712              (+0.00082%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view accumulate_1:(view_probe(Op :: Accumulate, Shape :: Three))
+  Instructions:                     3309391|3334391              (-0.74976%) [-1.00755x]
+  L1 Hits:                          4700449|4739447              (-0.82284%) [-1.00830x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              37|40                   (-7.50000%) [-1.08108x]
+  Total read+write:                 4700494|4739494              (-0.82287%) [-1.00830x]
+  Estimated Cycles:                 4701784|4740882              (-0.82470%) [-1.00832x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view accumulate_2:(view_probe(Op :: Accumulate, Shape :: Vec10))
+  Instructions:                     3642657|3657657              (-0.41010%) [-1.00412x]
+  L1 Hits:                          5131757|5154758              (-0.44621%) [-1.00448x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              51|51                   (No change)
+  Total read+write:                 5131816|5154816              (-0.44618%) [-1.00448x]
+  Estimated Cycles:                 5133582|5156578              (-0.44595%) [-1.00448x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view accumulate_3:(view_probe(Op :: Accumulate, Shape :: Vec1000))
+  Instructions:                     7452143|7467143              (-0.20088%) [-1.00201x]
+  L1 Hits:                         11018381|11035392             (-0.15415%) [-1.00154x]
+  LL Hits:                            28567|34559                (-17.3385%) [-1.20975x]
+  RAM Hits:                             299|296                  (+1.01351%) [+1.01014x]
+  Total read+write:                11047247|11070247             (-0.20776%) [-1.00208x]
+  Estimated Cycles:                11171681|11218547             (-0.41775%) [-1.00420x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view accumulate_4:(view_probe(Op :: Accumulate, Shape :: Nested))
+  Instructions:                     3958866|3976866              (-0.45262%) [-1.00455x]
+  L1 Hits:                          5668003|5694002              (-0.45660%) [-1.00459x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              65|67                   (-2.98507%) [-1.03077x]
+  Total read+write:                 5668076|5694076              (-0.45661%) [-1.00459x]
+  Estimated Cycles:                 5670318|5696382              (-0.45755%) [-1.00460x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view switch_cell_0:(view_probe(Op :: SwitchCell, Shape :: U64))
+  Instructions:                     3394391|3394391              (No change)
+  L1 Hits:                          4833439|4833440              (-0.00002%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              46|46                   (No change)
+  Total read+write:                 4833494|4833494              (No change)
+  Estimated Cycles:                 4835094|4835090              (+0.00008%) [+1.00000x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view switch_cell_1:(view_probe(Op :: SwitchCell, Shape :: Three))
+  Instructions:                     3396391|3396391              (No change)
+  L1 Hits:                          4836441|4836443              (-0.00004%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              44|43                   (+2.32558%) [+1.02326x]
+  Total read+write:                 4836494|4836494              (No change)
+  Estimated Cycles:                 4838026|4837988              (+0.00079%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view switch_cell_2:(view_probe(Op :: SwitchCell, Shape :: Vec10))
+  Instructions:                     3406391|3406391              (No change)
+  L1 Hits:                          4847441|4847441              (No change)
+  LL Hits:                                8|9                    (-11.1111%) [-1.12500x]
+  RAM Hits:                              45|44                   (+2.27273%) [+1.02273x]
+  Total read+write:                 4847494|4847494              (No change)
+  Estimated Cycles:                 4849056|4849026              (+0.00062%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view switch_cell_3:(view_probe(Op :: SwitchCell, Shape :: Vec1000))
+  Instructions:                     3407393|3407393              (No change)
+  L1 Hits:                          4848441|4848444              (-0.00006%) [-1.00000x]
+  LL Hits:                               10|11                   (-9.09091%) [-1.10000x]
+  RAM Hits:                              46|42                   (+9.52381%) [+1.09524x]
+  Total read+write:                 4848497|4848497              (No change)
+  Estimated Cycles:                 4850101|4849969              (+0.00272%) [+1.00003x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::view switch_cell_4:(view_probe(Op :: SwitchCell, Shape :: Nested))
+  Instructions:                     3419391|3419391              (No change)
+  L1 Hits:                          4866441|4866439              (+0.00004%) [+1.00000x]
+  LL Hits:                                8|9                    (-11.1111%) [-1.12500x]
+  RAM Hits:                              45|46                   (-2.17391%) [-1.02222x]
+  Total read+write:                 4866494|4866494              (No change)
+  Estimated Cycles:                 4868056|4868094              (-0.00078%) [-1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned store_0:(owned_probe(Op :: Store, Shape :: U64))
+  Instructions:                       37045|37045                (No change)
+  L1 Hits:                            55062|55062                (No change)
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              10|11                   (-9.09091%) [-1.10000x]
+  Total read+write:                   55075|55075                (No change)
+  Estimated Cycles:                   55427|55457                (-0.05410%) [-1.00054x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned store_1:(owned_probe(Op :: Store, Shape :: Three))
+  Instructions:                       48045|48045                (No change)
+  L1 Hits:                            74060|74062                (-0.00270%) [-1.00003x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              12|11                   (+9.09091%) [+1.09091x]
+  Total read+write:                   74075|74075                (No change)
+  Estimated Cycles:                   74495|74457                (+0.05104%) [+1.00051x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned store_2:(owned_probe(Op :: Store, Shape :: Vec10))
+  Instructions:                      155268|155268               (No change)
+  L1 Hits:                           227313|227314               (-0.00044%) [-1.00000x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              14|14                   (No change)
+  Total read+write:                  227330|227330               (No change)
+  Estimated Cycles:                  227818|227814               (+0.00176%) [+1.00002x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned store_3:(owned_probe(Op :: Store, Shape :: Vec1000))
+  Instructions:                     3823545|3823545              (No change)
+  L1 Hits:                          4442306|4442307              (-0.00002%) [-1.00000x]
+  LL Hits:                              130|129                  (+0.77519%) [+1.00775x]
+  RAM Hits:                             139|139                  (No change)
+  Total read+write:                 4442575|4442575              (No change)
+  Estimated Cycles:                 4447821|4447817              (+0.00009%) [+1.00000x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned store_4:(owned_probe(Op :: Store, Shape :: Nested))
+  Instructions:                      554322|554322               (No change)
+  L1 Hits:                           834376|834379               (-0.00036%) [-1.00000x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              29|27                   (+7.40741%) [+1.07407x]
+  Total read+write:                  834408|834408               (No change)
+  Estimated Cycles:                  835406|835334               (+0.00862%) [+1.00009x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned update_0:(owned_probe(Op :: Update, Shape :: U64))
+  Instructions:                       47045|47045                (No change)
+  L1 Hits:                            73061|73062                (-0.00137%) [-1.00001x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              11|11                   (No change)
+  Total read+write:                   73075|73075                (No change)
+  Estimated Cycles:                   73461|73457                (+0.00545%) [+1.00005x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned update_1:(owned_probe(Op :: Update, Shape :: Three))
+  Instructions:                       74045|74045                (No change)
+  L1 Hits:                           122058|122059               (-0.00082%) [-1.00001x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              14|14                   (No change)
+  Total read+write:                  122075|122075               (No change)
+  Estimated Cycles:                  122563|122559               (+0.00326%) [+1.00003x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned update_2:(owned_probe(Op :: Update, Shape :: Vec10))
+  Instructions:                       82044|82044                (No change)
+  L1 Hits:                           126057|126059               (-0.00159%) [-1.00002x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              14|13                   (+7.69231%) [+1.07692x]
+  Total read+write:                  126074|126074               (No change)
+  Estimated Cycles:                  126562|126524               (+0.03003%) [+1.00030x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned update_3:(owned_probe(Op :: Update, Shape :: Vec1000))
+  Instructions:                       83045|83045                (No change)
+  L1 Hits:                           127024|127030               (-0.00472%) [-1.00005x]
+  LL Hits:                               38|33                   (+15.1515%) [+1.15152x]
+  RAM Hits:                              13|12                   (+8.33333%) [+1.08333x]
+  Total read+write:                  127075|127075               (No change)
+  Estimated Cycles:                  127669|127615               (+0.04231%) [+1.00042x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned update_4:(owned_probe(Op :: Update, Shape :: Nested))
+  Instructions:                      300047|300047               (No change)
+  L1 Hits:                           499049|499051               (-0.00040%) [-1.00000x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              26|25                   (+4.00000%) [+1.04000x]
+  Total read+write:                  499078|499078               (No change)
+  Estimated Cycles:                  499974|499936               (+0.00760%) [+1.00008x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned hold_0:(owned_probe(Op :: Hold, Shape :: U64))
+  Instructions:                     3327391|3327391              (No change)
+  L1 Hits:                          4727450|4727448              (+0.00004%) [+1.00000x]
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              36|38                   (-5.26316%) [-1.05556x]
+  Total read+write:                 4727494|4727494              (No change)
+  Estimated Cycles:                 4728750|4728818              (-0.00144%) [-1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned hold_1:(owned_probe(Op :: Hold, Shape :: Three))
+  Instructions:                     3349391|3349391              (No change)
+  L1 Hits:                          4765444|4765445              (-0.00002%) [-1.00000x]
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              42|41                   (+2.43902%) [+1.02439x]
+  Total read+write:                 4765494|4765494              (No change)
+  Estimated Cycles:                 4766954|4766920              (+0.00071%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned hold_2:(owned_probe(Op :: Hold, Shape :: Vec10))
+  Instructions:                     3461523|3461523              (No change)
+  L1 Hits:                          4924602|4924603              (-0.00002%) [-1.00000x]
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              44|43                   (+2.32558%) [+1.02326x]
+  Total read+write:                 4924654|4924654              (No change)
+  Estimated Cycles:                 4926182|4926148              (+0.00069%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned hold_3:(owned_probe(Op :: Hold, Shape :: Vec1000))
+  Instructions:                     7127891|7127891              (No change)
+  L1 Hits:                          9137692|9137690              (+0.00002%) [+1.00000x]
+  LL Hits:                              135|135                  (No change)
+  RAM Hits:                             167|169                  (-1.18343%) [-1.01198x]
+  Total read+write:                 9137994|9137994              (No change)
+  Estimated Cycles:                 9144212|9144280              (-0.00074%) [-1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned hold_4:(owned_probe(Op :: Hold, Shape :: Nested))
+  Instructions:                     3878602|3878602              (No change)
+  L1 Hits:                          5566689|5566692              (-0.00005%) [-1.00000x]
+  LL Hits:                                8|8                    (No change)
+  RAM Hits:                              60|57                   (+5.26316%) [+1.05263x]
+  Total read+write:                 5566757|5566757              (No change)
+  Estimated Cycles:                 5568829|5568727              (+0.00183%) [+1.00002x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned accumulate_0:(owned_probe(Op :: Accumulate, Shape :: U64))
+  Instructions:                     3288391|3288391              (No change)
+  L1 Hits:                          4663450|4663451              (-0.00002%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              36|36                   (No change)
+  Total read+write:                 4663494|4663494              (No change)
+  Estimated Cycles:                 4664750|4664746              (+0.00009%) [+1.00000x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned accumulate_1:(owned_probe(Op :: Accumulate, Shape :: Three))
+  Instructions:                     3309391|3309391              (No change)
+  L1 Hits:                          4700445|4700449              (-0.00009%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              41|38                   (+7.89474%) [+1.07895x]
+  Total read+write:                 4700494|4700494              (No change)
+  Estimated Cycles:                 4701920|4701814              (+0.00225%) [+1.00002x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned accumulate_2:(owned_probe(Op :: Accumulate, Shape :: Vec10))
+  Instructions:                     3316390|3316390              (No change)
+  L1 Hits:                          4703447|4703450              (-0.00006%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              38|36                   (+5.55556%) [+1.05556x]
+  Total read+write:                 4703493|4703493              (No change)
+  Estimated Cycles:                 4704817|4704745              (+0.00153%) [+1.00002x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned accumulate_3:(owned_probe(Op :: Accumulate, Shape :: Vec1000))
+  Instructions:                     3317391|3317391              (No change)
+  L1 Hits:                          4704418|4704420              (-0.00004%) [-1.00000x]
+  LL Hits:                               39|38                   (+2.63158%) [+1.02632x]
+  RAM Hits:                              37|36                   (+2.77778%) [+1.02778x]
+  Total read+write:                 4704494|4704494              (No change)
+  Estimated Cycles:                 4705908|4705870              (+0.00081%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned accumulate_4:(owned_probe(Op :: Accumulate, Shape :: Nested))
+  Instructions:                     3536393|3536393              (No change)
+  L1 Hits:                          5078438|5078441              (-0.00006%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              51|49                   (+4.08163%) [+1.04082x]
+  Total read+write:                 5078497|5078497              (No change)
+  Estimated Cycles:                 5080263|5080191              (+0.00142%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned switch_cell_0:(owned_probe(Op :: SwitchCell, Shape :: U64))
+  Instructions:                     3394391|3394391              (No change)
+  L1 Hits:                          4833439|4833440              (-0.00002%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              46|46                   (No change)
+  Total read+write:                 4833494|4833494              (No change)
+  Estimated Cycles:                 4835094|4835090              (+0.00008%) [+1.00000x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned switch_cell_1:(owned_probe(Op :: SwitchCell, Shape :: Three))
+  Instructions:                     3396391|3396391              (No change)
+  L1 Hits:                          4836439|4836443              (-0.00008%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              46|43                   (+6.97674%) [+1.06977x]
+  Total read+write:                 4836494|4836494              (No change)
+  Estimated Cycles:                 4838094|4837988              (+0.00219%) [+1.00002x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned switch_cell_2:(owned_probe(Op :: SwitchCell, Shape :: Vec10))
+  Instructions:                     3406390|3406390              (No change)
+  L1 Hits:                          4847438|4847441              (-0.00006%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              46|44                   (+4.54545%) [+1.04545x]
+  Total read+write:                 4847493|4847493              (No change)
+  Estimated Cycles:                 4849093|4849021              (+0.00148%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned switch_cell_3:(owned_probe(Op :: SwitchCell, Shape :: Vec1000))
+  Instructions:                     3407391|3407391              (No change)
+  L1 Hits:                          4848439|4848439              (No change)
+  LL Hits:                               10|11                   (-9.09091%) [-1.10000x]
+  RAM Hits:                              45|44                   (+2.27273%) [+1.02273x]
+  Total read+write:                 4848494|4848494              (No change)
+  Estimated Cycles:                 4850064|4850034              (+0.00062%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::owned switch_cell_4:(owned_probe(Op :: SwitchCell, Shape :: Nested))
+  Instructions:                     3420393|3420393              (No change)
+  L1 Hits:                          4867441|4867444              (-0.00006%) [-1.00000x]
+  LL Hits:                                9|8                    (+12.5000%) [+1.12500x]
+  RAM Hits:                              47|45                   (+4.44444%) [+1.04444x]
+  Total read+write:                 4867497|4867497              (No change)
+  Estimated Cycles:                 4869131|4869059              (+0.00148%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::borrow update_0:(borrow_probe(Op :: Update, Shape :: U64))
+  Instructions:                       44045|44045                (No change)
+  L1 Hits:                            66062|66063                (-0.00151%) [-1.00002x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              10|10                   (No change)
+  Total read+write:                   66075|66075                (No change)
+  Estimated Cycles:                   66427|66423                (+0.00602%) [+1.00006x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::borrow update_1:(borrow_probe(Op :: Update, Shape :: Three))
+  Instructions:                       56045|56045                (No change)
+  L1 Hits:                            86058|86059                (-0.00116%) [-1.00001x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              14|14                   (No change)
+  Total read+write:                   86075|86075                (No change)
+  Estimated Cycles:                   86563|86559                (+0.00462%) [+1.00005x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::borrow update_2:(borrow_probe(Op :: Update, Shape :: Vec10))
+  Instructions:                       55044|55044                (No change)
+  L1 Hits:                            80060|80061                (-0.00125%) [-1.00001x]
+  LL Hits:                                2|2                    (No change)
+  RAM Hits:                              11|10                   (+10.0000%) [+1.10000x]
+  Total read+write:                   80073|80073                (No change)
+  Estimated Cycles:                   80455|80421                (+0.04228%) [+1.00042x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::borrow update_3:(borrow_probe(Op :: Update, Shape :: Vec1000))
+  Instructions:                       56045|56045                (No change)
+  L1 Hits:                            81031|81029                (+0.00247%) [+1.00002x]
+  LL Hits:                               33|35                   (-5.71429%) [-1.06061x]
+  RAM Hits:                              10|10                   (No change)
+  Total read+write:                   81074|81074                (No change)
+  Estimated Cycles:                   81546|81554                (-0.00981%) [-1.00010x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::borrow update_4:(borrow_probe(Op :: Update, Shape :: Nested))
+  Instructions:                       94047|94047                (No change)
+  L1 Hits:                           145060|145061               (-0.00069%) [-1.00001x]
+  LL Hits:                                3|2                    (+50.0000%) [+1.50000x]
+  RAM Hits:                              15|15                   (No change)
+  Total read+write:                  145078|145078               (No change)
+  Estimated Cycles:                  145600|145596               (+0.00275%) [+1.00003x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::borrow accumulate_0:(borrow_probe(Op :: Accumulate, Shape :: U64))
+  Instructions:                     3285391|3285391              (No change)
+  L1 Hits:                          4656451|4656452              (-0.00002%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              35|35                   (No change)
+  Total read+write:                 4656494|4656494              (No change)
+  Estimated Cycles:                 4657716|4657712              (+0.00009%) [+1.00000x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::borrow accumulate_1:(borrow_probe(Op :: Accumulate, Shape :: Three))
+  Instructions:                     3299391|3299391              (No change)
+  L1 Hits:                          4680446|4680448              (-0.00004%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              40|39                   (+2.56410%) [+1.02564x]
+  Total read+write:                 4680494|4680494              (No change)
+  Estimated Cycles:                 4681886|4681848              (+0.00081%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::borrow accumulate_2:(borrow_probe(Op :: Accumulate, Shape :: Vec10))
+  Instructions:                     3296390|3296390              (No change)
+  L1 Hits:                          4671449|4671452              (-0.00006%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              35|33                   (+6.06061%) [+1.06061x]
+  Total read+write:                 4671492|4671492              (No change)
+  Estimated Cycles:                 4672714|4672642              (+0.00154%) [+1.00002x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::borrow accumulate_3:(borrow_probe(Op :: Accumulate, Shape :: Vec1000))
+  Instructions:                     3297391|3297391              (No change)
+  L1 Hits:                          4672420|4672422              (-0.00004%) [-1.00000x]
+  LL Hits:                               39|38                   (+2.63158%) [+1.02632x]
+  RAM Hits:                              34|33                   (+3.03030%) [+1.03030x]
+  Total read+write:                 4672493|4672493              (No change)
+  Estimated Cycles:                 4673805|4673767              (+0.00081%) [+1.00001x]
+rfd_0003_rebrand_write_cost_instructions::rebrand_write::borrow accumulate_4:(borrow_probe(Op :: Accumulate, Shape :: Nested))
+  Instructions:                     3330393|3330393              (No change)
+  L1 Hits:                          4724449|4724452              (-0.00006%) [-1.00000x]
+  LL Hits:                                8|7                    (+14.2857%) [+1.14286x]
+  RAM Hits:                              40|38                   (+5.26316%) [+1.05263x]
+  Total read+write:                 4724497|4724497              (No change)
+  Estimated Cycles:                 4725889|4725817              (+0.00152%) [+1.00002x]
+
+Gungraun result: Ok. 110 without regressions; 0 regressed; 0 filtered; 110 benchmarks finished in 31.4484s
