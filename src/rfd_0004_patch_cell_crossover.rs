@@ -47,6 +47,22 @@
 //! two passes, removals first. The baseline's merge concatenates commands.
 //! The sources of one instant touch distinct keys; see `same_key_conflict`
 //! for why.
+//!
+//! Two variants were added after the first run:
+//!
+//! - `rope`, for `Vecs`: the delta design over chunked sequences instead of
+//!   flat vectors, for the source and for the mapped collection alike, each
+//!   its own `Rope`. The flat delta design's insert and remove at an index
+//!   move half of both vectors, so it is O(n) too; a rope makes them
+//!   O(√n). Maier and Odersky's reactive sequences use a concatenation tree
+//!   for the same reason.
+//! - `lazy`, for `Maps`: the delta design with the derived cells deferred.
+//!   The integral applies each instant's Z-set at once, since the next
+//!   upsert's Z-set needs the old value from it, but the filter and count
+//!   only append it to a pending buffer. A read, or the buffer reaching
+//!   `LAZY_BOUND` elements, consolidates the buffer and applies it, so
+//!   updates to one key between reads cancel down to one retraction and
+//!   one insertion.
 
 use std::collections::HashMap;
 
@@ -68,15 +84,27 @@ pub enum Variant {
     Baseline,
     /// A cell carrying deltas, derived cells incremental.
     Delta,
+    /// `Vecs` only: `Delta` over ropes instead of flat vectors.
+    Rope,
+    /// `Maps` only: `Delta` with the derived cells' Z-sets buffered until a
+    /// read.
+    Lazy,
 }
 
 impl Variant {
+    /// The variants every fixture has.
     pub const ALL: [Variant; 2] = [Variant::Baseline, Variant::Delta];
+    /// The variants of `Vecs`.
+    pub const VEC: [Variant; 3] = [Variant::Baseline, Variant::Delta, Variant::Rope];
+    /// The variants of `Maps`.
+    pub const MAP: [Variant; 3] = [Variant::Baseline, Variant::Delta, Variant::Lazy];
 
     pub fn name(self) -> &'static str {
         match self {
             Variant::Baseline => "baseline",
             Variant::Delta => "delta",
+            Variant::Rope => "rope",
+            Variant::Lazy => "lazy",
         }
     }
 }
@@ -228,6 +256,136 @@ impl DeltaVec {
     }
 }
 
+/// A sequence in chunks of b to 2b elements (one chunk may be shorter),
+/// with b about √n, and a directory of the chunks' lengths that an access
+/// scans. An insert or remove at an index scans at most n/b lengths and
+/// moves at most 2b elements, so it's O(√n) for the n the rope was built
+/// for; a split or a merge moves the n/b chunk headers, also O(√n). A
+/// counted B-tree would make it O(log n), at more code, and differs only
+/// past the sizes swept here.
+#[derive(Clone)]
+pub struct Rope {
+    b: usize,
+    lens: Vec<usize>,
+    chunks: Vec<Vec<u64>>,
+}
+
+impl Rope {
+    /// The chunk size for a rope of about n elements.
+    pub fn chunk_size(n: usize) -> usize {
+        n.isqrt().max(16)
+    }
+
+    pub fn new(items: &[u64], b: usize) -> Rope {
+        assert!(b >= 2);
+        let chunk = |c: &[u64]| {
+            let mut v = Vec::with_capacity(2 * b + 1);
+            v.extend_from_slice(c);
+            v
+        };
+        let chunks: Vec<Vec<u64>> = if items.is_empty() {
+            vec![chunk(&[])]
+        } else {
+            items.chunks(b).map(chunk).collect()
+        };
+        let lens = chunks.iter().map(Vec::len).collect();
+        Rope { b, lens, chunks }
+    }
+
+    pub fn len(&self) -> usize {
+        self.lens.iter().sum()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
+    pub fn to_vec(&self) -> Vec<u64> {
+        self.chunks.concat()
+    }
+
+    /// The chunk holding index `i` and the offset in it. An insert may name
+    /// the index one past a chunk's end, which appends to that chunk.
+    fn locate(&self, mut i: usize, inserting: bool) -> (usize, usize) {
+        for (c, &len) in self.lens.iter().enumerate() {
+            if i < len || (inserting && i == len) {
+                return (c, i);
+            }
+            i -= len;
+        }
+        panic!("index out of range");
+    }
+
+    fn split_if_long(&mut self, c: usize) {
+        if self.lens[c] > 2 * self.b {
+            let mut tail = Vec::with_capacity(2 * self.b + 1);
+            tail.extend_from_slice(&self.chunks[c][self.b..]);
+            self.chunks[c].truncate(self.b);
+            self.lens[c] = self.b;
+            self.lens.insert(c + 1, tail.len());
+            self.chunks.insert(c + 1, tail);
+        }
+    }
+
+    pub fn insert(&mut self, i: usize, x: u64) {
+        let (c, off) = self.locate(i, true);
+        self.chunks[c].insert(off, x);
+        self.lens[c] += 1;
+        self.split_if_long(c);
+    }
+
+    pub fn remove(&mut self, i: usize) -> u64 {
+        let (c, off) = self.locate(i, false);
+        let x = self.chunks[c].remove(off);
+        self.lens[c] -= 1;
+        if self.lens[c] < self.b / 2 && self.chunks.len() > 1 {
+            // Merge into the chunk before, or the one after for the first,
+            // and split again if that made it too long.
+            let a = c.saturating_sub(1);
+            let next = self.chunks.remove(a + 1);
+            self.lens.remove(a + 1);
+            self.chunks[a].extend_from_slice(&next);
+            self.lens[a] += next.len();
+            self.split_if_long(a);
+        }
+        x
+    }
+}
+
+/// `DeltaVec` over ropes: the integral and the incremental `map` each keep
+/// their own rope, and so each locate the index themselves, as two nodes
+/// would.
+#[derive(Clone)]
+struct DeltaRope {
+    source: Rope,
+    mapped: Rope,
+    sum: u64,
+}
+
+impl DeltaRope {
+    fn commit(&mut self, patch: &[Edit]) {
+        for &e in patch {
+            match e {
+                Edit::Insert(i, x) => {
+                    let y = f(x);
+                    self.source.insert(i, x);
+                    self.mapped.insert(i, y);
+                    self.sum = self.sum.wrapping_add(y);
+                }
+                Edit::Remove(i) => {
+                    self.source.remove(i);
+                    let y = self.mapped.remove(i);
+                    self.sum = self.sum.wrapping_sub(y);
+                }
+            }
+        }
+    }
+
+    fn read(&self) -> u64 {
+        self.sum
+    }
+}
+
 /// A `Vec` fixture: a cycle of instants, each `k` single-atom events, and
 /// both designs' state, each with its own place in the cycle.
 #[derive(Clone)]
@@ -240,6 +398,8 @@ pub struct Vecs {
     base_at: usize,
     delta: DeltaVec,
     delta_at: usize,
+    rope: DeltaRope,
+    rope_at: usize,
 }
 
 impl Vecs {
@@ -277,6 +437,12 @@ impl Vecs {
         assert_eq!(len, n);
         let mapped: Vec<u64> = source.iter().map(|&x| f(x)).collect();
         let sum = mapped.iter().fold(0u64, |a, &x| a.wrapping_add(x));
+        let b = Rope::chunk_size(n);
+        let rope = DeltaRope {
+            source: Rope::new(&source, b),
+            mapped: Rope::new(&mapped, b),
+            sum,
+        };
         Vecs {
             n,
             workload,
@@ -294,6 +460,8 @@ impl Vecs {
                 sum,
             },
             delta_at: 0,
+            rope,
+            rope_at: 0,
         }
     }
 
@@ -303,6 +471,8 @@ impl Vecs {
         let at = match v {
             Variant::Baseline => &mut self.base_at,
             Variant::Delta => &mut self.delta_at,
+            Variant::Rope => &mut self.rope_at,
+            Variant::Lazy => panic!("`lazy` is a variant of `Maps`"),
         };
         let t = *at % CYCLE;
         let reads = *at % self.workload.read_every == 0;
@@ -320,6 +490,11 @@ impl Vecs {
                 self.delta.commit(&self.patch);
                 if reads { self.delta.read() } else { 0 }
             }
+            Variant::Rope => {
+                self.rope.commit(&self.patch);
+                if reads { self.rope.read() } else { 0 }
+            }
+            Variant::Lazy => unreachable!(),
         }
     }
 
@@ -465,6 +640,84 @@ impl DeltaMap {
     }
 }
 
+/// The most Z-set elements `LazyMap` holds pending before it applies them
+/// without a read: 1,024, two per upsert, so 512 upserts. A fixed bound
+/// keeps the buffer's memory and the pause of one flush constant whatever
+/// n is; a bound in proportion to n would bound the buffer to the
+/// collection's own size instead. No bench reaches it: the rare reader
+/// leaves at most 32 elements pending.
+pub const LAZY_BOUND: usize = 1_024;
+
+/// `DeltaMap` with the derived cells lazy. The integral applies each
+/// instant's Z-set at once, exactly as `DeltaMap` does, because the next
+/// upsert's retraction reads the old value from it. The filter and the
+/// count append the Z-set to `pending`, and apply the consolidated buffer
+/// on a read or at the bound. Consolidating across instants is what's new:
+/// a key updated from a to b to c between reads leaves `(a, -1), (c, +1)`.
+#[derive(Clone)]
+struct LazyMap {
+    source: HashMap<u64, u64>,
+    filtered: HashMap<u64, u64>,
+    count: u64,
+    zset: Vec<Z>,
+    pending: Vec<Z>,
+    /// Instants in `pending`; one instant's Z-set is consolidated already.
+    instants: usize,
+    bound: usize,
+}
+
+impl LazyMap {
+    fn commit(&mut self, upserts: &[(u64, u64)]) {
+        compose_upserts(&self.source, upserts, &mut self.zset);
+        for pass in [-1i64, 1] {
+            for z in &self.zset {
+                if z.weight.signum() != pass {
+                    continue;
+                }
+                if pass < 0 {
+                    self.source.remove(&z.key);
+                } else {
+                    self.source.insert(z.key, z.value);
+                }
+            }
+        }
+        self.pending.extend_from_slice(&self.zset);
+        self.instants += 1;
+        if self.pending.len() >= self.bound {
+            self.flush();
+        }
+    }
+
+    fn flush(&mut self) {
+        if self.instants > 1 {
+            consolidate(&mut self.pending);
+        }
+        // Removals first, as in `DeltaMap`: after consolidation a key has at
+        // most one of each, and its removal must not take out its insertion.
+        for pass in [-1i64, 1] {
+            for z in &self.pending {
+                if z.weight.signum() != pass || !keep(z.value) {
+                    continue;
+                }
+                if pass < 0 {
+                    self.filtered.remove(&z.key);
+                    self.count -= 1;
+                } else {
+                    self.filtered.insert(z.key, z.value);
+                    self.count += 1;
+                }
+            }
+        }
+        self.pending.clear();
+        self.instants = 0;
+    }
+
+    fn read(&mut self) -> u64 {
+        self.flush();
+        self.count
+    }
+}
+
 /// A map fixture: a cycle of instants, each `k` upserts of distinct
 /// existing keys, and both designs' state.
 #[derive(Clone)]
@@ -477,6 +730,8 @@ pub struct Maps {
     base_at: usize,
     delta: DeltaMap,
     delta_at: usize,
+    lazy: LazyMap,
+    lazy_at: usize,
 }
 
 impl Maps {
@@ -506,6 +761,15 @@ impl Maps {
             .map(|(&k, &v)| (k, v))
             .collect();
         let count = filtered.len() as u64;
+        let lazy = LazyMap {
+            source: source.clone(),
+            filtered: filtered.clone(),
+            count,
+            zset: Vec::with_capacity(2 * workload.k),
+            pending: Vec::with_capacity(LAZY_BOUND + 2 * workload.k),
+            instants: 0,
+            bound: LAZY_BOUND,
+        };
         Maps {
             n,
             workload,
@@ -524,6 +788,8 @@ impl Maps {
                 zset: Vec::with_capacity(2 * workload.k),
             },
             delta_at: 0,
+            lazy,
+            lazy_at: 0,
         }
     }
 
@@ -531,6 +797,8 @@ impl Maps {
         let at = match v {
             Variant::Baseline => &mut self.base_at,
             Variant::Delta => &mut self.delta_at,
+            Variant::Lazy => &mut self.lazy_at,
+            Variant::Rope => panic!("`rope` is a variant of `Vecs`"),
         };
         let t = *at % CYCLE;
         let cycle = (*at / CYCLE) as u64;
@@ -555,6 +823,11 @@ impl Maps {
                 self.delta.commit(&self.upserts);
                 if reads { self.delta.read() } else { 0 }
             }
+            Variant::Lazy => {
+                self.lazy.commit(&self.upserts);
+                if reads { self.lazy.read() } else { 0 }
+            }
+            Variant::Rope => unreachable!(),
         }
     }
 
@@ -630,6 +903,7 @@ impl Compose {
                 }
                 self.out.len()
             }
+            Variant::Rope | Variant::Lazy => panic!("`compose` has no {} variant", v.name()),
         }
     }
 }
@@ -638,28 +912,103 @@ impl Compose {
 mod tests {
     use super::*;
 
-    /// Both designs read the same values at every instant the reader reads.
+    /// All designs read the same values at every instant the reader reads.
     #[test]
     fn designs_agree() {
-        for n in [3, 10, 100, 1_000] {
+        for n in [3, 10, 100, 1_000, 10_000] {
             for w in [ONE, TWO, RARE_READ, APPEND] {
                 let mut a = Vecs::new(n, w);
                 for _ in 0..3 * CYCLE {
-                    assert_eq!(a.step(Variant::Baseline), a.step(Variant::Delta));
+                    let read = a.step(Variant::Baseline);
+                    assert_eq!(read, a.step(Variant::Delta));
+                    assert_eq!(read, a.step(Variant::Rope));
                 }
                 assert_eq!(a.base.source, a.delta.source);
+                assert_eq!(a.base.source, a.rope.source.to_vec());
+                assert_eq!(a.delta.mapped, a.rope.mapped.to_vec());
                 if w.append {
                     continue;
                 }
                 let mut m = Maps::new(n, w);
                 for _ in 0..3 * CYCLE {
-                    assert_eq!(m.step(Variant::Baseline), m.step(Variant::Delta));
+                    let read = m.step(Variant::Baseline);
+                    assert_eq!(read, m.step(Variant::Delta));
+                    assert_eq!(read, m.step(Variant::Lazy));
                     // Every upsert changed its key's value.
                     assert_eq!(m.delta.zset.len(), 2 * w.k);
                 }
                 assert_eq!(m.base.source, m.delta.source);
+                assert_eq!(m.base.source, m.lazy.source);
+                m.lazy.flush();
+                assert_eq!(m.delta.filtered, m.lazy.filtered);
             }
         }
+    }
+
+    /// The rope agrees with a `Vec` under random inserts and removes that
+    /// grow it, shrink it to empty and grow it again, splitting and merging
+    /// chunks on the way.
+    #[test]
+    fn rope_is_a_vec() {
+        let mut rng = Rng::new(42);
+        let start: Vec<u64> = (0..100).collect();
+        let mut v = start.clone();
+        let mut r = Rope::new(&start, 4);
+        let (mut splits, mut merges) = (0, 0);
+        for phase in [0.8, 0.2, 0.7] {
+            for _ in 0..3_000 {
+                let chunks = r.chunks.len();
+                if v.is_empty() || (rng.below(1000) as f64) < phase * 1000.0 {
+                    let i = rng.below(v.len() + 1);
+                    let x = rng.next_u64();
+                    v.insert(i, x);
+                    r.insert(i, x);
+                } else {
+                    let i = rng.below(v.len());
+                    assert_eq!(v.remove(i), r.remove(i));
+                }
+                splits += (r.chunks.len() > chunks) as usize;
+                merges += (r.chunks.len() < chunks) as usize;
+                assert_eq!(r.len(), v.len());
+                assert!(r.chunks.iter().all(|c| c.len() <= 2 * r.b));
+            }
+            assert_eq!(r.to_vec(), v);
+        }
+        assert!(
+            splits > 100 && merges > 100,
+            "{splits} splits, {merges} merges"
+        );
+    }
+
+    /// The lazy design reads the same with a bound small enough to flush
+    /// between reads, and never holds more than the bound after a commit.
+    #[test]
+    fn lazy_bound() {
+        for n in [3, 100] {
+            for w in [ONE, TWO, RARE_READ] {
+                let mut m = Maps::new(n, w);
+                m.lazy.bound = 6;
+                for _ in 0..3 * CYCLE {
+                    let read = m.step(Variant::Baseline);
+                    assert_eq!(read, m.step(Variant::Lazy));
+                    assert!(m.lazy.pending.len() < m.lazy.bound);
+                }
+            }
+        }
+    }
+
+    /// Between reads, updates to one key cancel down to one retraction and
+    /// one insertion: 15 instants on three keys leave 30 pending elements,
+    /// which consolidate to at most six.
+    #[test]
+    fn lazy_cancels() {
+        let mut m = Maps::new(3, RARE_READ);
+        // The first instant reads, and the next 15 don't.
+        m.steps(Variant::Lazy, RARE);
+        assert_eq!(m.lazy.pending.len(), 2 * (RARE - 1));
+        let mut z = m.lazy.pending.clone();
+        consolidate(&mut z);
+        assert!(z.len() <= 2 * 3, "{} elements", z.len());
     }
 
     /// Flo's eager-execution law for Z-sets: applying the composition of

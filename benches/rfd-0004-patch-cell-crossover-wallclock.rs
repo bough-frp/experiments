@@ -13,6 +13,10 @@
 //! `vec-append` (edits at the end). `compose` takes k, the number of
 //! Z-sets consolidated in one instant, against concatenating k commands.
 //!
+//! Added later, beside the earlier IDs: `rope` in the `vec-*` groups (the
+//! delta design over ropes) and `lazy` in the `map-*` groups (the delta
+//! design with the derived cells buffering Z-sets until a read).
+//!
 //! Each fixture is checked first to give the same reads under both
 //! designs, and warmed for a cycle.
 
@@ -30,12 +34,11 @@ fn vec_group(c: &mut Criterion, w: Workload) {
     for &n in &SIZES {
         let mut fixture = Vecs::new(n, w);
         for _ in 0..CYCLE {
-            assert_eq!(
-                fixture.step(Variant::Baseline),
-                fixture.step(Variant::Delta)
-            );
+            let read = fixture.step(Variant::Baseline);
+            assert_eq!(read, fixture.step(Variant::Delta));
+            assert_eq!(read, fixture.step(Variant::Rope));
         }
-        for v in Variant::ALL {
+        for v in Variant::VEC {
             let mut f = fixture.clone();
             g.bench_function(BenchmarkId::new(v.name(), n), |b| {
                 b.iter(|| black_box(f.step(v)))
@@ -50,12 +53,11 @@ fn map_group(c: &mut Criterion, w: Workload) {
     for &n in &SIZES {
         let mut fixture = Maps::new(n, w);
         for _ in 0..CYCLE {
-            assert_eq!(
-                fixture.step(Variant::Baseline),
-                fixture.step(Variant::Delta)
-            );
+            let read = fixture.step(Variant::Baseline);
+            assert_eq!(read, fixture.step(Variant::Delta));
+            assert_eq!(read, fixture.step(Variant::Lazy));
         }
-        for v in Variant::ALL {
+        for v in Variant::MAP {
             let mut f = fixture.clone();
             g.bench_function(BenchmarkId::new(v.name(), n), |b| {
                 b.iter(|| black_box(f.step(v)))
@@ -90,8 +92,8 @@ fn patch_cell_crossover(c: &mut Criterion) {
 
 criterion_group! {
     name = benches;
-    // 108 benchmarks at about 1.5 s each, the slowest (map at 100k) a few
-    // seconds more: about four minutes.
+    // 157 benchmarks at about 1.5 s each, the slowest (map at 100k) a few
+    // seconds more: about six minutes.
     config = Criterion::default()
         .sample_size(50)
         .warm_up_time(Duration::from_millis(300))

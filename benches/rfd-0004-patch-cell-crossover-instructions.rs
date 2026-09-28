@@ -11,6 +11,11 @@
 //! the end instead of at a random index). `compose` counts 64 compositions
 //! of k Z-sets against 64 concatenations of k commands, the parameter k.
 //!
+//! Two variants were added later, keeping every earlier ID: `vec_rope`
+//! (the delta design over ropes, O(√n) per edit instead of the flat
+//! vectors' O(n)) and `map_lazy` (the delta design with the filter and the
+//! count buffering Z-sets until a read).
+//!
 //! The fixture is built in `setup` and both designs run a cycle on it
 //! there, so memos, capacities and the hash maps are at their steady state,
 //! and the counted cycle starts where a cycle starts. It's handed back so
@@ -26,7 +31,7 @@ use bough_experiments::rfd_0004_patch_cell_crossover::{
 
 fn vecs(n: usize, w: Workload) -> Vecs {
     let mut f = Vecs::new(n, w);
-    for v in Variant::ALL {
+    for v in Variant::VEC {
         f.steps(v, CYCLE);
     }
     f
@@ -47,7 +52,7 @@ fn vec_append(n: usize) -> Vecs {
 
 fn maps(n: usize, w: Workload) -> Maps {
     let mut f = Maps::new(n, w);
-    for v in Variant::ALL {
+    for v in Variant::MAP {
         f.steps(v, CYCLE);
     }
     f
@@ -94,6 +99,15 @@ fn vec_delta(mut f: Vecs) -> (u64, Vecs) {
 }
 
 #[library_benchmark]
+#[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_one, teardown = drop_out)]
+#[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_two, teardown = drop_out)]
+#[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_rare, teardown = drop_out)]
+#[benches::append(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = vec_append, teardown = drop_out)]
+fn vec_rope(mut f: Vecs) -> (u64, Vecs) {
+    (black_box(f.steps(Variant::Rope, CYCLE)), f)
+}
+
+#[library_benchmark]
 #[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_one, teardown = drop_out)]
 #[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_two, teardown = drop_out)]
 #[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_rare, teardown = drop_out)]
@@ -107,6 +121,14 @@ fn map_baseline(mut f: Maps) -> (u64, Maps) {
 #[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_rare, teardown = drop_out)]
 fn map_delta(mut f: Maps) -> (u64, Maps) {
     (black_box(f.steps(Variant::Delta, CYCLE)), f)
+}
+
+#[library_benchmark]
+#[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_one, teardown = drop_out)]
+#[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_two, teardown = drop_out)]
+#[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_rare, teardown = drop_out)]
+fn map_lazy(mut f: Maps) -> (u64, Maps) {
+    (black_box(f.steps(Variant::Lazy, CYCLE)), f)
 }
 
 fn run_compose(mut c: Compose, v: Variant) -> (u64, Compose) {
@@ -131,7 +153,7 @@ fn compose_delta(c: Compose) -> (u64, Compose) {
 
 library_benchmark_group!(
     name = patch_cell_crossover;
-    benchmarks = vec_baseline, vec_delta, map_baseline, map_delta, compose_baseline, compose_delta
+    benchmarks = vec_baseline, vec_delta, vec_rope, map_baseline, map_delta, map_lazy, compose_baseline, compose_delta
 );
 
 main!(library_benchmark_groups = patch_cell_crossover);
