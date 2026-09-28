@@ -22,6 +22,12 @@
 //! everything brought up to date on a read). Every `vec_*` bench also takes
 //! n = 1,000,000, as its eighth parameter, where O(log n) and O(√n) part.
 //!
+//! And two more, keeping every earlier ID: `map_fused` (the delta design
+//! eager, each upsert one insert on the source whose old value is the
+//! filter's retraction, so it has `map_fullylazy`'s fusion without its
+//! deferral) and `vec_btree_shared` (one B-tree whose leaves hold the source
+//! element and its mapped value, one descent where `vec_btree` makes two).
+//!
 //! The fixture is built in `setup` and both designs run a cycle on it
 //! there, so memos, capacities and the hash maps are at their steady state,
 //! and the counted cycle starts where a cycle starts. It's handed back so
@@ -154,6 +160,23 @@ fn map_fullylazy(mut f: Maps) -> (u64, Maps) {
     (black_box(f.steps(Variant::FullyLazy, CYCLE)), f)
 }
 
+#[library_benchmark]
+#[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_one, teardown = drop_out)]
+#[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_two, teardown = drop_out)]
+#[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000], setup = map_rare, teardown = drop_out)]
+fn map_fused(mut f: Maps) -> (u64, Maps) {
+    (black_box(f.steps(Variant::Fused, CYCLE)), f)
+}
+
+#[library_benchmark]
+#[benches::one(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_one, teardown = drop_out)]
+#[benches::two(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_two, teardown = drop_out)]
+#[benches::rare(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_rare, teardown = drop_out)]
+#[benches::append(args = [3, 10, 30, 100, 1_000, 10_000, 100_000, 1_000_000], setup = vec_append, teardown = drop_out)]
+fn vec_btree_shared(mut f: Vecs) -> (u64, Vecs) {
+    (black_box(f.steps(Variant::BTreeShared, CYCLE)), f)
+}
+
 fn run_compose(mut c: Compose, v: Variant) -> (u64, Compose) {
     let mut acc = 0u64;
     for _ in 0..CYCLE {
@@ -176,7 +199,7 @@ fn compose_delta(c: Compose) -> (u64, Compose) {
 
 library_benchmark_group!(
     name = patch_cell_crossover;
-    benchmarks = vec_baseline, vec_delta, vec_rope, map_baseline, map_delta, map_lazy, compose_baseline, compose_delta, vec_btree, map_fullylazy
+    benchmarks = vec_baseline, vec_delta, vec_rope, map_baseline, map_delta, map_lazy, compose_baseline, compose_delta, vec_btree, map_fullylazy, map_fused, vec_btree_shared
 );
 
 main!(library_benchmark_groups = patch_cell_crossover);

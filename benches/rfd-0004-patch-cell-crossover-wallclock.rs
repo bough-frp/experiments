@@ -19,7 +19,10 @@
 //! After those, `btree` in the `vec-*` groups (the delta design over
 //! counted B-trees) and `fullylazy` in the `map-*` groups (the source map
 //! deferred too, raw upserts buffered until a read). The `vec-*` groups
-//! also take n = 1,000,000, every variant.
+//! also take n = 1,000,000, every variant. Last, `fused` in the `map-*`
+//! groups (the delta design eager, each upsert one insert on the source
+//! whose old value is the filter's retraction) and `btree-shared` in the
+//! `vec-*` groups (one B-tree holding source and mapped values together).
 //!
 //! Each fixture is checked first to give the same reads under both
 //! designs, and warmed for a cycle.
@@ -43,6 +46,7 @@ fn vec_group(c: &mut Criterion, w: Workload) {
             assert_eq!(read, fixture.step(Variant::Delta));
             assert_eq!(read, fixture.step(Variant::Rope));
             assert_eq!(read, fixture.step(Variant::BTree));
+            assert_eq!(read, fixture.step(Variant::BTreeShared));
         }
         for v in Variant::VEC {
             let mut f = fixture.clone();
@@ -63,6 +67,7 @@ fn map_group(c: &mut Criterion, w: Workload) {
             assert_eq!(read, fixture.step(Variant::Delta));
             assert_eq!(read, fixture.step(Variant::Lazy));
             assert_eq!(read, fixture.step(Variant::FullyLazy));
+            assert_eq!(read, fixture.step(Variant::Fused));
         }
         for v in Variant::MAP {
             let mut f = fixture.clone();
@@ -99,12 +104,14 @@ fn patch_cell_crossover(c: &mut Criterion) {
 
 criterion_group! {
     name = benches;
-    // 222 benchmarks at about 1.5 s each, the slowest (map at 100k, vec
-    // baseline at 1M) a few seconds more: about eight and a half minutes.
+    // 275 benchmarks. At 0.3 s warm-up and 1 s measuring, the last run's
+    // 222 took about eight and a half minutes, about 2.3 s each with the
+    // fixtures and the slow ones (map at 100k, vec baseline at 1M); at
+    // 0.2 s and 0.8 s, 275 should take about eight and a half again.
     config = Criterion::default()
         .sample_size(50)
-        .warm_up_time(Duration::from_millis(300))
-        .measurement_time(Duration::from_secs(1));
+        .warm_up_time(Duration::from_millis(200))
+        .measurement_time(Duration::from_millis(800));
     targets = patch_cell_crossover
 }
 criterion_main!(benches);

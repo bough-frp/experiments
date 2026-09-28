@@ -77,6 +77,19 @@
 //!   brings the source, the filter and the count up to date. `lazy` could
 //!   not defer the source, because each Z-set's retraction needs the old
 //!   value from it; raw upserts need nothing from it until the read.
+//!
+//! Two more were added after the third run, to separate what `fullylazy`
+//! and `btree` won by from what they were built to test:
+//!
+//! - `fused`, for `Maps`: the delta design eager, every instant, but with
+//!   `fullylazy`'s fusion: each upsert is one `insert` on the source, and
+//!   the old value it hands back is the filter's retraction, so there is no
+//!   lookup, no separate removal and no Z-set to consolidate. Against
+//!   `delta` it measures the fusion; against `fullylazy`, the deferral.
+//! - `btree-shared`, for `Vecs`: one counted B-tree whose leaves hold each
+//!   source element beside its mapped value, so one descent serves the
+//!   integral and the `map`, as a fused map node's would. Against `btree`,
+//!   which keeps a tree per node, it measures what the second tree costs.
 
 use std::collections::HashMap;
 
@@ -111,24 +124,32 @@ pub enum Variant {
     /// `Maps` only: the raw upserts buffered until a read, the source map
     /// included.
     FullyLazy,
+    /// `Maps` only: `Delta` with each upsert one insert on the source, whose
+    /// old value is the filter's retraction; eager, nothing buffered.
+    Fused,
+    /// `Vecs` only: `BTree` with one tree whose leaves hold the source and
+    /// mapped values together.
+    BTreeShared,
 }
 
 impl Variant {
     /// The variants every fixture has.
     pub const ALL: [Variant; 2] = [Variant::Baseline, Variant::Delta];
     /// The variants of `Vecs`.
-    pub const VEC: [Variant; 4] = [
+    pub const VEC: [Variant; 5] = [
         Variant::Baseline,
         Variant::Delta,
         Variant::Rope,
         Variant::BTree,
+        Variant::BTreeShared,
     ];
     /// The variants of `Maps`.
-    pub const MAP: [Variant; 4] = [
+    pub const MAP: [Variant; 5] = [
         Variant::Baseline,
         Variant::Delta,
         Variant::Lazy,
         Variant::FullyLazy,
+        Variant::Fused,
     ];
 
     pub fn name(self) -> &'static str {
@@ -139,6 +160,8 @@ impl Variant {
             Variant::Lazy => "lazy",
             Variant::BTree => "btree",
             Variant::FullyLazy => "fullylazy",
+            Variant::Fused => "fused",
+            Variant::BTreeShared => "btree-shared",
         }
     }
 }
@@ -429,20 +452,26 @@ pub const INNER_MAX: usize = 16;
 /// A node of a counted B-tree: a leaf of elements, or an internal node with
 /// the number of elements under each child, so an index finds its child by
 /// scanning the sizes, O(log n) levels of at most `INNER_MAX` each.
+///
+/// Generic over the element, so `SharedBTree` can hold a source element and
+/// its mapped value side by side in one tree of the same shape.
 #[derive(Clone)]
-enum Node {
-    Leaf(Vec<u64>),
-    Inner { sizes: Vec<usize>, kids: Vec<Node> },
+enum Node<T> {
+    Leaf(Vec<T>),
+    Inner {
+        sizes: Vec<usize>,
+        kids: Vec<Node<T>>,
+    },
 }
 
-impl Node {
-    fn leaf(items: &[u64]) -> Node {
+impl<T: Copy> Node<T> {
+    fn leaf(items: &[T]) -> Node<T> {
         let mut v = Vec::with_capacity(LEAF_MAX + 1);
         v.extend_from_slice(items);
         Node::Leaf(v)
     }
 
-    fn inner(kids: Vec<Node>) -> Node {
+    fn inner(kids: Vec<Node<T>>) -> Node<T> {
         let mut sizes = Vec::with_capacity(INNER_MAX + 1);
         sizes.extend(kids.iter().map(Node::len));
         let mut k = Vec::with_capacity(INNER_MAX + 1);
@@ -480,7 +509,7 @@ impl Node {
     }
 
     /// Splits off the upper half as a new right sibling.
-    fn split(&mut self) -> Node {
+    fn split(&mut self) -> Node<T> {
         match self {
             Node::Leaf(v) => {
                 let right = Node::leaf(&v[v.len() / 2..]);
@@ -502,7 +531,7 @@ impl Node {
     }
 
     /// Appends the entries of `right`, a sibling of the same height.
-    fn absorb(&mut self, right: Node) {
+    fn absorb(&mut self, right: Node<T>) {
         match (self, right) {
             (Node::Leaf(v), Node::Leaf(r)) => v.extend_from_slice(&r),
             (
@@ -532,11 +561,11 @@ impl Node {
     }
 
     /// Inserts, and returns the new right sibling if this node split.
-    fn insert(&mut self, i: usize, x: u64) -> Option<Node> {
+    fn insert(&mut self, i: usize, x: T) -> Option<Node<T>> {
         match self {
             Node::Leaf(v) => v.insert(i, x),
             Node::Inner { sizes, kids } => {
-                let (c, off) = Node::locate(sizes, i, true);
+                let (c, off) = Self::locate(sizes, i, true);
                 match kids[c].insert(off, x) {
                     None => sizes[c] += 1,
                     Some(right) => {
@@ -551,11 +580,11 @@ impl Node {
     }
 
     /// Removes; the caller fixes this node if it underflowed.
-    fn remove(&mut self, i: usize) -> u64 {
+    fn remove(&mut self, i: usize) -> T {
         match self {
             Node::Leaf(v) => v.remove(i),
             Node::Inner { sizes, kids } => {
-                let (c, off) = Node::locate(sizes, i, false);
+                let (c, off) = Self::locate(sizes, i, false);
                 let x = kids[c].remove(off);
                 sizes[c] -= 1;
                 if kids[c].width() < kids[c].min_width() && kids.len() > 1 {
@@ -582,13 +611,13 @@ impl Node {
 /// insert or remove at an index, against the rope's O(√n). Built bulk, with
 /// nodes three-quarters full, so the first edits don't all split.
 #[derive(Clone)]
-pub struct BTree {
-    root: Node,
+pub struct BTree<T = u64> {
+    root: Node<T>,
 }
 
-impl BTree {
-    pub fn new(items: &[u64]) -> BTree {
-        let mut level: Vec<Node> = if items.is_empty() {
+impl<T: Copy> BTree<T> {
+    pub fn new(items: &[T]) -> BTree<T> {
+        let mut level: Vec<Node<T>> = if items.is_empty() {
             vec![Node::leaf(&[])]
         } else {
             items.chunks(LEAF_MAX * 3 / 4).map(Node::leaf).collect()
@@ -614,8 +643,8 @@ impl BTree {
         self.len() == 0
     }
 
-    pub fn to_vec(&self) -> Vec<u64> {
-        fn walk(n: &Node, out: &mut Vec<u64>) {
+    pub fn to_vec(&self) -> Vec<T> {
+        fn walk<T: Copy>(n: &Node<T>, out: &mut Vec<T>) {
             match n {
                 Node::Leaf(v) => out.extend_from_slice(v),
                 Node::Inner { kids, .. } => kids.iter().for_each(|k| walk(k, out)),
@@ -626,14 +655,14 @@ impl BTree {
         out
     }
 
-    pub fn insert(&mut self, i: usize, x: u64) {
+    pub fn insert(&mut self, i: usize, x: T) {
         if let Some(right) = self.root.insert(i, x) {
             let left = std::mem::replace(&mut self.root, Node::Leaf(Vec::new()));
             self.root = Node::inner(vec![left, right]);
         }
     }
 
-    pub fn remove(&mut self, i: usize) -> u64 {
+    pub fn remove(&mut self, i: usize) -> T {
         let x = self.root.remove(i);
         if let Node::Inner { kids, .. } = &mut self.root
             && kids.len() == 1
@@ -647,7 +676,7 @@ impl BTree {
     /// node is wider than its maximum, and every leaf is at the same depth.
     #[cfg(test)]
     fn check(&self) {
-        fn walk(n: &Node, depth: usize, leaves: &mut Vec<usize>) {
+        fn walk<T: Copy>(n: &Node<T>, depth: usize, leaves: &mut Vec<usize>) {
             assert!(n.width() <= n.max_width());
             match n {
                 Node::Leaf(_) => leaves.push(depth),
@@ -710,6 +739,40 @@ impl DeltaBTree {
     }
 }
 
+/// `DeltaBTree` with one tree for both collections: each leaf entry is a
+/// source element and its mapped value, so an edit descends once where
+/// `DeltaBTree` descends twice. The leaves keep `LEAF_MAX` entries, twice
+/// the bytes of `DeltaBTree`'s, so the tree has the same shape and height
+/// and the comparison is one descent against two, not a change of fan-out.
+/// The mapped collection is still there to read, as the `.1` of each entry.
+#[derive(Clone)]
+struct SharedBTree {
+    both: BTree<(u64, u64)>,
+    sum: u64,
+}
+
+impl SharedBTree {
+    fn commit(&mut self, patch: &[Edit]) {
+        for &e in patch {
+            match e {
+                Edit::Insert(i, x) => {
+                    let y = f(x);
+                    self.both.insert(i, (x, y));
+                    self.sum = self.sum.wrapping_add(y);
+                }
+                Edit::Remove(i) => {
+                    let (_, y) = self.both.remove(i);
+                    self.sum = self.sum.wrapping_sub(y);
+                }
+            }
+        }
+    }
+
+    fn read(&self) -> u64 {
+        self.sum
+    }
+}
+
 /// A `Vec` fixture: a cycle of instants, each `k` single-atom events, and
 /// both designs' state, each with its own place in the cycle.
 #[derive(Clone)]
@@ -726,6 +789,8 @@ pub struct Vecs {
     rope_at: usize,
     btree: DeltaBTree,
     btree_at: usize,
+    shared: SharedBTree,
+    shared_at: usize,
 }
 
 impl Vecs {
@@ -774,6 +839,11 @@ impl Vecs {
             mapped: BTree::new(&mapped),
             sum,
         };
+        let pairs: Vec<(u64, u64)> = source.iter().copied().zip(mapped.iter().copied()).collect();
+        let shared = SharedBTree {
+            both: BTree::new(&pairs),
+            sum,
+        };
         Vecs {
             n,
             workload,
@@ -795,6 +865,8 @@ impl Vecs {
             rope_at: 0,
             btree,
             btree_at: 0,
+            shared,
+            shared_at: 0,
         }
     }
 
@@ -806,7 +878,8 @@ impl Vecs {
             Variant::Delta => &mut self.delta_at,
             Variant::Rope => &mut self.rope_at,
             Variant::BTree => &mut self.btree_at,
-            Variant::Lazy | Variant::FullyLazy => {
+            Variant::BTreeShared => &mut self.shared_at,
+            Variant::Lazy | Variant::FullyLazy | Variant::Fused => {
                 panic!("`{}` is a variant of `Maps`", v.name())
             }
         };
@@ -834,7 +907,11 @@ impl Vecs {
                 self.btree.commit(&self.patch);
                 if reads { self.btree.read() } else { 0 }
             }
-            Variant::Lazy | Variant::FullyLazy => unreachable!(),
+            Variant::BTreeShared => {
+                self.shared.commit(&self.patch);
+                if reads { self.shared.read() } else { 0 }
+            }
+            Variant::Lazy | Variant::FullyLazy | Variant::Fused => unreachable!(),
         }
     }
 
@@ -1058,6 +1135,36 @@ impl LazyMap {
     }
 }
 
+/// One upsert through the source, the filter and the count, fused: the
+/// source's `insert` hands back the old value, which is the retraction the
+/// filter needs, so the upsert costs one hash insert on the source and at
+/// most a removal and an insertion on the filtered map. `FullyLazyMap` runs
+/// this on each surviving upsert of a flush, `FusedMap` on each upsert of
+/// each instant, so the two differ only in when.
+#[inline]
+fn fused_upsert(
+    source: &mut HashMap<u64, u64>,
+    filtered: &mut HashMap<u64, u64>,
+    count: &mut u64,
+    key: u64,
+    value: u64,
+) {
+    let old = source.insert(key, value);
+    if old == Some(value) {
+        return;
+    }
+    if let Some(old) = old
+        && keep(old)
+    {
+        filtered.remove(&key);
+        *count -= 1;
+    }
+    if keep(value) {
+        filtered.insert(key, value);
+        *count += 1;
+    }
+}
+
 /// The most raw upserts `FullyLazyMap` holds before it applies them without
 /// a read: as many upserts as `LAZY_BOUND` holds, two Z-set elements each.
 pub const FULLY_LAZY_BOUND: usize = LAZY_BOUND / 2;
@@ -1105,26 +1212,51 @@ impl FullyLazyMap {
             if self.pending.get(i + 1).is_some_and(|&(k, _, _)| k == key) {
                 continue;
             }
-            let old = self.source.insert(key, value);
-            if old == Some(value) {
-                continue;
-            }
-            if let Some(old) = old
-                && keep(old)
-            {
-                self.filtered.remove(&key);
-                self.count -= 1;
-            }
-            if keep(value) {
-                self.filtered.insert(key, value);
-                self.count += 1;
-            }
+            fused_upsert(
+                &mut self.source,
+                &mut self.filtered,
+                &mut self.count,
+                key,
+                value,
+            );
         }
         self.pending.clear();
     }
 
     fn read(&mut self) -> u64 {
         self.flush();
+        self.count
+    }
+}
+
+/// `DeltaMap` with `FullyLazyMap`'s fusion and none of its deferral: every
+/// instant, each upsert goes through `fused_upsert` at once. The Z-set the
+/// source hands the filter, `{(key, old, -1), (key, new, +1)}`, is never
+/// built as a vector: it is the pair `insert` returns and the upsert holds.
+/// A composed instant needs no consolidation, since the sources of one
+/// instant touch distinct keys, and applied in turn, upserts to one key
+/// would compose to the last anyway.
+#[derive(Clone)]
+struct FusedMap {
+    source: HashMap<u64, u64>,
+    filtered: HashMap<u64, u64>,
+    count: u64,
+}
+
+impl FusedMap {
+    fn commit(&mut self, upserts: &[(u64, u64)]) {
+        for &(key, value) in upserts {
+            fused_upsert(
+                &mut self.source,
+                &mut self.filtered,
+                &mut self.count,
+                key,
+                value,
+            );
+        }
+    }
+
+    fn read(&self) -> u64 {
         self.count
     }
 }
@@ -1145,6 +1277,8 @@ pub struct Maps {
     lazy_at: usize,
     fully: FullyLazyMap,
     fully_at: usize,
+    fused: FusedMap,
+    fused_at: usize,
 }
 
 impl Maps {
@@ -1174,6 +1308,11 @@ impl Maps {
             .map(|(&k, &v)| (k, v))
             .collect();
         let count = filtered.len() as u64;
+        let fused = FusedMap {
+            source: source.clone(),
+            filtered: filtered.clone(),
+            count,
+        };
         let fully = FullyLazyMap {
             source: source.clone(),
             filtered: filtered.clone(),
@@ -1212,6 +1351,8 @@ impl Maps {
             lazy_at: 0,
             fully,
             fully_at: 0,
+            fused,
+            fused_at: 0,
         }
     }
 
@@ -1221,7 +1362,10 @@ impl Maps {
             Variant::Delta => &mut self.delta_at,
             Variant::Lazy => &mut self.lazy_at,
             Variant::FullyLazy => &mut self.fully_at,
-            Variant::Rope | Variant::BTree => panic!("`{}` is a variant of `Vecs`", v.name()),
+            Variant::Fused => &mut self.fused_at,
+            Variant::Rope | Variant::BTree | Variant::BTreeShared => {
+                panic!("`{}` is a variant of `Vecs`", v.name())
+            }
         };
         let t = *at % CYCLE;
         let cycle = (*at / CYCLE) as u64;
@@ -1254,7 +1398,11 @@ impl Maps {
                 self.fully.commit(&self.upserts);
                 if reads { self.fully.read() } else { 0 }
             }
-            Variant::Rope | Variant::BTree => unreachable!(),
+            Variant::Fused => {
+                self.fused.commit(&self.upserts);
+                if reads { self.fused.read() } else { 0 }
+            }
+            Variant::Rope | Variant::BTree | Variant::BTreeShared => unreachable!(),
         }
     }
 
@@ -1330,7 +1478,12 @@ impl Compose {
                 }
                 self.out.len()
             }
-            Variant::Rope | Variant::Lazy | Variant::BTree | Variant::FullyLazy => {
+            Variant::Rope
+            | Variant::Lazy
+            | Variant::BTree
+            | Variant::FullyLazy
+            | Variant::Fused
+            | Variant::BTreeShared => {
                 panic!("`compose` has no {} variant", v.name())
             }
         }
@@ -1352,6 +1505,7 @@ mod tests {
                     assert_eq!(read, a.step(Variant::Delta));
                     assert_eq!(read, a.step(Variant::Rope));
                     assert_eq!(read, a.step(Variant::BTree));
+                    assert_eq!(read, a.step(Variant::BTreeShared));
                 }
                 assert_eq!(a.base.source, a.delta.source);
                 assert_eq!(a.base.source, a.rope.source.to_vec());
@@ -1360,6 +1514,12 @@ mod tests {
                 assert_eq!(a.delta.mapped, a.btree.mapped.to_vec());
                 a.btree.source.check();
                 a.btree.mapped.check();
+                let (source, mapped): (Vec<u64>, Vec<u64>) =
+                    a.shared.both.to_vec().into_iter().unzip();
+                assert_eq!(a.base.source, source);
+                assert_eq!(a.delta.mapped, mapped);
+                a.shared.both.check();
+                assert_eq!(a.shared.both.height(), a.btree.source.height());
                 if w.append {
                     continue;
                 }
@@ -1369,6 +1529,7 @@ mod tests {
                     assert_eq!(read, m.step(Variant::Delta));
                     assert_eq!(read, m.step(Variant::Lazy));
                     assert_eq!(read, m.step(Variant::FullyLazy));
+                    assert_eq!(read, m.step(Variant::Fused));
                     // Every upsert changed its key's value.
                     assert_eq!(m.delta.zset.len(), 2 * w.k);
                 }
@@ -1379,6 +1540,9 @@ mod tests {
                 m.fully.flush();
                 assert_eq!(m.base.source, m.fully.source);
                 assert_eq!(m.delta.filtered, m.fully.filtered);
+                assert_eq!(m.base.source, m.fused.source);
+                assert_eq!(m.delta.filtered, m.fused.filtered);
+                assert_eq!(m.delta.count, m.fused.count);
             }
         }
     }
