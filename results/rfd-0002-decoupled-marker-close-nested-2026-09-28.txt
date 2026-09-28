@@ -1,0 +1,319 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0002-decoupled-marker at experiments@48bdda5 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0002-decoupled-marker
+
+rustc: rustc 1.98.1 (48a229cea 2026-09-01)  (rust-toolchain.toml)
+check: rustc --emit=metadata per design; the baseline must build every fixture,
+       marker, close and rows must build exactly the legal loops
+close: marker-close; a fixture written for marker is compiled against it unchanged,
+       ignoring what `close` returns, so it still reads the forward after the close
+
+fixture                           legal  baseline  marker    close     rows      first error (first design with one)
+close-defer-forward-feeds-loop    yes    built     -         refused * -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+close-nested-reads-returned       yes    built     -         built     -         
+close-own-loop-again              no     built     -         refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+close-snapshot-then-steps         yes    built     -         built     -         
+close-stream-loop-cycle           no     built     -         refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+close-switch-smuggle              no     built     -         built *   -         
+close-two-loops-cycle             no     built     -         refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+close-two-loops-reset             yes    built     -         built     -         
+defer-backward-feeds-loop         yes    built     built     built     -         
+defer-countdown                   yes    built     built     built     -         
+defer-forward-feeds-loop          yes    built     refused * refused * -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+defer-no-filter                   yes    built     built     built     -         
+depends-illegal                   no     built     refused   refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+depends-on-forward                yes    built     built     built     -         
+f1-counter                        yes    built     built     built     -         
+f3-steps-cycle                    no     built     refused   refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+gate-counter                      yes    built     built     built     -         
+gate-of-steps                     no     built     refused   refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+helper-generic                    yes    -         built     built     -         
+helper-opaque                     yes    built     refused * refused * -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+helper-token                      yes    built     refused * refused * -         E0308 mismatched types
+map-cell-only                     no     built     refused   refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+map-only                          no     built     refused   refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+merge-only                        no     built     refused   refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+navigation                        yes    built     built     built     -         
+nested-f3-in-child                no     built     refused   refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+nested-loop-in-child              yes    built     built     built     -         
+nested-loop-reads-parent-forward  yes    built     refused * refused * -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+nested-split-bypass-parent        no     built     refused   refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+nested-split-feeds-parent         yes    built     built     built     -         
+nested-split-loop-in-child        yes    built     built     built     -         
+nested-switch-smuggle             no     built     built *   built *   -         
+rows-defer-countdown              yes    -         -         -         built     
+rows-defer-forward-feeds-loop     yes    -         -         -         built     
+rows-defer-no-filter              yes    -         -         -         built     
+rows-depends-illegal              no     -         -         -         refused   E0277 this loop's definition depends on its own forward reference in the same instant
+rows-f1-counter                   yes    -         -         -         built     
+rows-f3-steps-cycle               no     -         -         -         refused   E0277 this loop's definition depends on its own forward reference in the same instant
+rows-gate-counter                 yes    -         -         -         built     
+rows-navigation                   yes    -         -         -         built     
+rows-sample-in-construct          yes    -         -         -         built     
+rows-split-fed-by-children        yes    -         -         -         built     
+rows-switch-smuggle               no     -         -         -         built *   
+rows-two-loops-cycle              no     -         -         -         refused   E0277 this loop's definition depends on its own forward reference in the same instant
+rows-two-loops-reset              yes    -         -         -         built     
+rows-two-loops-undeclared         yes    -         -         -         refused * E0277 this loop's definition depends in the same instant on a loop its declaration doesn't list
+sample-in-construct               yes    built     built     built     -         
+snapshot-in-merge                 yes    built     built     built     -         
+snapshot-of-steps                 yes    built     built     built     -         
+split-bypass                      no     built     refused   refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+split-fed-by-children             yes    built     built     built     -         
+stream-counter                    yes    built     built     built     -         
+switch-inner-steps                no     built     refused   refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+switch-smuggle                    no     built     built *   built *   -         
+two-loops-cycle                   no     built     refused   refused   -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+two-loops-reset-definition        yes    built     built     built     -         
+two-loops-reset                   yes    built     refused * refused * -         E0277 this loop's definition depends on a loop's forward reference in the same instant
+
+* disagrees with the run-time rule: a legal loop refused, or an illegal one built
+
+--- marker-close: close-defer-forward-feeds-loop.rs, first diagnostic
+error[E0277]: this loop's definition depends on a loop's forward reference in the same instant
+   --> fixtures/rfd-0002-decoupled-marker/close-defer-forward-feeds-loop.rs:28:43
+    |
+ 28 |     let _total = total_loop.close(&mut b, next_total);
+    |                             -----         ^^^^^^^^^^ reaches a forward reference without a read from before the instant
+    |                             |
+    |                             required by a bound introduced by this call
+    |
+help: the trait `IsDecoupled` is not implemented for `Instantaneous`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker-close.rs:37:1
+    |
+ 37 | pub struct Instantaneous;
+    | ^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: only `snapshot`, `gate` and `sample` of a cell and a `switch_stream`'s selection read from before the instant, and only `split` and `defer` move to a child instant; a hold delays those reads, not its `steps`; a forward stays `Instantaneous` after its loop closes, so read a closed loop through the token its `close` returned
+help: the trait `IsDecoupled` is implemented for `Decoupled`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker-close.rs:61:1
+    |
+ 61 | impl IsDecoupled for Decoupled {}
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `CellLoop::<A>::close`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker-close.rs:447:21
+    |
+447 |     pub fn close<M: IsDecoupled>(self, b: &mut Build, definition: Cell<A, M>) -> Cell<A> {
+    |                     ^^^^^^^^^^^ required by this bound in `CellLoop::<A>::close`
+
+--- marker: defer-forward-feeds-loop.rs, first diagnostic
+error[E0277]: this loop's definition depends on a loop's forward reference in the same instant
+   --> fixtures/rfd-0002-decoupled-marker/defer-forward-feeds-loop.rs:28:30
+    |
+ 28 |     total_loop.close(&mut b, next_total);
+    |                -----         ^^^^^^^^^^ reaches a forward reference without a read from before the instant
+    |                |
+    |                required by a bound introduced by this call
+    |
+help: the trait `IsDecoupled` is not implemented for `Instantaneous`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:36:1
+    |
+ 36 | pub struct Instantaneous;
+    | ^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: only `snapshot`, `gate` and `sample` of a cell and a `switch_stream`'s selection read from before the instant, and only `split` and `defer` move to a child instant; a hold delays those reads, not its `steps`
+help: the trait `IsDecoupled` is implemented for `Decoupled`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:60:1
+    |
+ 60 | impl IsDecoupled for Decoupled {}
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `CellLoop::<A>::close`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:441:21
+    |
+441 |     pub fn close<M: IsDecoupled>(self, b: &mut Build, definition: Cell<A, M>) {
+    |                     ^^^^^^^^^^^ required by this bound in `CellLoop::<A>::close`
+
+--- marker: f3-steps-cycle.rs, first diagnostic
+error[E0277]: this loop's definition depends on a loop's forward reference in the same instant
+   --> fixtures/rfd-0002-decoupled-marker/f3-steps-cycle.rs:17:26
+    |
+ 17 |     c_loop.close(&mut b, next);
+    |            -----         ^^^^ reaches a forward reference without a read from before the instant
+    |            |
+    |            required by a bound introduced by this call
+    |
+help: the trait `IsDecoupled` is not implemented for `Instantaneous`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:36:1
+    |
+ 36 | pub struct Instantaneous;
+    | ^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: only `snapshot`, `gate` and `sample` of a cell and a `switch_stream`'s selection read from before the instant, and only `split` and `defer` move to a child instant; a hold delays those reads, not its `steps`
+help: the trait `IsDecoupled` is implemented for `Decoupled`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:60:1
+    |
+ 60 | impl IsDecoupled for Decoupled {}
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `CellLoop::<A>::close`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:441:21
+    |
+441 |     pub fn close<M: IsDecoupled>(self, b: &mut Build, definition: Cell<A, M>) {
+    |                     ^^^^^^^^^^^ required by this bound in `CellLoop::<A>::close`
+
+--- marker: helper-opaque.rs, first diagnostic
+error[E0277]: this loop's definition depends on a loop's forward reference in the same instant
+   --> fixtures/rfd-0002-decoupled-marker/helper-opaque.rs:19:26
+    |
+ 19 |     c_loop.close(&mut b, next);
+    |            -----         ^^^^ reaches a forward reference without a read from before the instant
+    |            |
+    |            required by a bound introduced by this call
+    |
+    = help: the trait `IsDecoupled` is not implemented for `<impl bough::Source<Event = u32> as bough::Source>::Mark`
+    = note: only `snapshot`, `gate` and `sample` of a cell and a `switch_stream`'s selection read from before the instant, and only `split` and `defer` move to a child instant; a hold delays those reads, not its `steps`
+help: the trait `IsDecoupled` is implemented for `Decoupled`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:60:1
+    |
+ 60 | impl IsDecoupled for Decoupled {}
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `CellLoop::<A>::close`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:441:21
+    |
+441 |     pub fn close<M: IsDecoupled>(self, b: &mut Build, definition: Cell<A, M>) {
+    |                     ^^^^^^^^^^^ required by this bound in `CellLoop::<A>::close`
+
+--- marker: helper-token.rs, first diagnostic
+error[E0308]: mismatched types
+  --> fixtures/rfd-0002-decoupled-marker/helper-token.rs:21:39
+   |
+21 |     let next = counter(&mut b, ticks, c);
+   |                -------                ^ expected `Cell<u32>`, found `Cell<u32, Instantaneous>`
+   |                |
+   |                arguments to this function are incorrect
+   |
+   = note: expected struct `bough::Cell<_, Decoupled>`
+              found struct `bough::Cell<_, Instantaneous>`
+note: function defined here
+  --> fixtures/rfd-0002-decoupled-marker/helper-token.rs:10:4
+   |
+10 | fn counter(b: &mut Build, ticks: Stream<()>, c: Cell<u32>) -> Cell<u32> {
+   |    ^^^^^^^                                   ------------
+
+--- marker: map-only.rs, first diagnostic
+error[E0277]: this loop's definition depends on a loop's forward reference in the same instant
+   --> fixtures/rfd-0002-decoupled-marker/map-only.rs:12:26
+    |
+ 12 |     s_loop.close(&mut b, s.map(|n| n + 1));
+    |            -----         ^^^^^^^^^^^^^^^^ reaches a forward reference without a read from before the instant
+    |            |
+    |            required by a bound introduced by this call
+    |
+help: the trait `IsDecoupled` is not implemented for `Instantaneous`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:36:1
+    |
+ 36 | pub struct Instantaneous;
+    | ^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: only `snapshot`, `gate` and `sample` of a cell and a `switch_stream`'s selection read from before the instant, and only `split` and `defer` move to a child instant; a hold delays those reads, not its `steps`
+help: the trait `IsDecoupled` is implemented for `Decoupled`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:60:1
+    |
+ 60 | impl IsDecoupled for Decoupled {}
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: the method call chain might not have had the expected associated types
+   --> fixtures/rfd-0002-decoupled-marker/map-only.rs:12:28
+    |
+ 12 |     s_loop.close(&mut b, s.map(|n| n + 1));
+    |                          - ^^^^^^^^^^^^^^ `Source::Mark` is `Instantaneous` here
+    |                          |
+    |                          this expression has type `Stream<u32, Instantaneous>`
+note: required by a bound in `StreamLoop::<A>::close`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:455:18
+    |
+452 |     pub fn close<S>(self, b: &mut Build, definition: S)
+    |            ----- required by a bound in this associated function
+...
+455 |         S::Mark: IsDecoupled,
+    |                  ^^^^^^^^^^^ required by this bound in `StreamLoop::<A>::close`
+
+--- marker: nested-loop-reads-parent-forward.rs, first diagnostic
+error[E0277]: this loop's definition depends on a loop's forward reference in the same instant
+   --> fixtures/rfd-0002-decoupled-marker/nested-loop-reads-parent-forward.rs:24:25
+    |
+ 24 |         w_loop.close(b, next_w);
+    |                -----    ^^^^^^ reaches a forward reference without a read from before the instant
+    |                |
+    |                required by a bound introduced by this call
+    |
+help: the trait `IsDecoupled` is not implemented for `Instantaneous`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:36:1
+    |
+ 36 | pub struct Instantaneous;
+    | ^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: only `snapshot`, `gate` and `sample` of a cell and a `switch_stream`'s selection read from before the instant, and only `split` and `defer` move to a child instant; a hold delays those reads, not its `steps`
+help: the trait `IsDecoupled` is implemented for `Decoupled`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:60:1
+    |
+ 60 | impl IsDecoupled for Decoupled {}
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `CellLoop::<A>::close`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker.rs:441:21
+    |
+441 |     pub fn close<M: IsDecoupled>(self, b: &mut Build, definition: Cell<A, M>) {
+    |                     ^^^^^^^^^^^ required by this bound in `CellLoop::<A>::close`
+
+--- rows: rows-two-loops-undeclared.rs, first diagnostic
+error[E0277]: this loop's definition depends in the same instant on a loop its declaration doesn't list
+   --> fixtures/rfd-0002-decoupled-marker/rows-two-loops-undeclared.rs:22:30
+    |
+ 22 |     retry_loop.close(&mut b, next_retry);
+    |                -----         ^^^^^^^^^^ depends on a loop outside the declared row
+    |                |
+    |                required by a bound introduced by this call
+    |
+    = note: list that loop in the declaration's row, or read it from before the instant, or through a `defer`
+help: the trait `BitWithin<B0>` is not implemented for `B1`
+      but trait `BitWithin<B1>` is implemented for it
+   --> fixtures/rfd-0002-decoupled-marker/api/rows.rs:125:1
+    |
+125 | impl BitWithin<B1> for B1 {}
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for that trait implementation, expected `B1`, found `B0`
+note: required for `R<B1, B0, B0, B0>` to implement `Within<R<B0, B0, B0, B0>>`
+   --> fixtures/rfd-0002-decoupled-marker/api/rows.rs:137:30
+    |
+137 | impl<A, B, C, D, W, X, Y, Z> Within<R<W, X, Y, Z>> for R<A, B, C, D>
+    |                              ^^^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^
+138 | where
+139 |     A: BitWithin<W>,
+    |        ------------ unsatisfied trait bound introduced here
+note: required by a bound in `CellLoop::<A, S, Deps>::close`
+   --> fixtures/rfd-0002-decoupled-marker/api/rows.rs:533:33
+    |
+533 |     pub fn close<M: Absent<S> + Within<Deps>>(self, b: &mut Build, definition: Cell<A, M>) {
+    |                                 ^^^^^^^^^^^^ required by this bound in `CellLoop::<A, S, Deps>::close`
+
+--- marker-close: two-loops-reset.rs, first diagnostic
+error[E0277]: this loop's definition depends on a loop's forward reference in the same instant
+   --> fixtures/rfd-0002-decoupled-marker/two-loops-reset.rs:26:30
+    |
+ 26 |     retry_loop.close(&mut b, next_retry);
+    |                -----         ^^^^^^^^^^ reaches a forward reference without a read from before the instant
+    |                |
+    |                required by a bound introduced by this call
+    |
+help: the trait `IsDecoupled` is not implemented for `Instantaneous`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker-close.rs:37:1
+    |
+ 37 | pub struct Instantaneous;
+    | ^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: only `snapshot`, `gate` and `sample` of a cell and a `switch_stream`'s selection read from before the instant, and only `split` and `defer` move to a child instant; a hold delays those reads, not its `steps`; a forward stays `Instantaneous` after its loop closes, so read a closed loop through the token its `close` returned
+help: the trait `IsDecoupled` is implemented for `Decoupled`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker-close.rs:61:1
+    |
+ 61 | impl IsDecoupled for Decoupled {}
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `CellLoop::<A>::close`
+   --> fixtures/rfd-0002-decoupled-marker/api/marker-close.rs:447:21
+    |
+447 |     pub fn close<M: IsDecoupled>(self, b: &mut Build, definition: Cell<A, M>) -> Cell<A> {
+    |                     ^^^^^^^^^^^ required by this bound in `CellLoop::<A>::close`
+
+marker: built 17 of 22 legal loops, refused 11 of 13 illegal ones
+  false refusals ["defer-forward-feeds-loop", "helper-opaque", "helper-token", "nested-loop-reads-parent-forward", "two-loops-reset"]; false acceptances ["nested-switch-smuggle", "switch-smuggle"]
+marker-close: built 20 of 26 legal loops, refused 14 of 17 illegal ones
+  false refusals ["close-defer-forward-feeds-loop", "defer-forward-feeds-loop", "helper-opaque", "helper-token", "nested-loop-reads-parent-forward", "two-loops-reset"]; false acceptances ["close-switch-smuggle", "nested-switch-smuggle", "switch-smuggle"]
+rows: built 9 of 10 legal loops, refused 3 of 4 illegal ones
+  false refusals ["rows-two-loops-undeclared"]; false acceptances ["rows-switch-smuggle"]
+marker through gate, sample, split, defer and depends: built 7 of 8 legal loops, refused 3 of 3 illegal ones; false refusals ["defer-forward-feeds-loop"]
+marker inside construct closures at child instants: built 3 of 4 legal loops, refused 2 of 3 illegal ones; false refusals ["nested-loop-reads-parent-forward"]; false acceptances ["nested-switch-smuggle"]
+marker-close inside construct closures at child instants: built 3 of 4 legal loops, refused 2 of 3 illegal ones; false refusals ["nested-loop-reads-parent-forward"]; false acceptances ["nested-switch-smuggle"]
+marker-close on the marker's fixtures: the marker's result on 35 of 35
+verdict: the marker refused F3 and built F1's counter
+verdict (close): marker-close built two-loops-reset threading the returned token and refused it reading the forward; it refused defer-forward-feeds-loop threaded and refused it as written
+verdict (switch): a switch fed its own consumer's steps as data: marker built, marker-close built (through the returned token: built), rows built, marker inside a construct at a child instant built
