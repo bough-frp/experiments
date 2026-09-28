@@ -1,0 +1,361 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-work-paced-trigger-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0003-work-paced-trigger-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.07s
+     Running benches/rfd-0003-work-paced-trigger-wallclock.rs (target/release/deps/rfd_0003_work_paced_trigger_wallclock-110b74f37e11eb30)
+Gnuplot not found, using plotters backend
+Benchmarking nav/baseline/3900
+Benchmarking nav/baseline/3900: Warming up for 200.00 ms
+Benchmarking nav/baseline/3900: Collecting 10 samples in estimated 8.0199 s (2480 iterations)
+Benchmarking nav/baseline/3900: Analyzing
+nav/baseline/3900       time:   [3.2583 ms 3.2646 ms 3.2706 ms]
+Benchmarking nav/rfd3/3900
+Benchmarking nav/rfd3/3900: Warming up for 200.00 ms
+Benchmarking nav/rfd3/3900: Collecting 10 samples in estimated 8.0243 s (2190 iterations)
+Benchmarking nav/rfd3/3900: Analyzing
+nav/rfd3/3900           time:   [3.6386 ms 3.6501 ms 3.6630 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking nav/excess/3900
+Benchmarking nav/excess/3900: Warming up for 200.00 ms
+Benchmarking nav/excess/3900: Collecting 10 samples in estimated 8.0210 s (1990 iterations)
+Benchmarking nav/excess/3900: Analyzing
+nav/excess/3900         time:   [4.0025 ms 4.0174 ms 4.0315 ms]
+Benchmarking nav/total/3900
+Benchmarking nav/total/3900: Warming up for 200.00 ms
+Benchmarking nav/total/3900: Collecting 10 samples in estimated 8.0018 s (2110 iterations)
+Benchmarking nav/total/3900: Analyzing
+nav/total/3900          time:   [3.7730 ms 3.7851 ms 3.7976 ms]
+
+Benchmarking pause-nav/baseline/3900
+Benchmarking pause-nav/baseline/3900: Warming up for 200.00 ms
+Benchmarking pause-nav/baseline/3900: Collecting 20 samples in estimated 500.00 ms (51k iterations)
+Benchmarking pause-nav/baseline/3900: Analyzing
+pause-nav/baseline/3900 time:   [1.0928 µs 1.0963 µs 1.0999 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking pause-nav/rfd3/3900
+Benchmarking pause-nav/rfd3/3900: Warming up for 200.00 ms
+Benchmarking pause-nav/rfd3/3900: Collecting 20 samples in estimated 500.22 ms (36k iterations)
+Benchmarking pause-nav/rfd3/3900: Analyzing
+pause-nav/rfd3/3900     time:   [1.8073 µs 1.8114 µs 1.8163 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking pause-nav/excess/3900
+Benchmarking pause-nav/excess/3900: Warming up for 200.00 ms
+Benchmarking pause-nav/excess/3900: Collecting 20 samples in estimated 500.04 ms (36k iterations)
+Benchmarking pause-nav/excess/3900: Analyzing
+pause-nav/excess/3900   time:   [1.7239 µs 1.7293 µs 1.7358 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking pause-nav/total/3900
+Benchmarking pause-nav/total/3900: Warming up for 200.00 ms
+Benchmarking pause-nav/total/3900: Collecting 20 samples in estimated 500.12 ms (49k iterations)
+Benchmarking pause-nav/total/3900: Analyzing
+pause-nav/total/3900    time:   [1.0898 µs 1.0945 µs 1.0992 µs]
+
+Benchmarking app/baseline/3900
+Benchmarking app/baseline/3900: Warming up for 200.00 ms
+Benchmarking app/baseline/3900: Collecting 10 samples in estimated 9.1235 s (50 iterations)
+Benchmarking app/baseline/3900: Analyzing
+app/baseline/3900       time:   [181.58 ms 181.87 ms 182.16 ms]
+Benchmarking app/rfd3/3900
+Benchmarking app/rfd3/3900: Warming up for 200.00 ms
+Benchmarking app/rfd3/3900: Collecting 10 samples in estimated 9.2965 s (40 iterations)
+Benchmarking app/rfd3/3900: Analyzing
+app/rfd3/3900           time:   [223.17 ms 223.75 ms 224.42 ms]
+Benchmarking app/excess/3900
+Benchmarking app/excess/3900: Warming up for 200.00 ms
+Benchmarking app/excess/3900: Collecting 10 samples in estimated 8.0117 s (340 iterations)
+Benchmarking app/excess/3900: Analyzing
+app/excess/3900         time:   [22.061 ms 22.112 ms 22.159 ms]
+Benchmarking app/total/3900
+Benchmarking app/total/3900: Warming up for 200.00 ms
+Benchmarking app/total/3900: Collecting 10 samples in estimated 8.0937 s (340 iterations)
+Benchmarking app/total/3900: Analyzing
+app/total/3900          time:   [22.198 ms 22.257 ms 22.314 ms]
+
+Benchmarking pause-app/baseline/3900
+Benchmarking pause-app/baseline/3900: Warming up for 200.00 ms
+Benchmarking pause-app/baseline/3900: Collecting 20 samples in estimated 531.22 ms (340 iterations)
+Benchmarking pause-app/baseline/3900: Analyzing
+pause-app/baseline/3900 time:   [136.96 µs 137.16 µs 137.39 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking pause-app/rfd3/3900
+Benchmarking pause-app/rfd3/3900: Warming up for 200.00 ms
+Benchmarking pause-app/rfd3/3900: Collecting 20 samples in estimated 551.23 ms (180 iterations)
+Benchmarking pause-app/rfd3/3900: Analyzing
+pause-app/rfd3/3900     time:   [408.60 µs 410.25 µs 412.18 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking pause-app/excess/3900
+Benchmarking pause-app/excess/3900: Warming up for 200.00 ms
+Benchmarking pause-app/excess/3900: Collecting 20 samples in estimated 520.08 ms (320 iterations)
+Benchmarking pause-app/excess/3900: Analyzing
+pause-app/excess/3900   time:   [149.47 µs 149.80 µs 150.16 µs]
+Benchmarking pause-app/total/3900
+Benchmarking pause-app/total/3900: Warming up for 200.00 ms
+Benchmarking pause-app/total/3900: Collecting 20 samples in estimated 523.35 ms (320 iterations)
+Benchmarking pause-app/total/3900: Analyzing
+pause-app/total/3900    time:   [146.31 µs 146.62 µs 146.96 µs]
+
+Benchmarking uneven-spread/baseline/3600
+Benchmarking uneven-spread/baseline/3600: Warming up for 200.00 ms
+Benchmarking uneven-spread/baseline/3600: Collecting 10 samples in estimated 10.041 s (30 iterations)
+Benchmarking uneven-spread/baseline/3600: Analyzing
+uneven-spread/baseline/3600
+                        time:   [332.81 ms 333.63 ms 334.44 ms]
+Benchmarking uneven-spread/rfd3/3600
+Benchmarking uneven-spread/rfd3/3600: Warming up for 200.00 ms
+Benchmarking uneven-spread/rfd3/3600: Collecting 10 samples in estimated 11.049 s (30 iterations)
+Benchmarking uneven-spread/rfd3/3600: Analyzing
+uneven-spread/rfd3/3600 time:   [365.32 ms 366.52 ms 367.80 ms]
+Benchmarking uneven-spread/excess/3600
+Benchmarking uneven-spread/excess/3600: Warming up for 200.00 ms
+Benchmarking uneven-spread/excess/3600: Collecting 10 samples in estimated 9.3858 s (50 iterations)
+Benchmarking uneven-spread/excess/3600: Analyzing
+uneven-spread/excess/3600
+                        time:   [186.48 ms 186.86 ms 187.24 ms]
+Benchmarking uneven-spread/total/3600
+Benchmarking uneven-spread/total/3600: Warming up for 200.00 ms
+Benchmarking uneven-spread/total/3600: Collecting 10 samples in estimated 8.4378 s (30 iterations)
+Benchmarking uneven-spread/total/3600: Analyzing
+uneven-spread/total/3600
+                        time:   [278.32 ms 278.54 ms 278.80 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking uneven-spread/decay/3600
+Benchmarking uneven-spread/decay/3600: Warming up for 200.00 ms
+Benchmarking uneven-spread/decay/3600: Collecting 10 samples in estimated 9.5290 s (50 iterations)
+Benchmarking uneven-spread/decay/3600: Analyzing
+uneven-spread/decay/3600
+                        time:   [186.24 ms 186.79 ms 187.49 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking uneven-spread/backoff/3600
+Benchmarking uneven-spread/backoff/3600: Warming up for 200.00 ms
+Benchmarking uneven-spread/backoff/3600: Collecting 10 samples in estimated 9.5195 s (50 iterations)
+Benchmarking uneven-spread/backoff/3600: Analyzing
+uneven-spread/backoff/3600
+                        time:   [187.03 ms 187.42 ms 187.81 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low mild
+  1 (10.00%) high mild
+
+Benchmarking pause-uneven-spread/baseline/3600
+Benchmarking pause-uneven-spread/baseline/3600: Warming up for 200.00 ms
+Benchmarking pause-uneven-spread/baseline/3600: Collecting 20 samples in estimated 533.80 ms (280 iterations)
+Benchmarking pause-uneven-spread/baseline/3600: Analyzing
+pause-uneven-spread/baseline/3600
+                        time:   [172.56 µs 172.92 µs 173.27 µs]
+Benchmarking pause-uneven-spread/rfd3/3600
+Benchmarking pause-uneven-spread/rfd3/3600: Warming up for 200.00 ms
+Benchmarking pause-uneven-spread/rfd3/3600: Collecting 20 samples in estimated 567.07 ms (140 iterations)
+Benchmarking pause-uneven-spread/rfd3/3600: Analyzing
+pause-uneven-spread/rfd3/3600
+                        time:   [575.35 µs 578.69 µs 582.99 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking pause-uneven-spread/excess/3600
+Benchmarking pause-uneven-spread/excess/3600: Warming up for 200.00 ms
+Benchmarking pause-uneven-spread/excess/3600: Collecting 20 samples in estimated 525.32 ms (220 iterations)
+Benchmarking pause-uneven-spread/excess/3600: Analyzing
+pause-uneven-spread/excess/3600
+                        time:   [231.96 µs 232.35 µs 232.77 µs]
+Benchmarking pause-uneven-spread/total/3600
+Benchmarking pause-uneven-spread/total/3600: Warming up for 200.00 ms
+Benchmarking pause-uneven-spread/total/3600: Collecting 20 samples in estimated 528.77 ms (280 iterations)
+Benchmarking pause-uneven-spread/total/3600: Analyzing
+pause-uneven-spread/total/3600
+                        time:   [167.80 µs 168.19 µs 168.60 µs]
+Benchmarking pause-uneven-spread/decay/3600
+Benchmarking pause-uneven-spread/decay/3600: Warming up for 200.00 ms
+Benchmarking pause-uneven-spread/decay/3600: Collecting 20 samples in estimated 532.77 ms (220 iterations)
+Benchmarking pause-uneven-spread/decay/3600: Analyzing
+pause-uneven-spread/decay/3600
+                        time:   [226.77 µs 227.17 µs 227.58 µs]
+Benchmarking pause-uneven-spread/backoff/3600
+Benchmarking pause-uneven-spread/backoff/3600: Warming up for 200.00 ms
+Benchmarking pause-uneven-spread/backoff/3600: Collecting 20 samples in estimated 507.94 ms (220 iterations)
+Benchmarking pause-uneven-spread/backoff/3600: Analyzing
+pause-uneven-spread/backoff/3600
+                        time:   [224.63 µs 225.44 µs 226.34 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+Benchmarking uneven-sparse/baseline/3600
+Benchmarking uneven-sparse/baseline/3600: Warming up for 200.00 ms
+Benchmarking uneven-sparse/baseline/3600: Collecting 10 samples in estimated 9.9928 s (30 iterations)
+Benchmarking uneven-sparse/baseline/3600: Analyzing
+uneven-sparse/baseline/3600
+                        time:   [331.10 ms 331.52 ms 331.93 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking uneven-sparse/rfd3/3600
+Benchmarking uneven-sparse/rfd3/3600: Warming up for 200.00 ms
+Benchmarking uneven-sparse/rfd3/3600: Collecting 10 samples in estimated 8.0969 s (40 iterations)
+Benchmarking uneven-sparse/rfd3/3600: Analyzing
+uneven-sparse/rfd3/3600 time:   [199.09 ms 199.57 ms 200.12 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking uneven-sparse/excess/3600
+Benchmarking uneven-sparse/excess/3600: Warming up for 200.00 ms
+Benchmarking uneven-sparse/excess/3600: Collecting 10 samples in estimated 8.9229 s (50 iterations)
+Benchmarking uneven-sparse/excess/3600: Analyzing
+uneven-sparse/excess/3600
+                        time:   [178.22 ms 178.40 ms 178.57 ms]
+Benchmarking uneven-sparse/total/3600
+Benchmarking uneven-sparse/total/3600: Warming up for 200.00 ms
+Benchmarking uneven-sparse/total/3600: Collecting 10 samples in estimated 8.3719 s (30 iterations)
+Benchmarking uneven-sparse/total/3600: Analyzing
+uneven-sparse/total/3600
+                        time:   [276.18 ms 276.50 ms 276.88 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking uneven-sparse/decay/3600
+Benchmarking uneven-sparse/decay/3600: Warming up for 200.00 ms
+Benchmarking uneven-sparse/decay/3600: Collecting 10 samples in estimated 8.9295 s (50 iterations)
+Benchmarking uneven-sparse/decay/3600: Analyzing
+uneven-sparse/decay/3600
+                        time:   [176.04 ms 176.49 ms 177.13 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking uneven-sparse/backoff/3600
+Benchmarking uneven-sparse/backoff/3600: Warming up for 200.00 ms
+Benchmarking uneven-sparse/backoff/3600: Collecting 10 samples in estimated 8.9470 s (50 iterations)
+Benchmarking uneven-sparse/backoff/3600: Analyzing
+uneven-sparse/backoff/3600
+                        time:   [178.18 ms 178.74 ms 179.15 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low severe
+
+Benchmarking pause-uneven-sparse/baseline/3600
+Benchmarking pause-uneven-sparse/baseline/3600: Warming up for 200.00 ms
+Benchmarking pause-uneven-sparse/baseline/3600: Collecting 20 samples in estimated 530.13 ms (280 iterations)
+Benchmarking pause-uneven-sparse/baseline/3600: Analyzing
+pause-uneven-sparse/baseline/3600
+                        time:   [168.23 µs 168.83 µs 169.57 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high severe
+Benchmarking pause-uneven-sparse/rfd3/3600
+Benchmarking pause-uneven-sparse/rfd3/3600: Warming up for 200.00 ms
+Benchmarking pause-uneven-sparse/rfd3/3600: Collecting 20 samples in estimated 562.94 ms (140 iterations)
+Benchmarking pause-uneven-sparse/rfd3/3600: Analyzing
+pause-uneven-sparse/rfd3/3600
+                        time:   [573.12 µs 574.97 µs 576.97 µs]
+Benchmarking pause-uneven-sparse/excess/3600
+Benchmarking pause-uneven-sparse/excess/3600: Warming up for 200.00 ms
+Benchmarking pause-uneven-sparse/excess/3600: Collecting 20 samples in estimated 542.22 ms (220 iterations)
+Benchmarking pause-uneven-sparse/excess/3600: Analyzing
+pause-uneven-sparse/excess/3600
+                        time:   [252.28 µs 252.71 µs 253.13 µs]
+Benchmarking pause-uneven-sparse/total/3600
+Benchmarking pause-uneven-sparse/total/3600: Warming up for 200.00 ms
+Benchmarking pause-uneven-sparse/total/3600: Collecting 20 samples in estimated 523.82 ms (260 iterations)
+Benchmarking pause-uneven-sparse/total/3600: Analyzing
+pause-uneven-sparse/total/3600
+                        time:   [182.76 µs 183.82 µs 184.90 µs]
+Benchmarking pause-uneven-sparse/decay/3600
+Benchmarking pause-uneven-sparse/decay/3600: Warming up for 200.00 ms
+Benchmarking pause-uneven-sparse/decay/3600: Collecting 20 samples in estimated 539.27 ms (220 iterations)
+Benchmarking pause-uneven-sparse/decay/3600: Analyzing
+pause-uneven-sparse/decay/3600
+                        time:   [246.81 µs 247.34 µs 248.11 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking pause-uneven-sparse/backoff/3600
+Benchmarking pause-uneven-sparse/backoff/3600: Warming up for 200.00 ms
+Benchmarking pause-uneven-sparse/backoff/3600: Collecting 20 samples in estimated 513.52 ms (220 iterations)
+Benchmarking pause-uneven-sparse/backoff/3600: Analyzing
+pause-uneven-sparse/backoff/3600
+                        time:   [236.36 µs 237.53 µs 238.86 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+
+Benchmarking uneven-lagging/baseline/3600
+Benchmarking uneven-lagging/baseline/3600: Warming up for 200.00 ms
+Benchmarking uneven-lagging/baseline/3600: Collecting 10 samples in estimated 10.104 s (30 iterations)
+Benchmarking uneven-lagging/baseline/3600: Analyzing
+uneven-lagging/baseline/3600
+                        time:   [333.27 ms 333.97 ms 334.66 ms]
+Benchmarking uneven-lagging/excess/3600
+Benchmarking uneven-lagging/excess/3600: Warming up for 200.00 ms
+Benchmarking uneven-lagging/excess/3600: Collecting 10 samples in estimated 8.7116 s (50 iterations)
+Benchmarking uneven-lagging/excess/3600: Analyzing
+uneven-lagging/excess/3600
+                        time:   [172.26 ms 172.68 ms 173.09 ms]
+Benchmarking uneven-lagging/marked/3600
+Benchmarking uneven-lagging/marked/3600: Warming up for 200.00 ms
+Benchmarking uneven-lagging/marked/3600: Collecting 10 samples in estimated 8.9740 s (50 iterations)
+Benchmarking uneven-lagging/marked/3600: Analyzing
+uneven-lagging/marked/3600
+                        time:   [172.49 ms 172.91 ms 173.34 ms]
+
+Benchmarking fast-path/baseline
+Benchmarking fast-path/baseline: Warming up for 200.00 ms
+Benchmarking fast-path/baseline: Collecting 20 samples in estimated 300.04 ms (1.0M iterations)
+Benchmarking fast-path/baseline: Analyzing
+fast-path/baseline      time:   [287.57 ns 288.11 ns 288.99 ns]
+Benchmarking fast-path/excess
+Benchmarking fast-path/excess: Warming up for 200.00 ms
+Benchmarking fast-path/excess: Collecting 20 samples in estimated 300.05 ms (1.0M iterations)
+Benchmarking fast-path/excess: Analyzing
+fast-path/excess        time:   [288.29 ns 290.33 ns 292.69 ns]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) high mild
+  1 (5.00%) high severe
+Benchmarking fast-path/total
+Benchmarking fast-path/total: Warming up for 200.00 ms
+Benchmarking fast-path/total: Collecting 20 samples in estimated 300.13 ms (466k iterations)
+Benchmarking fast-path/total: Analyzing
+fast-path/total         time:   [637.50 ns 638.58 ns 639.71 ns]
+Found 4 outliers among 20 measurements (20.00%)
+  1 (5.00%) low severe
+  1 (5.00%) low mild
+  2 (10.00%) high severe
+
+
+$ python3 scripts/ratios.py nav app pause-nav pause-app uneven-spread uneven-sparse pause-uneven-spread pause-uneven-sparse uneven-lagging fast-path
+
+benchmark                         ratio   95% interval       baseline mean
+app/excess/3900                    0.122  [ 0.121,  0.122]   181865644.8 ns
+app/rfd3/3900                      1.230  [ 1.226,  1.234]   181865644.8 ns
+app/total/3900                     0.122  [ 0.122,  0.123]   181865644.8 ns
+fast-path/excess                   0.994  [ 0.987,  1.002]         290.8 ns
+fast-path/total                    2.195  [ 2.177,  2.213]         290.8 ns
+nav/excess/3900                    1.231  [ 1.226,  1.236]     3264612.4 ns
+nav/rfd3/3900                      1.118  [ 1.114,  1.122]     3264612.4 ns
+nav/total/3900                     1.159  [ 1.155,  1.164]     3264612.4 ns
+pause-app/excess/3900              1.092  [ 1.089,  1.095]      137163.9 ns
+pause-app/rfd3/3900                2.991  [ 2.978,  3.006]      137163.9 ns
+pause-app/total/3900               1.069  [ 1.066,  1.072]      137163.9 ns
+pause-nav/excess/3900              1.577  [ 1.570,  1.585]        1096.3 ns
+pause-nav/rfd3/3900                1.652  [ 1.646,  1.659]        1096.3 ns
+pause-nav/total/3900               0.998  [ 0.993,  1.004]        1096.3 ns
+pause-uneven-sparse/backoff/3600   1.407  [ 1.398,  1.416]      168826.4 ns
+pause-uneven-sparse/decay/3600     1.465  [ 1.458,  1.472]      168826.4 ns
+pause-uneven-sparse/excess/3600    1.497  [ 1.490,  1.503]      168826.4 ns
+pause-uneven-sparse/rfd3/3600      3.406  [ 3.388,  3.423]      168826.4 ns
+pause-uneven-sparse/total/3600     1.089  [ 1.081,  1.096]      168826.4 ns
+pause-uneven-spread/backoff/3600   1.304  [ 1.298,  1.310]      172920.0 ns
+pause-uneven-spread/decay/3600     1.314  [ 1.310,  1.317]      172920.0 ns
+pause-uneven-spread/excess/3600    1.344  [ 1.340,  1.347]      172920.0 ns
+pause-uneven-spread/rfd3/3600      3.346  [ 3.326,  3.373]      172920.0 ns
+pause-uneven-spread/total/3600     0.973  [ 0.970,  0.976]      172920.0 ns
+uneven-lagging/excess/3600         0.517  [ 0.515,  0.519]   333966989.2 ns
+uneven-lagging/marked/3600         0.518  [ 0.516,  0.519]   333966989.2 ns
+uneven-sparse/backoff/3600         0.539  [ 0.537,  0.541]   331524341.0 ns
+uneven-sparse/decay/3600           0.532  [ 0.531,  0.534]   331524341.0 ns
+uneven-sparse/excess/3600          0.538  [ 0.537,  0.539]   331524341.0 ns
+uneven-sparse/rfd3/3600            0.602  [ 0.600,  0.604]   331524341.0 ns
+uneven-sparse/total/3600           0.834  [ 0.833,  0.836]   331524341.0 ns
+uneven-spread/backoff/3600         0.562  [ 0.560,  0.564]   333628637.5 ns
+uneven-spread/decay/3600           0.560  [ 0.558,  0.562]   333628637.5 ns
+uneven-spread/excess/3600          0.560  [ 0.558,  0.562]   333628637.5 ns
+uneven-spread/rfd3/3600            1.099  [ 1.094,  1.103]   333628637.5 ns
+uneven-spread/total/3600           0.835  [ 0.833,  0.837]   333628637.5 ns
+
