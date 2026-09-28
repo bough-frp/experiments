@@ -1,0 +1,35 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0005-heap-vs-mark-on-quiet-regions-counts at experiments@8006fcf - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo test --release --lib rfd_0005_heap_vs_mark_on_quiet_regions::tests::counts -- --nocapture
+
+   Compiling bough-experiments v0.1.0 (/home/zefs/prog/bough/experiments)
+    Finished `release` profile [optimized] target(s) in 1.34s
+     Running unittests src/lib.rs (target/release/deps/bough_experiments-7908e5454028b438)
+
+running 1 test
+shape     param  nodes height   marked   fired  quiet%  popped
+ui-small    100    253     15    253.0   253.0     0.0   252.0
+ui-small     90    253     15    253.0   227.1    10.2   227.0
+ui-small     75    253     15    253.0   193.4    23.6   194.4
+ui-small     50    253     15    253.0   135.4    46.5   138.5
+ui-small     25    253     15    253.0    76.8    69.7    81.7
+ui-small     10    253     15    253.0    32.6    87.1    38.8
+ui-small      5    253     15    253.0    16.8    93.4    23.4
+ui-small      2    253     15    253.0     8.7    96.5    15.6
+ui-small      1    253     15    253.0     4.5    98.2    11.4
+ui-small      0    253     15    253.0     1.0    99.6     8.0
+ui-large    100   9997     19   9997.0  9997.0     0.0  9996.0
+ui-large     90   9997     19   9997.0  8958.0    10.4  8970.5
+ui-large     75   9997     19   9997.0  7451.2    25.5  7483.2
+ui-large     50   9997     19   9997.0  4983.0    50.2  5046.9
+ui-large     25   9997     19   9997.0  2625.1    73.7  2719.2
+ui-large     10   9997     19   9997.0  1057.1    89.4  1171.2
+ui-large      5   9997     19   9997.0   543.9    94.6   664.4
+ui-large      2   9997     19   9997.0   207.5    97.9   332.2
+ui-large      1   9997     19   9997.0   108.2    98.9   234.0
+ui-large      0   9997     19   9997.0     1.0   100.0   128.0
+frame        64    513      8    513.0   513.0     0.0   512.0
+frame      1024   8193      8   8193.0  8193.0     0.0  8192.0
+test rfd_0005_heap_vs_mark_on_quiet_regions::tests::counts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.18s
+
