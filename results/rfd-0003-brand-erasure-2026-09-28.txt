@@ -1,0 +1,189 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-28 - rfd-0003-brand-erasure at experiments@95010de - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0003-brand-erasure
+
+stable:  rustc 1.98.1 (48a229cea 2026-09-01)  (rust-toolchain.toml)
+nightly: rustc 1.100.0-nightly (1303417c4 2026-09-21)  (pinned as nightly-2026-09-22, auto only)
+
+design   fixture             expected result  first error
+erasure  derive-shapes       build    built   
+erasure  wrong-rebrand       build    built   
+erasure  screens             build    built   
+erasure  screens-io          build    built   
+erasure  switch-choice       build    built   
+erasure  generic-helper      build    built   
+erasure  forgot-capture      fail     failed  E0521 borrowed data escapes outside of closure
+erasure  static-token        fail     failed  E0521 borrowed data escapes outside of closure
+erasure  mutate-return       fail     failed  lifetime may not live long enough
+erasure  forge-witness       fail     failed  E0451 field `brand` of struct `bough::Witness` is private
+erasure  stash-in-impl       fail     failed  lifetime may not live long enough
+erasure  identity-of         fail     failed  E0477 the type `Clicks<'g>` does not fulfill the required lifetime
+erasure  witness-capture     fail     failed  E0521 borrowed data escapes outside of closure
+erasure  remote-chat         build    built   
+erasure  remote-listen       build    built   
+erasure  remote-listen-leak  fail     failed  E0521 borrowed data escapes outside of closure
+erasure  remote-raw-token    fail     failed  E0521 borrowed data escapes outside of closure
+erasure  leak-open           fail?    built   
+erasure  leak-hold           fail?    built   
+erasure  leak-shared         fail?    built   
+
+split    derive-shapes       build    built   
+split    screens             build    failed  E0599 no method named `anchor` found for mutable reference `&mut bough::Build<'_>` in the current scope
+split    screens-io          build    built   
+split    switch-choice       build    built   
+split    remote-chat         build    built   
+split    remote-listen       build    built   
+split    leak-open           fail?    failed  E0599 no method named `open` found for mutable reference `&mut Build<'_>` in the current scope
+split    leak-hold           fail?    built   
+split    leak-shared         fail?    built   
+
+auto     derive-shapes       build    built   
+auto     screens             build    built   
+auto     screens-io          build    built   
+auto     switch-choice       build    built   
+auto     generic-helper      build    failed  E0277 the trait bound `T: GraphSafe` is not satisfied in `{closure@fixtures/rfd-0003-brand-erasure/generic-helper.rs:14:11: 14:19}`
+auto     remote-chat         build    built   
+auto     remote-listen       build    built   
+auto     forgot-capture      fail     failed  E0521 borrowed data escapes outside of closure
+auto     leak-open           fail?    failed  E0277 the trait bound `bough::Anchored<bough::Cell<'static, u32>>: GraphSafe` is not satisfied in `{closure@fixtures/rfd-0003-brand-erasure/leak-open.rs:20:32: 20:43}`
+auto     leak-hold           fail?    failed  E0277 the trait bound `Anchored<bough::Cell<'static, u32>>: GraphSafe` is not satisfied in `{closure@fixtures/rfd-0003-brand-erasure/leak-hold.rs:17:18: 17:26}`
+auto     leak-shared         fail?    failed  E0277 the trait bound `Vec<bough::Anchored<bough::Cell<'static, u32>>>: GraphSafe` is not satisfied in `{closure@fixtures/rfd-0003-brand-erasure/leak-shared.rs:21:18: 21:26}`
+
+scoped   anchor              build    built   
+scoped   remote-spawn        build    failed  lifetime may not live long enough
+scoped   remote-scoped       build    built   
+scoped   leak-open           fail?    failed  E0521 borrowed data escapes outside of closure
+scoped   leak-shared         fail?    failed  lifetime may not live long enough
+
+fail?: a leak route (question 3), a guard hidden in graph state; it isn't
+unsound, and a failure is what the question asks for.
+
+--- erasure: derive-shapes.rs, run
+built:   left 3 right 5 history [3, 5, 7]  total 11
+opened:  left 3 right 5 history [3, 5, 7]  total 11
+held:    left 3 right 5 history [3, 5, 7]
+values:  left Ok(4) right Ok(8) history [Ok(4), Ok(8), Ok(104)] total Ok(7)
+collect: freed 8 of 12 nodes; opened then collected: Err(Stale); still anchored: Ok(7)
+foreign: Err(ForeignGraph)
+
+--- erasure: wrong-rebrand.rs, run
+swapped: built left at slot 3, right at slot 5
+swapped: held initial value sampled, left at slot 5 reads Ok(1000)
+swapped: after a send, opened left at slot 3 reads Ok(6); held value sampled, left at slot 3 reads Ok(6)
+hidden:  after a collection, the reopened field reads Err(Stale)
+celsius: a send through the reopened input panicked: a stored value has the type its node was built with
+
+--- erasure: remote-chat.rs, run
+ada heard ["ada: hello from ada", "bob: hello from bob", "cy: hi"]
+bob heard ["ada: hello from ada", "bob: hello from bob", "cy: hi"]
+cy heard []
+
+--- erasure: remote-listen.rs, run
+row for ada anchored by the listener; a worker's send through it made the total Ok(5)
+
+--- erasure: leak-open.rs, run
+captured anchor: 6 nodes built, 0 freed once every held guard is dropped, 6 live
+no capture     : 6 nodes built, 6 freed once every held guard is dropped, 0 live
+
+--- split: remote-chat.rs, run
+ada heard ["ada: hello from ada", "bob: hello from bob", "cy: hi"]
+bob heard ["ada: hello from ada", "bob: hello from bob", "cy: hi"]
+cy heard []
+
+--- erasure: stash-in-impl.rs, first diagnostic
+error: lifetime may not live long enough
+  --> fixtures/rfd-0003-brand-erasure/stash-in-impl.rs:33:9
+   |
+28 |     fn rebrand<'x>(&self, to: Witness<'x>) -> Clicks<'x> {
+   |                -- lifetime `'x` defined here
+...
+33 |         out
+   |         ^^^ returning this value requires that `'x` must outlive `'static`
+   |
+   = note: requirement occurs because of the type `Clicks<'_>`, which makes the generic argument `'_` invariant
+   = note: the struct `Clicks<'g>` is invariant over the parameter `'g`
+   = help: see <https://doc.rust-lang.org/nomicon/subtyping.html> for more information about variance
+
+--- erasure: identity-of.rs, first diagnostic
+error[E0477]: the type `Clicks<'g>` does not fulfill the required lifetime
+  --> fixtures/rfd-0003-brand-erasure/identity-of.rs:21:19
+   |
+21 |     type Of<'x> = Clicks<'g>;
+   |                   ^^^^^^^^^^
+   |
+note: type must outlive the lifetime `'x` as defined here as required by this binding
+  --> fixtures/rfd-0003-brand-erasure/identity-of.rs:21:13
+   |
+21 |     type Of<'x> = Clicks<'g>;
+   |             ^^
+
+--- split: leak-open.rs, first diagnostic
+error[E0599]: no method named `open` found for mutable reference `&mut Build<'_>` in the current scope
+  --> fixtures/rfd-0003-brand-erasure/leak-open.rs:21:31
+   |
+21 |                 let shown = b.open(&shown);
+   |                               ^^^^ method not found in `&mut Build<'_>`
+
+--- auto: leak-open.rs, first diagnostic
+error[E0277]: the trait bound `bough::Anchored<bough::Cell<'static, u32>>: GraphSafe` is not satisfied in `{closure@fixtures/rfd-0003-brand-erasure/leak-open.rs:20:32: 20:43}`
+    --> fixtures/rfd-0003-brand-erasure/leak-open.rs:20:32
+     |
+  20 |               opens.construct(b, move |b, n| {
+     |                     ---------    ^----------
+     |                     |            |
+     |  ___________________|____________within this `{closure@fixtures/rfd-0003-brand-erasure/leak-open.rs:20:32: 20:43}`
+     | |                   |
+     | |                   required by a bound introduced by this call
+  21 | |                 let shown = b.open(&shown);
+  22 | |                 shown.map_cell(b, move |v| v + n)
+  23 | |             })
+     | |_____________^ unsatisfied trait bound
+     |
+help: within `{closure@fixtures/rfd-0003-brand-erasure/leak-open.rs:20:32: 20:43}`, the trait `GraphSafe` is not implemented for `bough::Anchored<bough::Cell<'static, u32>>`
+    --> fixtures/rfd-0003-brand-erasure/api.rs:448:1
+     |
+ 448 | pub struct Anchored<T> {
+     | ^^^^^^^^^^^^^^^^^^^^^^
+note: required because `shown` is used within this closure
+    --> fixtures/rfd-0003-brand-erasure/leak-open.rs:21:37
+     |
+  21 |                 let shown = b.open(&shown);
+     |                                     ^^^^^
+note: required by a bound in `bough::Source::construct`
+    --> fixtures/rfd-0003-brand-erasure/api.rs:1187:72
+     |
+1081 | pub trait Source<'g>: sealed::Parts + Sized {
+...
+1187 |     fn construct<B: Rebrand, F: Fn(&mut Build<'g>, Self::Event) -> B + GraphSafe + 'static>(
+     |                                                                        ^^^^^^^^^ required by this bound in `Source::construct`
+
+--- scoped: remote-spawn.rs, first diagnostic
+error: lifetime may not live long enough
+  --> fixtures/rfd-0003-brand-erasure/scoped/remote-spawn.rs:13:13
+   |
+10 |     runtime(|mut rt| {
+   |              ------ has type `Runtime<'1>`
+...
+13 |             b.anchor(joins_in)
+   |             ^^^^^^^^^^^^^^^^^^ returning this value requires that `'1` must outlive `'static`
+
+--- scoped: leak-open.rs, first diagnostic
+error[E0521]: borrowed data escapes outside of closure
+  --> fixtures/rfd-0003-brand-erasure/scoped/leak-open.rs:15:25
+   |
+ 9 |     runtime(|mut rt| {
+   |              ------
+   |              |
+   |              `rt` is a reference that is only valid in the closure body
+   |              has type `Runtime<'1>`
+...
+15 |             let _made = opens.construct(b, move |b, _| b.open(&shown));
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |                         |
+   |                         `rt` escapes the closure body here
+   |                         argument requires that `'1` must outlive `'static`
+
+erasure: 8 of 8 must-build programs built, 9 of 9 must-fail programs failed, 0 of 3 leak routes refused
+split: 5 of 6 must-build programs built, 1 of 3 leak routes refused
+auto: 6 of 7 must-build programs built, 1 of 1 must-fail programs failed, 3 of 3 leak routes refused
+scoped: 2 of 3 must-build programs built, 2 of 2 leak routes refused
+(every fixture and both api.rs are #![forbid(unsafe_code)])
