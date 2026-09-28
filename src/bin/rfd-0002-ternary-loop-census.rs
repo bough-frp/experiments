@@ -68,6 +68,29 @@
 //! since each rule needs its cycle predecessor settled first (or both
 //! sides, for the merges). So every open cycle stays ⊥, and constructive
 //! means (a).
+//!
+//! **Reachable-state mode.** Free cells overstate what can happen: a gate
+//! pair may be exclusive only by an invariant of the state. So the same
+//! programs are judged again with each cell defined in the program, as
+//! `src.map(pred).hold(init)` for an input or any of its streams (the
+//! loop's own included, since the gate reads the cell before the instant),
+//! drawn from a second seed so the programs and the free-cell counts don't
+//! change. Starting from the initial cell values, every instant the input
+//! model allows is run from each reached state, breadth-first, and the
+//! program is constructive if every one settles. A program constructive
+//! this way but not over free cells is:
+//!
+//! - **(a') dead gate:** some gate is closed in every reachable state, and
+//!   with those gates deleted the program is (a). Such a gate never fires.
+//! - **(a') invariant:** otherwise acyclic in every reachable state once
+//!   closed gates are cut: exclusive by an invariant, and a switch on the
+//!   same cells expresses it, choosing any acyclic wiring in the
+//!   unreachable states.
+//! - **(c1), (c2):** as (b1) and (b2), judged over the reachable states.
+//!
+//! The quiet-instant argument above holds in every reachable state (the
+//! quiet instant leaves the cells alone), so under `any` class (c) is
+//! empty too.
 
 use std::fmt::Write as _;
 
@@ -450,6 +473,271 @@ fn judge(p: &Program, combos: &[Vec<V>]) -> Verdict {
     }
 }
 
+/// What a gate cell holds in the reachable-state mode:
+/// `cell = src.map(pred).hold(init)`. The gate reads it before the instant,
+/// so `src` may be any stream of the program, the loop's own included: that
+/// read isn't a dependency (RFD 2), and the hold takes the new value at the
+/// end of the instant.
+#[derive(Clone, Copy, Debug)]
+struct CellDef {
+    src: Src,
+    pred: Pred,
+    init: bool,
+}
+
+type Bind = [CellDef; CELLS];
+
+fn draw_bind(rng: &mut Rng, inputs: usize, size: usize) -> Bind {
+    std::array::from_fn(|_| CellDef {
+        src: if rng.below(100) < 35 {
+            Src::Input(rng.below(inputs))
+        } else {
+            Src::Node(rng.below(size))
+        },
+        pred: [Pred::Even, Pred::Odd, Pred::Zero, Pred::NonZero][rng.below(4)],
+        init: rng.below(2) == 1,
+    })
+}
+
+fn initial(bind: &Bind) -> u8 {
+    bind.iter()
+        .enumerate()
+        .fold(0, |acc, (j, c)| acc | (c.init as u8) << j)
+}
+
+/// The cell state after an instant that settled as `s`: a present source
+/// sets its cell to the predicate on its value, an absent one keeps it.
+fn step_cells(bind: &Bind, inputs: &[V], s: &[V], cells: u8) -> u8 {
+    let mut next = cells;
+    for (j, c) in bind.iter().enumerate() {
+        let v = match c.src {
+            Src::Input(i) => inputs[i],
+            Src::Node(k) => s[k],
+        };
+        if let V::Present(x) = v {
+            next = next & !(1 << j) | (c.pred.test(x) as u8) << j;
+        }
+    }
+    next
+}
+
+/// What exploring the cell states breadth-first from the initial one saw.
+struct Reach {
+    /// Every instant from every reached state settled.
+    constructive: bool,
+    /// Bit `s` set when cell state `s` was reached.
+    states: u8,
+    /// Per cell state, per node: an `or_else` whose left side was present
+    /// in every instant of that state.
+    left_always: Vec<Vec<bool>>,
+    silent: usize,
+    order_mismatches: u64,
+}
+
+/// Explores the product of cell states from the initial values, running
+/// every instant the input model allows from each reached state. Stops at
+/// the first instant that doesn't settle: its next state is undefined.
+fn explore(p: &Program, bind: &Bind, combos: &[Vec<V>], filters: Filters) -> Reach {
+    let n = p.nodes.len();
+    let start = initial(bind);
+    let mut r = Reach {
+        constructive: true,
+        states: 1 << start,
+        left_always: vec![vec![true; n]; 1 << CELLS],
+        silent: 0,
+        order_mismatches: 0,
+    };
+    let mut ever_present = vec![false; n];
+    let mut queue = std::collections::VecDeque::from([start]);
+    while let Some(cells) = queue.pop_front() {
+        for inp in combos {
+            let s = eval(p, inp, cells, filters, false);
+            if matches!(filters, Filters::ByValue) && s != eval(p, inp, cells, filters, true) {
+                r.order_mismatches += 1;
+            }
+            if !s.iter().all(|v| v.settled()) {
+                r.constructive = false;
+                return r;
+            }
+            for (e, v) in ever_present.iter_mut().zip(&s) {
+                *e |= v.present();
+            }
+            for (k, op) in p.nodes.iter().enumerate() {
+                if let Op::OrElse(a, _) = op {
+                    let left = match *a {
+                        Src::Input(i) => inp[i],
+                        Src::Node(j) => s[j],
+                    };
+                    if !left.present() {
+                        r.left_always[cells as usize][k] = false;
+                    }
+                }
+            }
+            let next = step_cells(bind, inp, &s, cells);
+            if r.states >> next & 1 == 0 {
+                r.states |= 1 << next;
+                queue.push_back(next);
+            }
+        }
+    }
+    r.silent = ever_present.iter().filter(|e| !**e).count();
+    r
+}
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum RClass {
+    /// (a') dead gate: some gate is closed in every reachable state, and
+    /// with those edges deleted the program is (a) over free cells.
+    DeadGate,
+    /// (a') invariant: acyclic in every reachable state once closed gates
+    /// are cut, but not by dead gates alone.
+    Invariant,
+    /// (c1) as (b1), over the reachable states.
+    DeadBranch,
+    /// (c2) as (b2), over the reachable states.
+    PerInstant,
+}
+
+struct RVerdict {
+    class: Option<RClass>,
+    value_dependent: bool,
+    /// Of (c): every gate is open in every reachable state or closed in
+    /// every one (the census asks it of the pruned program), so the cells are constants and the program is a (b)
+    /// pattern with its gates wired in or out.
+    fixed_gates: bool,
+    order_mismatches: u64,
+    silent: usize,
+    states: u8,
+}
+
+/// Judges a program constructive over reachable cell states. The caller
+/// asks only about programs the free-cell judge refused, so every class
+/// here is one the free cells hid.
+fn judge_reach(p: &Program, bind: &Bind, combos: &[Vec<V>]) -> RVerdict {
+    let r = explore(p, bind, combos, Filters::ByValue);
+    let mut v = RVerdict {
+        class: None,
+        value_dependent: false,
+        fixed_gates: false,
+        order_mismatches: r.order_mismatches,
+        silent: r.silent,
+        states: r.states,
+    };
+    if !r.constructive {
+        return v;
+    }
+    let reached: Vec<u8> = (0..1u8 << CELLS)
+        .filter(|s| r.states >> s & 1 == 1)
+        .collect();
+    let gates_ok = reached.iter().all(|&s| !has_cycle(p, &gate_cut(p, s)));
+    v.class = Some(if gates_ok {
+        let never_open: Vec<bool> = p
+            .nodes
+            .iter()
+            .map(|op| matches!(op, Op::Gate(lit, _) if reached.iter().all(|&s| !lit.open(s))))
+            .collect();
+        if (0..1u8 << CELLS).all(|s| {
+            let g = gate_cut(p, s);
+            !has_cycle(p, &|k, pos| never_open[k] || g(k, pos))
+        }) {
+            RClass::DeadGate
+        } else {
+            RClass::Invariant
+        }
+    } else if reached.iter().all(|&s| {
+        let g = gate_cut(p, s);
+        let dead = &r.left_always[s as usize];
+        !has_cycle(p, &|k, pos| g(k, pos) || (pos == 1 && dead[k]))
+    }) {
+        RClass::DeadBranch
+    } else {
+        RClass::PerInstant
+    });
+    v.fixed_gates = !gates_ok
+        && p.nodes.iter().all(|op| match op {
+            Op::Gate(lit, _) => {
+                let open = reached.iter().filter(|&&s| lit.open(s)).count();
+                open == 0 || open == reached.len()
+            }
+            _ => true,
+        });
+    v.value_dependent = !gates_ok && {
+        let filters = p
+            .nodes
+            .iter()
+            .filter(|o| matches!(o, Op::Filter(..)))
+            .count();
+        !(0..1u32 << filters).all(|bits| explore(p, bind, combos, Filters::Free(bits)).constructive)
+    };
+    v
+}
+
+/// As `prune`, but also keeps the source of every cell a kept gate reads,
+/// and what is upstream of it, since reachability depends on them.
+fn prune_bound(p: &Program, bind: &Bind) -> (Program, Bind) {
+    let mut keep = on_cycle(p);
+    loop {
+        keep_upstream(p, &mut keep);
+        let mut grew = false;
+        for k in 0..p.nodes.len() {
+            if let (true, Op::Gate(lit, _)) = (keep[k], p.nodes[k])
+                && let Src::Node(j) = bind[lit.cell].src
+                && !std::mem::replace(&mut keep[j], true)
+            {
+                grew = true;
+            }
+        }
+        if !grew {
+            break;
+        }
+    }
+    let (q, index) = renumber(p, &keep);
+    let mut b = *bind;
+    for c in &mut b {
+        if let Src::Node(j) = c.src {
+            // A cell no kept gate reads may lose its source; it's unused,
+            // so point it anywhere harmless.
+            c.src = if keep[j] {
+                Src::Node(index[j])
+            } else {
+                Src::Input(0)
+            };
+        }
+    }
+    (q, b)
+}
+
+/// `show`, with each cell a kept gate reads declared as a `cell_loop` and
+/// closed with its hold.
+fn show_bound(p: &Program, bind: &Bind) -> String {
+    let used: Vec<usize> = (0..CELLS)
+        .filter(|&j| {
+            p.nodes
+                .iter()
+                .any(|op| matches!(op, Op::Gate(lit, _) if lit.cell == j))
+        })
+        .collect();
+    let mut out = String::new();
+    for &j in &used {
+        let _ = writeln!(out, "    let (c{j}, c{j}_loop) = b.cell_loop();");
+    }
+    out.push_str(&show(p));
+    for &j in &used {
+        let c = bind[j];
+        let src = match c.src {
+            Src::Input(i) => format!("i{i}"),
+            Src::Node(k) => format!("s{k}"),
+        };
+        let _ = writeln!(
+            out,
+            "    c{j}_loop.close({src}.map({}).hold({}));",
+            c.pred.text(),
+            c.init
+        );
+    }
+    out
+}
+
 /// SplitMix64: small, seeded, good enough to draw programs.
 struct Rng(u64);
 
@@ -559,9 +847,14 @@ fn on_cycle(p: &Program) -> Vec<bool> {
 /// dropping them changes neither constructiveness nor the class; `main`
 /// checks that for every example it prints.
 fn prune(p: &Program) -> Program {
-    let cyc = on_cycle(p);
-    let mut keep = cyc.clone();
-    let mut stack: Vec<usize> = (0..p.nodes.len()).filter(|&k| cyc[k]).collect();
+    let mut keep = on_cycle(p);
+    keep_upstream(p, &mut keep);
+    renumber(p, &keep).0
+}
+
+/// Adds to `keep` every node upstream of one already kept.
+fn keep_upstream(p: &Program, keep: &mut [bool]) {
+    let mut stack: Vec<usize> = (0..p.nodes.len()).filter(|&k| keep[k]).collect();
     while let Some(k) = stack.pop() {
         for j in node_args(&p.nodes[k]) {
             if !std::mem::replace(&mut keep[j], true) {
@@ -569,6 +862,10 @@ fn prune(p: &Program) -> Program {
             }
         }
     }
+}
+
+/// The kept nodes, renumbered in order, and each old node's new index.
+fn renumber(p: &Program, keep: &[bool]) -> (Program, Vec<usize>) {
     let mut index = vec![usize::MAX; p.nodes.len()];
     let mut next = 0;
     for (k, kept) in keep.iter().enumerate() {
@@ -584,7 +881,7 @@ fn prune(p: &Program) -> Program {
     let nodes = p
         .nodes
         .iter()
-        .zip(&keep)
+        .zip(keep)
         .filter(|(_, kept)| **kept)
         .map(|(op, _)| match *op {
             Op::Map(f, a) => Op::Map(f, re(a)),
@@ -595,7 +892,7 @@ fn prune(p: &Program) -> Program {
             Op::OrElse(a, b) => Op::OrElse(re(a), re(b)),
         })
         .collect();
-    Program { nodes }
+    (Program { nodes }, index)
 }
 
 /// Bough-like pseudocode: a node used at or before its definition is a
@@ -677,11 +974,61 @@ fn pct(a: u64, b: u64) -> String {
 /// nothing flows around sorts last), then pruned size.
 type Example = Option<((bool, usize), Program)>;
 
+/// The reachable-state mode's counts for one size and input model.
+#[derive(Default, Clone, Copy)]
+struct RRow {
+    programs: u64,
+    /// Constructive over free cells (the census above).
+    free: u64,
+    /// Constructive over reachable cell states.
+    reach: u64,
+    dead_gate: u64,
+    invariant: u64,
+    dead_branch: u64,
+    per_instant: u64,
+    value_dep: u64,
+    fixed: u64,
+    /// Control: constructive over free cells but not over reachable ones,
+    /// which can't happen, since the reachable states are a subset.
+    lost: u64,
+}
+
+impl RRow {
+    fn add(&mut self, o: &RRow) {
+        self.programs += o.programs;
+        self.free += o.free;
+        self.reach += o.reach;
+        self.dead_gate += o.dead_gate;
+        self.invariant += o.invariant;
+        self.dead_branch += o.dead_branch;
+        self.per_instant += o.per_instant;
+        self.value_dep += o.value_dep;
+        self.fixed += o.fixed;
+        self.lost += o.lost;
+    }
+    fn hidden(&self) -> u64 {
+        self.dead_gate + self.invariant + self.dead_branch + self.per_instant
+    }
+    fn class_c(&self) -> u64 {
+        self.dead_branch + self.per_instant
+    }
+}
+
+/// A reachable-mode example: rank as `Example`, the pruned program and its
+/// cells, and the reachable states of the unpruned one.
+type RExample = Option<((bool, usize), Program, Bind)>;
+
 struct Census {
     rows: Vec<[Row; 3]>,
     examples: [[Example; 3]; 3],
     value_example: [Example; 3],
     mismatches: u64,
+    reach_rows: Vec<[RRow; 3]>,
+    reach_examples: [[RExample; 4]; 3],
+    reach_value_example: [RExample; 3],
+    /// Of (c), one whose gates are not all fixed: a cell that changes.
+    reach_live_example: [RExample; 3],
+    reach_mismatches: u64,
 }
 
 const MODELS: [Model; 3] = [Model::Any, Model::AtLeastOne, Model::ExactlyOne];
@@ -689,14 +1036,23 @@ const MODELS: [Model; 3] = [Model::Any, Model::AtLeastOne, Model::ExactlyOne];
 fn census(inputs: usize, samples: usize, seed: u64) -> Census {
     let combos: Vec<Vec<Vec<V>>> = MODELS.iter().map(|&m| input_combos(inputs, m)).collect();
     let mut rng = Rng(seed);
+    // The cells' definitions come from a stream of their own, so the
+    // programs drawn, and every count over free cells, stay as they were.
+    let mut bind_rng = Rng(seed ^ 0xce11_5eed);
     let mut c = Census {
         rows: Vec::new(),
         examples: Default::default(),
         value_example: Default::default(),
         mismatches: 0,
+        reach_rows: Vec::new(),
+        reach_examples: Default::default(),
+        reach_value_example: Default::default(),
+        reach_live_example: Default::default(),
+        reach_mismatches: 0,
     };
     for size in 1..=MAX_SIZE {
         let mut rows = [Row::default(); 3];
+        let mut reach_rows = [RRow::default(); 3];
         let mut drawn = 0;
         while drawn < samples {
             let p = draw(&mut rng, inputs, size);
@@ -705,10 +1061,66 @@ fn census(inputs: usize, samples: usize, seed: u64) -> Census {
                 continue;
             }
             drawn += 1;
+            let bind = draw_bind(&mut bind_rng, inputs, size);
             let small = prune(&p);
             for m in 0..MODELS.len() {
                 let v = judge(&p, &combos[m]);
                 c.mismatches += v.order_mismatches;
+                let rr = &mut reach_rows[m];
+                rr.programs += 1;
+                let rv = judge_reach(&p, &bind, &combos[m]);
+                c.reach_mismatches += rv.order_mismatches;
+                if rv.class.is_some() {
+                    rr.reach += 1;
+                }
+                if v.class.is_some() {
+                    rr.free += 1;
+                    if rv.class.is_none() {
+                        rr.lost += 1;
+                    }
+                } else if let Some(rclass) = rv.class {
+                    let ci = match rclass {
+                        RClass::DeadGate => {
+                            rr.dead_gate += 1;
+                            0
+                        }
+                        RClass::Invariant => {
+                            rr.invariant += 1;
+                            1
+                        }
+                        RClass::DeadBranch => {
+                            rr.dead_branch += 1;
+                            2
+                        }
+                        RClass::PerInstant => {
+                            rr.per_instant += 1;
+                            3
+                        }
+                    };
+                    let (sp, sb) = prune_bound(&p, &bind);
+                    // Whether the cells are constants is asked of the pruned
+                    // program: a gate downstream of every cycle doesn't matter.
+                    let is_c = matches!(rclass, RClass::DeadBranch | RClass::PerInstant);
+                    let fixed = is_c && judge_reach(&sp, &sb, &combos[m]).fixed_gates;
+                    if fixed {
+                        rr.fixed += 1;
+                    }
+                    let rank = (rv.silent > 0, sp.nodes.len());
+                    let better = |e: &RExample| e.as_ref().is_none_or(|(r0, _, _)| rank < *r0);
+                    if better(&c.reach_examples[m][ci]) {
+                        c.reach_examples[m][ci] = Some((rank, sp.clone(), sb));
+                    }
+                    let live = is_c && !fixed;
+                    if live && better(&c.reach_live_example[m]) {
+                        c.reach_live_example[m] = Some((rank, sp.clone(), sb));
+                    }
+                    if rv.value_dependent {
+                        rr.value_dep += 1;
+                        if better(&c.reach_value_example[m]) {
+                            c.reach_value_example[m] = Some((rank, sp, sb));
+                        }
+                    }
+                }
                 let r = &mut rows[m];
                 r.programs += 1;
                 let Some(class) = v.class else { continue };
@@ -741,6 +1153,7 @@ fn census(inputs: usize, samples: usize, seed: u64) -> Census {
             }
         }
         c.rows.push(rows);
+        c.reach_rows.push(reach_rows);
     }
     c
 }
@@ -798,6 +1211,7 @@ fn main() {
         "{:>6} {:>5} {:>8} {:>12} {:>8} {:>6} {:>6}",
         "inputs", "model", "programs", "constructive", "(a)", "(b)", "val"
     );
+    let mut others = Vec::new();
     for inputs in [1, 3] {
         let other = census(inputs, SAMPLES / 5, 2026 + inputs as u64);
         for (m, &model) in MODELS.iter().enumerate() {
@@ -816,6 +1230,7 @@ fn main() {
                 t.value_dep
             );
         }
+        others.push((inputs, other));
     }
     println!();
 
@@ -889,5 +1304,192 @@ fn main() {
         one.constructive,
         one.outside(),
         one.value_dep
+    );
+
+    reachable_section(&c, &others, &all_combos);
+}
+
+/// Reachable cell states in the order `c1c0`, as the example headers
+/// print them.
+fn states_text(states: u8) -> String {
+    (0..1u8 << CELLS)
+        .filter(|s| states >> s & 1 == 1)
+        .map(|s| format!("{}{}", s >> 1 & 1, s & 1))
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+fn reach_line(label: &str, r: &RRow) -> String {
+    format!(
+        "{:>4} {:>8} {:>6} {:>6} {:>5} {:>6} {:>6} {:>5} {:>5} {:>4} {:>4}",
+        label,
+        r.programs,
+        r.free,
+        r.reach,
+        r.hidden(),
+        r.dead_gate,
+        r.invariant,
+        r.dead_branch,
+        r.per_instant,
+        r.value_dep,
+        r.fixed
+    )
+}
+
+/// The follow-up: gate cells are holds of the program's own streams, and
+/// only reachable cell states are checked.
+fn reachable_section(c: &Census, others: &[(usize, Census)], all_combos: &[Vec<Vec<V>>]) {
+    println!("\n== Reachable-state mode ==\n");
+    println!("Same programs. Each gate cell is now `c = src.map(pred).hold(init)`, src an");
+    println!("input or any stream of the program, the loop's own included (the gate reads c");
+    println!("before the instant, so that is no dependency), pred one of the four filter");
+    println!("predicates, init false or true, drawn once per program from a second seed.");
+    println!("Only cell states reachable from the initial one, over instants the input");
+    println!("model allows, are checked: breadth-first over the at most 4 states.");
+    println!("free: constructive over free cells (as above). reach: over reachable states.");
+    println!("new: constructive over reachable states but not over free cells, split into");
+    println!("(a'd)  dead gate: some gate is closed in every reachable state; with those");
+    println!("       gates deleted, the program is (a) over free cells.");
+    println!("(a'i)  invariant: acyclic in every reachable state once closed gates are cut,");
+    println!("       not by dead gates alone. A switch on the same cells expresses it.");
+    println!("(c1), (c2): as (b1), (b2), judged over the reachable states.");
+    println!("val: of (c), constructive only because of filter predicates on values.");
+    println!("fix: of (c), every gate on or upstream of a cycle is open in every reachable");
+    println!("     state or closed in every one: its cells are constants, and the cycle is a");
+    println!("     (b) pattern.\n");
+
+    let mut totals = [RRow::default(); 3];
+    for (m, &model) in MODELS.iter().enumerate() {
+        println!("input model `{}`: {}", model.name(), model.describe());
+        println!(
+            "{:>4} {:>8} {:>6} {:>6} {:>5} {:>6} {:>6} {:>5} {:>5} {:>4} {:>4}",
+            "size",
+            "programs",
+            "free",
+            "reach",
+            "new",
+            "(a'd)",
+            "(a'i)",
+            "(c1)",
+            "(c2)",
+            "val",
+            "fix"
+        );
+        for (i, rows) in c.reach_rows.iter().enumerate() {
+            totals[m].add(&rows[m]);
+            println!("{}", reach_line(&(i + 1).to_string(), &rows[m]));
+        }
+        println!("{}\n", reach_line("all", &totals[m]));
+    }
+
+    println!("Sensitivity to the number of inputs, reachable states (as above):");
+    println!(
+        "{:>6} {:>5} {:>8} {:>6} {:>5} {:>6} {:>6} {:>5} {:>4} {:>4}",
+        "inputs", "model", "programs", "free", "new", "(a'd)", "(a'i)", "(c)", "val", "fix"
+    );
+    for (inputs, other) in others {
+        for (m, &model) in MODELS.iter().enumerate() {
+            let mut t = RRow::default();
+            for rows in &other.reach_rows {
+                t.add(&rows[m]);
+            }
+            println!(
+                "{:>6} {:>5} {:>8} {:>6} {:>5} {:>6} {:>6} {:>5} {:>4} {:>4}",
+                inputs,
+                model.name(),
+                t.programs,
+                t.free,
+                t.hidden(),
+                t.dead_gate,
+                t.invariant,
+                t.class_c(),
+                t.value_dep,
+                t.fixed
+            );
+        }
+    }
+    println!();
+
+    let lost: u64 = totals.iter().map(|t| t.lost).sum();
+    println!("control: {lost} programs constructive over free cells but not reachable states");
+    println!(
+        "control: {} instants where forward and reverse sweeps disagreed\n",
+        c.reach_mismatches
+    );
+
+    println!("Minimal examples, 2 inputs, ranked as above; pruning keeps the source of");
+    println!("every cell a kept gate reads. Each is re-judged after pruning, to check it");
+    println!("is still refused over free cells and kept its class over reachable ones.");
+    println!("Reachable states are listed as c1c0.\n");
+    let print_example = |label: &str, m: usize, e: &RExample, want: &dyn Fn(&RVerdict) -> bool| {
+        let name = MODELS[m].name();
+        let Some((_, p, bind)) = e else {
+            println!("{label}, model `{name}`: none found\n");
+            return;
+        };
+        let free = judge(p, &all_combos[m]);
+        let v = judge_reach(p, bind, &all_combos[m]);
+        println!(
+            "{label}, model `{name}` (class kept: {}; every stream fires: {}; reachable: {}):",
+            if free.class.is_none() && want(&v) {
+                "yes"
+            } else {
+                "NO"
+            },
+            if v.silent == 0 { "yes" } else { "no" },
+            states_text(v.states)
+        );
+        println!("{}", show_bound(p, bind));
+    };
+    let labels = [
+        "(a'd) dead gate",
+        "(a'i) invariant",
+        "(c1) dead branch",
+        "(c2) per instant",
+    ];
+    let classes = [
+        RClass::DeadGate,
+        RClass::Invariant,
+        RClass::DeadBranch,
+        RClass::PerInstant,
+    ];
+    for (ci, label) in labels.iter().enumerate() {
+        for m in 0..MODELS.len() {
+            print_example(label, m, &c.reach_examples[m][ci], &|v| {
+                v.class == Some(classes[ci])
+            });
+        }
+    }
+    for m in 0..MODELS.len() {
+        print_example("(c) value-dependent", m, &c.reach_value_example[m], &|v| {
+            v.value_dependent
+        });
+    }
+
+    for m in 0..MODELS.len() {
+        print_example(
+            "(c) with a cell that changes",
+            m,
+            &c.reach_live_example[m],
+            &|v| matches!(v.class, Some(RClass::DeadBranch | RClass::PerInstant)) && !v.fixed_gates,
+        );
+    }
+
+    let part = |t: &RRow| {
+        format!(
+            "{} constructive over reachable states but not free cells, {} (a'), {} (c), {} of those with constant cells, {} value-dependent",
+            t.hidden(),
+            t.dead_gate + t.invariant,
+            t.class_c(),
+            t.fixed,
+            t.value_dep
+        )
+    };
+    println!(
+        "verdict (reachable states): of {} refused programs, under `any` {}; under `>=1` {}; under `one` {}.",
+        totals[0].programs,
+        part(&totals[0]),
+        part(&totals[1]),
+        part(&totals[2])
     );
 }
