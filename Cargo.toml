@@ -7,9 +7,11 @@ publish = false
 # Members join only when a probe is incompatible with every existing crate;
 # see the README.
 [workspace]
+members = ["rfd-0003-rebrand-derive"]
 resolver = "3"
 
 [dependencies]
+libc = "0.2"
 
 [dev-dependencies]
 criterion = "0.8"

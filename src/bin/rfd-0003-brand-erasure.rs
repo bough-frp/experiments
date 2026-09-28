@@ -23,6 +23,12 @@
 //! The binary compiles each (design, fixture) pair with the pinned `rustc`
 //! (the nightly for `auto`), prints whether it built and its first error,
 //! runs the fixtures marked to run, and prints their output.
+//!
+//! `-- derive` runs a follow-up instead, in `rfd-0003-brand-erasure/derive.rs`:
+//! the same `api.rs` with its `Rebrand` impls written by a real proc macro.
+
+#[path = "rfd-0003-brand-erasure/derive.rs"]
+mod derive;
 
 use std::path::Path;
 use std::process::{Command, Stdio};
@@ -223,6 +229,21 @@ fn run(binary: &Path) -> Vec<String> {
     lines
 }
 
+/// The whole of the first error in `rustc`'s output.
+fn first_diagnostic(stderr: &str) -> Vec<String> {
+    let mut first = stderr
+        .lines()
+        .skip_while(|line| !line.starts_with("error"))
+        .enumerate()
+        .take_while(|(i, line)| *i == 0 || !line.starts_with("error"))
+        .map(|(_, line)| line.to_string())
+        .collect::<Vec<_>>();
+    while first.last().is_some_and(|line| line.trim().is_empty()) {
+        first.pop();
+    }
+    first
+}
+
 fn compile(root: &Path, design: &Design, fixture: &str, mode: Mode) -> Outcome {
     let source = Path::new(DIR)
         .join(design.subdir)
@@ -248,17 +269,7 @@ fn compile(root: &Path, design: &Design, fixture: &str, mode: Mode) -> Outcome {
         .arg(&source)
         .output()
         .expect("rustc runs");
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    let mut first = stderr
-        .lines()
-        .skip_while(|line| !line.starts_with("error"))
-        .enumerate()
-        .take_while(|(i, line)| *i == 0 || !line.starts_with("error"))
-        .map(|(_, line)| line.to_string())
-        .collect::<Vec<_>>();
-    while first.last().is_some_and(|line| line.trim().is_empty()) {
-        first.pop();
-    }
+    let first = first_diagnostic(&String::from_utf8_lossy(&output.stderr));
     let built = output.status.success();
     let ran = (built && mode == Run).then(|| run(&binary));
     Outcome { built, first, ran }
@@ -276,6 +287,11 @@ struct Tally {
 
 fn main() {
     let root = Path::new(env!("CARGO_MANIFEST_DIR"));
+    // `-- derive` runs the follow-up on a real derive instead.
+    if std::env::args().nth(1).as_deref() == Some("derive") {
+        derive::main(root);
+        return;
+    }
     println!("stable:  {}  (rust-toolchain.toml)", version(root, None));
     println!(
         "nightly: {}  (pinned as {NIGHTLY}, auto only)",

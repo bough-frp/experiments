@@ -1,0 +1,17 @@
+# `#[derive(Rebrand)]` for `rfd-0003-brand-erasure`. A proc macro needs a
+# crate of its own, which no target of the root package can be, so it is a
+# workspace member; see the README.
+[package]
+name = "rfd-0003-rebrand-derive"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[lib]
+proc-macro = true
+
+# The versions `bough-derive` uses.
+[dependencies]
+proc-macro2 = "1"
+quote = "1"
+syn = { version = "2", features = ["full"] }
