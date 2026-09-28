@@ -11,13 +11,21 @@
 //!   arena, under RFD 3's trigger and under each work term. No collection
 //!   runs in it; the wall-clock bench's loop also counts `total`'s.
 //!
+//! - `uneven_run`, `uneven_pause` (group `uneven`): the same two for the
+//!   uneven workload, four inputs at uneven rates with growing live regions,
+//!   `UNEVEN_WINDOW` units after `UNEVEN_WARMUP`, under each garbage mix and
+//!   each of `UNEVEN_POLICIES`. Divide `uneven_run` by 3,600 for the cost
+//!   per unit. Run it alone with the filter `*::uneven::*`.
+//!
 //! Every run is built and warmed in setup, outside what is counted, and
 //! handed back so that its drop runs in teardown.
 
 use gungraun::{library_benchmark, library_benchmark_group, main};
 use std::hint::black_box;
 
-use bough_experiments::rfd_0003_work_paced_trigger::{APP_KEPT, Policy, Run, WINDOW};
+use bough_experiments::rfd_0003_work_paced_trigger::{
+    APP_KEPT, Mix, Policy, Run, UNEVEN_WINDOW, Uneven, WINDOW,
+};
 
 fn warmed(kept: usize, p: Policy) -> Run {
     Run::new(kept, p).warmed()
@@ -31,8 +39,16 @@ fn fast_path(kept: usize, p: Policy) -> Run {
     Run::fast_path(kept, p)
 }
 
-fn drop_run<T>(out: (T, Run)) {
+fn drop_run<T, R>(out: (T, R)) {
     black_box(out.0);
+}
+
+fn uneven_warmed(mix: Mix, p: Policy) -> Uneven {
+    Uneven::new(mix, p, false).warmed()
+}
+
+fn uneven_before_largest(mix: Mix, p: Policy) -> Uneven {
+    Uneven::before_largest(mix, p, UNEVEN_WINDOW)
 }
 
 #[library_benchmark]
@@ -86,9 +102,72 @@ fn fast_path_unit(mut r: Run) -> (Option<usize>, Run) {
     (black_box(r.settle(navigated)), r)
 }
 
+#[library_benchmark]
+#[benches::spread(
+    args = [
+        (Mix::Spread, Policy::Baseline),
+        (Mix::Spread, Policy::Rfd3),
+        (Mix::Spread, Policy::Excess),
+        (Mix::Spread, Policy::Total),
+        (Mix::Spread, Policy::Decay),
+        (Mix::Spread, Policy::Backoff)
+    ],
+    setup = uneven_warmed,
+    teardown = drop_run
+)]
+#[benches::sparse(
+    args = [
+        (Mix::Sparse, Policy::Baseline),
+        (Mix::Sparse, Policy::Rfd3),
+        (Mix::Sparse, Policy::Excess),
+        (Mix::Sparse, Policy::Total),
+        (Mix::Sparse, Policy::Decay),
+        (Mix::Sparse, Policy::Backoff)
+    ],
+    setup = uneven_warmed,
+    teardown = drop_run
+)]
+fn uneven_run(mut r: Uneven) -> (i64, Uneven) {
+    (black_box(r.run(black_box(UNEVEN_WINDOW))), r)
+}
+
+#[library_benchmark]
+#[benches::spread(
+    args = [
+        (Mix::Spread, Policy::Baseline),
+        (Mix::Spread, Policy::Rfd3),
+        (Mix::Spread, Policy::Excess),
+        (Mix::Spread, Policy::Total),
+        (Mix::Spread, Policy::Decay),
+        (Mix::Spread, Policy::Backoff)
+    ],
+    setup = uneven_before_largest,
+    teardown = drop_run
+)]
+#[benches::sparse(
+    args = [
+        (Mix::Sparse, Policy::Baseline),
+        (Mix::Sparse, Policy::Rfd3),
+        (Mix::Sparse, Policy::Excess),
+        (Mix::Sparse, Policy::Total),
+        (Mix::Sparse, Policy::Decay),
+        (Mix::Sparse, Policy::Backoff)
+    ],
+    setup = uneven_before_largest,
+    teardown = drop_run
+)]
+fn uneven_pause(mut r: Uneven) -> (usize, Uneven) {
+    (black_box(r.collect()), r)
+}
+
 library_benchmark_group!(
     name = work_paced_trigger;
     benchmarks = run, pause, fast_path_unit
 );
 
-main!(library_benchmark_groups = work_paced_trigger);
+library_benchmark_group!(
+    name = uneven;
+    benchmarks = uneven_run, uneven_pause
+);
+
+main!(library_benchmark_groups = work_paced_trigger, uneven);

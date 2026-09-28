@@ -17,6 +17,13 @@
 //!   RFD 3's trigger, which an engine pays anyway, so each ratio is what a
 //!   work term adds to a transaction.
 //!
+//! - `uneven-spread`, `uneven-sparse`, and `pause-uneven-spread`,
+//!   `pause-uneven-sparse`: the same for the uneven workload (four inputs
+//!   at uneven rates, live regions that grow, navigation garbage off every
+//!   frequent input or off the tenth and hundredth only), each
+//!   `<group>/<policy>/3600` over `UNEVEN_POLICIES`, `UNEVEN_WINDOW` units
+//!   after `UNEVEN_WARMUP`. Divide by 3,600 for a unit.
+//!
 //! Every run is cloned in `iter_batched`'s setup and handed back so that
 //! neither the clone nor its drop is timed.
 
@@ -25,15 +32,18 @@ use std::time::Duration;
 
 use criterion::{BatchSize, BenchmarkId, Criterion, SamplingMode, criterion_group, criterion_main};
 
-use bough_experiments::rfd_0003_work_paced_trigger::{APP_KEPT, POLICIES, Policy, Run, WINDOW};
+use bough_experiments::rfd_0003_work_paced_trigger::{
+    APP_KEPT, MIXES, POLICIES, Policy, Run, UNEVEN_POLICIES, UNEVEN_WINDOW, Uneven, WINDOW,
+};
 
-fn batched<T>(
+fn batched<R: Clone, T>(
     g: &mut criterion::BenchmarkGroup<'_, criterion::measurement::WallTime>,
     id: &str,
-    r: &Run,
-    f: impl Fn(&mut Run) -> T,
+    param: usize,
+    r: &R,
+    f: impl Fn(&mut R) -> T,
 ) {
-    g.bench_function(BenchmarkId::new(id, WINDOW), |b| {
+    g.bench_function(BenchmarkId::new(id, param), |b| {
         b.iter_batched(
             || r.clone(),
             |mut r| (black_box(f(&mut r)), r),
@@ -50,7 +60,7 @@ fn work_paced_trigger(c: &mut Criterion) {
         g.measurement_time(Duration::from_secs(8));
         for p in POLICIES {
             let r = Run::new(kept, p).warmed();
-            batched(&mut g, p.name(), &r, |r| r.run(black_box(WINDOW)));
+            batched(&mut g, p.name(), WINDOW, &r, |r| r.run(black_box(WINDOW)));
         }
         g.finish();
 
@@ -59,7 +69,30 @@ fn work_paced_trigger(c: &mut Criterion) {
         g.measurement_time(Duration::from_millis(500));
         for p in POLICIES {
             let r = Run::before_largest(kept, p, WINDOW);
-            batched(&mut g, p.name(), &r, Run::collect);
+            batched(&mut g, p.name(), WINDOW, &r, Run::collect);
+        }
+        g.finish();
+    }
+
+    for mix in MIXES {
+        let mut g = c.benchmark_group(format!("uneven-{}", mix.name()));
+        g.sampling_mode(SamplingMode::Flat);
+        g.sample_size(10);
+        g.measurement_time(Duration::from_secs(8));
+        for p in UNEVEN_POLICIES {
+            let r = Uneven::new(mix, p, false).warmed();
+            batched(&mut g, p.name(), UNEVEN_WINDOW, &r, |r| {
+                r.run(black_box(UNEVEN_WINDOW))
+            });
+        }
+        g.finish();
+
+        let mut g = c.benchmark_group(format!("pause-uneven-{}", mix.name()));
+        g.sampling_mode(SamplingMode::Flat);
+        g.measurement_time(Duration::from_millis(500));
+        for p in UNEVEN_POLICIES {
+            let r = Uneven::before_largest(mix, p, UNEVEN_WINDOW);
+            batched(&mut g, p.name(), UNEVEN_WINDOW, &r, Uneven::collect);
         }
         g.finish();
     }
