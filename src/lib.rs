@@ -3,6 +3,7 @@
 
 pub mod rfd_0003_incremental_mark;
 pub mod rfd_0003_rebrand_cost;
+pub mod rfd_0003_rebrand_write_cost;
 pub mod rfd_0003_sweep_cost;
 pub mod rfd_0003_work_paced_trigger;
 pub mod rfd_0004_erased_materializer;
