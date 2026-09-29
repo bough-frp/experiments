@@ -1,0 +1,2699 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-29 - rfd-0005-small-side-order-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0005-small-side-order-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.07s
+     Running benches/rfd-0005-small-side-order-wallclock.rs (target/release/deps/rfd_0005_small_side_order_wallclock-e71555c30e35be84)
+Gnuplot not found, using plotters backend
+Benchmarking moves/baseline/settled
+Benchmarking moves/baseline/settled: Warming up for 3.0000 s
+Benchmarking moves/baseline/settled: Collecting 10 samples in estimated 4.1845 s (990 iterations)
+Benchmarking moves/baseline/settled: Analyzing
+moves/baseline/settled  time:   [3.4805 ms 3.4833 ms 3.4863 ms]
+Benchmarking moves/pk/settled
+Benchmarking moves/pk/settled: Warming up for 3.0000 s
+Benchmarking moves/pk/settled: Collecting 10 samples in estimated 4.0227 s (3960 iterations)
+Benchmarking moves/pk/settled: Analyzing
+moves/pk/settled        time:   [64.047 µs 64.272 µs 64.527 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking moves/back/settled
+Benchmarking moves/back/settled: Warming up for 3.0000 s
+Benchmarking moves/back/settled: Collecting 10 samples in estimated 4.0116 s (3905 iterations)
+Benchmarking moves/back/settled: Analyzing
+moves/back/settled      time:   [72.359 µs 72.431 µs 72.486 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low mild
+  1 (10.00%) high mild
+Benchmarking moves/twoway/settled
+Benchmarking moves/twoway/settled: Warming up for 3.0000 s
+Benchmarking moves/twoway/settled: Collecting 10 samples in estimated 4.0126 s (3960 iterations)
+Benchmarking moves/twoway/settled: Analyzing
+moves/twoway/settled    time:   [57.887 µs 58.074 µs 58.199 µs]
+Benchmarking moves/back-fresh/settled
+Benchmarking moves/back-fresh/settled: Warming up for 3.0000 s
+Benchmarking moves/back-fresh/settled: Collecting 10 samples in estimated 4.0052 s (3905 iterations)
+Benchmarking moves/back-fresh/settled: Analyzing
+moves/back-fresh/settled
+                        time:   [72.065 µs 72.220 µs 72.298 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking moves/twoway-fresh/settled
+Benchmarking moves/twoway-fresh/settled: Warming up for 3.0000 s
+Benchmarking moves/twoway-fresh/settled: Collecting 10 samples in estimated 4.0125 s (3960 iterations)
+Benchmarking moves/twoway-fresh/settled: Analyzing
+moves/twoway-fresh/settled
+                        time:   [57.606 µs 57.929 µs 58.133 µs]
+Benchmarking moves/back-nosort/settled
+Benchmarking moves/back-nosort/settled: Warming up for 3.0000 s
+Benchmarking moves/back-nosort/settled: Collecting 10 samples in estimated 4.0415 s (3960 iterations)
+Benchmarking moves/back-nosort/settled: Analyzing
+moves/back-nosort/settled
+                        time:   [68.089 µs 68.162 µs 68.220 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking moves/baseline/mixed
+Benchmarking moves/baseline/mixed: Warming up for 3.0000 s
+Benchmarking moves/baseline/mixed: Collecting 10 samples in estimated 4.1209 s (1155 iterations)
+Benchmarking moves/baseline/mixed: Analyzing
+moves/baseline/mixed    time:   [2.5306 ms 2.5316 ms 2.5328 ms]
+Benchmarking moves/pk/mixed
+Benchmarking moves/pk/mixed: Warming up for 3.0000 s
+Benchmarking moves/pk/mixed: Collecting 10 samples in estimated 5.6423 s (110 iterations)
+Benchmarking moves/pk/mixed: Analyzing
+moves/pk/mixed          time:   [49.644 ms 49.758 ms 49.941 ms]
+Benchmarking moves/back/mixed
+Benchmarking moves/back/mixed: Warming up for 3.0000 s
+Benchmarking moves/back/mixed: Collecting 10 samples in estimated 4.0234 s (2585 iterations)
+Benchmarking moves/back/mixed: Analyzing
+moves/back/mixed        time:   [262.35 µs 262.44 µs 262.58 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking moves/twoway/mixed
+Benchmarking moves/twoway/mixed: Warming up for 3.0000 s
+Benchmarking moves/twoway/mixed: Collecting 10 samples in estimated 4.0078 s (2695 iterations)
+Benchmarking moves/twoway/mixed: Analyzing
+moves/twoway/mixed      time:   [260.22 µs 261.26 µs 262.24 µs]
+Benchmarking moves/back-fresh/mixed
+Benchmarking moves/back-fresh/mixed: Warming up for 3.0000 s
+Benchmarking moves/back-fresh/mixed: Collecting 10 samples in estimated 4.0763 s (2750 iterations)
+Benchmarking moves/back-fresh/mixed: Analyzing
+moves/back-fresh/mixed  time:   [267.57 µs 267.94 µs 268.51 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking moves/twoway-fresh/mixed
+Benchmarking moves/twoway-fresh/mixed: Warming up for 3.0000 s
+Benchmarking moves/twoway-fresh/mixed: Collecting 10 samples in estimated 4.0136 s (2695 iterations)
+Benchmarking moves/twoway-fresh/mixed: Analyzing
+moves/twoway-fresh/mixed
+                        time:   [252.07 µs 252.38 µs 252.68 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking moves/back-nosort/mixed
+Benchmarking moves/back-nosort/mixed: Warming up for 3.0000 s
+Benchmarking moves/back-nosort/mixed: Collecting 10 samples in estimated 4.0596 s (2750 iterations)
+Benchmarking moves/back-nosort/mixed: Analyzing
+moves/back-nosort/mixed time:   [264.95 µs 265.34 µs 265.79 µs]
+Benchmarking moves/baseline/churn
+Benchmarking moves/baseline/churn: Warming up for 3.0000 s
+Benchmarking moves/baseline/churn: Collecting 10 samples in estimated 4.0017 s (1375 iterations)
+Benchmarking moves/baseline/churn: Analyzing
+moves/baseline/churn    time:   [1.7633 ms 1.7639 ms 1.7643 ms]
+Benchmarking moves/pk/churn
+Benchmarking moves/pk/churn: Warming up for 3.0000 s
+Benchmarking moves/pk/churn: Collecting 10 samples in estimated 4.8731 s (30 iterations)
+Benchmarking moves/pk/churn: Analyzing
+moves/pk/churn          time:   [159.62 ms 160.17 ms 160.75 ms]
+Benchmarking moves/back/churn
+Benchmarking moves/back/churn: Warming up for 3.0000 s
+Benchmarking moves/back/churn: Collecting 10 samples in estimated 4.0722 s (2310 iterations)
+Benchmarking moves/back/churn: Analyzing
+moves/back/churn        time:   [525.62 µs 527.37 µs 528.75 µs]
+Found 4 outliers among 10 measurements (40.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking moves/twoway/churn
+Benchmarking moves/twoway/churn: Warming up for 3.0000 s
+Benchmarking moves/twoway/churn: Collecting 10 samples in estimated 4.0748 s (2420 iterations)
+Benchmarking moves/twoway/churn: Analyzing
+moves/twoway/churn      time:   [521.59 µs 523.03 µs 524.24 µs]
+Benchmarking moves/back-fresh/churn
+Benchmarking moves/back-fresh/churn: Warming up for 3.0000 s
+Benchmarking moves/back-fresh/churn: Collecting 10 samples in estimated 4.0525 s (2365 iterations)
+Benchmarking moves/back-fresh/churn: Analyzing
+moves/back-fresh/churn  time:   [501.08 µs 501.40 µs 502.22 µs]
+Benchmarking moves/twoway-fresh/churn
+Benchmarking moves/twoway-fresh/churn: Warming up for 3.0000 s
+Benchmarking moves/twoway-fresh/churn: Collecting 10 samples in estimated 4.0085 s (2365 iterations)
+Benchmarking moves/twoway-fresh/churn: Analyzing
+moves/twoway-fresh/churn
+                        time:   [516.05 µs 516.99 µs 519.19 µs]
+Benchmarking moves/back-nosort/churn
+Benchmarking moves/back-nosort/churn: Warming up for 3.0000 s
+Benchmarking moves/back-nosort/churn: Collecting 10 samples in estimated 4.0173 s (2365 iterations)
+Benchmarking moves/back-nosort/churn: Analyzing
+moves/back-nosort/churn time:   [494.43 µs 495.90 µs 498.16 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking moves/baseline/lazy
+Benchmarking moves/baseline/lazy: Warming up for 3.0000 s
+Benchmarking moves/baseline/lazy: Collecting 10 samples in estimated 4.0572 s (1320 iterations)
+Benchmarking moves/baseline/lazy: Analyzing
+moves/baseline/lazy     time:   [1.5309 ms 1.5364 ms 1.5424 ms]
+Benchmarking moves/pk/lazy
+Benchmarking moves/pk/lazy: Warming up for 3.0000 s
+Benchmarking moves/pk/lazy: Collecting 10 samples in estimated 7.5666 s (20 iterations)
+Benchmarking moves/pk/lazy: Analyzing
+moves/pk/lazy           time:   [377.07 ms 378.08 ms 378.93 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking moves/back/lazy
+Benchmarking moves/back/lazy: Warming up for 3.0000 s
+Benchmarking moves/back/lazy: Collecting 10 samples in estimated 4.0799 s (1595 iterations)
+Benchmarking moves/back/lazy: Analyzing
+moves/back/lazy         time:   [988.32 µs 991.23 µs 995.64 µs]
+Benchmarking moves/twoway/lazy
+Benchmarking moves/twoway/lazy: Warming up for 3.0000 s
+Benchmarking moves/twoway/lazy: Collecting 10 samples in estimated 4.0822 s (1595 iterations)
+Benchmarking moves/twoway/lazy: Analyzing
+moves/twoway/lazy       time:   [943.54 µs 944.03 µs 944.50 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking moves/back-fresh/lazy
+Benchmarking moves/back-fresh/lazy: Warming up for 3.0000 s
+Benchmarking moves/back-fresh/lazy: Collecting 10 samples in estimated 4.0834 s (1650 iterations)
+Benchmarking moves/back-fresh/lazy: Analyzing
+moves/back-fresh/lazy   time:   [901.53 µs 902.91 µs 905.43 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking moves/twoway-fresh/lazy
+Benchmarking moves/twoway-fresh/lazy: Warming up for 3.0000 s
+Benchmarking moves/twoway-fresh/lazy: Collecting 10 samples in estimated 4.0010 s (1595 iterations)
+Benchmarking moves/twoway-fresh/lazy: Analyzing
+moves/twoway-fresh/lazy time:   [923.03 µs 926.30 µs 928.62 µs]
+Benchmarking moves/back-nosort/lazy
+Benchmarking moves/back-nosort/lazy: Warming up for 3.0000 s
+Benchmarking moves/back-nosort/lazy: Collecting 10 samples in estimated 4.0423 s (1650 iterations)
+Benchmarking moves/back-nosort/lazy: Analyzing
+moves/back-nosort/lazy  time:   [892.80 µs 899.22 µs 907.35 µs]
+
+Benchmarking build/baseline/lazy
+Benchmarking build/baseline/lazy: Warming up for 3.0000 s
+Benchmarking build/baseline/lazy: Collecting 20 samples in estimated 4.2555 s (2100 iterations)
+Benchmarking build/baseline/lazy: Analyzing
+build/baseline/lazy     time:   [518.50 µs 519.00 µs 519.48 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking build/pk/lazy
+Benchmarking build/pk/lazy: Warming up for 3.0000 s
+Benchmarking build/pk/lazy: Collecting 20 samples in estimated 4.3488 s (2100 iterations)
+Benchmarking build/pk/lazy: Analyzing
+build/pk/lazy           time:   [548.97 µs 549.79 µs 550.71 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking build/om/lazy
+Benchmarking build/om/lazy: Warming up for 3.0000 s
+Benchmarking build/om/lazy: Collecting 20 samples in estimated 4.1371 s (1890 iterations)
+Benchmarking build/om/lazy: Analyzing
+build/om/lazy           time:   [588.56 µs 589.73 µs 591.22 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+
+Benchmarking adversarial/baseline/u10-d10
+Benchmarking adversarial/baseline/u10-d10: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u10-d10: Collecting 10 samples in estimated 500.06 ms (261k iterations)
+Benchmarking adversarial/baseline/u10-d10: Analyzing
+adversarial/baseline/u10-d10
+                        time:   [1.7486 µs 1.7531 µs 1.7589 µs]
+Benchmarking adversarial/pk/u10-d10
+Benchmarking adversarial/pk/u10-d10: Warming up for 200.00 ms
+Benchmarking adversarial/pk/u10-d10: Collecting 10 samples in estimated 500.32 ms (68k iterations)
+Benchmarking adversarial/pk/u10-d10: Analyzing
+adversarial/pk/u10-d10  time:   [6.9671 µs 7.0213 µs 7.1018 µs]
+Benchmarking adversarial/back/u10-d10
+Benchmarking adversarial/back/u10-d10: Warming up for 200.00 ms
+Benchmarking adversarial/back/u10-d10: Collecting 10 samples in estimated 500.26 ms (87k iterations)
+Benchmarking adversarial/back/u10-d10: Analyzing
+adversarial/back/u10-d10
+                        time:   [5.1181 µs 5.1207 µs 5.1245 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial/twoway/u10-d10
+Benchmarking adversarial/twoway/u10-d10: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u10-d10: Collecting 10 samples in estimated 500.34 ms (67k iterations)
+Benchmarking adversarial/twoway/u10-d10: Analyzing
+adversarial/twoway/u10-d10
+                        time:   [6.9526 µs 6.9635 µs 6.9693 µs]
+Benchmarking adversarial/back-fresh/u10-d10
+Benchmarking adversarial/back-fresh/u10-d10: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u10-d10: Collecting 10 samples in estimated 500.17 ms (105k iterations)
+Benchmarking adversarial/back-fresh/u10-d10: Analyzing
+adversarial/back-fresh/u10-d10
+                        time:   [3.9687 µs 4.0085 µs 4.1138 µs]
+Benchmarking adversarial/twoway-fresh/u10-d10
+Benchmarking adversarial/twoway-fresh/u10-d10: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u10-d10: Collecting 10 samples in estimated 500.21 ms (80k iterations)
+Benchmarking adversarial/twoway-fresh/u10-d10: Analyzing
+adversarial/twoway-fresh/u10-d10
+                        time:   [5.7083 µs 5.7136 µs 5.7198 µs]
+Benchmarking adversarial/back-nosort/u10-d10
+Benchmarking adversarial/back-nosort/u10-d10: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u10-d10: Collecting 10 samples in estimated 500.02 ms (111k iterations)
+Benchmarking adversarial/back-nosort/u10-d10: Analyzing
+adversarial/back-nosort/u10-d10
+                        time:   [3.8592 µs 3.8665 µs 3.8742 µs]
+Benchmarking adversarial/baseline/u10-d100
+Benchmarking adversarial/baseline/u10-d100: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u10-d100: Collecting 10 samples in estimated 500.12 ms (218k iterations)
+Benchmarking adversarial/baseline/u10-d100: Analyzing
+adversarial/baseline/u10-d100
+                        time:   [1.8588 µs 1.9974 µs 2.1866 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low severe
+Benchmarking adversarial/pk/u10-d100
+Benchmarking adversarial/pk/u10-d100: Warming up for 200.00 ms
+Benchmarking adversarial/pk/u10-d100: Collecting 10 samples in estimated 500.36 ms (9240 iterations)
+Benchmarking adversarial/pk/u10-d100: Analyzing
+adversarial/pk/u10-d100 time:   [52.288 µs 52.895 µs 53.387 µs]
+Benchmarking adversarial/back/u10-d100
+Benchmarking adversarial/back/u10-d100: Warming up for 200.00 ms
+Benchmarking adversarial/back/u10-d100: Collecting 10 samples in estimated 500.14 ms (84k iterations)
+Benchmarking adversarial/back/u10-d100: Analyzing
+adversarial/back/u10-d100
+                        time:   [5.2575 µs 5.2868 µs 5.3247 µs]
+Benchmarking adversarial/twoway/u10-d100
+Benchmarking adversarial/twoway/u10-d100: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u10-d100: Collecting 10 samples in estimated 500.03 ms (61k iterations)
+Benchmarking adversarial/twoway/u10-d100: Analyzing
+adversarial/twoway/u10-d100
+                        time:   [7.4326 µs 7.4448 µs 7.4605 µs]
+Benchmarking adversarial/back-fresh/u10-d100
+Benchmarking adversarial/back-fresh/u10-d100: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u10-d100: Collecting 10 samples in estimated 500.19 ms (109k iterations)
+Benchmarking adversarial/back-fresh/u10-d100: Analyzing
+adversarial/back-fresh/u10-d100
+                        time:   [4.2904 µs 4.3467 µs 4.3674 µs]
+Benchmarking adversarial/twoway-fresh/u10-d100
+Benchmarking adversarial/twoway-fresh/u10-d100: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u10-d100: Collecting 10 samples in estimated 500.26 ms (71k iterations)
+Benchmarking adversarial/twoway-fresh/u10-d100: Analyzing
+adversarial/twoway-fresh/u10-d100
+                        time:   [6.2512 µs 6.2666 µs 6.2824 µs]
+Benchmarking adversarial/back-nosort/u10-d100
+Benchmarking adversarial/back-nosort/u10-d100: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u10-d100: Collecting 10 samples in estimated 500.15 ms (110k iterations)
+Benchmarking adversarial/back-nosort/u10-d100: Analyzing
+adversarial/back-nosort/u10-d100
+                        time:   [4.1199 µs 4.2888 µs 4.4147 µs]
+Benchmarking adversarial/baseline/u10-d1000
+Benchmarking adversarial/baseline/u10-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u10-d1000: Collecting 10 samples in estimated 500.05 ms (213k iterations)
+Benchmarking adversarial/baseline/u10-d1000: Analyzing
+adversarial/baseline/u10-d1000
+                        time:   [2.0826 µs 2.1402 µs 2.2207 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking adversarial/pk/u10-d1000
+Benchmarking adversarial/pk/u10-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/pk/u10-d1000: Collecting 10 samples in estimated 524.35 ms (770 iterations)
+Benchmarking adversarial/pk/u10-d1000: Analyzing
+adversarial/pk/u10-d1000
+                        time:   [677.45 µs 679.07 µs 682.13 µs]
+Benchmarking adversarial/back/u10-d1000
+Benchmarking adversarial/back/u10-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/back/u10-d1000: Collecting 10 samples in estimated 500.17 ms (79k iterations)
+Benchmarking adversarial/back/u10-d1000: Analyzing
+adversarial/back/u10-d1000
+                        time:   [5.1077 µs 5.1271 µs 5.1384 µs]
+Benchmarking adversarial/twoway/u10-d1000
+Benchmarking adversarial/twoway/u10-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u10-d1000: Collecting 10 samples in estimated 500.06 ms (57k iterations)
+Benchmarking adversarial/twoway/u10-d1000: Analyzing
+adversarial/twoway/u10-d1000
+                        time:   [7.3559 µs 7.3796 µs 7.3968 µs]
+Benchmarking adversarial/back-fresh/u10-d1000
+Benchmarking adversarial/back-fresh/u10-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u10-d1000: Collecting 10 samples in estimated 500.01 ms (93k iterations)
+Benchmarking adversarial/back-fresh/u10-d1000: Analyzing
+adversarial/back-fresh/u10-d1000
+                        time:   [4.2530 µs 4.2896 µs 4.3065 µs]
+Benchmarking adversarial/twoway-fresh/u10-d1000
+Benchmarking adversarial/twoway-fresh/u10-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u10-d1000: Collecting 10 samples in estimated 500.11 ms (65k iterations)
+Benchmarking adversarial/twoway-fresh/u10-d1000: Analyzing
+adversarial/twoway-fresh/u10-d1000
+                        time:   [6.2376 µs 6.2700 µs 6.2885 µs]
+Benchmarking adversarial/back-nosort/u10-d1000
+Benchmarking adversarial/back-nosort/u10-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u10-d1000: Collecting 10 samples in estimated 500.08 ms (99k iterations)
+Benchmarking adversarial/back-nosort/u10-d1000: Analyzing
+adversarial/back-nosort/u10-d1000
+                        time:   [3.8182 µs 3.8256 µs 3.8374 µs]
+Benchmarking adversarial/baseline/u10-d10000
+Benchmarking adversarial/baseline/u10-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u10-d10000: Collecting 10 samples in estimated 500.07 ms (146k iterations)
+Benchmarking adversarial/baseline/u10-d10000: Analyzing
+adversarial/baseline/u10-d10000
+                        time:   [1.6777 µs 1.8231 µs 1.9594 µs]
+Benchmarking adversarial/pk/u10-d10000
+Benchmarking adversarial/pk/u10-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/pk/u10-d10000: Collecting 10 samples in estimated 952.51 ms (110 iterations)
+Benchmarking adversarial/pk/u10-d10000: Analyzing
+adversarial/pk/u10-d10000
+                        time:   [8.8462 ms 8.9399 ms 9.0178 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking adversarial/back/u10-d10000
+Benchmarking adversarial/back/u10-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/back/u10-d10000: Collecting 10 samples in estimated 500.30 ms (39k iterations)
+Benchmarking adversarial/back/u10-d10000: Analyzing
+adversarial/back/u10-d10000
+                        time:   [5.5569 µs 5.5688 µs 5.5819 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low mild
+  2 (20.00%) high severe
+Benchmarking adversarial/twoway/u10-d10000
+Benchmarking adversarial/twoway/u10-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u10-d10000: Collecting 10 samples in estimated 500.36 ms (30k iterations)
+Benchmarking adversarial/twoway/u10-d10000: Analyzing
+adversarial/twoway/u10-d10000
+                        time:   [7.9276 µs 7.9611 µs 7.9972 µs]
+Benchmarking adversarial/back-fresh/u10-d10000
+Benchmarking adversarial/back-fresh/u10-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u10-d10000: Collecting 10 samples in estimated 500.23 ms (43k iterations)
+Benchmarking adversarial/back-fresh/u10-d10000: Analyzing
+adversarial/back-fresh/u10-d10000
+                        time:   [4.1750 µs 4.1875 µs 4.2198 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking adversarial/twoway-fresh/u10-d10000
+Benchmarking adversarial/twoway-fresh/u10-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u10-d10000: Collecting 10 samples in estimated 500.17 ms (32k iterations)
+Benchmarking adversarial/twoway-fresh/u10-d10000: Analyzing
+adversarial/twoway-fresh/u10-d10000
+                        time:   [6.6176 µs 6.6286 µs 6.6388 µs]
+Benchmarking adversarial/back-nosort/u10-d10000
+Benchmarking adversarial/back-nosort/u10-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u10-d10000: Collecting 10 samples in estimated 500.15 ms (44k iterations)
+Benchmarking adversarial/back-nosort/u10-d10000: Analyzing
+adversarial/back-nosort/u10-d10000
+                        time:   [4.1339 µs 4.1536 µs 4.1904 µs]
+Benchmarking adversarial/baseline/u100-d10
+Benchmarking adversarial/baseline/u100-d10: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u100-d10: Collecting 10 samples in estimated 500.15 ms (32k iterations)
+Benchmarking adversarial/baseline/u100-d10: Analyzing
+adversarial/baseline/u100-d10
+                        time:   [13.406 µs 14.421 µs 15.286 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking adversarial/pk/u100-d10
+Benchmarking adversarial/pk/u100-d10: Warming up for 200.00 ms
+Benchmarking adversarial/pk/u100-d10: Collecting 10 samples in estimated 500.27 ms (8580 iterations)
+Benchmarking adversarial/pk/u100-d10: Analyzing
+adversarial/pk/u100-d10 time:   [55.888 µs 56.026 µs 56.293 µs]
+Benchmarking adversarial/back/u100-d10
+Benchmarking adversarial/back/u100-d10: Warming up for 200.00 ms
+Benchmarking adversarial/back/u100-d10: Collecting 10 samples in estimated 500.45 ms (9460 iterations)
+Benchmarking adversarial/back/u100-d10: Analyzing
+adversarial/back/u100-d10
+                        time:   [51.472 µs 51.798 µs 52.172 µs]
+Benchmarking adversarial/twoway/u100-d10
+Benchmarking adversarial/twoway/u100-d10: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u100-d10: Collecting 10 samples in estimated 500.04 ms (62k iterations)
+Benchmarking adversarial/twoway/u100-d10: Analyzing
+adversarial/twoway/u100-d10
+                        time:   [6.2462 µs 6.2651 µs 6.2894 µs]
+Benchmarking adversarial/back-fresh/u100-d10
+Benchmarking adversarial/back-fresh/u100-d10: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u100-d10: Collecting 10 samples in estimated 501.62 ms (12k iterations)
+Benchmarking adversarial/back-fresh/u100-d10: Analyzing
+adversarial/back-fresh/u100-d10
+                        time:   [40.137 µs 40.347 µs 40.594 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial/twoway-fresh/u100-d10
+Benchmarking adversarial/twoway-fresh/u100-d10: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u100-d10: Collecting 10 samples in estimated 500.03 ms (61k iterations)
+Benchmarking adversarial/twoway-fresh/u100-d10: Analyzing
+adversarial/twoway-fresh/u100-d10
+                        time:   [6.3863 µs 6.3953 µs 6.4058 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial/back-nosort/u100-d10
+Benchmarking adversarial/back-nosort/u100-d10: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u100-d10: Collecting 10 samples in estimated 500.02 ms (16k iterations)
+Benchmarking adversarial/back-nosort/u100-d10: Analyzing
+adversarial/back-nosort/u100-d10
+                        time:   [29.339 µs 29.347 µs 29.360 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking adversarial/baseline/u100-d100
+Benchmarking adversarial/baseline/u100-d100: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u100-d100: Collecting 10 samples in estimated 500.05 ms (32k iterations)
+Benchmarking adversarial/baseline/u100-d100: Analyzing
+adversarial/baseline/u100-d100
+                        time:   [14.361 µs 15.168 µs 15.526 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking adversarial/pk/u100-d100
+Benchmarking adversarial/pk/u100-d100: Warming up for 200.00 ms
+Benchmarking adversarial/pk/u100-d100: Collecting 10 samples in estimated 503.30 ms (5005 iterations)
+Benchmarking adversarial/pk/u100-d100: Analyzing
+adversarial/pk/u100-d100
+                        time:   [98.544 µs 98.629 µs 98.797 µs]
+Benchmarking adversarial/back/u100-d100
+Benchmarking adversarial/back/u100-d100: Warming up for 200.00 ms
+Benchmarking adversarial/back/u100-d100: Collecting 10 samples in estimated 500.73 ms (9515 iterations)
+Benchmarking adversarial/back/u100-d100: Analyzing
+adversarial/back/u100-d100
+                        time:   [50.714 µs 50.741 µs 50.795 µs]
+Benchmarking adversarial/twoway/u100-d100
+Benchmarking adversarial/twoway/u100-d100: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u100-d100: Collecting 10 samples in estimated 501.81 ms (7040 iterations)
+Benchmarking adversarial/twoway/u100-d100: Analyzing
+adversarial/twoway/u100-d100
+                        time:   [69.167 µs 69.197 µs 69.223 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking adversarial/back-fresh/u100-d100
+Benchmarking adversarial/back-fresh/u100-d100: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u100-d100: Collecting 10 samples in estimated 500.46 ms (12k iterations)
+Benchmarking adversarial/back-fresh/u100-d100: Analyzing
+adversarial/back-fresh/u100-d100
+                        time:   [39.503 µs 39.692 µs 39.986 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking adversarial/twoway-fresh/u100-d100
+Benchmarking adversarial/twoway-fresh/u100-d100: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u100-d100: Collecting 10 samples in estimated 502.74 ms (8470 iterations)
+Benchmarking adversarial/twoway-fresh/u100-d100: Analyzing
+adversarial/twoway-fresh/u100-d100
+                        time:   [57.389 µs 57.503 µs 57.563 µs]
+Benchmarking adversarial/back-nosort/u100-d100
+Benchmarking adversarial/back-nosort/u100-d100: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u100-d100: Collecting 10 samples in estimated 500.40 ms (16k iterations)
+Benchmarking adversarial/back-nosort/u100-d100: Analyzing
+adversarial/back-nosort/u100-d100
+                        time:   [29.159 µs 29.251 µs 29.372 µs]
+Benchmarking adversarial/baseline/u100-d1000
+Benchmarking adversarial/baseline/u100-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u100-d1000: Collecting 10 samples in estimated 500.41 ms (41k iterations)
+Benchmarking adversarial/baseline/u100-d1000: Analyzing
+adversarial/baseline/u100-d1000
+                        time:   [12.930 µs 13.663 µs 14.153 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high severe
+Benchmarking adversarial/pk/u100-d1000
+Benchmarking adversarial/pk/u100-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/pk/u100-d1000: Collecting 10 samples in estimated 533.08 ms (715 iterations)
+Benchmarking adversarial/pk/u100-d1000: Analyzing
+adversarial/pk/u100-d1000
+                        time:   [743.61 µs 744.56 µs 745.52 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial/back/u100-d1000
+Benchmarking adversarial/back/u100-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/back/u100-d1000: Collecting 10 samples in estimated 501.90 ms (9570 iterations)
+Benchmarking adversarial/back/u100-d1000: Analyzing
+adversarial/back/u100-d1000
+                        time:   [50.210 µs 50.276 µs 50.331 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking adversarial/twoway/u100-d1000
+Benchmarking adversarial/twoway/u100-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u100-d1000: Collecting 10 samples in estimated 503.03 ms (6930 iterations)
+Benchmarking adversarial/twoway/u100-d1000: Analyzing
+adversarial/twoway/u100-d1000
+                        time:   [69.450 µs 69.585 µs 69.809 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial/back-fresh/u100-d1000
+Benchmarking adversarial/back-fresh/u100-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u100-d1000: Collecting 10 samples in estimated 500.18 ms (12k iterations)
+Benchmarking adversarial/back-fresh/u100-d1000: Analyzing
+adversarial/back-fresh/u100-d1000
+                        time:   [38.929 µs 39.029 µs 39.255 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking adversarial/twoway-fresh/u100-d1000
+Benchmarking adversarial/twoway-fresh/u100-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u100-d1000: Collecting 10 samples in estimated 501.02 ms (8140 iterations)
+Benchmarking adversarial/twoway-fresh/u100-d1000: Analyzing
+adversarial/twoway-fresh/u100-d1000
+                        time:   [58.760 µs 58.779 µs 58.792 µs]
+Benchmarking adversarial/back-nosort/u100-d1000
+Benchmarking adversarial/back-nosort/u100-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u100-d1000: Collecting 10 samples in estimated 500.51 ms (16k iterations)
+Benchmarking adversarial/back-nosort/u100-d1000: Analyzing
+adversarial/back-nosort/u100-d1000
+                        time:   [28.202 µs 28.258 µs 28.339 µs]
+Found 4 outliers among 10 measurements (40.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking adversarial/baseline/u100-d10000
+Benchmarking adversarial/baseline/u100-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u100-d10000: Collecting 10 samples in estimated 500.74 ms (35k iterations)
+Benchmarking adversarial/baseline/u100-d10000: Analyzing
+adversarial/baseline/u100-d10000
+                        time:   [9.9146 µs 11.560 µs 12.505 µs]
+Benchmarking adversarial/pk/u100-d10000
+Benchmarking adversarial/pk/u100-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/pk/u100-d10000: Collecting 10 samples in estimated 999.67 ms (110 iterations)
+Benchmarking adversarial/pk/u100-d10000: Analyzing
+adversarial/pk/u100-d10000
+                        time:   [9.0172 ms 9.0393 ms 9.0854 ms]
+Benchmarking adversarial/back/u100-d10000
+Benchmarking adversarial/back/u100-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/back/u100-d10000: Collecting 10 samples in estimated 502.39 ms (8635 iterations)
+Benchmarking adversarial/back/u100-d10000: Analyzing
+adversarial/back/u100-d10000
+                        time:   [49.680 µs 49.692 µs 49.702 µs]
+Benchmarking adversarial/twoway/u100-d10000
+Benchmarking adversarial/twoway/u100-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u100-d10000: Collecting 10 samples in estimated 500.20 ms (6215 iterations)
+Benchmarking adversarial/twoway/u100-d10000: Analyzing
+adversarial/twoway/u100-d10000
+                        time:   [70.505 µs 70.603 µs 70.700 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking adversarial/back-fresh/u100-d10000
+Benchmarking adversarial/back-fresh/u100-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u100-d10000: Collecting 10 samples in estimated 502.30 ms (11k iterations)
+Benchmarking adversarial/back-fresh/u100-d10000: Analyzing
+adversarial/back-fresh/u100-d10000
+                        time:   [38.921 µs 38.956 µs 39.000 µs]
+Benchmarking adversarial/twoway-fresh/u100-d10000
+Benchmarking adversarial/twoway-fresh/u100-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u100-d10000: Collecting 10 samples in estimated 502.44 ms (7260 iterations)
+Benchmarking adversarial/twoway-fresh/u100-d10000: Analyzing
+adversarial/twoway-fresh/u100-d10000
+                        time:   [58.896 µs 58.949 µs 58.988 µs]
+Benchmarking adversarial/back-nosort/u100-d10000
+Benchmarking adversarial/back-nosort/u100-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u100-d10000: Collecting 10 samples in estimated 500.94 ms (14k iterations)
+Benchmarking adversarial/back-nosort/u100-d10000: Analyzing
+adversarial/back-nosort/u100-d10000
+                        time:   [28.434 µs 28.481 µs 28.599 µs]
+Benchmarking adversarial/baseline/u1000-d10
+Benchmarking adversarial/baseline/u1000-d10: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u1000-d10: Collecting 10 samples in estimated 502.50 ms (5115 iterations)
+Benchmarking adversarial/baseline/u1000-d10: Analyzing
+adversarial/baseline/u1000-d10
+                        time:   [94.780 µs 95.139 µs 95.918 µs]
+Benchmarking adversarial/pk/u1000-d10
+Benchmarking adversarial/pk/u1000-d10: Warming up for 200.00 ms
+Benchmarking adversarial/pk/u1000-d10: Collecting 10 samples in estimated 538.82 ms (660 iterations)
+Benchmarking adversarial/pk/u1000-d10: Analyzing
+adversarial/pk/u1000-d10
+                        time:   [813.94 µs 821.37 µs 824.97 µs]
+Benchmarking adversarial/back/u1000-d10
+Benchmarking adversarial/back/u1000-d10: Warming up for 200.00 ms
+Benchmarking adversarial/back/u1000-d10: Collecting 10 samples in estimated 510.73 ms (660 iterations)
+Benchmarking adversarial/back/u1000-d10: Analyzing
+adversarial/back/u1000-d10
+                        time:   [761.57 µs 762.84 µs 763.92 µs]
+Benchmarking adversarial/twoway/u1000-d10
+Benchmarking adversarial/twoway/u1000-d10: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u1000-d10: Collecting 10 samples in estimated 500.82 ms (25k iterations)
+Benchmarking adversarial/twoway/u1000-d10: Analyzing
+adversarial/twoway/u1000-d10
+                        time:   [7.2396 µs 7.2446 µs 7.2529 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial/back-fresh/u1000-d10
+Benchmarking adversarial/back-fresh/u1000-d10: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u1000-d10: Collecting 10 samples in estimated 512.67 ms (880 iterations)
+Benchmarking adversarial/back-fresh/u1000-d10: Analyzing
+adversarial/back-fresh/u1000-d10
+                        time:   [533.27 µs 537.20 µs 543.42 µs]
+Benchmarking adversarial/twoway-fresh/u1000-d10
+Benchmarking adversarial/twoway-fresh/u1000-d10: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u1000-d10: Collecting 10 samples in estimated 500.72 ms (25k iterations)
+Benchmarking adversarial/twoway-fresh/u1000-d10: Analyzing
+adversarial/twoway-fresh/u1000-d10
+                        time:   [6.9612 µs 6.9982 µs 7.0401 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking adversarial/back-nosort/u1000-d10
+Benchmarking adversarial/back-nosort/u1000-d10: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u1000-d10: Collecting 10 samples in estimated 500.04 ms (1760 iterations)
+Benchmarking adversarial/back-nosort/u1000-d10: Analyzing
+adversarial/back-nosort/u1000-d10
+                        time:   [281.71 µs 283.42 µs 285.90 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low mild
+Benchmarking adversarial/baseline/u1000-d100
+Benchmarking adversarial/baseline/u1000-d100: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u1000-d100: Collecting 10 samples in estimated 504.83 ms (5170 iterations)
+Benchmarking adversarial/baseline/u1000-d100: Analyzing
+adversarial/baseline/u1000-d100
+                        time:   [95.054 µs 95.264 µs 95.487 µs]
+Benchmarking adversarial/pk/u1000-d100
+Benchmarking adversarial/pk/u1000-d100: Warming up for 200.00 ms
+Benchmarking adversarial/pk/u1000-d100: Collecting 10 samples in estimated 508.03 ms (605 iterations)
+Benchmarking adversarial/pk/u1000-d100: Analyzing
+adversarial/pk/u1000-d100
+                        time:   [798.88 µs 804.99 µs 809.44 µs]
+Benchmarking adversarial/back/u1000-d100
+Benchmarking adversarial/back/u1000-d100: Warming up for 200.00 ms
+Benchmarking adversarial/back/u1000-d100: Collecting 10 samples in estimated 517.92 ms (660 iterations)
+Benchmarking adversarial/back/u1000-d100: Analyzing
+adversarial/back/u1000-d100
+                        time:   [772.20 µs 774.52 µs 777.66 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking adversarial/twoway/u1000-d100
+Benchmarking adversarial/twoway/u1000-d100: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u1000-d100: Collecting 10 samples in estimated 501.68 ms (6490 iterations)
+Benchmarking adversarial/twoway/u1000-d100: Analyzing
+adversarial/twoway/u1000-d100
+                        time:   [64.115 µs 64.173 µs 64.259 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking adversarial/back-fresh/u1000-d100
+Benchmarking adversarial/back-fresh/u1000-d100: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u1000-d100: Collecting 10 samples in estimated 526.80 ms (880 iterations)
+Benchmarking adversarial/back-fresh/u1000-d100: Analyzing
+adversarial/back-fresh/u1000-d100
+                        time:   [523.18 µs 531.24 µs 540.16 µs]
+Benchmarking adversarial/twoway-fresh/u1000-d100
+Benchmarking adversarial/twoway-fresh/u1000-d100: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u1000-d100: Collecting 10 samples in estimated 501.71 ms (6490 iterations)
+Benchmarking adversarial/twoway-fresh/u1000-d100: Analyzing
+adversarial/twoway-fresh/u1000-d100
+                        time:   [64.366 µs 64.544 µs 64.709 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking adversarial/back-nosort/u1000-d100
+Benchmarking adversarial/back-nosort/u1000-d100: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u1000-d100: Collecting 10 samples in estimated 508.75 ms (1815 iterations)
+Benchmarking adversarial/back-nosort/u1000-d100: Analyzing
+adversarial/back-nosort/u1000-d100
+                        time:   [267.38 µs 267.46 µs 267.58 µs]
+Benchmarking adversarial/baseline/u1000-d1000
+Benchmarking adversarial/baseline/u1000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u1000-d1000: Collecting 10 samples in estimated 501.28 ms (5280 iterations)
+Benchmarking adversarial/baseline/u1000-d1000: Analyzing
+adversarial/baseline/u1000-d1000
+                        time:   [91.880 µs 92.181 µs 92.781 µs]
+Benchmarking adversarial/pk/u1000-d1000
+Benchmarking adversarial/pk/u1000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/pk/u1000-d1000: Collecting 10 samples in estimated 517.47 ms (385 iterations)
+Benchmarking adversarial/pk/u1000-d1000: Analyzing
+adversarial/pk/u1000-d1000
+                        time:   [1.3319 ms 1.3340 ms 1.3372 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial/back/u1000-d1000
+Benchmarking adversarial/back/u1000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/back/u1000-d1000: Collecting 10 samples in estimated 514.09 ms (660 iterations)
+Benchmarking adversarial/back/u1000-d1000: Analyzing
+adversarial/back/u1000-d1000
+                        time:   [766.72 µs 767.13 µs 767.68 µs]
+Found 4 outliers among 10 measurements (40.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking adversarial/twoway/u1000-d1000
+Benchmarking adversarial/twoway/u1000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u1000-d1000: Collecting 10 samples in estimated 528.07 ms (550 iterations)
+Benchmarking adversarial/twoway/u1000-d1000: Analyzing
+adversarial/twoway/u1000-d1000
+                        time:   [949.62 µs 951.92 µs 956.60 µs]
+Benchmarking adversarial/back-fresh/u1000-d1000
+Benchmarking adversarial/back-fresh/u1000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u1000-d1000: Collecting 10 samples in estimated 506.41 ms (935 iterations)
+Benchmarking adversarial/back-fresh/u1000-d1000: Analyzing
+adversarial/back-fresh/u1000-d1000
+                        time:   [497.78 µs 515.37 µs 535.54 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial/twoway-fresh/u1000-d1000
+Benchmarking adversarial/twoway-fresh/u1000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u1000-d1000: Collecting 10 samples in estimated 543.31 ms (660 iterations)
+Benchmarking adversarial/twoway-fresh/u1000-d1000: Analyzing
+adversarial/twoway-fresh/u1000-d1000
+                        time:   [810.46 µs 814.04 µs 819.44 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low mild
+Benchmarking adversarial/back-nosort/u1000-d1000
+Benchmarking adversarial/back-nosort/u1000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u1000-d1000: Collecting 10 samples in estimated 503.28 ms (1815 iterations)
+Benchmarking adversarial/back-nosort/u1000-d1000: Analyzing
+adversarial/back-nosort/u1000-d1000
+                        time:   [264.44 µs 265.05 µs 265.32 µs]
+Benchmarking adversarial/baseline/u1000-d10000
+Benchmarking adversarial/baseline/u1000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u1000-d10000: Collecting 10 samples in estimated 501.87 ms (5555 iterations)
+Benchmarking adversarial/baseline/u1000-d10000: Analyzing
+adversarial/baseline/u1000-d10000
+                        time:   [86.692 µs 86.865 µs 87.035 µs]
+Benchmarking adversarial/pk/u1000-d10000
+Benchmarking adversarial/pk/u1000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/pk/u1000-d10000: Collecting 10 samples in estimated 950.05 ms (110 iterations)
+Benchmarking adversarial/pk/u1000-d10000: Analyzing
+adversarial/pk/u1000-d10000
+                        time:   [8.5580 ms 8.5772 ms 8.5908 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking adversarial/back/u1000-d10000
+Benchmarking adversarial/back/u1000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/back/u1000-d10000: Collecting 10 samples in estimated 506.98 ms (660 iterations)
+Benchmarking adversarial/back/u1000-d10000: Analyzing
+adversarial/back/u1000-d10000
+                        time:   [781.08 µs 786.95 µs 790.39 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking adversarial/twoway/u1000-d10000
+Benchmarking adversarial/twoway/u1000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u1000-d10000: Collecting 10 samples in estimated 549.18 ms (550 iterations)
+Benchmarking adversarial/twoway/u1000-d10000: Analyzing
+adversarial/twoway/u1000-d10000
+                        time:   [976.64 µs 977.35 µs 977.83 µs]
+Benchmarking adversarial/back-fresh/u1000-d10000
+Benchmarking adversarial/back-fresh/u1000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u1000-d10000: Collecting 10 samples in estimated 524.53 ms (935 iterations)
+Benchmarking adversarial/back-fresh/u1000-d10000: Analyzing
+adversarial/back-fresh/u1000-d10000
+                        time:   [487.08 µs 517.14 µs 545.12 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial/twoway-fresh/u1000-d10000
+Benchmarking adversarial/twoway-fresh/u1000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u1000-d10000: Collecting 10 samples in estimated 510.74 ms (605 iterations)
+Benchmarking adversarial/twoway-fresh/u1000-d10000: Analyzing
+adversarial/twoway-fresh/u1000-d10000
+                        time:   [826.98 µs 828.00 µs 830.55 µs]
+Benchmarking adversarial/back-nosort/u1000-d10000
+Benchmarking adversarial/back-nosort/u1000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u1000-d10000: Collecting 10 samples in estimated 500.96 ms (1815 iterations)
+Benchmarking adversarial/back-nosort/u1000-d10000: Analyzing
+adversarial/back-nosort/u1000-d10000
+                        time:   [262.69 µs 264.33 µs 265.94 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking adversarial/baseline/u10000-d10
+Benchmarking adversarial/baseline/u10000-d10: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u10000-d10: Collecting 10 samples in estimated 563.50 ms (385 iterations)
+Benchmarking adversarial/baseline/u10000-d10: Analyzing
+adversarial/baseline/u10000-d10
+                        time:   [1.4001 ms 1.4015 ms 1.4035 ms]
+Benchmarking adversarial/pk/u10000-d10
+Benchmarking adversarial/pk/u10000-d10: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 581.8ms or enable flat sampling.
+Benchmarking adversarial/pk/u10000-d10: Collecting 10 samples in estimated 581.83 ms (55 iterations)
+Benchmarking adversarial/pk/u10000-d10: Analyzing
+adversarial/pk/u10000-d10
+                        time:   [10.447 ms 10.479 ms 10.524 ms]
+Benchmarking adversarial/back/u10000-d10
+Benchmarking adversarial/back/u10000-d10: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 594.5ms or enable flat sampling.
+Benchmarking adversarial/back/u10000-d10: Collecting 10 samples in estimated 594.48 ms (55 iterations)
+Benchmarking adversarial/back/u10000-d10: Analyzing
+adversarial/back/u10000-d10
+                        time:   [10.364 ms 10.388 ms 10.410 ms]
+Benchmarking adversarial/twoway/u10000-d10
+Benchmarking adversarial/twoway/u10000-d10: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u10000-d10: Collecting 10 samples in estimated 517.06 ms (1210 iterations)
+Benchmarking adversarial/twoway/u10000-d10: Analyzing
+adversarial/twoway/u10000-d10
+                        time:   [12.248 µs 12.409 µs 12.537 µs]
+Benchmarking adversarial/back-fresh/u10000-d10
+Benchmarking adversarial/back-fresh/u10000-d10: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u10000-d10: Collecting 10 samples in estimated 874.73 ms (110 iterations)
+Benchmarking adversarial/back-fresh/u10000-d10: Analyzing
+adversarial/back-fresh/u10000-d10
+                        time:   [8.3474 ms 8.6850 ms 8.8491 ms]
+Benchmarking adversarial/twoway-fresh/u10000-d10
+Benchmarking adversarial/twoway-fresh/u10000-d10: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u10000-d10: Collecting 10 samples in estimated 514.19 ms (1210 iterations)
+Benchmarking adversarial/twoway-fresh/u10000-d10: Analyzing
+adversarial/twoway-fresh/u10000-d10
+                        time:   [11.460 µs 11.627 µs 11.793 µs]
+Benchmarking adversarial/back-nosort/u10000-d10
+Benchmarking adversarial/back-nosort/u10000-d10: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u10000-d10: Collecting 10 samples in estimated 593.64 ms (165 iterations)
+Benchmarking adversarial/back-nosort/u10000-d10: Analyzing
+adversarial/back-nosort/u10000-d10
+                        time:   [3.2228 ms 3.2405 ms 3.2659 ms]
+Benchmarking adversarial/baseline/u10000-d100
+Benchmarking adversarial/baseline/u10000-d100: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u10000-d100: Collecting 10 samples in estimated 576.67 ms (385 iterations)
+Benchmarking adversarial/baseline/u10000-d100: Analyzing
+adversarial/baseline/u10000-d100
+                        time:   [1.4320 ms 1.4331 ms 1.4345 ms]
+Benchmarking adversarial/pk/u10000-d100
+Benchmarking adversarial/pk/u10000-d100: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 577.4ms or enable flat sampling.
+Benchmarking adversarial/pk/u10000-d100: Collecting 10 samples in estimated 577.44 ms (55 iterations)
+Benchmarking adversarial/pk/u10000-d100: Analyzing
+adversarial/pk/u10000-d100
+                        time:   [10.376 ms 10.406 ms 10.448 ms]
+Benchmarking adversarial/back/u10000-d100
+Benchmarking adversarial/back/u10000-d100: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 615.6ms or enable flat sampling.
+Benchmarking adversarial/back/u10000-d100: Collecting 10 samples in estimated 615.63 ms (55 iterations)
+Benchmarking adversarial/back/u10000-d100: Analyzing
+adversarial/back/u10000-d100
+                        time:   [10.707 ms 10.741 ms 10.773 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking adversarial/twoway/u10000-d100
+Benchmarking adversarial/twoway/u10000-d100: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u10000-d100: Collecting 10 samples in estimated 520.85 ms (1045 iterations)
+Benchmarking adversarial/twoway/u10000-d100: Analyzing
+adversarial/twoway/u10000-d100
+                        time:   [74.994 µs 75.479 µs 76.126 µs]
+Benchmarking adversarial/back-fresh/u10000-d100
+Benchmarking adversarial/back-fresh/u10000-d100: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u10000-d100: Collecting 10 samples in estimated 848.74 ms (110 iterations)
+Benchmarking adversarial/back-fresh/u10000-d100: Analyzing
+adversarial/back-fresh/u10000-d100
+                        time:   [6.9890 ms 7.2684 ms 7.4914 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking adversarial/twoway-fresh/u10000-d100
+Benchmarking adversarial/twoway-fresh/u10000-d100: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u10000-d100: Collecting 10 samples in estimated 521.68 ms (1045 iterations)
+Benchmarking adversarial/twoway-fresh/u10000-d100: Analyzing
+adversarial/twoway-fresh/u10000-d100
+                        time:   [75.235 µs 75.624 µs 76.065 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking adversarial/back-nosort/u10000-d100
+Benchmarking adversarial/back-nosort/u10000-d100: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u10000-d100: Collecting 10 samples in estimated 587.80 ms (165 iterations)
+Benchmarking adversarial/back-nosort/u10000-d100: Analyzing
+adversarial/back-nosort/u10000-d100
+                        time:   [3.1833 ms 3.1988 ms 3.2112 ms]
+Benchmarking adversarial/baseline/u10000-d1000
+Benchmarking adversarial/baseline/u10000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u10000-d1000: Collecting 10 samples in estimated 567.51 ms (385 iterations)
+Benchmarking adversarial/baseline/u10000-d1000: Analyzing
+adversarial/baseline/u10000-d1000
+                        time:   [1.4233 ms 1.5229 ms 1.5654 ms]
+Benchmarking adversarial/pk/u10000-d1000
+Benchmarking adversarial/pk/u10000-d1000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 596.1ms or enable flat sampling.
+Benchmarking adversarial/pk/u10000-d1000: Collecting 10 samples in estimated 596.15 ms (55 iterations)
+Benchmarking adversarial/pk/u10000-d1000: Analyzing
+adversarial/pk/u10000-d1000
+                        time:   [10.703 ms 10.737 ms 10.762 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial/back/u10000-d1000
+Benchmarking adversarial/back/u10000-d1000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 569.3ms or enable flat sampling.
+Benchmarking adversarial/back/u10000-d1000: Collecting 10 samples in estimated 569.34 ms (55 iterations)
+Benchmarking adversarial/back/u10000-d1000: Analyzing
+adversarial/back/u10000-d1000
+                        time:   [9.8566 ms 9.8919 ms 9.9323 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial/twoway/u10000-d1000
+Benchmarking adversarial/twoway/u10000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway/u10000-d1000: Collecting 10 samples in estimated 506.57 ms (385 iterations)
+Benchmarking adversarial/twoway/u10000-d1000: Analyzing
+adversarial/twoway/u10000-d1000
+                        time:   [870.03 µs 873.04 µs 878.46 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking adversarial/back-fresh/u10000-d1000
+Benchmarking adversarial/back-fresh/u10000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u10000-d1000: Collecting 10 samples in estimated 819.71 ms (110 iterations)
+Benchmarking adversarial/back-fresh/u10000-d1000: Analyzing
+adversarial/back-fresh/u10000-d1000
+                        time:   [6.9749 ms 7.5400 ms 8.1488 ms]
+Benchmarking adversarial/twoway-fresh/u10000-d1000
+Benchmarking adversarial/twoway-fresh/u10000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/twoway-fresh/u10000-d1000: Collecting 10 samples in estimated 509.82 ms (385 iterations)
+Benchmarking adversarial/twoway-fresh/u10000-d1000: Analyzing
+adversarial/twoway-fresh/u10000-d1000
+                        time:   [871.35 µs 883.67 µs 890.72 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial/back-nosort/u10000-d1000
+Benchmarking adversarial/back-nosort/u10000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u10000-d1000: Collecting 10 samples in estimated 594.89 ms (165 iterations)
+Benchmarking adversarial/back-nosort/u10000-d1000: Analyzing
+adversarial/back-nosort/u10000-d1000
+                        time:   [3.1538 ms 3.1653 ms 3.1922 ms]
+Benchmarking adversarial/baseline/u10000-d10000
+Benchmarking adversarial/baseline/u10000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/baseline/u10000-d10000: Collecting 10 samples in estimated 568.21 ms (385 iterations)
+Benchmarking adversarial/baseline/u10000-d10000: Analyzing
+adversarial/baseline/u10000-d10000
+                        time:   [1.3814 ms 1.3960 ms 1.4087 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking adversarial/pk/u10000-d10000
+Benchmarking adversarial/pk/u10000-d10000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 991.5ms or enable flat sampling.
+Benchmarking adversarial/pk/u10000-d10000: Collecting 10 samples in estimated 991.45 ms (55 iterations)
+Benchmarking adversarial/pk/u10000-d10000: Analyzing
+adversarial/pk/u10000-d10000
+                        time:   [17.834 ms 17.854 ms 17.890 ms]
+Benchmarking adversarial/back/u10000-d10000
+Benchmarking adversarial/back/u10000-d10000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 596.9ms or enable flat sampling.
+Benchmarking adversarial/back/u10000-d10000: Collecting 10 samples in estimated 596.93 ms (55 iterations)
+Benchmarking adversarial/back/u10000-d10000: Analyzing
+adversarial/back/u10000-d10000
+                        time:   [10.308 ms 10.358 ms 10.401 ms]
+Benchmarking adversarial/twoway/u10000-d10000
+Benchmarking adversarial/twoway/u10000-d10000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 660.7ms or enable flat sampling.
+Benchmarking adversarial/twoway/u10000-d10000: Collecting 10 samples in estimated 660.74 ms (55 iterations)
+Benchmarking adversarial/twoway/u10000-d10000: Analyzing
+adversarial/twoway/u10000-d10000
+                        time:   [11.418 ms 11.443 ms 11.471 ms]
+Benchmarking adversarial/back-fresh/u10000-d10000
+Benchmarking adversarial/back-fresh/u10000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/back-fresh/u10000-d10000: Collecting 10 samples in estimated 825.69 ms (110 iterations)
+Benchmarking adversarial/back-fresh/u10000-d10000: Analyzing
+adversarial/back-fresh/u10000-d10000
+                        time:   [7.0111 ms 7.2660 ms 7.4369 ms]
+Benchmarking adversarial/twoway-fresh/u10000-d10000
+Benchmarking adversarial/twoway-fresh/u10000-d10000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 574.0ms or enable flat sampling.
+Benchmarking adversarial/twoway-fresh/u10000-d10000: Collecting 10 samples in estimated 573.96 ms (55 iterations)
+Benchmarking adversarial/twoway-fresh/u10000-d10000: Analyzing
+adversarial/twoway-fresh/u10000-d10000
+                        time:   [9.8820 ms 9.9035 ms 9.9186 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high severe
+Benchmarking adversarial/back-nosort/u10000-d10000
+Benchmarking adversarial/back-nosort/u10000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial/back-nosort/u10000-d10000: Collecting 10 samples in estimated 581.34 ms (165 iterations)
+Benchmarking adversarial/back-nosort/u10000-d10000: Analyzing
+adversarial/back-nosort/u10000-d10000
+                        time:   [3.1259 ms 3.1333 ms 3.1429 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+Benchmarking adversarial-cycle/baseline/u10-d10
+Benchmarking adversarial-cycle/baseline/u10-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u10-d10: Collecting 10 samples in estimated 500.08 ms (140k iterations)
+Benchmarking adversarial-cycle/baseline/u10-d10: Analyzing
+adversarial-cycle/baseline/u10-d10
+                        time:   [2.5234 µs 2.6809 µs 2.8466 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial-cycle/pk/u10-d10
+Benchmarking adversarial-cycle/pk/u10-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u10-d10: Collecting 10 samples in estimated 500.02 ms (130k iterations)
+Benchmarking adversarial-cycle/pk/u10-d10: Analyzing
+adversarial-cycle/pk/u10-d10
+                        time:   [3.5901 µs 3.5981 µs 3.6082 µs]
+Benchmarking adversarial-cycle/back/u10-d10
+Benchmarking adversarial-cycle/back/u10-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u10-d10: Collecting 10 samples in estimated 500.11 ms (153k iterations)
+Benchmarking adversarial-cycle/back/u10-d10: Analyzing
+adversarial-cycle/back/u10-d10
+                        time:   [3.5028 µs 3.5548 µs 3.5778 µs]
+Benchmarking adversarial-cycle/twoway/u10-d10
+Benchmarking adversarial-cycle/twoway/u10-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u10-d10: Collecting 10 samples in estimated 500.09 ms (134k iterations)
+Benchmarking adversarial-cycle/twoway/u10-d10: Analyzing
+adversarial-cycle/twoway/u10-d10
+                        time:   [3.1173 µs 3.1637 µs 3.2053 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking adversarial-cycle/back-nosort/u10-d10
+Benchmarking adversarial-cycle/back-nosort/u10-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u10-d10: Collecting 10 samples in estimated 500.10 ms (152k iterations)
+Benchmarking adversarial-cycle/back-nosort/u10-d10: Analyzing
+adversarial-cycle/back-nosort/u10-d10
+                        time:   [2.9322 µs 3.0553 µs 3.1542 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking adversarial-cycle/baseline/u10-d100
+Benchmarking adversarial-cycle/baseline/u10-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u10-d100: Collecting 10 samples in estimated 500.29 ms (52k iterations)
+Benchmarking adversarial-cycle/baseline/u10-d100: Analyzing
+adversarial-cycle/baseline/u10-d100
+                        time:   [12.011 µs 12.033 µs 12.059 µs]
+Benchmarking adversarial-cycle/pk/u10-d100
+Benchmarking adversarial-cycle/pk/u10-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u10-d100: Collecting 10 samples in estimated 500.62 ms (35k iterations)
+Benchmarking adversarial-cycle/pk/u10-d100: Analyzing
+adversarial-cycle/pk/u10-d100
+                        time:   [13.736 µs 13.748 µs 13.758 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking adversarial-cycle/back/u10-d100
+Benchmarking adversarial-cycle/back/u10-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u10-d100: Collecting 10 samples in estimated 500.29 ms (50k iterations)
+Benchmarking adversarial-cycle/back/u10-d100: Analyzing
+adversarial-cycle/back/u10-d100
+                        time:   [9.3052 µs 9.3560 µs 9.4359 µs]
+Benchmarking adversarial-cycle/twoway/u10-d100
+Benchmarking adversarial-cycle/twoway/u10-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u10-d100: Collecting 10 samples in estimated 500.47 ms (42k iterations)
+Benchmarking adversarial-cycle/twoway/u10-d100: Analyzing
+adversarial-cycle/twoway/u10-d100
+                        time:   [10.945 µs 11.339 µs 11.527 µs]
+Benchmarking adversarial-cycle/back-nosort/u10-d100
+Benchmarking adversarial-cycle/back-nosort/u10-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u10-d100: Collecting 10 samples in estimated 500.03 ms (57k iterations)
+Benchmarking adversarial-cycle/back-nosort/u10-d100: Analyzing
+adversarial-cycle/back-nosort/u10-d100
+                        time:   [7.7825 µs 7.8145 µs 7.8490 µs]
+Benchmarking adversarial-cycle/baseline/u10-d1000
+Benchmarking adversarial-cycle/baseline/u10-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u10-d1000: Collecting 10 samples in estimated 505.62 ms (4620 iterations)
+Benchmarking adversarial-cycle/baseline/u10-d1000: Analyzing
+adversarial-cycle/baseline/u10-d1000
+                        time:   [111.93 µs 111.95 µs 112.00 µs]
+Benchmarking adversarial-cycle/pk/u10-d1000
+Benchmarking adversarial-cycle/pk/u10-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u10-d1000: Collecting 10 samples in estimated 501.39 ms (4180 iterations)
+Benchmarking adversarial-cycle/pk/u10-d1000: Analyzing
+adversarial-cycle/pk/u10-d1000
+                        time:   [119.50 µs 120.36 µs 121.23 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low severe
+Benchmarking adversarial-cycle/back/u10-d1000
+Benchmarking adversarial-cycle/back/u10-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u10-d1000: Collecting 10 samples in estimated 500.45 ms (6215 iterations)
+Benchmarking adversarial-cycle/back/u10-d1000: Analyzing
+adversarial-cycle/back/u10-d1000
+                        time:   [78.985 µs 79.145 µs 79.351 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking adversarial-cycle/twoway/u10-d1000
+Benchmarking adversarial-cycle/twoway/u10-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u10-d1000: Collecting 10 samples in estimated 504.66 ms (5775 iterations)
+Benchmarking adversarial-cycle/twoway/u10-d1000: Analyzing
+adversarial-cycle/twoway/u10-d1000
+                        time:   [85.964 µs 86.217 µs 86.522 µs]
+Benchmarking adversarial-cycle/back-nosort/u10-d1000
+Benchmarking adversarial-cycle/back-nosort/u10-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u10-d1000: Collecting 10 samples in estimated 500.50 ms (7260 iterations)
+Benchmarking adversarial-cycle/back-nosort/u10-d1000: Analyzing
+adversarial-cycle/back-nosort/u10-d1000
+                        time:   [68.128 µs 68.240 µs 68.439 µs]
+Benchmarking adversarial-cycle/baseline/u10-d10000
+Benchmarking adversarial-cycle/baseline/u10-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u10-d10000: Collecting 10 samples in estimated 511.22 ms (825 iterations)
+Benchmarking adversarial-cycle/baseline/u10-d10000: Analyzing
+adversarial-cycle/baseline/u10-d10000
+                        time:   [617.95 µs 618.02 µs 618.06 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high severe
+Benchmarking adversarial-cycle/pk/u10-d10000
+Benchmarking adversarial-cycle/pk/u10-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u10-d10000: Collecting 10 samples in estimated 516.31 ms (550 iterations)
+Benchmarking adversarial-cycle/pk/u10-d10000: Analyzing
+adversarial-cycle/pk/u10-d10000
+                        time:   [767.15 µs 790.74 µs 841.60 µs]
+Benchmarking adversarial-cycle/back/u10-d10000
+Benchmarking adversarial-cycle/back/u10-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u10-d10000: Collecting 10 samples in estimated 504.05 ms (660 iterations)
+Benchmarking adversarial-cycle/back/u10-d10000: Analyzing
+adversarial-cycle/back/u10-d10000
+                        time:   [753.62 µs 756.67 µs 761.66 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking adversarial-cycle/twoway/u10-d10000
+Benchmarking adversarial-cycle/twoway/u10-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u10-d10000: Collecting 10 samples in estimated 528.49 ms (660 iterations)
+Benchmarking adversarial-cycle/twoway/u10-d10000: Analyzing
+adversarial-cycle/twoway/u10-d10000
+                        time:   [789.89 µs 794.10 µs 800.24 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking adversarial-cycle/back-nosort/u10-d10000
+Benchmarking adversarial-cycle/back-nosort/u10-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u10-d10000: Collecting 10 samples in estimated 509.97 ms (825 iterations)
+Benchmarking adversarial-cycle/back-nosort/u10-d10000: Analyzing
+adversarial-cycle/back-nosort/u10-d10000
+                        time:   [609.80 µs 612.06 µs 616.69 µs]
+Benchmarking adversarial-cycle/baseline/u100-d10
+Benchmarking adversarial-cycle/baseline/u100-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u100-d10: Collecting 10 samples in estimated 500.42 ms (37k iterations)
+Benchmarking adversarial-cycle/baseline/u100-d10: Analyzing
+adversarial-cycle/baseline/u100-d10
+                        time:   [11.544 µs 12.735 µs 13.297 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low severe
+Benchmarking adversarial-cycle/pk/u100-d10
+Benchmarking adversarial-cycle/pk/u100-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u100-d10: Collecting 10 samples in estimated 500.45 ms (33k iterations)
+Benchmarking adversarial-cycle/pk/u100-d10: Analyzing
+adversarial-cycle/pk/u100-d10
+                        time:   [13.818 µs 13.944 µs 14.098 µs]
+Benchmarking adversarial-cycle/back/u100-d10
+Benchmarking adversarial-cycle/back/u100-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u100-d10: Collecting 10 samples in estimated 500.30 ms (42k iterations)
+Benchmarking adversarial-cycle/back/u100-d10: Analyzing
+adversarial-cycle/back/u100-d10
+                        time:   [10.116 µs 10.172 µs 10.249 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high severe
+Benchmarking adversarial-cycle/twoway/u100-d10
+Benchmarking adversarial-cycle/twoway/u100-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u100-d10: Collecting 10 samples in estimated 500.66 ms (37k iterations)
+Benchmarking adversarial-cycle/twoway/u100-d10: Analyzing
+adversarial-cycle/twoway/u100-d10
+                        time:   [11.420 µs 11.478 µs 11.552 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking adversarial-cycle/back-nosort/u100-d10
+Benchmarking adversarial-cycle/back-nosort/u100-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u100-d10: Collecting 10 samples in estimated 500.22 ms (47k iterations)
+Benchmarking adversarial-cycle/back-nosort/u100-d10: Analyzing
+adversarial-cycle/back-nosort/u100-d10
+                        time:   [8.8309 µs 8.8350 µs 8.8400 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking adversarial-cycle/baseline/u100-d100
+Benchmarking adversarial-cycle/baseline/u100-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u100-d100: Collecting 10 samples in estimated 500.58 ms (21k iterations)
+Benchmarking adversarial-cycle/baseline/u100-d100: Analyzing
+adversarial-cycle/baseline/u100-d100
+                        time:   [21.071 µs 23.234 µs 24.206 µs]
+Benchmarking adversarial-cycle/pk/u100-d100
+Benchmarking adversarial-cycle/pk/u100-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u100-d100: Collecting 10 samples in estimated 500.99 ms (17k iterations)
+Benchmarking adversarial-cycle/pk/u100-d100: Analyzing
+adversarial-cycle/pk/u100-d100
+                        time:   [27.650 µs 27.820 µs 27.995 µs]
+Benchmarking adversarial-cycle/back/u100-d100
+Benchmarking adversarial-cycle/back/u100-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u100-d100: Collecting 10 samples in estimated 500.01 ms (25k iterations)
+Benchmarking adversarial-cycle/back/u100-d100: Analyzing
+adversarial-cycle/back/u100-d100
+                        time:   [18.772 µs 20.670 µs 24.650 µs]
+Benchmarking adversarial-cycle/twoway/u100-d100
+Benchmarking adversarial-cycle/twoway/u100-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u100-d100: Collecting 10 samples in estimated 500.11 ms (24k iterations)
+Benchmarking adversarial-cycle/twoway/u100-d100: Analyzing
+adversarial-cycle/twoway/u100-d100
+                        time:   [18.527 µs 18.533 µs 18.538 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking adversarial-cycle/back-nosort/u100-d100
+Benchmarking adversarial-cycle/back-nosort/u100-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u100-d100: Collecting 10 samples in estimated 500.25 ms (29k iterations)
+Benchmarking adversarial-cycle/back-nosort/u100-d100: Analyzing
+adversarial-cycle/back-nosort/u100-d100
+                        time:   [15.731 µs 15.739 µs 15.751 µs]
+Benchmarking adversarial-cycle/baseline/u100-d1000
+Benchmarking adversarial-cycle/baseline/u100-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u100-d1000: Collecting 10 samples in estimated 500.42 ms (4950 iterations)
+Benchmarking adversarial-cycle/baseline/u100-d1000: Analyzing
+adversarial-cycle/baseline/u100-d1000
+                        time:   [78.258 µs 82.647 µs 90.259 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking adversarial-cycle/pk/u100-d1000
+Benchmarking adversarial-cycle/pk/u100-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u100-d1000: Collecting 10 samples in estimated 505.42 ms (3795 iterations)
+Benchmarking adversarial-cycle/pk/u100-d1000: Analyzing
+adversarial-cycle/pk/u100-d1000
+                        time:   [131.68 µs 133.15 µs 134.39 µs]
+Benchmarking adversarial-cycle/back/u100-d1000
+Benchmarking adversarial-cycle/back/u100-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u100-d1000: Collecting 10 samples in estimated 504.05 ms (5555 iterations)
+Benchmarking adversarial-cycle/back/u100-d1000: Analyzing
+adversarial-cycle/back/u100-d1000
+                        time:   [88.526 µs 88.934 µs 89.573 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking adversarial-cycle/twoway/u100-d1000
+Benchmarking adversarial-cycle/twoway/u100-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u100-d1000: Collecting 10 samples in estimated 501.97 ms (5225 iterations)
+Benchmarking adversarial-cycle/twoway/u100-d1000: Analyzing
+adversarial-cycle/twoway/u100-d1000
+                        time:   [92.915 µs 93.377 µs 94.048 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking adversarial-cycle/back-nosort/u100-d1000
+Benchmarking adversarial-cycle/back-nosort/u100-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u100-d1000: Collecting 10 samples in estimated 501.09 ms (6435 iterations)
+Benchmarking adversarial-cycle/back-nosort/u100-d1000: Analyzing
+adversarial-cycle/back-nosort/u100-d1000
+                        time:   [75.447 µs 76.654 µs 78.872 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking adversarial-cycle/baseline/u100-d10000
+Benchmarking adversarial-cycle/baseline/u100-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u100-d10000: Collecting 10 samples in estimated 515.48 ms (825 iterations)
+Benchmarking adversarial-cycle/baseline/u100-d10000: Analyzing
+adversarial-cycle/baseline/u100-d10000
+                        time:   [616.99 µs 621.44 µs 625.44 µs]
+Benchmarking adversarial-cycle/pk/u100-d10000
+Benchmarking adversarial-cycle/pk/u100-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u100-d10000: Collecting 10 samples in estimated 508.50 ms (440 iterations)
+Benchmarking adversarial-cycle/pk/u100-d10000: Analyzing
+adversarial-cycle/pk/u100-d10000
+                        time:   [1.1921 ms 1.2302 ms 1.2411 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking adversarial-cycle/back/u100-d10000
+Benchmarking adversarial-cycle/back/u100-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u100-d10000: Collecting 10 samples in estimated 511.08 ms (660 iterations)
+Benchmarking adversarial-cycle/back/u100-d10000: Analyzing
+adversarial-cycle/back/u100-d10000
+                        time:   [764.80 µs 767.66 µs 772.93 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial-cycle/twoway/u100-d10000
+Benchmarking adversarial-cycle/twoway/u100-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u100-d10000: Collecting 10 samples in estimated 542.63 ms (660 iterations)
+Benchmarking adversarial-cycle/twoway/u100-d10000: Analyzing
+adversarial-cycle/twoway/u100-d10000
+                        time:   [815.09 µs 815.60 µs 816.99 µs]
+Benchmarking adversarial-cycle/back-nosort/u100-d10000
+Benchmarking adversarial-cycle/back-nosort/u100-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u100-d10000: Collecting 10 samples in estimated 526.95 ms (825 iterations)
+Benchmarking adversarial-cycle/back-nosort/u100-d10000: Analyzing
+adversarial-cycle/back-nosort/u100-d10000
+                        time:   [618.84 µs 620.46 µs 623.98 µs]
+Benchmarking adversarial-cycle/baseline/u1000-d10
+Benchmarking adversarial-cycle/baseline/u1000-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u1000-d10: Collecting 10 samples in estimated 501.80 ms (7645 iterations)
+Benchmarking adversarial-cycle/baseline/u1000-d10: Analyzing
+adversarial-cycle/baseline/u1000-d10
+                        time:   [63.093 µs 63.283 µs 63.543 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking adversarial-cycle/pk/u1000-d10
+Benchmarking adversarial-cycle/pk/u1000-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u1000-d10: Collecting 10 samples in estimated 503.75 ms (4400 iterations)
+Benchmarking adversarial-cycle/pk/u1000-d10: Analyzing
+adversarial-cycle/pk/u1000-d10
+                        time:   [108.78 µs 109.00 µs 109.15 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking adversarial-cycle/back/u1000-d10
+Benchmarking adversarial-cycle/back/u1000-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u1000-d10: Collecting 10 samples in estimated 503.22 ms (5665 iterations)
+Benchmarking adversarial-cycle/back/u1000-d10: Analyzing
+adversarial-cycle/back/u1000-d10
+                        time:   [78.175 µs 78.399 µs 78.868 µs]
+Benchmarking adversarial-cycle/twoway/u1000-d10
+Benchmarking adversarial-cycle/twoway/u1000-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u1000-d10: Collecting 10 samples in estimated 501.02 ms (5225 iterations)
+Benchmarking adversarial-cycle/twoway/u1000-d10: Analyzing
+adversarial-cycle/twoway/u1000-d10
+                        time:   [82.263 µs 82.343 µs 82.449 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking adversarial-cycle/back-nosort/u1000-d10
+Benchmarking adversarial-cycle/back-nosort/u1000-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u1000-d10: Collecting 10 samples in estimated 503.82 ms (6710 iterations)
+Benchmarking adversarial-cycle/back-nosort/u1000-d10: Analyzing
+adversarial-cycle/back-nosort/u1000-d10
+                        time:   [62.918 µs 63.319 µs 63.827 µs]
+Benchmarking adversarial-cycle/baseline/u1000-d100
+Benchmarking adversarial-cycle/baseline/u1000-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u1000-d100: Collecting 10 samples in estimated 501.05 ms (6655 iterations)
+Benchmarking adversarial-cycle/baseline/u1000-d100: Analyzing
+adversarial-cycle/baseline/u1000-d100
+                        time:   [72.667 µs 73.038 µs 73.539 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking adversarial-cycle/pk/u1000-d100
+Benchmarking adversarial-cycle/pk/u1000-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u1000-d100: Collecting 10 samples in estimated 504.19 ms (3905 iterations)
+Benchmarking adversarial-cycle/pk/u1000-d100: Analyzing
+adversarial-cycle/pk/u1000-d100
+                        time:   [124.83 µs 124.90 µs 125.06 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking adversarial-cycle/back/u1000-d100
+Benchmarking adversarial-cycle/back/u1000-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u1000-d100: Collecting 10 samples in estimated 504.12 ms (5060 iterations)
+Benchmarking adversarial-cycle/back/u1000-d100: Analyzing
+adversarial-cycle/back/u1000-d100
+                        time:   [88.115 µs 88.138 µs 88.164 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial-cycle/twoway/u1000-d100
+Benchmarking adversarial-cycle/twoway/u1000-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u1000-d100: Collecting 10 samples in estimated 504.73 ms (4730 iterations)
+Benchmarking adversarial-cycle/twoway/u1000-d100: Analyzing
+adversarial-cycle/twoway/u1000-d100
+                        time:   [92.699 µs 92.734 µs 92.781 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking adversarial-cycle/back-nosort/u1000-d100
+Benchmarking adversarial-cycle/back-nosort/u1000-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u1000-d100: Collecting 10 samples in estimated 501.06 ms (6050 iterations)
+Benchmarking adversarial-cycle/back-nosort/u1000-d100: Analyzing
+adversarial-cycle/back-nosort/u1000-d100
+                        time:   [70.294 µs 70.381 µs 70.545 µs]
+Benchmarking adversarial-cycle/baseline/u1000-d1000
+Benchmarking adversarial-cycle/baseline/u1000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u1000-d1000: Collecting 10 samples in estimated 505.09 ms (3630 iterations)
+Benchmarking adversarial-cycle/baseline/u1000-d1000: Analyzing
+adversarial-cycle/baseline/u1000-d1000
+                        time:   [133.97 µs 134.64 µs 135.58 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial-cycle/pk/u1000-d1000
+Benchmarking adversarial-cycle/pk/u1000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u1000-d1000: Collecting 10 samples in estimated 502.34 ms (2145 iterations)
+Benchmarking adversarial-cycle/pk/u1000-d1000: Analyzing
+adversarial-cycle/pk/u1000-d1000
+                        time:   [230.56 µs 230.76 µs 230.94 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking adversarial-cycle/back/u1000-d1000
+Benchmarking adversarial-cycle/back/u1000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u1000-d1000: Collecting 10 samples in estimated 504.87 ms (2970 iterations)
+Benchmarking adversarial-cycle/back/u1000-d1000: Analyzing
+adversarial-cycle/back/u1000-d1000
+                        time:   [157.61 µs 157.70 µs 157.80 µs]
+Benchmarking adversarial-cycle/twoway/u1000-d1000
+Benchmarking adversarial-cycle/twoway/u1000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u1000-d1000: Collecting 10 samples in estimated 500.11 ms (2750 iterations)
+Benchmarking adversarial-cycle/twoway/u1000-d1000: Analyzing
+adversarial-cycle/twoway/u1000-d1000
+                        time:   [167.21 µs 167.37 µs 167.47 µs]
+Benchmarking adversarial-cycle/back-nosort/u1000-d1000
+Benchmarking adversarial-cycle/back-nosort/u1000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u1000-d1000: Collecting 10 samples in estimated 506.45 ms (3520 iterations)
+Benchmarking adversarial-cycle/back-nosort/u1000-d1000: Analyzing
+adversarial-cycle/back-nosort/u1000-d1000
+                        time:   [131.66 µs 131.70 µs 131.75 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking adversarial-cycle/baseline/u1000-d10000
+Benchmarking adversarial-cycle/baseline/u1000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u1000-d10000: Collecting 10 samples in estimated 521.82 ms (660 iterations)
+Benchmarking adversarial-cycle/baseline/u1000-d10000: Analyzing
+adversarial-cycle/baseline/u1000-d10000
+                        time:   [786.30 µs 786.60 µs 787.02 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial-cycle/pk/u1000-d10000
+Benchmarking adversarial-cycle/pk/u1000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u1000-d10000: Collecting 10 samples in estimated 521.81 ms (440 iterations)
+Benchmarking adversarial-cycle/pk/u1000-d10000: Analyzing
+adversarial-cycle/pk/u1000-d10000
+                        time:   [1.1992 ms 1.1996 ms 1.2000 ms]
+Benchmarking adversarial-cycle/back/u1000-d10000
+Benchmarking adversarial-cycle/back/u1000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u1000-d10000: Collecting 10 samples in estimated 519.47 ms (605 iterations)
+Benchmarking adversarial-cycle/back/u1000-d10000: Analyzing
+adversarial-cycle/back/u1000-d10000
+                        time:   [838.34 µs 843.21 µs 846.86 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking adversarial-cycle/twoway/u1000-d10000
+Benchmarking adversarial-cycle/twoway/u1000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u1000-d10000: Collecting 10 samples in estimated 504.48 ms (550 iterations)
+Benchmarking adversarial-cycle/twoway/u1000-d10000: Analyzing
+adversarial-cycle/twoway/u1000-d10000
+                        time:   [887.85 µs 891.20 µs 894.31 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking adversarial-cycle/back-nosort/u1000-d10000
+Benchmarking adversarial-cycle/back-nosort/u1000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u1000-d10000: Collecting 10 samples in estimated 523.72 ms (550 iterations)
+Benchmarking adversarial-cycle/back-nosort/u1000-d10000: Analyzing
+adversarial-cycle/back-nosort/u1000-d10000
+                        time:   [967.09 µs 969.39 µs 974.29 µs]
+Benchmarking adversarial-cycle/baseline/u10000-d10
+Benchmarking adversarial-cycle/baseline/u10000-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u10000-d10: Collecting 10 samples in estimated 553.81 ms (440 iterations)
+Benchmarking adversarial-cycle/baseline/u10000-d10: Analyzing
+adversarial-cycle/baseline/u10000-d10
+                        time:   [1.1621 ms 1.2487 ms 1.3049 ms]
+Benchmarking adversarial-cycle/pk/u10000-d10
+Benchmarking adversarial-cycle/pk/u10000-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u10000-d10: Collecting 10 samples in estimated 585.03 ms (330 iterations)
+Benchmarking adversarial-cycle/pk/u10000-d10: Analyzing
+adversarial-cycle/pk/u10000-d10
+                        time:   [1.6473 ms 1.6790 ms 1.7035 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking adversarial-cycle/back/u10000-d10
+Benchmarking adversarial-cycle/back/u10000-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u10000-d10: Collecting 10 samples in estimated 574.53 ms (275 iterations)
+Benchmarking adversarial-cycle/back/u10000-d10: Analyzing
+adversarial-cycle/back/u10000-d10
+                        time:   [1.7659 ms 1.7722 ms 1.7763 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking adversarial-cycle/twoway/u10000-d10
+Benchmarking adversarial-cycle/twoway/u10000-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u10000-d10: Collecting 10 samples in estimated 506.51 ms (330 iterations)
+Benchmarking adversarial-cycle/twoway/u10000-d10: Analyzing
+adversarial-cycle/twoway/u10000-d10
+                        time:   [1.1540 ms 1.1636 ms 1.1704 ms]
+Benchmarking adversarial-cycle/back-nosort/u10000-d10
+Benchmarking adversarial-cycle/back-nosort/u10000-d10: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u10000-d10: Collecting 10 samples in estimated 554.61 ms (385 iterations)
+Benchmarking adversarial-cycle/back-nosort/u10000-d10: Analyzing
+adversarial-cycle/back-nosort/u10000-d10
+                        time:   [1.1295 ms 1.1305 ms 1.1323 ms]
+Benchmarking adversarial-cycle/baseline/u10000-d100
+Benchmarking adversarial-cycle/baseline/u10000-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u10000-d100: Collecting 10 samples in estimated 536.04 ms (495 iterations)
+Benchmarking adversarial-cycle/baseline/u10000-d100: Analyzing
+adversarial-cycle/baseline/u10000-d100
+                        time:   [1.0733 ms 1.1374 ms 1.1694 ms]
+Benchmarking adversarial-cycle/pk/u10000-d100
+Benchmarking adversarial-cycle/pk/u10000-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u10000-d100: Collecting 10 samples in estimated 541.43 ms (275 iterations)
+Benchmarking adversarial-cycle/pk/u10000-d100: Analyzing
+adversarial-cycle/pk/u10000-d100
+                        time:   [1.5922 ms 1.6379 ms 1.6962 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial-cycle/back/u10000-d100
+Benchmarking adversarial-cycle/back/u10000-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u10000-d100: Collecting 10 samples in estimated 529.07 ms (275 iterations)
+Benchmarking adversarial-cycle/back/u10000-d100: Analyzing
+adversarial-cycle/back/u10000-d100
+                        time:   [1.6096 ms 1.6149 ms 1.6184 ms]
+Benchmarking adversarial-cycle/twoway/u10000-d100
+Benchmarking adversarial-cycle/twoway/u10000-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u10000-d100: Collecting 10 samples in estimated 504.05 ms (330 iterations)
+Benchmarking adversarial-cycle/twoway/u10000-d100: Analyzing
+adversarial-cycle/twoway/u10000-d100
+                        time:   [1.1489 ms 1.1559 ms 1.1658 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking adversarial-cycle/back-nosort/u10000-d100
+Benchmarking adversarial-cycle/back-nosort/u10000-d100: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u10000-d100: Collecting 10 samples in estimated 560.32 ms (385 iterations)
+Benchmarking adversarial-cycle/back-nosort/u10000-d100: Analyzing
+adversarial-cycle/back-nosort/u10000-d100
+                        time:   [1.1507 ms 1.1518 ms 1.1532 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial-cycle/baseline/u10000-d1000
+Benchmarking adversarial-cycle/baseline/u10000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u10000-d1000: Collecting 10 samples in estimated 506.03 ms (440 iterations)
+Benchmarking adversarial-cycle/baseline/u10000-d1000: Analyzing
+adversarial-cycle/baseline/u10000-d1000
+                        time:   [1.0942 ms 1.1005 ms 1.1046 ms]
+Benchmarking adversarial-cycle/pk/u10000-d1000
+Benchmarking adversarial-cycle/pk/u10000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u10000-d1000: Collecting 10 samples in estimated 564.62 ms (275 iterations)
+Benchmarking adversarial-cycle/pk/u10000-d1000: Analyzing
+adversarial-cycle/pk/u10000-d1000
+                        time:   [2.0636 ms 2.0646 ms 2.0657 ms]
+Benchmarking adversarial-cycle/back/u10000-d1000
+Benchmarking adversarial-cycle/back/u10000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u10000-d1000: Collecting 10 samples in estimated 549.06 ms (275 iterations)
+Benchmarking adversarial-cycle/back/u10000-d1000: Analyzing
+adversarial-cycle/back/u10000-d1000
+                        time:   [1.7509 ms 1.7757 ms 1.8142 ms]
+Benchmarking adversarial-cycle/twoway/u10000-d1000
+Benchmarking adversarial-cycle/twoway/u10000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u10000-d1000: Collecting 10 samples in estimated 535.09 ms (330 iterations)
+Benchmarking adversarial-cycle/twoway/u10000-d1000: Analyzing
+adversarial-cycle/twoway/u10000-d1000
+                        time:   [1.2341 ms 1.2347 ms 1.2356 ms]
+Benchmarking adversarial-cycle/back-nosort/u10000-d1000
+Benchmarking adversarial-cycle/back-nosort/u10000-d1000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u10000-d1000: Collecting 10 samples in estimated 501.91 ms (330 iterations)
+Benchmarking adversarial-cycle/back-nosort/u10000-d1000: Analyzing
+adversarial-cycle/back-nosort/u10000-d1000
+                        time:   [1.2050 ms 1.2073 ms 1.2113 ms]
+Benchmarking adversarial-cycle/baseline/u10000-d10000
+Benchmarking adversarial-cycle/baseline/u10000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/baseline/u10000-d10000: Collecting 10 samples in estimated 549.73 ms (330 iterations)
+Benchmarking adversarial-cycle/baseline/u10000-d10000: Analyzing
+adversarial-cycle/baseline/u10000-d10000
+                        time:   [2.2170 ms 2.2255 ms 2.2469 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial-cycle/pk/u10000-d10000
+Benchmarking adversarial-cycle/pk/u10000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/pk/u10000-d10000: Collecting 10 samples in estimated 596.60 ms (220 iterations)
+Benchmarking adversarial-cycle/pk/u10000-d10000: Analyzing
+adversarial-cycle/pk/u10000-d10000
+                        time:   [2.5983 ms 2.7924 ms 2.8903 ms]
+Benchmarking adversarial-cycle/back/u10000-d10000
+Benchmarking adversarial-cycle/back/u10000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back/u10000-d10000: Collecting 10 samples in estimated 627.57 ms (220 iterations)
+Benchmarking adversarial-cycle/back/u10000-d10000: Analyzing
+adversarial-cycle/back/u10000-d10000
+                        time:   [2.4613 ms 2.4641 ms 2.4713 ms]
+Benchmarking adversarial-cycle/twoway/u10000-d10000
+Benchmarking adversarial-cycle/twoway/u10000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/twoway/u10000-d10000: Collecting 10 samples in estimated 617.24 ms (275 iterations)
+Benchmarking adversarial-cycle/twoway/u10000-d10000: Analyzing
+adversarial-cycle/twoway/u10000-d10000
+                        time:   [1.8294 ms 1.8367 ms 1.8436 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking adversarial-cycle/back-nosort/u10000-d10000
+Benchmarking adversarial-cycle/back-nosort/u10000-d10000: Warming up for 200.00 ms
+Benchmarking adversarial-cycle/back-nosort/u10000-d10000: Collecting 10 samples in estimated 525.36 ms (220 iterations)
+Benchmarking adversarial-cycle/back-nosort/u10000-d10000: Analyzing
+adversarial-cycle/back-nosort/u10000-d10000
+                        time:   [2.0641 ms 2.0648 ms 2.0662 ms]
+
+Benchmarking mixed/baseline/s10-n10
+Benchmarking mixed/baseline/s10-n10: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s10-n10: Collecting 10 samples in estimated 500.10 ms (148k iterations)
+Benchmarking mixed/baseline/s10-n10: Analyzing
+mixed/baseline/s10-n10  time:   [3.1654 µs 3.3363 µs 3.4037 µs]
+Benchmarking mixed/back/s10-n10
+Benchmarking mixed/back/s10-n10: Warming up for 200.00 ms
+Benchmarking mixed/back/s10-n10: Collecting 10 samples in estimated 500.26 ms (75k iterations)
+Benchmarking mixed/back/s10-n10: Analyzing
+mixed/back/s10-n10      time:   [5.4145 µs 5.4838 µs 5.5333 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low severe
+  2 (20.00%) high mild
+Benchmarking mixed/twoway/s10-n10
+Benchmarking mixed/twoway/s10-n10: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s10-n10: Collecting 10 samples in estimated 500.47 ms (57k iterations)
+Benchmarking mixed/twoway/s10-n10: Analyzing
+mixed/twoway/s10-n10    time:   [7.3902 µs 7.4023 µs 7.4187 µs]
+Benchmarking mixed/back-fresh/s10-n10
+Benchmarking mixed/back-fresh/s10-n10: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s10-n10: Collecting 10 samples in estimated 500.13 ms (97k iterations)
+Benchmarking mixed/back-fresh/s10-n10: Analyzing
+mixed/back-fresh/s10-n10
+                        time:   [3.9672 µs 3.9949 µs 4.0378 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low mild
+  1 (10.00%) high severe
+Benchmarking mixed/twoway-fresh/s10-n10
+Benchmarking mixed/twoway-fresh/s10-n10: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s10-n10: Collecting 10 samples in estimated 500.30 ms (64k iterations)
+Benchmarking mixed/twoway-fresh/s10-n10: Analyzing
+mixed/twoway-fresh/s10-n10
+                        time:   [6.2015 µs 6.2093 µs 6.2158 µs]
+Benchmarking mixed/back-nosort/s10-n10
+Benchmarking mixed/back-nosort/s10-n10: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s10-n10: Collecting 10 samples in estimated 500.10 ms (96k iterations)
+Benchmarking mixed/back-nosort/s10-n10: Analyzing
+mixed/back-nosort/s10-n10
+                        time:   [3.9614 µs 4.0266 µs 4.0806 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low mild
+  1 (10.00%) high mild
+Benchmarking mixed/baseline/s10-n100
+Benchmarking mixed/baseline/s10-n100: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s10-n100: Collecting 10 samples in estimated 500.81 ms (33k iterations)
+Benchmarking mixed/baseline/s10-n100: Analyzing
+mixed/baseline/s10-n100 time:   [15.173 µs 15.280 µs 15.328 µs]
+Benchmarking mixed/back/s10-n100
+Benchmarking mixed/back/s10-n100: Warming up for 200.00 ms
+Benchmarking mixed/back/s10-n100: Collecting 10 samples in estimated 501.29 ms (9570 iterations)
+Benchmarking mixed/back/s10-n100: Analyzing
+mixed/back/s10-n100     time:   [49.858 µs 49.974 µs 50.251 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking mixed/twoway/s10-n100
+Benchmarking mixed/twoway/s10-n100: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s10-n100: Collecting 10 samples in estimated 501.11 ms (6765 iterations)
+Benchmarking mixed/twoway/s10-n100: Analyzing
+mixed/twoway/s10-n100   time:   [70.938 µs 71.132 µs 71.327 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking mixed/back-fresh/s10-n100
+Benchmarking mixed/back-fresh/s10-n100: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s10-n100: Collecting 10 samples in estimated 500.68 ms (12k iterations)
+Benchmarking mixed/back-fresh/s10-n100: Analyzing
+mixed/back-fresh/s10-n100
+                        time:   [39.233 µs 39.292 µs 39.337 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking mixed/twoway-fresh/s10-n100
+Benchmarking mixed/twoway-fresh/s10-n100: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s10-n100: Collecting 10 samples in estimated 500.03 ms (8085 iterations)
+Benchmarking mixed/twoway-fresh/s10-n100: Analyzing
+mixed/twoway-fresh/s10-n100
+                        time:   [59.072 µs 59.083 µs 59.095 µs]
+Benchmarking mixed/back-nosort/s10-n100
+Benchmarking mixed/back-nosort/s10-n100: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s10-n100: Collecting 10 samples in estimated 500.04 ms (16k iterations)
+Benchmarking mixed/back-nosort/s10-n100: Analyzing
+mixed/back-nosort/s10-n100
+                        time:   [28.416 µs 28.480 µs 28.586 µs]
+Benchmarking mixed/baseline/s10-n1000
+Benchmarking mixed/baseline/s10-n1000: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s10-n1000: Collecting 10 samples in estimated 504.36 ms (5280 iterations)
+Benchmarking mixed/baseline/s10-n1000: Analyzing
+mixed/baseline/s10-n1000
+                        time:   [93.187 µs 93.282 µs 93.341 µs]
+Benchmarking mixed/back/s10-n1000
+Benchmarking mixed/back/s10-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back/s10-n1000: Collecting 10 samples in estimated 513.88 ms (660 iterations)
+Benchmarking mixed/back/s10-n1000: Analyzing
+mixed/back/s10-n1000    time:   [761.14 µs 761.42 µs 761.92 µs]
+Benchmarking mixed/twoway/s10-n1000
+Benchmarking mixed/twoway/s10-n1000: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s10-n1000: Collecting 10 samples in estimated 536.14 ms (550 iterations)
+Benchmarking mixed/twoway/s10-n1000: Analyzing
+mixed/twoway/s10-n1000  time:   [958.75 µs 966.37 µs 973.20 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/back-fresh/s10-n1000
+Benchmarking mixed/back-fresh/s10-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s10-n1000: Collecting 10 samples in estimated 512.14 ms (990 iterations)
+Benchmarking mixed/back-fresh/s10-n1000: Analyzing
+mixed/back-fresh/s10-n1000
+                        time:   [485.49 µs 504.06 µs 524.68 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/twoway-fresh/s10-n1000
+Benchmarking mixed/twoway-fresh/s10-n1000: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s10-n1000: Collecting 10 samples in estimated 501.62 ms (605 iterations)
+Benchmarking mixed/twoway-fresh/s10-n1000: Analyzing
+mixed/twoway-fresh/s10-n1000
+                        time:   [817.02 µs 819.75 µs 823.68 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/back-nosort/s10-n1000
+Benchmarking mixed/back-nosort/s10-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s10-n1000: Collecting 10 samples in estimated 510.23 ms (1815 iterations)
+Benchmarking mixed/back-nosort/s10-n1000: Analyzing
+mixed/back-nosort/s10-n1000
+                        time:   [272.00 µs 275.74 µs 278.45 µs]
+Benchmarking mixed/baseline/s10-n10000
+Benchmarking mixed/baseline/s10-n10000: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s10-n10000: Collecting 10 samples in estimated 504.31 ms (330 iterations)
+Benchmarking mixed/baseline/s10-n10000: Analyzing
+mixed/baseline/s10-n10000
+                        time:   [1.4978 ms 1.5427 ms 1.5760 ms]
+Benchmarking mixed/back/s10-n10000
+Benchmarking mixed/back/s10-n10000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 579.4ms or enable flat sampling.
+Benchmarking mixed/back/s10-n10000: Collecting 10 samples in estimated 579.44 ms (55 iterations)
+Benchmarking mixed/back/s10-n10000: Analyzing
+mixed/back/s10-n10000   time:   [10.118 ms 10.157 ms 10.201 ms]
+Benchmarking mixed/twoway/s10-n10000
+Benchmarking mixed/twoway/s10-n10000: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s10-n10000: Collecting 10 samples in estimated 502.57 ms (385 iterations)
+Benchmarking mixed/twoway/s10-n10000: Analyzing
+mixed/twoway/s10-n10000 time:   [876.95 µs 882.95 µs 889.47 µs]
+Benchmarking mixed/back-fresh/s10-n10000
+Benchmarking mixed/back-fresh/s10-n10000: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s10-n10000: Collecting 10 samples in estimated 895.02 ms (110 iterations)
+Benchmarking mixed/back-fresh/s10-n10000: Analyzing
+mixed/back-fresh/s10-n10000
+                        time:   [7.2206 ms 7.2805 ms 7.3304 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking mixed/twoway-fresh/s10-n10000
+Benchmarking mixed/twoway-fresh/s10-n10000: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s10-n10000: Collecting 10 samples in estimated 503.08 ms (385 iterations)
+Benchmarking mixed/twoway-fresh/s10-n10000: Analyzing
+mixed/twoway-fresh/s10-n10000
+                        time:   [852.36 µs 858.60 µs 863.96 µs]
+Benchmarking mixed/back-nosort/s10-n10000
+Benchmarking mixed/back-nosort/s10-n10000: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s10-n10000: Collecting 10 samples in estimated 586.74 ms (165 iterations)
+Benchmarking mixed/back-nosort/s10-n10000: Analyzing
+mixed/back-nosort/s10-n10000
+                        time:   [3.1271 ms 3.1291 ms 3.1345 ms]
+Benchmarking mixed/baseline/s100-n10
+Benchmarking mixed/baseline/s100-n10: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s100-n10: Collecting 10 samples in estimated 500.36 ms (32k iterations)
+Benchmarking mixed/baseline/s100-n10: Analyzing
+mixed/baseline/s100-n10 time:   [12.705 µs 13.664 µs 15.875 µs]
+Benchmarking mixed/back/s100-n10
+Benchmarking mixed/back/s100-n10: Warming up for 200.00 ms
+Benchmarking mixed/back/s100-n10: Collecting 10 samples in estimated 500.32 ms (79k iterations)
+Benchmarking mixed/back/s100-n10: Analyzing
+mixed/back/s100-n10     time:   [5.1690 µs 5.1830 µs 5.2028 µs]
+Benchmarking mixed/twoway/s100-n10
+Benchmarking mixed/twoway/s100-n10: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s100-n10: Collecting 10 samples in estimated 500.02 ms (56k iterations)
+Benchmarking mixed/twoway/s100-n10: Analyzing
+mixed/twoway/s100-n10   time:   [7.2648 µs 7.3088 µs 7.3759 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low mild
+  1 (10.00%) high mild
+Benchmarking mixed/back-fresh/s100-n10
+Benchmarking mixed/back-fresh/s100-n10: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s100-n10: Collecting 10 samples in estimated 500.15 ms (97k iterations)
+Benchmarking mixed/back-fresh/s100-n10: Analyzing
+mixed/back-fresh/s100-n10
+                        time:   [3.9733 µs 4.0413 µs 4.1446 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking mixed/twoway-fresh/s100-n10
+Benchmarking mixed/twoway-fresh/s100-n10: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s100-n10: Collecting 10 samples in estimated 500.35 ms (64k iterations)
+Benchmarking mixed/twoway-fresh/s100-n10: Analyzing
+mixed/twoway-fresh/s100-n10
+                        time:   [6.3384 µs 6.3511 µs 6.3782 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking mixed/back-nosort/s100-n10
+Benchmarking mixed/back-nosort/s100-n10: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s100-n10: Collecting 10 samples in estimated 500.18 ms (98k iterations)
+Benchmarking mixed/back-nosort/s100-n10: Analyzing
+mixed/back-nosort/s100-n10
+                        time:   [3.8452 µs 3.8513 µs 3.8569 µs]
+Benchmarking mixed/baseline/s100-n100
+Benchmarking mixed/baseline/s100-n100: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s100-n100: Collecting 10 samples in estimated 500.50 ms (16k iterations)
+Benchmarking mixed/baseline/s100-n100: Analyzing
+mixed/baseline/s100-n100
+                        time:   [30.109 µs 30.194 µs 30.265 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking mixed/back/s100-n100
+Benchmarking mixed/back/s100-n100: Warming up for 200.00 ms
+Benchmarking mixed/back/s100-n100: Collecting 10 samples in estimated 502.41 ms (9570 iterations)
+Benchmarking mixed/back/s100-n100: Analyzing
+mixed/back/s100-n100    time:   [50.089 µs 50.132 µs 50.215 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/twoway/s100-n100
+Benchmarking mixed/twoway/s100-n100: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s100-n100: Collecting 10 samples in estimated 501.83 ms (6820 iterations)
+Benchmarking mixed/twoway/s100-n100: Analyzing
+mixed/twoway/s100-n100  time:   [70.340 µs 70.412 µs 70.540 µs]
+Benchmarking mixed/back-fresh/s100-n100
+Benchmarking mixed/back-fresh/s100-n100: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s100-n100: Collecting 10 samples in estimated 501.11 ms (12k iterations)
+Benchmarking mixed/back-fresh/s100-n100: Analyzing
+mixed/back-fresh/s100-n100
+                        time:   [39.374 µs 39.441 µs 39.514 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/twoway-fresh/s100-n100
+Benchmarking mixed/twoway-fresh/s100-n100: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s100-n100: Collecting 10 samples in estimated 500.31 ms (8085 iterations)
+Benchmarking mixed/twoway-fresh/s100-n100: Analyzing
+mixed/twoway-fresh/s100-n100
+                        time:   [58.904 µs 59.022 µs 59.111 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/back-nosort/s100-n100
+Benchmarking mixed/back-nosort/s100-n100: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s100-n100: Collecting 10 samples in estimated 500.99 ms (16k iterations)
+Benchmarking mixed/back-nosort/s100-n100: Analyzing
+mixed/back-nosort/s100-n100
+                        time:   [28.429 µs 28.437 µs 28.450 µs]
+Benchmarking mixed/baseline/s100-n1000
+Benchmarking mixed/baseline/s100-n1000: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s100-n1000: Collecting 10 samples in estimated 500.77 ms (4620 iterations)
+Benchmarking mixed/baseline/s100-n1000: Analyzing
+mixed/baseline/s100-n1000
+                        time:   [105.80 µs 105.86 µs 105.93 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking mixed/back/s100-n1000
+Benchmarking mixed/back/s100-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back/s100-n1000: Collecting 10 samples in estimated 521.51 ms (660 iterations)
+Benchmarking mixed/back/s100-n1000: Analyzing
+mixed/back/s100-n1000   time:   [765.72 µs 770.52 µs 775.47 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low severe
+Benchmarking mixed/twoway/s100-n1000
+Benchmarking mixed/twoway/s100-n1000: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s100-n1000: Collecting 10 samples in estimated 532.29 ms (550 iterations)
+Benchmarking mixed/twoway/s100-n1000: Analyzing
+mixed/twoway/s100-n1000 time:   [955.57 µs 956.35 µs 957.57 µs]
+Benchmarking mixed/back-fresh/s100-n1000
+Benchmarking mixed/back-fresh/s100-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s100-n1000: Collecting 10 samples in estimated 507.97 ms (935 iterations)
+Benchmarking mixed/back-fresh/s100-n1000: Analyzing
+mixed/back-fresh/s100-n1000
+                        time:   [505.85 µs 527.87 µs 549.34 µs]
+Benchmarking mixed/twoway-fresh/s100-n1000
+Benchmarking mixed/twoway-fresh/s100-n1000: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s100-n1000: Collecting 10 samples in estimated 537.87 ms (660 iterations)
+Benchmarking mixed/twoway-fresh/s100-n1000: Analyzing
+mixed/twoway-fresh/s100-n1000
+                        time:   [799.11 µs 799.51 µs 799.87 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/back-nosort/s100-n1000
+Benchmarking mixed/back-nosort/s100-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s100-n1000: Collecting 10 samples in estimated 501.96 ms (1815 iterations)
+Benchmarking mixed/back-nosort/s100-n1000: Analyzing
+mixed/back-nosort/s100-n1000
+                        time:   [264.54 µs 264.85 µs 265.37 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/baseline/s100-n10000
+Benchmarking mixed/baseline/s100-n10000: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s100-n10000: Collecting 10 samples in estimated 523.76 ms (330 iterations)
+Benchmarking mixed/baseline/s100-n10000: Analyzing
+mixed/baseline/s100-n10000
+                        time:   [1.4816 ms 1.5375 ms 1.6081 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low severe
+  1 (10.00%) high mild
+Benchmarking mixed/back/s100-n10000
+Benchmarking mixed/back/s100-n10000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 591.3ms or enable flat sampling.
+Benchmarking mixed/back/s100-n10000: Collecting 10 samples in estimated 591.35 ms (55 iterations)
+Benchmarking mixed/back/s100-n10000: Analyzing
+mixed/back/s100-n10000  time:   [10.307 ms 10.351 ms 10.431 ms]
+Benchmarking mixed/twoway/s100-n10000
+Benchmarking mixed/twoway/s100-n10000: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s100-n10000: Collecting 10 samples in estimated 500.60 ms (385 iterations)
+Benchmarking mixed/twoway/s100-n10000: Analyzing
+mixed/twoway/s100-n10000
+                        time:   [851.37 µs 852.83 µs 854.13 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking mixed/back-fresh/s100-n10000
+Benchmarking mixed/back-fresh/s100-n10000: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s100-n10000: Collecting 10 samples in estimated 896.52 ms (110 iterations)
+Benchmarking mixed/back-fresh/s100-n10000: Analyzing
+mixed/back-fresh/s100-n10000
+                        time:   [7.2716 ms 7.6479 ms 8.3293 ms]
+Benchmarking mixed/twoway-fresh/s100-n10000
+Benchmarking mixed/twoway-fresh/s100-n10000: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s100-n10000: Collecting 10 samples in estimated 505.04 ms (385 iterations)
+Benchmarking mixed/twoway-fresh/s100-n10000: Analyzing
+mixed/twoway-fresh/s100-n10000
+                        time:   [859.52 µs 860.97 µs 862.08 µs]
+Benchmarking mixed/back-nosort/s100-n10000
+Benchmarking mixed/back-nosort/s100-n10000: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s100-n10000: Collecting 10 samples in estimated 573.24 ms (165 iterations)
+Benchmarking mixed/back-nosort/s100-n10000: Analyzing
+mixed/back-nosort/s100-n10000
+                        time:   [3.1175 ms 3.1190 ms 3.1206 ms]
+Benchmarking mixed/baseline/s1000-n10
+Benchmarking mixed/baseline/s1000-n10: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s1000-n10: Collecting 10 samples in estimated 507.90 ms (3355 iterations)
+Benchmarking mixed/baseline/s1000-n10: Analyzing
+mixed/baseline/s1000-n10
+                        time:   [118.62 µs 126.97 µs 145.43 µs]
+Benchmarking mixed/back/s1000-n10
+Benchmarking mixed/back/s1000-n10: Warming up for 200.00 ms
+Benchmarking mixed/back/s1000-n10: Collecting 10 samples in estimated 500.14 ms (71k iterations)
+Benchmarking mixed/back/s1000-n10: Analyzing
+mixed/back/s1000-n10    time:   [5.1863 µs 5.2068 µs 5.2239 µs]
+Benchmarking mixed/twoway/s1000-n10
+Benchmarking mixed/twoway/s1000-n10: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s1000-n10: Collecting 10 samples in estimated 500.20 ms (52k iterations)
+Benchmarking mixed/twoway/s1000-n10: Analyzing
+mixed/twoway/s1000-n10  time:   [7.2199 µs 7.2486 µs 7.3121 µs]
+Benchmarking mixed/back-fresh/s1000-n10
+Benchmarking mixed/back-fresh/s1000-n10: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s1000-n10: Collecting 10 samples in estimated 500.13 ms (86k iterations)
+Benchmarking mixed/back-fresh/s1000-n10: Analyzing
+mixed/back-fresh/s1000-n10
+                        time:   [3.9380 µs 3.9418 µs 3.9446 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking mixed/twoway-fresh/s1000-n10
+Benchmarking mixed/twoway-fresh/s1000-n10: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s1000-n10: Collecting 10 samples in estimated 500.16 ms (59k iterations)
+Benchmarking mixed/twoway-fresh/s1000-n10: Analyzing
+mixed/twoway-fresh/s1000-n10
+                        time:   [6.2455 µs 6.2541 µs 6.2636 µs]
+Benchmarking mixed/back-nosort/s1000-n10
+Benchmarking mixed/back-nosort/s1000-n10: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s1000-n10: Collecting 10 samples in estimated 500.09 ms (87k iterations)
+Benchmarking mixed/back-nosort/s1000-n10: Analyzing
+mixed/back-nosort/s1000-n10
+                        time:   [3.9322 µs 3.9426 µs 3.9541 µs]
+Benchmarking mixed/baseline/s1000-n100
+Benchmarking mixed/baseline/s1000-n100: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s1000-n100: Collecting 10 samples in estimated 505.05 ms (3355 iterations)
+Benchmarking mixed/baseline/s1000-n100: Analyzing
+mixed/baseline/s1000-n100
+                        time:   [163.66 µs 163.71 µs 163.74 µs]
+Benchmarking mixed/back/s1000-n100
+Benchmarking mixed/back/s1000-n100: Warming up for 200.00 ms
+Benchmarking mixed/back/s1000-n100: Collecting 10 samples in estimated 502.15 ms (9350 iterations)
+Benchmarking mixed/back/s1000-n100: Analyzing
+mixed/back/s1000-n100   time:   [50.441 µs 50.463 µs 50.510 µs]
+Benchmarking mixed/twoway/s1000-n100
+Benchmarking mixed/twoway/s1000-n100: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s1000-n100: Collecting 10 samples in estimated 500.83 ms (6985 iterations)
+Benchmarking mixed/twoway/s1000-n100: Analyzing
+mixed/twoway/s1000-n100 time:   [67.564 µs 67.721 µs 67.906 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+Benchmarking mixed/back-fresh/s1000-n100
+Benchmarking mixed/back-fresh/s1000-n100: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s1000-n100: Collecting 10 samples in estimated 501.10 ms (12k iterations)
+Benchmarking mixed/back-fresh/s1000-n100: Analyzing
+mixed/back-fresh/s1000-n100
+                        time:   [39.804 µs 39.809 µs 39.817 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking mixed/twoway-fresh/s1000-n100
+Benchmarking mixed/twoway-fresh/s1000-n100: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s1000-n100: Collecting 10 samples in estimated 502.99 ms (8195 iterations)
+Benchmarking mixed/twoway-fresh/s1000-n100: Analyzing
+mixed/twoway-fresh/s1000-n100
+                        time:   [58.187 µs 58.226 µs 58.283 µs]
+Benchmarking mixed/back-nosort/s1000-n100
+Benchmarking mixed/back-nosort/s1000-n100: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s1000-n100: Collecting 10 samples in estimated 501.40 ms (15k iterations)
+Benchmarking mixed/back-nosort/s1000-n100: Analyzing
+mixed/back-nosort/s1000-n100
+                        time:   [30.632 µs 30.671 µs 30.714 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+Benchmarking mixed/baseline/s1000-n1000
+Benchmarking mixed/baseline/s1000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s1000-n1000: Collecting 10 samples in estimated 508.10 ms (2365 iterations)
+Benchmarking mixed/baseline/s1000-n1000: Analyzing
+mixed/baseline/s1000-n1000
+                        time:   [220.96 µs 251.23 µs 279.95 µs]
+Benchmarking mixed/back/s1000-n1000
+Benchmarking mixed/back/s1000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back/s1000-n1000: Collecting 10 samples in estimated 518.38 ms (660 iterations)
+Benchmarking mixed/back/s1000-n1000: Analyzing
+mixed/back/s1000-n1000  time:   [768.04 µs 770.78 µs 776.82 µs]
+Benchmarking mixed/twoway/s1000-n1000
+Benchmarking mixed/twoway/s1000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s1000-n1000: Collecting 10 samples in estimated 532.54 ms (550 iterations)
+Benchmarking mixed/twoway/s1000-n1000: Analyzing
+mixed/twoway/s1000-n1000
+                        time:   [937.55 µs 942.02 µs 951.11 µs]
+Benchmarking mixed/back-fresh/s1000-n1000
+Benchmarking mixed/back-fresh/s1000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s1000-n1000: Collecting 10 samples in estimated 526.68 ms (990 iterations)
+Benchmarking mixed/back-fresh/s1000-n1000: Analyzing
+mixed/back-fresh/s1000-n1000
+                        time:   [489.52 µs 505.34 µs 524.50 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking mixed/twoway-fresh/s1000-n1000
+Benchmarking mixed/twoway-fresh/s1000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s1000-n1000: Collecting 10 samples in estimated 533.97 ms (660 iterations)
+Benchmarking mixed/twoway-fresh/s1000-n1000: Analyzing
+mixed/twoway-fresh/s1000-n1000
+                        time:   [790.06 µs 790.46 µs 791.06 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking mixed/back-nosort/s1000-n1000
+Benchmarking mixed/back-nosort/s1000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s1000-n1000: Collecting 10 samples in estimated 506.76 ms (1815 iterations)
+Benchmarking mixed/back-nosort/s1000-n1000: Analyzing
+mixed/back-nosort/s1000-n1000
+                        time:   [267.14 µs 267.36 µs 267.63 µs]
+Benchmarking mixed/baseline/s1000-n10000
+Benchmarking mixed/baseline/s1000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s1000-n10000: Collecting 10 samples in estimated 537.73 ms (330 iterations)
+Benchmarking mixed/baseline/s1000-n10000: Analyzing
+mixed/baseline/s1000-n10000
+                        time:   [1.5717 ms 1.6469 ms 1.7012 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking mixed/back/s1000-n10000
+Benchmarking mixed/back/s1000-n10000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 581.0ms or enable flat sampling.
+Benchmarking mixed/back/s1000-n10000: Collecting 10 samples in estimated 581.03 ms (55 iterations)
+Benchmarking mixed/back/s1000-n10000: Analyzing
+mixed/back/s1000-n10000 time:   [10.028 ms 10.060 ms 10.108 ms]
+Benchmarking mixed/twoway/s1000-n10000
+Benchmarking mixed/twoway/s1000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s1000-n10000: Collecting 10 samples in estimated 559.99 ms (440 iterations)
+Benchmarking mixed/twoway/s1000-n10000: Analyzing
+mixed/twoway/s1000-n10000
+                        time:   [818.10 µs 819.08 µs 821.18 µs]
+Benchmarking mixed/back-fresh/s1000-n10000
+Benchmarking mixed/back-fresh/s1000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s1000-n10000: Collecting 10 samples in estimated 891.67 ms (110 iterations)
+Benchmarking mixed/back-fresh/s1000-n10000: Analyzing
+mixed/back-fresh/s1000-n10000
+                        time:   [8.0677 ms 8.4060 ms 8.6568 ms]
+Benchmarking mixed/twoway-fresh/s1000-n10000
+Benchmarking mixed/twoway-fresh/s1000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s1000-n10000: Collecting 10 samples in estimated 559.67 ms (440 iterations)
+Benchmarking mixed/twoway-fresh/s1000-n10000: Analyzing
+mixed/twoway-fresh/s1000-n10000
+                        time:   [816.17 µs 817.28 µs 818.71 µs]
+Benchmarking mixed/back-nosort/s1000-n10000
+Benchmarking mixed/back-nosort/s1000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s1000-n10000: Collecting 10 samples in estimated 582.16 ms (165 iterations)
+Benchmarking mixed/back-nosort/s1000-n10000: Analyzing
+mixed/back-nosort/s1000-n10000
+                        time:   [3.2042 ms 3.2193 ms 3.2359 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high mild
+Benchmarking mixed/baseline/s10000-n10
+Benchmarking mixed/baseline/s10000-n10: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s10000-n10: Collecting 10 samples in estimated 508.82 ms (495 iterations)
+Benchmarking mixed/baseline/s10000-n10: Analyzing
+mixed/baseline/s10000-n10
+                        time:   [1.0246 ms 1.0296 ms 1.0363 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking mixed/back/s10000-n10
+Benchmarking mixed/back/s10000-n10: Warming up for 200.00 ms
+Benchmarking mixed/back/s10000-n10: Collecting 10 samples in estimated 500.38 ms (38k iterations)
+Benchmarking mixed/back/s10000-n10: Analyzing
+mixed/back/s10000-n10   time:   [5.4213 µs 5.4348 µs 5.4517 µs]
+Benchmarking mixed/twoway/s10000-n10
+Benchmarking mixed/twoway/s10000-n10: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s10000-n10: Collecting 10 samples in estimated 500.04 ms (29k iterations)
+Benchmarking mixed/twoway/s10000-n10: Analyzing
+mixed/twoway/s10000-n10 time:   [7.7246 µs 7.7888 µs 7.8391 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking mixed/back-fresh/s10000-n10
+Benchmarking mixed/back-fresh/s10000-n10: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s10000-n10: Collecting 10 samples in estimated 500.52 ms (41k iterations)
+Benchmarking mixed/back-fresh/s10000-n10: Analyzing
+mixed/back-fresh/s10000-n10
+                        time:   [4.1796 µs 4.2598 µs 4.3715 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking mixed/twoway-fresh/s10000-n10
+Benchmarking mixed/twoway-fresh/s10000-n10: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s10000-n10: Collecting 10 samples in estimated 500.33 ms (31k iterations)
+Benchmarking mixed/twoway-fresh/s10000-n10: Analyzing
+mixed/twoway-fresh/s10000-n10
+                        time:   [6.5818 µs 6.6130 µs 6.6412 µs]
+Benchmarking mixed/back-nosort/s10000-n10
+Benchmarking mixed/back-nosort/s10000-n10: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s10000-n10: Collecting 10 samples in estimated 500.20 ms (41k iterations)
+Benchmarking mixed/back-nosort/s10000-n10: Analyzing
+mixed/back-nosort/s10000-n10
+                        time:   [4.2323 µs 4.2493 µs 4.2661 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking mixed/baseline/s10000-n100
+Benchmarking mixed/baseline/s10000-n100: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s10000-n100: Collecting 10 samples in estimated 518.75 ms (495 iterations)
+Benchmarking mixed/baseline/s10000-n100: Analyzing
+mixed/baseline/s10000-n100
+                        time:   [1.0416 ms 1.0419 ms 1.0423 ms]
+Benchmarking mixed/back/s10000-n100
+Benchmarking mixed/back/s10000-n100: Warming up for 200.00 ms
+Benchmarking mixed/back/s10000-n100: Collecting 10 samples in estimated 502.98 ms (8525 iterations)
+Benchmarking mixed/back/s10000-n100: Analyzing
+mixed/back/s10000-n100  time:   [49.975 µs 50.009 µs 50.031 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/twoway/s10000-n100
+Benchmarking mixed/twoway/s10000-n100: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s10000-n100: Collecting 10 samples in estimated 503.55 ms (6490 iterations)
+Benchmarking mixed/twoway/s10000-n100: Analyzing
+mixed/twoway/s10000-n100
+                        time:   [65.847 µs 65.873 µs 65.908 µs]
+Benchmarking mixed/back-fresh/s10000-n100
+Benchmarking mixed/back-fresh/s10000-n100: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s10000-n100: Collecting 10 samples in estimated 501.78 ms (10k iterations)
+Benchmarking mixed/back-fresh/s10000-n100: Analyzing
+mixed/back-fresh/s10000-n100
+                        time:   [39.112 µs 39.144 µs 39.235 µs]
+Benchmarking mixed/twoway-fresh/s10000-n100
+Benchmarking mixed/twoway-fresh/s10000-n100: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s10000-n100: Collecting 10 samples in estimated 502.44 ms (7480 iterations)
+Benchmarking mixed/twoway-fresh/s10000-n100: Analyzing
+mixed/twoway-fresh/s10000-n100
+                        time:   [56.723 µs 57.018 µs 57.143 µs]
+Benchmarking mixed/back-nosort/s10000-n100
+Benchmarking mixed/back-nosort/s10000-n100: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s10000-n100: Collecting 10 samples in estimated 501.24 ms (13k iterations)
+Benchmarking mixed/back-nosort/s10000-n100: Analyzing
+mixed/back-nosort/s10000-n100
+                        time:   [28.375 µs 28.388 µs 28.395 µs]
+Benchmarking mixed/baseline/s10000-n1000
+Benchmarking mixed/baseline/s10000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s10000-n1000: Collecting 10 samples in estimated 502.25 ms (440 iterations)
+Benchmarking mixed/baseline/s10000-n1000: Analyzing
+mixed/baseline/s10000-n1000
+                        time:   [1.1347 ms 1.1359 ms 1.1369 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking mixed/back/s10000-n1000
+Benchmarking mixed/back/s10000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back/s10000-n1000: Collecting 10 samples in estimated 524.47 ms (660 iterations)
+Benchmarking mixed/back/s10000-n1000: Analyzing
+mixed/back/s10000-n1000 time:   [770.99 µs 773.15 µs 777.77 µs]
+Benchmarking mixed/twoway/s10000-n1000
+Benchmarking mixed/twoway/s10000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s10000-n1000: Collecting 10 samples in estimated 511.47 ms (550 iterations)
+Benchmarking mixed/twoway/s10000-n1000: Analyzing
+mixed/twoway/s10000-n1000
+                        time:   [914.80 µs 917.24 µs 919.26 µs]
+Benchmarking mixed/back-fresh/s10000-n1000
+Benchmarking mixed/back-fresh/s10000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s10000-n1000: Collecting 10 samples in estimated 518.86 ms (935 iterations)
+Benchmarking mixed/back-fresh/s10000-n1000: Analyzing
+mixed/back-fresh/s10000-n1000
+                        time:   [497.58 µs 523.15 µs 538.15 µs]
+Benchmarking mixed/twoway-fresh/s10000-n1000
+Benchmarking mixed/twoway-fresh/s10000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s10000-n1000: Collecting 10 samples in estimated 516.99 ms (660 iterations)
+Benchmarking mixed/twoway-fresh/s10000-n1000: Analyzing
+mixed/twoway-fresh/s10000-n1000
+                        time:   [758.85 µs 759.97 µs 760.64 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/back-nosort/s10000-n1000
+Benchmarking mixed/back-nosort/s10000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s10000-n1000: Collecting 10 samples in estimated 501.28 ms (1815 iterations)
+Benchmarking mixed/back-nosort/s10000-n1000: Analyzing
+mixed/back-nosort/s10000-n1000
+                        time:   [258.14 µs 258.38 µs 258.55 µs]
+Benchmarking mixed/baseline/s10000-n10000
+Benchmarking mixed/baseline/s10000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s10000-n10000: Collecting 10 samples in estimated 549.69 ms (220 iterations)
+Benchmarking mixed/baseline/s10000-n10000: Analyzing
+mixed/baseline/s10000-n10000
+                        time:   [2.4308 ms 2.4326 ms 2.4335 ms]
+Benchmarking mixed/back/s10000-n10000
+Benchmarking mixed/back/s10000-n10000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 583.8ms or enable flat sampling.
+Benchmarking mixed/back/s10000-n10000: Collecting 10 samples in estimated 583.80 ms (55 iterations)
+Benchmarking mixed/back/s10000-n10000: Analyzing
+mixed/back/s10000-n10000
+                        time:   [10.186 ms 10.224 ms 10.259 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking mixed/twoway/s10000-n10000
+Benchmarking mixed/twoway/s10000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s10000-n10000: Collecting 10 samples in estimated 556.68 ms (440 iterations)
+Benchmarking mixed/twoway/s10000-n10000: Analyzing
+mixed/twoway/s10000-n10000
+                        time:   [780.75 µs 786.59 µs 790.77 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/back-fresh/s10000-n10000
+Benchmarking mixed/back-fresh/s10000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s10000-n10000: Collecting 10 samples in estimated 874.08 ms (110 iterations)
+Benchmarking mixed/back-fresh/s10000-n10000: Analyzing
+mixed/back-fresh/s10000-n10000
+                        time:   [7.1443 ms 7.5550 ms 7.9055 ms]
+Benchmarking mixed/twoway-fresh/s10000-n10000
+Benchmarking mixed/twoway-fresh/s10000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s10000-n10000: Collecting 10 samples in estimated 567.59 ms (440 iterations)
+Benchmarking mixed/twoway-fresh/s10000-n10000: Analyzing
+mixed/twoway-fresh/s10000-n10000
+                        time:   [781.05 µs 785.66 µs 790.66 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/back-nosort/s10000-n10000
+Benchmarking mixed/back-nosort/s10000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s10000-n10000: Collecting 10 samples in estimated 578.53 ms (165 iterations)
+Benchmarking mixed/back-nosort/s10000-n10000: Analyzing
+mixed/back-nosort/s10000-n10000
+                        time:   [3.1314 ms 3.1393 ms 3.1464 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking mixed/baseline/s100000-n10
+Benchmarking mixed/baseline/s100000-n10: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 860.4ms or enable flat sampling.
+Benchmarking mixed/baseline/s100000-n10: Collecting 10 samples in estimated 860.40 ms (55 iterations)
+Benchmarking mixed/baseline/s100000-n10: Analyzing
+mixed/baseline/s100000-n10
+                        time:   [14.315 ms 14.463 ms 14.811 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking mixed/back/s100000-n10
+Benchmarking mixed/back/s100000-n10: Warming up for 200.00 ms
+Benchmarking mixed/back/s100000-n10: Collecting 10 samples in estimated 504.00 ms (5995 iterations)
+Benchmarking mixed/back/s100000-n10: Analyzing
+mixed/back/s100000-n10  time:   [5.6976 µs 5.7071 µs 5.7183 µs]
+Benchmarking mixed/twoway/s100000-n10
+Benchmarking mixed/twoway/s100000-n10: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s100000-n10: Collecting 10 samples in estimated 505.24 ms (3850 iterations)
+Benchmarking mixed/twoway/s100000-n10: Analyzing
+mixed/twoway/s100000-n10
+                        time:   [7.9202 µs 7.9374 µs 7.9555 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking mixed/back-fresh/s100000-n10
+Benchmarking mixed/back-fresh/s100000-n10: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s100000-n10: Collecting 10 samples in estimated 503.84 ms (6215 iterations)
+Benchmarking mixed/back-fresh/s100000-n10: Analyzing
+mixed/back-fresh/s100000-n10
+                        time:   [4.2642 µs 4.4152 µs 4.5314 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking mixed/twoway-fresh/s100000-n10
+Benchmarking mixed/twoway-fresh/s100000-n10: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s100000-n10: Collecting 10 samples in estimated 503.56 ms (3905 iterations)
+Benchmarking mixed/twoway-fresh/s100000-n10: Analyzing
+mixed/twoway-fresh/s100000-n10
+                        time:   [6.8219 µs 6.8518 µs 6.8841 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/back-nosort/s100000-n10
+Benchmarking mixed/back-nosort/s100000-n10: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s100000-n10: Collecting 10 samples in estimated 503.30 ms (5995 iterations)
+Benchmarking mixed/back-nosort/s100000-n10: Analyzing
+mixed/back-nosort/s100000-n10
+                        time:   [4.2518 µs 4.3431 µs 4.3994 µs]
+Benchmarking mixed/baseline/s100000-n100
+Benchmarking mixed/baseline/s100000-n100: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 830.9ms or enable flat sampling.
+Benchmarking mixed/baseline/s100000-n100: Collecting 10 samples in estimated 830.91 ms (55 iterations)
+Benchmarking mixed/baseline/s100000-n100: Analyzing
+mixed/baseline/s100000-n100
+                        time:   [15.217 ms 15.327 ms 15.426 ms]
+Found 4 outliers among 10 measurements (40.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+  2 (20.00%) high mild
+Benchmarking mixed/back/s100000-n100
+Benchmarking mixed/back/s100000-n100: Warming up for 200.00 ms
+Benchmarking mixed/back/s100000-n100: Collecting 10 samples in estimated 507.05 ms (3795 iterations)
+Benchmarking mixed/back/s100000-n100: Analyzing
+mixed/back/s100000-n100 time:   [49.299 µs 49.322 µs 49.364 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking mixed/twoway/s100000-n100
+Benchmarking mixed/twoway/s100000-n100: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s100000-n100: Collecting 10 samples in estimated 504.02 ms (2475 iterations)
+Benchmarking mixed/twoway/s100000-n100: Analyzing
+mixed/twoway/s100000-n100
+                        time:   [65.938 µs 66.121 µs 66.293 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking mixed/back-fresh/s100000-n100
+Benchmarking mixed/back-fresh/s100000-n100: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s100000-n100: Collecting 10 samples in estimated 505.52 ms (4180 iterations)
+Benchmarking mixed/back-fresh/s100000-n100: Analyzing
+mixed/back-fresh/s100000-n100
+                        time:   [38.670 µs 38.697 µs 38.756 µs]
+Benchmarking mixed/twoway-fresh/s100000-n100
+Benchmarking mixed/twoway-fresh/s100000-n100: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s100000-n100: Collecting 10 samples in estimated 502.67 ms (2640 iterations)
+Benchmarking mixed/twoway-fresh/s100000-n100: Analyzing
+mixed/twoway-fresh/s100000-n100
+                        time:   [55.239 µs 55.267 µs 55.298 µs]
+Benchmarking mixed/back-nosort/s100000-n100
+Benchmarking mixed/back-nosort/s100000-n100: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s100000-n100: Collecting 10 samples in estimated 501.95 ms (4565 iterations)
+Benchmarking mixed/back-nosort/s100000-n100: Analyzing
+mixed/back-nosort/s100000-n100
+                        time:   [28.004 µs 28.066 µs 28.122 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking mixed/baseline/s100000-n1000
+Benchmarking mixed/baseline/s100000-n1000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 836.1ms or enable flat sampling.
+Benchmarking mixed/baseline/s100000-n1000: Collecting 10 samples in estimated 836.07 ms (55 iterations)
+Benchmarking mixed/baseline/s100000-n1000: Analyzing
+mixed/baseline/s100000-n1000
+                        time:   [15.200 ms 15.348 ms 15.446 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking mixed/back/s100000-n1000
+Benchmarking mixed/back/s100000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back/s100000-n1000: Collecting 10 samples in estimated 518.86 ms (550 iterations)
+Benchmarking mixed/back/s100000-n1000: Analyzing
+mixed/back/s100000-n1000
+                        time:   [764.72 µs 767.57 µs 772.86 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking mixed/twoway/s100000-n1000
+Benchmarking mixed/twoway/s100000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s100000-n1000: Collecting 10 samples in estimated 513.42 ms (440 iterations)
+Benchmarking mixed/twoway/s100000-n1000: Analyzing
+mixed/twoway/s100000-n1000
+                        time:   [908.94 µs 910.96 µs 911.99 µs]
+Benchmarking mixed/back-fresh/s100000-n1000
+Benchmarking mixed/back-fresh/s100000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back-fresh/s100000-n1000: Collecting 10 samples in estimated 502.78 ms (770 iterations)
+Benchmarking mixed/back-fresh/s100000-n1000: Analyzing
+mixed/back-fresh/s100000-n1000
+                        time:   [487.44 µs 521.28 µs 551.65 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking mixed/twoway-fresh/s100000-n1000
+Benchmarking mixed/twoway-fresh/s100000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s100000-n1000: Collecting 10 samples in estimated 501.14 ms (550 iterations)
+Benchmarking mixed/twoway-fresh/s100000-n1000: Analyzing
+mixed/twoway-fresh/s100000-n1000
+                        time:   [741.72 µs 744.76 µs 748.28 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking mixed/back-nosort/s100000-n1000
+Benchmarking mixed/back-nosort/s100000-n1000: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s100000-n1000: Collecting 10 samples in estimated 501.71 ms (1100 iterations)
+Benchmarking mixed/back-nosort/s100000-n1000: Analyzing
+mixed/back-nosort/s100000-n1000
+                        time:   [300.37 µs 300.95 µs 301.45 µs]
+Benchmarking mixed/baseline/s100000-n10000
+Benchmarking mixed/baseline/s100000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/baseline/s100000-n10000: Collecting 10 samples in estimated 642.85 ms (30 iterations)
+Benchmarking mixed/baseline/s100000-n10000: Analyzing
+mixed/baseline/s100000-n10000
+                        time:   [21.127 ms 21.667 ms 22.119 ms]
+Benchmarking mixed/back/s100000-n10000
+Benchmarking mixed/back/s100000-n10000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 573.4ms or enable flat sampling.
+Benchmarking mixed/back/s100000-n10000: Collecting 10 samples in estimated 573.40 ms (55 iterations)
+Benchmarking mixed/back/s100000-n10000: Analyzing
+mixed/back/s100000-n10000
+                        time:   [9.6215 ms 9.6378 ms 9.6545 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking mixed/twoway/s100000-n10000
+Benchmarking mixed/twoway/s100000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/twoway/s100000-n10000: Collecting 10 samples in estimated 528.23 ms (330 iterations)
+Benchmarking mixed/twoway/s100000-n10000: Analyzing
+mixed/twoway/s100000-n10000
+                        time:   [789.24 µs 789.65 µs 790.22 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low mild
+  1 (10.00%) high mild
+Benchmarking mixed/back-fresh/s100000-n10000
+Benchmarking mixed/back-fresh/s100000-n10000: Warming up for 200.00 ms
+
+Warning: Unable to complete 10 samples in 500.0ms. You may wish to increase target time to 506.0ms or enable flat sampling.
+Benchmarking mixed/back-fresh/s100000-n10000: Collecting 10 samples in estimated 506.05 ms (55 iterations)
+Benchmarking mixed/back-fresh/s100000-n10000: Analyzing
+mixed/back-fresh/s100000-n10000
+                        time:   [8.3014 ms 8.7124 ms 8.9043 ms]
+Benchmarking mixed/twoway-fresh/s100000-n10000
+Benchmarking mixed/twoway-fresh/s100000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/twoway-fresh/s100000-n10000: Collecting 10 samples in estimated 532.68 ms (330 iterations)
+Benchmarking mixed/twoway-fresh/s100000-n10000: Analyzing
+mixed/twoway-fresh/s100000-n10000
+                        time:   [791.20 µs 792.61 µs 794.71 µs]
+Benchmarking mixed/back-nosort/s100000-n10000
+Benchmarking mixed/back-nosort/s100000-n10000: Warming up for 200.00 ms
+Benchmarking mixed/back-nosort/s100000-n10000: Collecting 10 samples in estimated 616.37 ms (165 iterations)
+Benchmarking mixed/back-nosort/s100000-n10000: Analyzing
+mixed/back-nosort/s100000-n10000
+                        time:   [3.0800 ms 3.0882 ms 3.0966 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+
+
+$ python3 scripts/ratios.py
+
+benchmark                                    ratio   95% interval       baseline mean
+adversarial-cycle/back-nosort/u10-d10         1.097  [ 1.033,  1.161]        2770.9 ns
+adversarial-cycle/back-nosort/u10-d100        0.652  [ 0.649,  0.655]       12022.9 ns
+adversarial-cycle/back-nosort/u10-d1000       0.611  [ 0.610,  0.612]      111988.7 ns
+adversarial-cycle/back-nosort/u10-d10000      0.996  [ 0.991,  1.001]      617997.2 ns
+adversarial-cycle/back-nosort/u100-d10        0.705  [ 0.668,  0.764]       12540.5 ns
+adversarial-cycle/back-nosort/u100-d100       0.740  [ 0.683,  0.813]       21261.9 ns
+adversarial-cycle/back-nosort/u100-d1000      0.890  [ 0.790,  0.971]       86058.6 ns
+adversarial-cycle/back-nosort/u100-d10000     1.007  [ 1.000,  1.014]      619883.7 ns
+adversarial-cycle/back-nosort/u1000-d10       1.005  [ 0.999,  1.011]       63196.4 ns
+adversarial-cycle/back-nosort/u1000-d100      0.967  [ 0.962,  0.971]       72924.0 ns
+adversarial-cycle/back-nosort/u1000-d1000     0.978  [ 0.974,  0.981]      134758.9 ns
+adversarial-cycle/back-nosort/u1000-d10000    1.236  [ 1.233,  1.239]      786718.8 ns
+adversarial-cycle/back-nosort/u10000-d10      0.906  [ 0.873,  0.946]     1248190.9 ns
+adversarial-cycle/back-nosort/u10000-d100     1.065  [ 1.019,  1.111]     1082786.2 ns
+adversarial-cycle/back-nosort/u10000-d1000    1.113  [ 1.102,  1.125]     1093303.8 ns
+adversarial-cycle/back-nosort/u10000-d10000   0.919  [ 0.903,  0.930]     2250583.5 ns
+adversarial-cycle/back/u10-d10                1.220  [ 1.118,  1.314]        2770.9 ns
+adversarial-cycle/back/u10-d100               0.781  [ 0.776,  0.786]       12022.9 ns
+adversarial-cycle/back/u10-d1000              0.709  [ 0.705,  0.717]      111988.7 ns
+adversarial-cycle/back/u10-d10000             1.222  [ 1.219,  1.227]      617997.2 ns
+adversarial-cycle/back/u100-d10               0.809  [ 0.767,  0.877]       12540.5 ns
+adversarial-cycle/back/u100-d100              1.065  [ 0.924,  1.218]       21261.9 ns
+adversarial-cycle/back/u100-d1000             1.042  [ 0.920,  1.133]       86058.6 ns
+adversarial-cycle/back/u100-d10000            1.239  [ 1.231,  1.247]      619883.7 ns
+adversarial-cycle/back/u1000-d10              1.245  [ 1.238,  1.251]       63196.4 ns
+adversarial-cycle/back/u1000-d100             1.209  [ 1.203,  1.213]       72924.0 ns
+adversarial-cycle/back/u1000-d1000            1.170  [ 1.166,  1.174]      134758.9 ns
+adversarial-cycle/back/u1000-d10000           1.068  [ 1.066,  1.072]      786718.8 ns
+adversarial-cycle/back/u10000-d10             1.421  [ 1.369,  1.484]     1248190.9 ns
+adversarial-cycle/back/u10000-d100            1.490  [ 1.427,  1.555]     1082786.2 ns
+adversarial-cycle/back/u10000-d1000           1.633  [ 1.607,  1.657]     1093303.8 ns
+adversarial-cycle/back/u10000-d10000          1.103  [ 1.083,  1.118]     2250583.5 ns
+adversarial-cycle/pk/u10-d10                  1.305  [ 1.234,  1.370]        2770.9 ns
+adversarial-cycle/pk/u10-d100                 1.142  [ 1.139,  1.146]       12022.9 ns
+adversarial-cycle/pk/u10-d1000                1.080  [ 1.075,  1.083]      111988.7 ns
+adversarial-cycle/pk/u10-d10000               1.477  [ 1.276,  1.701]      617997.2 ns
+adversarial-cycle/pk/u100-d10                 1.120  [ 1.060,  1.214]       12540.5 ns
+adversarial-cycle/pk/u100-d100                1.311  [ 1.213,  1.441]       21261.9 ns
+adversarial-cycle/pk/u100-d1000               1.545  [ 1.373,  1.684]       86058.6 ns
+adversarial-cycle/pk/u100-d10000              1.931  [ 1.785,  2.008]      619883.7 ns
+adversarial-cycle/pk/u1000-d10                1.725  [ 1.720,  1.730]       63196.4 ns
+adversarial-cycle/pk/u1000-d100               1.717  [ 1.708,  1.725]       72924.0 ns
+adversarial-cycle/pk/u1000-d1000              1.712  [ 1.706,  1.718]      134758.9 ns
+adversarial-cycle/pk/u1000-d10000             1.525  [ 1.524,  1.525]      786718.8 ns
+adversarial-cycle/pk/u10000-d10               1.329  [ 1.279,  1.390]     1248190.9 ns
+adversarial-cycle/pk/u10000-d100              1.556  [ 1.473,  1.639]     1082786.2 ns
+adversarial-cycle/pk/u10000-d1000             1.888  [ 1.876,  1.900]     1093303.8 ns
+adversarial-cycle/pk/u10000-d10000            1.235  [ 1.156,  1.300]     2250583.5 ns
+adversarial-cycle/twoway/u10-d10              1.152  [ 1.089,  1.212]        2770.9 ns
+adversarial-cycle/twoway/u10-d100             0.918  [ 0.901,  0.939]       12022.9 ns
+adversarial-cycle/twoway/u10-d1000            0.772  [ 0.770,  0.774]      111988.7 ns
+adversarial-cycle/twoway/u10-d10000           1.281  [ 1.278,  1.286]      617997.2 ns
+adversarial-cycle/twoway/u100-d10             0.919  [ 0.871,  0.997]       12540.5 ns
+adversarial-cycle/twoway/u100-d100            0.871  [ 0.805,  0.957]       21261.9 ns
+adversarial-cycle/twoway/u100-d1000           1.093  [ 0.967,  1.189]       86058.6 ns
+adversarial-cycle/twoway/u100-d10000          1.321  [ 1.313,  1.328]      619883.7 ns
+adversarial-cycle/twoway/u1000-d10            1.304  [ 1.301,  1.307]       63196.4 ns
+adversarial-cycle/twoway/u1000-d100           1.272  [ 1.266,  1.276]       72924.0 ns
+adversarial-cycle/twoway/u1000-d1000          1.241  [ 1.237,  1.246]      134758.9 ns
+adversarial-cycle/twoway/u1000-d10000         1.134  [ 1.132,  1.137]      786718.8 ns
+adversarial-cycle/twoway/u10000-d10           0.931  [ 0.896,  0.973]     1248190.9 ns
+adversarial-cycle/twoway/u10000-d100          1.064  [ 1.018,  1.110]     1082786.2 ns
+adversarial-cycle/twoway/u10000-d1000         1.131  [ 1.123,  1.138]     1093303.8 ns
+adversarial-cycle/twoway/u10000-d10000        0.815  [ 0.801,  0.825]     2250583.5 ns
+adversarial/back-fresh/u10-d10                2.375  [ 2.296,  2.458]        1755.6 ns
+adversarial/back-fresh/u10-d100               2.005  [ 1.912,  2.127]        2105.2 ns
+adversarial/back-fresh/u10-d1000              2.033  [ 1.988,  2.060]        2102.6 ns
+adversarial/back-fresh/u10-d10000             2.318  [ 2.192,  2.463]        1844.8 ns
+adversarial/back-fresh/u100-d10               2.682  [ 2.609,  2.809]       15023.4 ns
+adversarial/back-fresh/u100-d100              2.636  [ 2.573,  2.745]       15007.6 ns
+adversarial/back-fresh/u100-d1000             2.826  [ 2.779,  2.907]       13796.5 ns
+adversarial/back-fresh/u100-d10000            3.694  [ 3.408,  3.962]       10570.5 ns
+adversarial/back-fresh/u1000-d10              5.609  [ 5.557,  5.668]       95849.3 ns
+adversarial/back-fresh/u1000-d100             5.570  [ 5.463,  5.681]       95302.1 ns
+adversarial/back-fresh/u1000-d1000            5.507  [ 5.336,  5.721]       92790.8 ns
+adversarial/back-fresh/u1000-d10000           5.771  [ 5.573,  6.028]       86858.3 ns
+adversarial/back-fresh/u10000-d10             5.848  [ 5.470,  6.171]     1401479.2 ns
+adversarial/back-fresh/u10000-d100            4.961  [ 4.867,  5.093]     1433712.2 ns
+adversarial/back-fresh/u10000-d1000           5.002  [ 4.734,  5.311]     1464354.8 ns
+adversarial/back-fresh/u10000-d10000          5.060  [ 4.964,  5.177]     1403841.2 ns
+adversarial/back-nosort/u10-d10               2.204  [ 2.197,  2.212]        1755.6 ns
+adversarial/back-nosort/u10-d100              2.022  [ 1.929,  2.146]        2105.2 ns
+adversarial/back-nosort/u10-d1000             1.822  [ 1.782,  1.845]        2102.6 ns
+adversarial/back-nosort/u10-d10000            2.264  [ 2.149,  2.393]        1844.8 ns
+adversarial/back-nosort/u100-d10              1.951  [ 1.902,  2.039]       15023.4 ns
+adversarial/back-nosort/u100-d100             1.948  [ 1.902,  2.029]       15007.6 ns
+adversarial/back-nosort/u100-d1000            2.052  [ 2.018,  2.111]       13796.5 ns
+adversarial/back-nosort/u100-d10000           2.716  [ 2.503,  2.916]       10570.5 ns
+adversarial/back-nosort/u1000-d10             2.938  [ 2.884,  2.985]       95849.3 ns
+adversarial/back-nosort/u1000-d100            2.808  [ 2.801,  2.813]       95302.1 ns
+adversarial/back-nosort/u1000-d1000           2.853  [ 2.837,  2.869]       92790.8 ns
+adversarial/back-nosort/u1000-d10000          3.041  [ 3.021,  3.058]       86858.3 ns
+adversarial/back-nosort/u10000-d10            2.312  [ 2.296,  2.328]     1401479.2 ns
+adversarial/back-nosort/u10000-d100           2.227  [ 2.218,  2.236]     1433712.2 ns
+adversarial/back-nosort/u10000-d1000          2.183  [ 2.108,  2.251]     1464354.8 ns
+adversarial/back-nosort/u10000-d10000         2.229  [ 2.220,  2.245]     1403841.2 ns
+adversarial/back/u10-d10                      2.917  [ 2.908,  2.926]        1755.6 ns
+adversarial/back/u10-d100                     2.509  [ 2.416,  2.654]        2105.2 ns
+adversarial/back/u10-d1000                    2.433  [ 2.381,  2.464]        2102.6 ns
+adversarial/back/u10-d10000                   3.025  [ 2.870,  3.202]        1844.8 ns
+adversarial/back/u100-d10                     3.428  [ 3.339,  3.586]       15023.4 ns
+adversarial/back/u100-d100                    3.382  [ 3.303,  3.524]       15007.6 ns
+adversarial/back/u100-d1000                   3.647  [ 3.587,  3.751]       13796.5 ns
+adversarial/back/u100-d10000                  4.711  [ 4.344,  5.054]       10570.5 ns
+adversarial/back/u1000-d10                    7.951  [ 7.905,  8.000]       95849.3 ns
+adversarial/back/u1000-d100                   8.116  [ 8.092,  8.145]       95302.1 ns
+adversarial/back/u1000-d1000                  8.268  [ 8.222,  8.316]       92790.8 ns
+adversarial/back/u1000-d10000                 8.995  [ 8.923,  9.058]       86858.3 ns
+adversarial/back/u10000-d10                   7.398  [ 7.374,  7.420]     1401479.2 ns
+adversarial/back/u10000-d100                  7.554  [ 7.465,  7.704]     1433712.2 ns
+adversarial/back/u10000-d1000                 6.771  [ 6.538,  6.990]     1464354.8 ns
+adversarial/back/u10000-d10000                7.367  [ 7.311,  7.433]     1403841.2 ns
+adversarial/pk/u10-d10                        4.028  [ 3.993,  4.060]        1755.6 ns
+adversarial/pk/u10-d100                      24.862  [23.895, 26.273]        2105.2 ns
+adversarial/pk/u10-d1000                     323.552  [316.542, 327.643]        2102.6 ns
+adversarial/pk/u10-d10000                    4803.385  [4557.945, 5077.305]        1844.8 ns
+adversarial/pk/u100-d10                       3.783  [ 3.661,  3.978]       15023.4 ns
+adversarial/pk/u100-d100                      6.582  [ 6.428,  6.859]       15007.6 ns
+adversarial/pk/u100-d1000                    53.916  [53.020, 55.467]       13796.5 ns
+adversarial/pk/u100-d10000                   859.142  [790.403, 922.082]       10570.5 ns
+adversarial/pk/u1000-d10                      8.491  [ 8.401,  8.581]       95849.3 ns
+adversarial/pk/u1000-d100                     8.460  [ 8.411,  8.512]       95302.1 ns
+adversarial/pk/u1000-d1000                   14.415  [14.321, 14.517]       92790.8 ns
+adversarial/pk/u1000-d10000                  98.497  [98.008, 98.925]       86858.3 ns
+adversarial/pk/u10000-d10                     7.497  [ 7.468,  7.525]     1401479.2 ns
+adversarial/pk/u10000-d100                    7.263  [ 7.243,  7.282]     1433712.2 ns
+adversarial/pk/u10000-d1000                   7.336  [ 7.084,  7.570]     1464354.8 ns
+adversarial/pk/u10000-d10000                 12.721  [12.671, 12.808]     1403841.2 ns
+adversarial/twoway-fresh/u10-d10              3.259  [ 3.248,  3.269]        1755.6 ns
+adversarial/twoway-fresh/u10-d100             2.979  [ 2.870,  3.148]        2105.2 ns
+adversarial/twoway-fresh/u10-d1000            2.981  [ 2.916,  3.019]        2102.6 ns
+adversarial/twoway-fresh/u10-d10000           3.595  [ 3.409,  3.798]        1844.8 ns
+adversarial/twoway-fresh/u100-d10             0.425  [ 0.415,  0.445]       15023.4 ns
+adversarial/twoway-fresh/u100-d100            3.822  [ 3.732,  3.980]       15007.6 ns
+adversarial/twoway-fresh/u100-d1000           4.259  [ 4.187,  4.381]       13796.5 ns
+adversarial/twoway-fresh/u100-d10000          5.590  [ 5.153,  5.988]       10570.5 ns
+adversarial/twoway-fresh/u1000-d10            0.073  [ 0.073,  0.074]       95849.3 ns
+adversarial/twoway-fresh/u1000-d100           0.676  [ 0.675,  0.678]       95302.1 ns
+adversarial/twoway-fresh/u1000-d1000          8.811  [ 8.753,  8.870]       92790.8 ns
+adversarial/twoway-fresh/u1000-d10000         9.574  [ 9.531,  9.621]       86858.3 ns
+adversarial/twoway-fresh/u10000-d10           0.008  [ 0.008,  0.008]     1401479.2 ns
+adversarial/twoway-fresh/u10000-d100          0.053  [ 0.052,  0.053]     1433712.2 ns
+adversarial/twoway-fresh/u10000-d1000         0.599  [ 0.578,  0.618]     1464354.8 ns
+adversarial/twoway-fresh/u10000-d10000        7.050  [ 7.012,  7.105]     1403841.2 ns
+adversarial/twoway/u10-d10                    3.952  [ 3.929,  3.972]        1755.6 ns
+adversarial/twoway/u10-d100                   3.542  [ 3.411,  3.746]        2105.2 ns
+adversarial/twoway/u10-d1000                  3.513  [ 3.436,  3.557]        2102.6 ns
+adversarial/twoway/u10-d10000                 4.308  [ 4.087,  4.548]        1844.8 ns
+adversarial/twoway/u100-d10                   0.417  [ 0.407,  0.436]       15023.4 ns
+adversarial/twoway/u100-d100                  4.604  [ 4.498,  4.794]       15007.6 ns
+adversarial/twoway/u100-d1000                 5.043  [ 4.960,  5.188]       13796.5 ns
+adversarial/twoway/u100-d10000                6.696  [ 6.175,  7.178]       10570.5 ns
+adversarial/twoway/u1000-d10                  0.076  [ 0.075,  0.076]       95849.3 ns
+adversarial/twoway/u1000-d100                 0.674  [ 0.672,  0.675]       95302.1 ns
+adversarial/twoway/u1000-d1000               10.304  [10.233, 10.376]       92790.8 ns
+adversarial/twoway/u1000-d10000              11.243  [11.220, 11.265]       86858.3 ns
+adversarial/twoway/u10000-d10                 0.009  [ 0.009,  0.009]     1401479.2 ns
+adversarial/twoway/u10000-d100                0.053  [ 0.052,  0.053]     1433712.2 ns
+adversarial/twoway/u10000-d1000               0.597  [ 0.577,  0.616]     1464354.8 ns
+adversarial/twoway/u10000-d10000              8.149  [ 8.112,  8.207]     1403841.2 ns
+build/om/lazy                                 1.139  [ 1.131,  1.151]      520658.2 ns
+build/pk/lazy                                 1.057  [ 1.051,  1.062]      520658.2 ns
+mixed/back-fresh/s10-n10                      1.286  [ 1.204,  1.380]        3094.2 ns
+mixed/back-fresh/s10-n100                     2.584  [ 2.568,  2.604]       15216.1 ns
+mixed/back-fresh/s10-n1000                    5.324  [ 5.210,  5.484]       93187.1 ns
+mixed/back-fresh/s10-n10000                   4.906  [ 4.734,  5.100]     1499482.1 ns
+mixed/back-fresh/s100-n10                     0.267  [ 0.251,  0.292]       15021.6 ns
+mixed/back-fresh/s100-n100                    1.306  [ 1.304,  1.309]       30180.0 ns
+mixed/back-fresh/s100-n1000                   4.859  [ 4.699,  5.028]      105843.0 ns
+mixed/back-fresh/s100-n10000                  4.898  [ 4.550,  5.301]     1579346.3 ns
+mixed/back-fresh/s1000-n10                    0.028  [ 0.027,  0.031]      139139.0 ns
+mixed/back-fresh/s1000-n100                   0.243  [ 0.243,  0.243]      163689.7 ns
+mixed/back-fresh/s1000-n1000                  2.118  [ 1.912,  2.333]      237583.3 ns
+mixed/back-fresh/s1000-n10000                 5.197  [ 4.979,  5.404]     1604378.3 ns
+mixed/back-fresh/s10000-n10                   0.004  [ 0.004,  0.004]     1028974.4 ns
+mixed/back-fresh/s10000-n100                  0.038  [ 0.038,  0.038]     1042438.5 ns
+mixed/back-fresh/s10000-n1000                 0.448  [ 0.434,  0.462]     1136251.6 ns
+mixed/back-fresh/s10000-n10000                3.100  [ 2.987,  3.215]     2429941.5 ns
+mixed/back-fresh/s100000-n10                  0.000  [ 0.000,  0.000]    15254538.6 ns
+mixed/back-fresh/s100000-n100                 0.003  [ 0.003,  0.003]    15194769.5 ns
+mixed/back-fresh/s100000-n1000                0.033  [ 0.032,  0.035]    15260186.3 ns
+mixed/back-fresh/s100000-n10000               0.388  [ 0.365,  0.407]    21666749.6 ns
+mixed/back-nosort/s10-n10                     1.302  [ 1.220,  1.395]        3094.2 ns
+mixed/back-nosort/s10-n100                    1.875  [ 1.863,  1.891]       15216.1 ns
+mixed/back-nosort/s10-n1000                   2.927  [ 2.894,  2.961]       93187.1 ns
+mixed/back-nosort/s10-n10000                  2.098  [ 2.033,  2.164]     1499482.1 ns
+mixed/back-nosort/s100-n10                    0.256  [ 0.239,  0.278]       15021.6 ns
+mixed/back-nosort/s100-n100                   0.943  [ 0.941,  0.944]       30180.0 ns
+mixed/back-nosort/s100-n1000                  2.502  [ 2.500,  2.505]      105843.0 ns
+mixed/back-nosort/s100-n10000                 1.975  [ 1.938,  2.029]     1579346.3 ns
+mixed/back-nosort/s1000-n10                   0.028  [ 0.027,  0.031]      139139.0 ns
+mixed/back-nosort/s1000-n100                  0.187  [ 0.187,  0.188]      163689.7 ns
+mixed/back-nosort/s1000-n1000                 1.128  [ 1.023,  1.228]      237583.3 ns
+mixed/back-nosort/s1000-n10000                1.999  [ 1.943,  2.043]     1604378.3 ns
+mixed/back-nosort/s10000-n10                  0.004  [ 0.004,  0.004]     1028974.4 ns
+mixed/back-nosort/s10000-n100                 0.027  [ 0.027,  0.027]     1042438.5 ns
+mixed/back-nosort/s10000-n1000                0.227  [ 0.227,  0.227]     1136251.6 ns
+mixed/back-nosort/s10000-n10000               1.295  [ 1.287,  1.304]     2429941.5 ns
+mixed/back-nosort/s100000-n10                 0.000  [ 0.000,  0.000]    15254538.6 ns
+mixed/back-nosort/s100000-n100                0.002  [ 0.002,  0.002]    15194769.5 ns
+mixed/back-nosort/s100000-n1000               0.020  [ 0.020,  0.020]    15260186.3 ns
+mixed/back-nosort/s100000-n10000              0.143  [ 0.140,  0.146]    21666749.6 ns
+mixed/back/s10-n10                            1.783  [ 1.673,  1.916]        3094.2 ns
+mixed/back/s10-n100                           3.298  [ 3.266,  3.343]       15216.1 ns
+mixed/back/s10-n1000                          8.173  [ 8.161,  8.184]       93187.1 ns
+mixed/back/s10-n10000                         6.794  [ 6.586,  7.021]     1499482.1 ns
+mixed/back/s100-n10                           0.344  [ 0.322,  0.375]       15021.6 ns
+mixed/back/s100-n100                          1.661  [ 1.658,  1.665]       30180.0 ns
+mixed/back/s100-n1000                         7.311  [ 7.279,  7.331]      105843.0 ns
+mixed/back/s100-n10000                        6.570  [ 6.438,  6.755]     1579346.3 ns
+mixed/back/s1000-n10                          0.037  [ 0.035,  0.040]      139139.0 ns
+mixed/back/s1000-n100                         0.309  [ 0.308,  0.309]      163689.7 ns
+mixed/back/s1000-n1000                        3.266  [ 2.970,  3.558]      237583.3 ns
+mixed/back/s1000-n10000                       6.278  [ 6.104,  6.415]     1604378.3 ns
+mixed/back/s10000-n10                         0.005  [ 0.005,  0.005]     1028974.4 ns
+mixed/back/s10000-n100                        0.048  [ 0.048,  0.048]     1042438.5 ns
+mixed/back/s10000-n1000                       0.684  [ 0.681,  0.687]     1136251.6 ns
+mixed/back/s10000-n10000                      4.217  [ 4.191,  4.246]     2429941.5 ns
+mixed/back/s100000-n10                        0.000  [ 0.000,  0.000]    15254538.6 ns
+mixed/back/s100000-n100                       0.003  [ 0.003,  0.003]    15194769.5 ns
+mixed/back/s100000-n1000                      0.051  [ 0.050,  0.051]    15260186.3 ns
+mixed/back/s100000-n10000                     0.444  [ 0.436,  0.456]    21666749.6 ns
+mixed/twoway-fresh/s10-n10                    2.005  [ 1.879,  2.148]        3094.2 ns
+mixed/twoway-fresh/s10-n100                   3.882  [ 3.857,  3.913]       15216.1 ns
+mixed/twoway-fresh/s10-n1000                  8.789  [ 8.767,  8.817]       93187.1 ns
+mixed/twoway-fresh/s10-n10000                 0.572  [ 0.554,  0.590]     1499482.1 ns
+mixed/twoway-fresh/s100-n10                   0.423  [ 0.395,  0.460]       15021.6 ns
+mixed/twoway-fresh/s100-n100                  1.954  [ 1.950,  1.958]       30180.0 ns
+mixed/twoway-fresh/s100-n1000                 7.557  [ 7.549,  7.565]      105843.0 ns
+mixed/twoway-fresh/s100-n10000                0.545  [ 0.534,  0.559]     1579346.3 ns
+mixed/twoway-fresh/s1000-n10                  0.045  [ 0.042,  0.049]      139139.0 ns
+mixed/twoway-fresh/s1000-n100                 0.356  [ 0.356,  0.357]      163689.7 ns
+mixed/twoway-fresh/s1000-n1000                3.342  [ 3.029,  3.633]      237583.3 ns
+mixed/twoway-fresh/s1000-n10000               0.511  [ 0.496,  0.522]     1604378.3 ns
+mixed/twoway-fresh/s10000-n10                 0.006  [ 0.006,  0.007]     1028974.4 ns
+mixed/twoway-fresh/s10000-n100                0.054  [ 0.054,  0.055]     1042438.5 ns
+mixed/twoway-fresh/s10000-n1000               0.669  [ 0.668,  0.670]     1136251.6 ns
+mixed/twoway-fresh/s10000-n10000              0.324  [ 0.322,  0.327]     2429941.5 ns
+mixed/twoway-fresh/s100000-n10                0.000  [ 0.000,  0.000]    15254538.6 ns
+mixed/twoway-fresh/s100000-n100               0.004  [ 0.004,  0.004]    15194769.5 ns
+mixed/twoway-fresh/s100000-n1000              0.049  [ 0.048,  0.049]    15260186.3 ns
+mixed/twoway-fresh/s100000-n10000             0.037  [ 0.036,  0.038]    21666749.6 ns
+mixed/twoway/s10-n10                          2.394  [ 2.245,  2.569]        3094.2 ns
+mixed/twoway/s10-n100                         4.664  [ 4.630,  4.705]       15216.1 ns
+mixed/twoway/s10-n1000                       10.334  [10.287, 10.393]       93187.1 ns
+mixed/twoway/s10-n10000                       0.586  [ 0.567,  0.605]     1499482.1 ns
+mixed/twoway/s100-n10                         0.487  [ 0.455,  0.530]       15021.6 ns
+mixed/twoway/s100-n100                        2.337  [ 2.331,  2.342]       30180.0 ns
+mixed/twoway/s100-n1000                       9.043  [ 9.031,  9.056]      105843.0 ns
+mixed/twoway/s100-n10000                      0.540  [ 0.530,  0.555]     1579346.3 ns
+mixed/twoway/s1000-n10                        0.052  [ 0.049,  0.057]      139139.0 ns
+mixed/twoway/s1000-n100                       0.414  [ 0.414,  0.415]      163689.7 ns
+mixed/twoway/s1000-n1000                      3.995  [ 3.629,  4.348]      237583.3 ns
+mixed/twoway/s1000-n10000                     0.514  [ 0.499,  0.525]     1604378.3 ns
+mixed/twoway/s10000-n10                       0.008  [ 0.007,  0.008]     1028974.4 ns
+mixed/twoway/s10000-n100                      0.063  [ 0.063,  0.063]     1042438.5 ns
+mixed/twoway/s10000-n1000                     0.806  [ 0.804,  0.809]     1136251.6 ns
+mixed/twoway/s10000-n10000                    0.322  [ 0.321,  0.324]     2429941.5 ns
+mixed/twoway/s100000-n10                      0.001  [ 0.000,  0.001]    15254538.6 ns
+mixed/twoway/s100000-n100                     0.004  [ 0.004,  0.004]    15194769.5 ns
+mixed/twoway/s100000-n1000                    0.060  [ 0.059,  0.060]    15260186.3 ns
+mixed/twoway/s100000-n10000                   0.036  [ 0.036,  0.037]    21666749.6 ns
+moves/back-fresh/churn                        0.285  [ 0.284,  0.286]     1763939.3 ns
+moves/back-fresh/lazy                         0.588  [ 0.585,  0.591]     1537334.7 ns
+moves/back-fresh/mixed                        0.106  [ 0.106,  0.107]     2531602.2 ns
+moves/back-fresh/settled                      0.021  [ 0.021,  0.021]     3483095.4 ns
+moves/back-nosort/churn                       0.282  [ 0.281,  0.284]     1763939.3 ns
+moves/back-nosort/lazy                        0.584  [ 0.580,  0.587]     1537334.7 ns
+moves/back-nosort/mixed                       0.105  [ 0.104,  0.105]     2531602.2 ns
+moves/back-nosort/settled                     0.020  [ 0.020,  0.020]     3483095.4 ns
+moves/back/churn                              0.300  [ 0.299,  0.301]     1763939.3 ns
+moves/back/lazy                               0.647  [ 0.644,  0.651]     1537334.7 ns
+moves/back/mixed                              0.104  [ 0.104,  0.104]     2531602.2 ns
+moves/back/settled                            0.021  [ 0.021,  0.021]     3483095.4 ns
+moves/pk/churn                               90.803  [90.485, 91.132]     1763939.3 ns
+moves/pk/lazy                                245.929  [244.929, 246.886]     1537334.7 ns
+moves/pk/mixed                               19.696  [19.654, 19.735]     2531602.2 ns
+moves/pk/settled                              0.018  [ 0.018,  0.019]     3483095.4 ns
+moves/twoway-fresh/churn                      0.294  [ 0.293,  0.296]     1763939.3 ns
+moves/twoway-fresh/lazy                       0.603  [ 0.600,  0.606]     1537334.7 ns
+moves/twoway-fresh/mixed                      0.100  [ 0.100,  0.100]     2531602.2 ns
+moves/twoway-fresh/settled                    0.017  [ 0.017,  0.017]     3483095.4 ns
+moves/twoway/churn                            0.296  [ 0.295,  0.297]     1763939.3 ns
+moves/twoway/lazy                             0.615  [ 0.613,  0.618]     1537334.7 ns
+moves/twoway/mixed                            0.103  [ 0.103,  0.103]     2531602.2 ns
+moves/twoway/settled                          0.017  [ 0.017,  0.017]     3483095.4 ns
+

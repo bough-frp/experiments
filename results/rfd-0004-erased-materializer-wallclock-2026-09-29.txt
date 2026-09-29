@@ -1,0 +1,40 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-29 - rfd-0004-erased-materializer-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0004-erased-materializer-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.10s
+     Running benches/rfd-0004-erased-materializer-wallclock.rs (target/release/deps/rfd_0004_erased_materializer_wallclock-56852d47210e11a5)
+Gnuplot not found, using plotters backend
+Benchmarking event/baseline/3
+Benchmarking event/baseline/3: Warming up for 3.0000 s
+Benchmarking event/baseline/3: Collecting 100 samples in estimated 10.000 s (281M iterations)
+Benchmarking event/baseline/3: Analyzing
+event/baseline/3        time:   [35.522 ns 35.570 ns 35.620 ns]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+Benchmarking event/boxed/3
+Benchmarking event/boxed/3: Warming up for 3.0000 s
+Benchmarking event/boxed/3: Collecting 100 samples in estimated 10.000 s (277M iterations)
+Benchmarking event/boxed/3: Analyzing
+event/boxed/3           time:   [36.101 ns 36.163 ns 36.220 ns]
+Benchmarking event/fnptr/3
+Benchmarking event/fnptr/3: Warming up for 3.0000 s
+Benchmarking event/fnptr/3: Collecting 100 samples in estimated 10.000 s (272M iterations)
+Benchmarking event/fnptr/3: Analyzing
+event/fnptr/3           time:   [36.772 ns 36.821 ns 36.872 ns]
+Found 8 outliers among 100 measurements (8.00%)
+  1 (1.00%) low mild
+  7 (7.00%) high mild
+Benchmarking event/flat/3
+Benchmarking event/flat/3: Warming up for 3.0000 s
+Benchmarking event/flat/3: Collecting 100 samples in estimated 10.000 s (290M iterations)
+Benchmarking event/flat/3: Analyzing
+event/flat/3            time:   [34.549 ns 34.597 ns 34.651 ns]
+
+
+$ python3 scripts/ratios.py
+
+benchmark      ratio   95% interval       baseline mean
+event/boxed/3   1.018  [ 1.016,  1.020]          35.6 ns
+event/flat/3    0.973  [ 0.972,  0.974]          35.6 ns
+event/fnptr/3   1.034  [ 1.033,  1.035]          35.6 ns
+

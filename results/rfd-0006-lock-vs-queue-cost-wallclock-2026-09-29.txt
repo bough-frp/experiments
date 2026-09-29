@@ -1,0 +1,1262 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-29 - rfd-0006-lock-vs-queue-cost-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0006-lock-vs-queue-cost-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.13s
+     Running benches/rfd-0006-lock-vs-queue-cost-wallclock.rs (target/release/deps/rfd_0006_lock_vs_queue_cost_wallclock-71c9a91761feb839)
+Gnuplot not found, using plotters backend
+Benchmarking single/baseline/1
+Benchmarking single/baseline/1: Warming up for 500.00 ms
+Benchmarking single/baseline/1: Collecting 30 samples in estimated 3.0002 s (6.0M iterations)
+Benchmarking single/baseline/1: Analyzing
+single/baseline/1       time:   [505.04 ns 505.94 ns 506.77 ns]
+Benchmarking single/lock/1
+Benchmarking single/lock/1: Warming up for 500.00 ms
+Benchmarking single/lock/1: Collecting 30 samples in estimated 3.0001 s (5.7M iterations)
+Benchmarking single/lock/1: Analyzing
+single/lock/1           time:   [528.18 ns 529.00 ns 530.06 ns]
+Found 3 outliers among 30 measurements (10.00%)
+  2 (6.67%) high mild
+  1 (3.33%) high severe
+Benchmarking single/queue/1
+Benchmarking single/queue/1: Warming up for 500.00 ms
+Benchmarking single/queue/1: Collecting 30 samples in estimated 3.0001 s (5.2M iterations)
+Benchmarking single/queue/1: Analyzing
+single/queue/1          time:   [578.52 ns 579.36 ns 580.33 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high mild
+Benchmarking single/baseline/64
+Benchmarking single/baseline/64: Warming up for 500.00 ms
+Benchmarking single/baseline/64: Collecting 30 samples in estimated 3.0050 s (93k iterations)
+Benchmarking single/baseline/64: Analyzing
+single/baseline/64      time:   [32.099 µs 32.124 µs 32.154 µs]
+Found 4 outliers among 30 measurements (13.33%)
+  1 (3.33%) low severe
+  1 (3.33%) high mild
+  2 (6.67%) high severe
+Benchmarking single/lock/64
+Benchmarking single/lock/64: Warming up for 500.00 ms
+Benchmarking single/lock/64: Collecting 30 samples in estimated 3.0037 s (93k iterations)
+Benchmarking single/lock/64: Analyzing
+single/lock/64          time:   [32.534 µs 32.592 µs 32.652 µs]
+Found 9 outliers among 30 measurements (30.00%)
+  3 (10.00%) low severe
+  6 (20.00%) high severe
+Benchmarking single/queue/64
+Benchmarking single/queue/64: Warming up for 500.00 ms
+Benchmarking single/queue/64: Collecting 30 samples in estimated 3.0004 s (84k iterations)
+Benchmarking single/queue/64: Analyzing
+single/queue/64         time:   [35.502 µs 35.633 µs 35.756 µs]
+
+Benchmarking contended/baseline/2
+Benchmarking contended/baseline/2: Warming up for 500.00 ms
+Benchmarking contended/baseline/2: Collecting 30 samples in estimated 3.0000 s (6.0M iterations)
+Benchmarking contended/baseline/2: Analyzing
+contended/baseline/2    time:   [498.99 ns 499.97 ns 501.05 ns]
+Found 6 outliers among 30 measurements (20.00%)
+  6 (20.00%) high mild
+Benchmarking contended/lock/2
+Benchmarking contended/lock/2: Warming up for 500.00 ms
+Benchmarking contended/lock/2: Collecting 30 samples in estimated 3.0000 s (3.6M iterations)
+Benchmarking contended/lock/2: Analyzing
+contended/lock/2        time:   [850.61 ns 859.56 ns 868.31 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) low mild
+Benchmarking contended/queue/2
+Benchmarking contended/queue/2: Warming up for 500.00 ms
+Benchmarking contended/queue/2: Collecting 30 samples in estimated 3.0000 s (4.7M iterations)
+Benchmarking contended/queue/2: Analyzing
+contended/queue/2       time:   [630.54 ns 636.68 ns 642.98 ns]
+Benchmarking contended/baseline/4
+Benchmarking contended/baseline/4: Warming up for 500.00 ms
+Benchmarking contended/baseline/4: Collecting 30 samples in estimated 3.0000 s (6.0M iterations)
+Benchmarking contended/baseline/4: Analyzing
+contended/baseline/4    time:   [497.75 ns 498.36 ns 499.13 ns]
+Found 4 outliers among 30 measurements (13.33%)
+  1 (3.33%) high mild
+  3 (10.00%) high severe
+Benchmarking contended/lock/4
+Benchmarking contended/lock/4: Warming up for 500.00 ms
+Benchmarking contended/lock/4: Collecting 30 samples in estimated 3.0000 s (3.2M iterations)
+Benchmarking contended/lock/4: Analyzing
+contended/lock/4        time:   [944.02 ns 947.68 ns 952.81 ns]
+Found 2 outliers among 30 measurements (6.67%)
+  1 (3.33%) low mild
+  1 (3.33%) high severe
+Benchmarking contended/queue/4
+Benchmarking contended/queue/4: Warming up for 500.00 ms
+Benchmarking contended/queue/4: Collecting 30 samples in estimated 3.0000 s (4.5M iterations)
+Benchmarking contended/queue/4: Analyzing
+contended/queue/4       time:   [684.91 ns 694.04 ns 703.51 ns]
+Benchmarking contended/baseline/8
+Benchmarking contended/baseline/8: Warming up for 500.00 ms
+Benchmarking contended/baseline/8: Collecting 30 samples in estimated 3.0000 s (6.0M iterations)
+Benchmarking contended/baseline/8: Analyzing
+contended/baseline/8    time:   [497.55 ns 497.88 ns 498.29 ns]
+Found 5 outliers among 30 measurements (16.67%)
+  1 (3.33%) high mild
+  4 (13.33%) high severe
+Benchmarking contended/lock/8
+Benchmarking contended/lock/8: Warming up for 500.00 ms
+Benchmarking contended/lock/8: Collecting 30 samples in estimated 3.0000 s (2.9M iterations)
+Benchmarking contended/lock/8: Analyzing
+contended/lock/8        time:   [1.0047 µs 1.0083 µs 1.0124 µs]
+Found 3 outliers among 30 measurements (10.00%)
+  2 (6.67%) low severe
+  1 (3.33%) high severe
+Benchmarking contended/queue/8
+Benchmarking contended/queue/8: Warming up for 500.00 ms
+Benchmarking contended/queue/8: Collecting 30 samples in estimated 3.0000 s (4.0M iterations)
+Benchmarking contended/queue/8: Analyzing
+contended/queue/8       time:   [742.60 ns 755.09 ns 767.61 ns]
+
+Benchmarking footprint-0B/baseline/2
+Benchmarking footprint-0B/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-0B/baseline/2: Collecting 30 samples in estimated 2.0000 s (3.8M iterations)
+Benchmarking footprint-0B/baseline/2: Analyzing
+footprint-0B/baseline/2 time:   [527.60 ns 528.51 ns 529.57 ns]
+Found 7 outliers among 30 measurements (23.33%)
+  2 (6.67%) high mild
+  5 (16.67%) high severe
+Benchmarking footprint-0B/lock/2
+Benchmarking footprint-0B/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-0B/lock/2: Collecting 30 samples in estimated 2.0000 s (2.1M iterations)
+Benchmarking footprint-0B/lock/2: Analyzing
+footprint-0B/lock/2     time:   [894.38 ns 905.62 ns 915.95 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) low mild
+Benchmarking footprint-0B/ticket/2
+Benchmarking footprint-0B/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-0B/ticket/2: Collecting 30 samples in estimated 2.0000 s (2.9M iterations)
+Benchmarking footprint-0B/ticket/2: Analyzing
+footprint-0B/ticket/2   time:   [719.75 ns 732.81 ns 746.57 ns]
+Benchmarking footprint-0B/queue/2
+Benchmarking footprint-0B/queue/2: Warming up for 500.00 ms
+Benchmarking footprint-0B/queue/2: Collecting 30 samples in estimated 2.0000 s (3.0M iterations)
+Benchmarking footprint-0B/queue/2: Analyzing
+footprint-0B/queue/2    time:   [644.22 ns 646.39 ns 648.63 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high mild
+Benchmarking footprint-0B/baseline/4
+Benchmarking footprint-0B/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-0B/baseline/4: Collecting 30 samples in estimated 2.0000 s (3.8M iterations)
+Benchmarking footprint-0B/baseline/4: Analyzing
+footprint-0B/baseline/4 time:   [527.30 ns 527.76 ns 528.35 ns]
+Found 5 outliers among 30 measurements (16.67%)
+  5 (16.67%) high severe
+Benchmarking footprint-0B/lock/4
+Benchmarking footprint-0B/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-0B/lock/4: Collecting 30 samples in estimated 2.0000 s (2.1M iterations)
+Benchmarking footprint-0B/lock/4: Analyzing
+footprint-0B/lock/4     time:   [912.46 ns 922.69 ns 935.66 ns]
+Found 2 outliers among 30 measurements (6.67%)
+  1 (3.33%) high mild
+  1 (3.33%) high severe
+Benchmarking footprint-0B/ticket/4
+Benchmarking footprint-0B/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-0B/ticket/4: Collecting 30 samples in estimated 2.0000 s (2.2M iterations)
+Benchmarking footprint-0B/ticket/4: Analyzing
+footprint-0B/ticket/4   time:   [839.93 ns 854.60 ns 869.27 ns]
+Benchmarking footprint-0B/queue/4
+Benchmarking footprint-0B/queue/4: Warming up for 500.00 ms
+Benchmarking footprint-0B/queue/4: Collecting 30 samples in estimated 2.0000 s (2.7M iterations)
+Benchmarking footprint-0B/queue/4: Analyzing
+footprint-0B/queue/4    time:   [699.71 ns 701.91 ns 704.72 ns]
+Found 4 outliers among 30 measurements (13.33%)
+  2 (6.67%) low mild
+  1 (3.33%) high mild
+  1 (3.33%) high severe
+Benchmarking footprint-0B/baseline/8
+Benchmarking footprint-0B/baseline/8: Warming up for 500.00 ms
+Benchmarking footprint-0B/baseline/8: Collecting 30 samples in estimated 2.0000 s (3.8M iterations)
+Benchmarking footprint-0B/baseline/8: Analyzing
+footprint-0B/baseline/8 time:   [527.19 ns 527.87 ns 528.70 ns]
+Found 5 outliers among 30 measurements (16.67%)
+  1 (3.33%) high mild
+  4 (13.33%) high severe
+Benchmarking footprint-0B/lock/8
+Benchmarking footprint-0B/lock/8: Warming up for 500.00 ms
+Benchmarking footprint-0B/lock/8: Collecting 30 samples in estimated 2.0000 s (1.9M iterations)
+Benchmarking footprint-0B/lock/8: Analyzing
+footprint-0B/lock/8     time:   [974.15 ns 983.89 ns 993.67 ns]
+Benchmarking footprint-0B/ticket/8
+Benchmarking footprint-0B/ticket/8: Warming up for 500.00 ms
+Benchmarking footprint-0B/ticket/8: Collecting 30 samples in estimated 2.0000 s (2.1M iterations)
+Benchmarking footprint-0B/ticket/8: Analyzing
+footprint-0B/ticket/8   time:   [889.06 ns 918.41 ns 946.88 ns]
+Benchmarking footprint-0B/queue/8
+Benchmarking footprint-0B/queue/8: Warming up for 500.00 ms
+Benchmarking footprint-0B/queue/8: Collecting 30 samples in estimated 2.0000 s (2.4M iterations)
+Benchmarking footprint-0B/queue/8: Analyzing
+footprint-0B/queue/8    time:   [750.10 ns 755.13 ns 761.56 ns]
+Found 6 outliers among 30 measurements (20.00%)
+  5 (16.67%) low mild
+  1 (3.33%) high severe
+
+Benchmarking footprint-64B/baseline/2
+Benchmarking footprint-64B/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-64B/baseline/2: Collecting 30 samples in estimated 2.0000 s (3.8M iterations)
+Benchmarking footprint-64B/baseline/2: Analyzing
+footprint-64B/baseline/2
+                        time:   [527.70 ns 528.24 ns 528.99 ns]
+Found 4 outliers among 30 measurements (13.33%)
+  4 (13.33%) high severe
+Benchmarking footprint-64B/lock/2
+Benchmarking footprint-64B/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-64B/lock/2: Collecting 30 samples in estimated 2.0000 s (2.2M iterations)
+Benchmarking footprint-64B/lock/2: Analyzing
+footprint-64B/lock/2    time:   [904.50 ns 912.38 ns 920.25 ns]
+Benchmarking footprint-64B/ticket/2
+Benchmarking footprint-64B/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-64B/ticket/2: Collecting 30 samples in estimated 2.0000 s (2.8M iterations)
+Benchmarking footprint-64B/ticket/2: Analyzing
+footprint-64B/ticket/2  time:   [718.01 ns 729.64 ns 741.94 ns]
+Benchmarking footprint-64B/queue/2
+Benchmarking footprint-64B/queue/2: Warming up for 500.00 ms
+Benchmarking footprint-64B/queue/2: Collecting 30 samples in estimated 2.0000 s (3.0M iterations)
+Benchmarking footprint-64B/queue/2: Analyzing
+footprint-64B/queue/2   time:   [646.94 ns 649.00 ns 651.24 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high mild
+Benchmarking footprint-64B/baseline/4
+Benchmarking footprint-64B/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-64B/baseline/4: Collecting 30 samples in estimated 2.0000 s (3.8M iterations)
+Benchmarking footprint-64B/baseline/4: Analyzing
+footprint-64B/baseline/4
+                        time:   [528.96 ns 529.82 ns 530.76 ns]
+Benchmarking footprint-64B/lock/4
+Benchmarking footprint-64B/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-64B/lock/4: Collecting 30 samples in estimated 2.0000 s (1.9M iterations)
+Benchmarking footprint-64B/lock/4: Analyzing
+footprint-64B/lock/4    time:   [971.83 ns 989.06 ns 1.0091 µs]
+Found 7 outliers among 30 measurements (23.33%)
+  1 (3.33%) high mild
+  6 (20.00%) high severe
+Benchmarking footprint-64B/ticket/4
+Benchmarking footprint-64B/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-64B/ticket/4: Collecting 30 samples in estimated 2.0000 s (2.0M iterations)
+Benchmarking footprint-64B/ticket/4: Analyzing
+footprint-64B/ticket/4  time:   [852.61 ns 879.35 ns 906.69 ns]
+Benchmarking footprint-64B/queue/4
+Benchmarking footprint-64B/queue/4: Warming up for 500.00 ms
+Benchmarking footprint-64B/queue/4: Collecting 30 samples in estimated 2.0000 s (2.7M iterations)
+Benchmarking footprint-64B/queue/4: Analyzing
+footprint-64B/queue/4   time:   [699.38 ns 701.78 ns 704.78 ns]
+Found 3 outliers among 30 measurements (10.00%)
+  2 (6.67%) high mild
+  1 (3.33%) high severe
+Benchmarking footprint-64B/baseline/8
+Benchmarking footprint-64B/baseline/8: Warming up for 500.00 ms
+Benchmarking footprint-64B/baseline/8: Collecting 30 samples in estimated 2.0000 s (3.8M iterations)
+Benchmarking footprint-64B/baseline/8: Analyzing
+footprint-64B/baseline/8
+                        time:   [531.44 ns 531.55 ns 531.73 ns]
+Found 2 outliers among 30 measurements (6.67%)
+  2 (6.67%) high severe
+Benchmarking footprint-64B/lock/8
+Benchmarking footprint-64B/lock/8: Warming up for 500.00 ms
+Benchmarking footprint-64B/lock/8: Collecting 30 samples in estimated 2.0000 s (1.9M iterations)
+Benchmarking footprint-64B/lock/8: Analyzing
+footprint-64B/lock/8    time:   [1.0281 µs 1.0366 µs 1.0447 µs]
+Benchmarking footprint-64B/ticket/8
+Benchmarking footprint-64B/ticket/8: Warming up for 500.00 ms
+Benchmarking footprint-64B/ticket/8: Collecting 30 samples in estimated 2.0000 s (2.0M iterations)
+Benchmarking footprint-64B/ticket/8: Analyzing
+footprint-64B/ticket/8  time:   [908.09 ns 940.39 ns 972.03 ns]
+Benchmarking footprint-64B/queue/8
+Benchmarking footprint-64B/queue/8: Warming up for 500.00 ms
+Benchmarking footprint-64B/queue/8: Collecting 30 samples in estimated 2.0000 s (2.4M iterations)
+Benchmarking footprint-64B/queue/8: Analyzing
+footprint-64B/queue/8   time:   [752.24 ns 757.48 ns 763.95 ns]
+Found 5 outliers among 30 measurements (16.67%)
+  4 (13.33%) low severe
+  1 (3.33%) high severe
+
+Benchmarking footprint-1216B/baseline/2
+Benchmarking footprint-1216B/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-1216B/baseline/2: Collecting 30 samples in estimated 2.0000 s (3.7M iterations)
+Benchmarking footprint-1216B/baseline/2: Analyzing
+footprint-1216B/baseline/2
+                        time:   [546.37 ns 546.94 ns 547.60 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high mild
+Benchmarking footprint-1216B/lock/2
+Benchmarking footprint-1216B/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-1216B/lock/2: Collecting 30 samples in estimated 2.0000 s (2.1M iterations)
+Benchmarking footprint-1216B/lock/2: Analyzing
+footprint-1216B/lock/2  time:   [925.10 ns 933.02 ns 941.06 ns]
+Benchmarking footprint-1216B/ticket/2
+Benchmarking footprint-1216B/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-1216B/ticket/2: Collecting 30 samples in estimated 2.0000 s (2.3M iterations)
+Benchmarking footprint-1216B/ticket/2: Analyzing
+footprint-1216B/ticket/2
+                        time:   [864.02 ns 895.52 ns 922.25 ns]
+Found 3 outliers among 30 measurements (10.00%)
+  1 (3.33%) low severe
+  2 (6.67%) low mild
+Benchmarking footprint-1216B/queue/2
+Benchmarking footprint-1216B/queue/2: Warming up for 500.00 ms
+Benchmarking footprint-1216B/queue/2: Collecting 30 samples in estimated 2.0000 s (2.9M iterations)
+Benchmarking footprint-1216B/queue/2: Analyzing
+footprint-1216B/queue/2 time:   [658.54 ns 662.91 ns 667.08 ns]
+Found 3 outliers among 30 measurements (10.00%)
+  2 (6.67%) low mild
+  1 (3.33%) high mild
+Benchmarking footprint-1216B/baseline/4
+Benchmarking footprint-1216B/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-1216B/baseline/4: Collecting 30 samples in estimated 2.0000 s (3.7M iterations)
+Benchmarking footprint-1216B/baseline/4: Analyzing
+footprint-1216B/baseline/4
+                        time:   [545.88 ns 546.00 ns 546.12 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high mild
+Benchmarking footprint-1216B/lock/4
+Benchmarking footprint-1216B/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-1216B/lock/4: Collecting 30 samples in estimated 2.0000 s (1.9M iterations)
+Benchmarking footprint-1216B/lock/4: Analyzing
+footprint-1216B/lock/4  time:   [1.0666 µs 1.0785 µs 1.0892 µs]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) low mild
+Benchmarking footprint-1216B/ticket/4
+Benchmarking footprint-1216B/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-1216B/ticket/4: Collecting 30 samples in estimated 2.0000 s (2.0M iterations)
+Benchmarking footprint-1216B/ticket/4: Analyzing
+footprint-1216B/ticket/4
+                        time:   [974.50 ns 1.0060 µs 1.0390 µs]
+Benchmarking footprint-1216B/queue/4
+Benchmarking footprint-1216B/queue/4: Warming up for 500.00 ms
+Benchmarking footprint-1216B/queue/4: Collecting 30 samples in estimated 2.0000 s (2.7M iterations)
+Benchmarking footprint-1216B/queue/4: Analyzing
+footprint-1216B/queue/4 time:   [716.55 ns 719.09 ns 722.23 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high severe
+Benchmarking footprint-1216B/baseline/8
+Benchmarking footprint-1216B/baseline/8: Warming up for 500.00 ms
+Benchmarking footprint-1216B/baseline/8: Collecting 30 samples in estimated 2.0000 s (3.7M iterations)
+Benchmarking footprint-1216B/baseline/8: Analyzing
+footprint-1216B/baseline/8
+                        time:   [547.39 ns 548.39 ns 549.44 ns]
+Benchmarking footprint-1216B/lock/8
+Benchmarking footprint-1216B/lock/8: Warming up for 500.00 ms
+Benchmarking footprint-1216B/lock/8: Collecting 30 samples in estimated 2.0000 s (1.7M iterations)
+Benchmarking footprint-1216B/lock/8: Analyzing
+footprint-1216B/lock/8  time:   [1.1098 µs 1.1260 µs 1.1401 µs]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) low mild
+Benchmarking footprint-1216B/ticket/8
+Benchmarking footprint-1216B/ticket/8: Warming up for 500.00 ms
+Benchmarking footprint-1216B/ticket/8: Collecting 30 samples in estimated 2.0000 s (1.8M iterations)
+Benchmarking footprint-1216B/ticket/8: Analyzing
+footprint-1216B/ticket/8
+                        time:   [1.0155 µs 1.0435 µs 1.0698 µs]
+Benchmarking footprint-1216B/queue/8
+Benchmarking footprint-1216B/queue/8: Warming up for 500.00 ms
+Benchmarking footprint-1216B/queue/8: Collecting 30 samples in estimated 2.0000 s (2.4M iterations)
+Benchmarking footprint-1216B/queue/8: Analyzing
+footprint-1216B/queue/8 time:   [766.36 ns 773.99 ns 781.21 ns]
+Found 4 outliers among 30 measurements (13.33%)
+  2 (6.67%) low severe
+  1 (3.33%) low mild
+  1 (3.33%) high severe
+
+Benchmarking footprint-16KiB/baseline/2
+Benchmarking footprint-16KiB/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-16KiB/baseline/2: Collecting 30 samples in estimated 2.0000 s (2.3M iterations)
+Benchmarking footprint-16KiB/baseline/2: Analyzing
+footprint-16KiB/baseline/2
+                        time:   [859.69 ns 861.39 ns 863.31 ns]
+Found 4 outliers among 30 measurements (13.33%)
+  4 (13.33%) high mild
+Benchmarking footprint-16KiB/lock/2
+Benchmarking footprint-16KiB/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-16KiB/lock/2: Collecting 30 samples in estimated 2.0000 s (1.4M iterations)
+Benchmarking footprint-16KiB/lock/2: Analyzing
+footprint-16KiB/lock/2  time:   [1.4074 µs 1.4138 µs 1.4194 µs]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) low mild
+Benchmarking footprint-16KiB/ticket/2
+Benchmarking footprint-16KiB/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-16KiB/ticket/2: Collecting 30 samples in estimated 2.0001 s (631k iterations)
+Benchmarking footprint-16KiB/ticket/2: Analyzing
+footprint-16KiB/ticket/2
+                        time:   [2.7810 µs 3.0119 µs 3.1931 µs]
+Found 3 outliers among 30 measurements (10.00%)
+  3 (10.00%) low severe
+Benchmarking footprint-16KiB/queue/2
+Benchmarking footprint-16KiB/queue/2: Warming up for 500.00 ms
+Benchmarking footprint-16KiB/queue/2: Collecting 30 samples in estimated 2.0000 s (2.0M iterations)
+Benchmarking footprint-16KiB/queue/2: Analyzing
+footprint-16KiB/queue/2 time:   [974.85 ns 977.74 ns 980.70 ns]
+Benchmarking footprint-16KiB/baseline/4
+Benchmarking footprint-16KiB/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-16KiB/baseline/4: Collecting 30 samples in estimated 2.0000 s (2.3M iterations)
+Benchmarking footprint-16KiB/baseline/4: Analyzing
+footprint-16KiB/baseline/4
+                        time:   [861.11 ns 863.19 ns 865.38 ns]
+Benchmarking footprint-16KiB/lock/4
+Benchmarking footprint-16KiB/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-16KiB/lock/4: Collecting 30 samples in estimated 2.0000 s (906k iterations)
+Benchmarking footprint-16KiB/lock/4: Analyzing
+footprint-16KiB/lock/4  time:   [2.1514 µs 2.1735 µs 2.1942 µs]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) low mild
+Benchmarking footprint-16KiB/ticket/4
+Benchmarking footprint-16KiB/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-16KiB/ticket/4: Collecting 30 samples in estimated 2.0000 s (817k iterations)
+Benchmarking footprint-16KiB/ticket/4: Analyzing
+footprint-16KiB/ticket/4
+                        time:   [2.4785 µs 2.6395 µs 2.8020 µs]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) low mild
+Benchmarking footprint-16KiB/queue/4
+Benchmarking footprint-16KiB/queue/4: Warming up for 500.00 ms
+Benchmarking footprint-16KiB/queue/4: Collecting 30 samples in estimated 2.0000 s (1.9M iterations)
+Benchmarking footprint-16KiB/queue/4: Analyzing
+footprint-16KiB/queue/4 time:   [1.0160 µs 1.0198 µs 1.0235 µs]
+Found 4 outliers among 30 measurements (13.33%)
+  1 (3.33%) low severe
+  1 (3.33%) low mild
+  1 (3.33%) high mild
+  1 (3.33%) high severe
+Benchmarking footprint-16KiB/baseline/8
+Benchmarking footprint-16KiB/baseline/8: Warming up for 500.00 ms
+Benchmarking footprint-16KiB/baseline/8: Collecting 30 samples in estimated 2.0000 s (2.3M iterations)
+Benchmarking footprint-16KiB/baseline/8: Analyzing
+footprint-16KiB/baseline/8
+                        time:   [861.20 ns 862.34 ns 863.58 ns]
+Benchmarking footprint-16KiB/lock/8
+Benchmarking footprint-16KiB/lock/8: Warming up for 500.00 ms
+Benchmarking footprint-16KiB/lock/8: Collecting 30 samples in estimated 2.0000 s (950k iterations)
+Benchmarking footprint-16KiB/lock/8: Analyzing
+footprint-16KiB/lock/8  time:   [2.0349 µs 2.0588 µs 2.0791 µs]
+Found 2 outliers among 30 measurements (6.67%)
+  2 (6.67%) low severe
+Benchmarking footprint-16KiB/ticket/8
+Benchmarking footprint-16KiB/ticket/8: Warming up for 500.00 ms
+Benchmarking footprint-16KiB/ticket/8: Collecting 30 samples in estimated 2.0000 s (758k iterations)
+Benchmarking footprint-16KiB/ticket/8: Analyzing
+footprint-16KiB/ticket/8
+                        time:   [2.3475 µs 2.4339 µs 2.5192 µs]
+Found 6 outliers among 30 measurements (20.00%)
+  3 (10.00%) low mild
+  3 (10.00%) high mild
+Benchmarking footprint-16KiB/queue/8
+Benchmarking footprint-16KiB/queue/8: Warming up for 500.00 ms
+Benchmarking footprint-16KiB/queue/8: Collecting 30 samples in estimated 2.0000 s (1.7M iterations)
+Benchmarking footprint-16KiB/queue/8: Analyzing
+footprint-16KiB/queue/8 time:   [1.0683 µs 1.0759 µs 1.0833 µs]
+Found 2 outliers among 30 measurements (6.67%)
+  1 (3.33%) low severe
+  1 (3.33%) high severe
+
+Benchmarking footprint-256KiB/baseline/2
+Benchmarking footprint-256KiB/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-256KiB/baseline/2: Collecting 30 samples in estimated 2.0001 s (339k iterations)
+Benchmarking footprint-256KiB/baseline/2: Analyzing
+footprint-256KiB/baseline/2
+                        time:   [5.8800 µs 5.8845 µs 5.8922 µs]
+Found 5 outliers among 30 measurements (16.67%)
+  2 (6.67%) high mild
+  3 (10.00%) high severe
+Benchmarking footprint-256KiB/lock/2
+Benchmarking footprint-256KiB/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-256KiB/lock/2: Collecting 30 samples in estimated 2.0001 s (248k iterations)
+Benchmarking footprint-256KiB/lock/2: Analyzing
+footprint-256KiB/lock/2 time:   [7.8262 µs 7.9683 µs 8.0859 µs]
+Found 2 outliers among 30 measurements (6.67%)
+  1 (3.33%) low severe
+  1 (3.33%) low mild
+Benchmarking footprint-256KiB/ticket/2
+Benchmarking footprint-256KiB/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-256KiB/ticket/2: Collecting 30 samples in estimated 2.0004 s (82k iterations)
+Benchmarking footprint-256KiB/ticket/2: Analyzing
+footprint-256KiB/ticket/2
+                        time:   [24.666 µs 25.922 µs 26.631 µs]
+Found 3 outliers among 30 measurements (10.00%)
+  3 (10.00%) low severe
+Benchmarking footprint-256KiB/queue/2
+Benchmarking footprint-256KiB/queue/2: Warming up for 500.00 ms
+Benchmarking footprint-256KiB/queue/2: Collecting 30 samples in estimated 2.0002 s (333k iterations)
+Benchmarking footprint-256KiB/queue/2: Analyzing
+footprint-256KiB/queue/2
+                        time:   [5.9562 µs 5.9592 µs 5.9624 µs]
+Found 5 outliers among 30 measurements (16.67%)
+  4 (13.33%) high mild
+  1 (3.33%) high severe
+Benchmarking footprint-256KiB/baseline/4
+Benchmarking footprint-256KiB/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-256KiB/baseline/4: Collecting 30 samples in estimated 2.0001 s (340k iterations)
+Benchmarking footprint-256KiB/baseline/4: Analyzing
+footprint-256KiB/baseline/4
+                        time:   [5.8842 µs 5.8872 µs 5.8915 µs]
+Found 2 outliers among 30 measurements (6.67%)
+  1 (3.33%) high mild
+  1 (3.33%) high severe
+Benchmarking footprint-256KiB/lock/4
+Benchmarking footprint-256KiB/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-256KiB/lock/4: Collecting 30 samples in estimated 2.0001 s (270k iterations)
+Benchmarking footprint-256KiB/lock/4: Analyzing
+footprint-256KiB/lock/4 time:   [7.2045 µs 7.2780 µs 7.3474 µs]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) low mild
+Benchmarking footprint-256KiB/ticket/4
+Benchmarking footprint-256KiB/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-256KiB/ticket/4: Collecting 30 samples in estimated 2.0005 s (109k iterations)
+Benchmarking footprint-256KiB/ticket/4: Analyzing
+footprint-256KiB/ticket/4
+                        time:   [19.325 µs 20.528 µs 21.980 µs]
+Benchmarking footprint-256KiB/queue/4
+Benchmarking footprint-256KiB/queue/4: Warming up for 500.00 ms
+Benchmarking footprint-256KiB/queue/4: Collecting 30 samples in estimated 2.0000 s (333k iterations)
+Benchmarking footprint-256KiB/queue/4: Analyzing
+footprint-256KiB/queue/4
+                        time:   [5.9876 µs 5.9970 µs 6.0070 µs]
+Benchmarking footprint-256KiB/baseline/8
+Benchmarking footprint-256KiB/baseline/8: Warming up for 500.00 ms
+Benchmarking footprint-256KiB/baseline/8: Collecting 30 samples in estimated 2.0001 s (339k iterations)
+Benchmarking footprint-256KiB/baseline/8: Analyzing
+footprint-256KiB/baseline/8
+                        time:   [5.9065 µs 5.9229 µs 5.9398 µs]
+Benchmarking footprint-256KiB/lock/8
+Benchmarking footprint-256KiB/lock/8: Warming up for 500.00 ms
+Benchmarking footprint-256KiB/lock/8: Collecting 30 samples in estimated 2.0002 s (267k iterations)
+Benchmarking footprint-256KiB/lock/8: Analyzing
+footprint-256KiB/lock/8 time:   [7.2727 µs 7.3822 µs 7.4801 µs]
+Found 4 outliers among 30 measurements (13.33%)
+  4 (13.33%) low mild
+Benchmarking footprint-256KiB/ticket/8
+Benchmarking footprint-256KiB/ticket/8: Warming up for 500.00 ms
+Benchmarking footprint-256KiB/ticket/8: Collecting 30 samples in estimated 2.0004 s (125k iterations)
+Benchmarking footprint-256KiB/ticket/8: Analyzing
+footprint-256KiB/ticket/8
+                        time:   [17.406 µs 18.768 µs 19.988 µs]
+Found 2 outliers among 30 measurements (6.67%)
+  2 (6.67%) low mild
+Benchmarking footprint-256KiB/queue/8
+Benchmarking footprint-256KiB/queue/8: Warming up for 500.00 ms
+Benchmarking footprint-256KiB/queue/8: Collecting 30 samples in estimated 2.0000 s (328k iterations)
+Benchmarking footprint-256KiB/queue/8: Analyzing
+footprint-256KiB/queue/8
+                        time:   [6.0139 µs 6.0184 µs 6.0235 µs]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high mild
+
+Benchmarking footprint-0B-ccx1/baseline/2
+Benchmarking footprint-0B-ccx1/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx1/baseline/2: Collecting 30 samples in estimated 2.0000 s (3.7M iterations)
+Benchmarking footprint-0B-ccx1/baseline/2: Analyzing
+footprint-0B-ccx1/baseline/2
+                        time:   [535.47 ns 535.67 ns 535.94 ns]
+Found 2 outliers among 30 measurements (6.67%)
+  2 (6.67%) high severe
+Benchmarking footprint-0B-ccx1/lock/2
+Benchmarking footprint-0B-ccx1/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx1/lock/2: Collecting 30 samples in estimated 2.0000 s (2.4M iterations)
+Benchmarking footprint-0B-ccx1/lock/2: Analyzing
+footprint-0B-ccx1/lock/2
+                        time:   [846.10 ns 851.16 ns 856.26 ns]
+Benchmarking footprint-0B-ccx1/ticket/2
+Benchmarking footprint-0B-ccx1/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx1/ticket/2: Collecting 30 samples in estimated 2.0000 s (3.3M iterations)
+Benchmarking footprint-0B-ccx1/ticket/2: Analyzing
+footprint-0B-ccx1/ticket/2
+                        time:   [597.74 ns 601.92 ns 606.12 ns]
+Benchmarking footprint-0B-ccx1/futex/2
+Benchmarking footprint-0B-ccx1/futex/2: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx1/futex/2: Collecting 30 samples in estimated 2.0000 s (2.4M iterations)
+Benchmarking footprint-0B-ccx1/futex/2: Analyzing
+footprint-0B-ccx1/futex/2
+                        time:   [867.12 ns 868.79 ns 870.48 ns]
+Benchmarking footprint-0B-ccx1/baseline/4
+Benchmarking footprint-0B-ccx1/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx1/baseline/4: Collecting 30 samples in estimated 2.0000 s (3.7M iterations)
+Benchmarking footprint-0B-ccx1/baseline/4: Analyzing
+footprint-0B-ccx1/baseline/4
+                        time:   [535.81 ns 535.91 ns 536.04 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high severe
+Benchmarking footprint-0B-ccx1/lock/4
+Benchmarking footprint-0B-ccx1/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx1/lock/4: Collecting 30 samples in estimated 2.0000 s (2.2M iterations)
+Benchmarking footprint-0B-ccx1/lock/4: Analyzing
+footprint-0B-ccx1/lock/4
+                        time:   [932.77 ns 937.18 ns 940.66 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) low severe
+Benchmarking footprint-0B-ccx1/ticket/4
+Benchmarking footprint-0B-ccx1/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx1/ticket/4: Collecting 30 samples in estimated 2.0000 s (3.0M iterations)
+Benchmarking footprint-0B-ccx1/ticket/4: Analyzing
+footprint-0B-ccx1/ticket/4
+                        time:   [638.20 ns 647.52 ns 656.96 ns]
+Benchmarking footprint-0B-ccx1/futex/4
+Benchmarking footprint-0B-ccx1/futex/4: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx1/futex/4: Collecting 30 samples in estimated 2.0000 s (2.2M iterations)
+Benchmarking footprint-0B-ccx1/futex/4: Analyzing
+footprint-0B-ccx1/futex/4
+                        time:   [896.78 ns 901.73 ns 908.65 ns]
+Found 3 outliers among 30 measurements (10.00%)
+  1 (3.33%) high mild
+  2 (6.67%) high severe
+
+Benchmarking footprint-0B-ccx2/baseline/2
+Benchmarking footprint-0B-ccx2/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx2/baseline/2: Collecting 30 samples in estimated 2.0000 s (3.7M iterations)
+Benchmarking footprint-0B-ccx2/baseline/2: Analyzing
+footprint-0B-ccx2/baseline/2
+                        time:   [535.66 ns 535.77 ns 535.90 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high severe
+Benchmarking footprint-0B-ccx2/lock/2
+Benchmarking footprint-0B-ccx2/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx2/lock/2: Collecting 30 samples in estimated 2.0000 s (2.1M iterations)
+Benchmarking footprint-0B-ccx2/lock/2: Analyzing
+footprint-0B-ccx2/lock/2
+                        time:   [921.62 ns 927.10 ns 932.04 ns]
+Found 5 outliers among 30 measurements (16.67%)
+  5 (16.67%) low mild
+Benchmarking footprint-0B-ccx2/ticket/2
+Benchmarking footprint-0B-ccx2/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx2/ticket/2: Collecting 30 samples in estimated 2.0000 s (2.8M iterations)
+Benchmarking footprint-0B-ccx2/ticket/2: Analyzing
+footprint-0B-ccx2/ticket/2
+                        time:   [743.79 ns 758.24 ns 772.67 ns]
+Benchmarking footprint-0B-ccx2/futex/2
+Benchmarking footprint-0B-ccx2/futex/2: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx2/futex/2: Collecting 30 samples in estimated 2.0000 s (2.1M iterations)
+Benchmarking footprint-0B-ccx2/futex/2: Analyzing
+footprint-0B-ccx2/futex/2
+                        time:   [953.74 ns 955.86 ns 957.84 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) low mild
+Benchmarking footprint-0B-ccx2/baseline/4
+Benchmarking footprint-0B-ccx2/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx2/baseline/4: Collecting 30 samples in estimated 2.0000 s (3.7M iterations)
+Benchmarking footprint-0B-ccx2/baseline/4: Analyzing
+footprint-0B-ccx2/baseline/4
+                        time:   [535.63 ns 535.85 ns 536.18 ns]
+Found 3 outliers among 30 measurements (10.00%)
+  1 (3.33%) high mild
+  2 (6.67%) high severe
+Benchmarking footprint-0B-ccx2/lock/4
+Benchmarking footprint-0B-ccx2/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx2/lock/4: Collecting 30 samples in estimated 2.0000 s (2.2M iterations)
+Benchmarking footprint-0B-ccx2/lock/4: Analyzing
+footprint-0B-ccx2/lock/4
+                        time:   [947.17 ns 959.52 ns 972.29 ns]
+Benchmarking footprint-0B-ccx2/ticket/4
+Benchmarking footprint-0B-ccx2/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx2/ticket/4: Collecting 30 samples in estimated 2.0000 s (2.2M iterations)
+Benchmarking footprint-0B-ccx2/ticket/4: Analyzing
+footprint-0B-ccx2/ticket/4
+                        time:   [848.66 ns 864.97 ns 882.36 ns]
+Benchmarking footprint-0B-ccx2/futex/4
+Benchmarking footprint-0B-ccx2/futex/4: Warming up for 500.00 ms
+Benchmarking footprint-0B-ccx2/futex/4: Collecting 30 samples in estimated 2.0000 s (2.1M iterations)
+Benchmarking footprint-0B-ccx2/futex/4: Analyzing
+footprint-0B-ccx2/futex/4
+                        time:   [945.04 ns 946.69 ns 948.49 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high mild
+
+Benchmarking footprint-64B-ccx1/baseline/2
+Benchmarking footprint-64B-ccx1/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-64B-ccx1/baseline/2: Collecting 30 samples in estimated 2.0000 s (3.7M iterations)
+Benchmarking footprint-64B-ccx1/baseline/2: Analyzing
+footprint-64B-ccx1/baseline/2
+                        time:   [536.07 ns 536.16 ns 536.28 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high severe
+Benchmarking footprint-64B-ccx1/lock/2
+Benchmarking footprint-64B-ccx1/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-64B-ccx1/lock/2: Collecting 30 samples in estimated 2.0000 s (2.4M iterations)
+Benchmarking footprint-64B-ccx1/lock/2: Analyzing
+footprint-64B-ccx1/lock/2
+                        time:   [845.79 ns 851.98 ns 857.91 ns]
+Benchmarking footprint-64B-ccx1/ticket/2
+Benchmarking footprint-64B-ccx1/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-64B-ccx1/ticket/2: Collecting 30 samples in estimated 2.0000 s (3.2M iterations)
+Benchmarking footprint-64B-ccx1/ticket/2: Analyzing
+footprint-64B-ccx1/ticket/2
+                        time:   [614.44 ns 621.88 ns 629.36 ns]
+Benchmarking footprint-64B-ccx1/baseline/4
+Benchmarking footprint-64B-ccx1/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-64B-ccx1/baseline/4: Collecting 30 samples in estimated 2.0000 s (3.7M iterations)
+Benchmarking footprint-64B-ccx1/baseline/4: Analyzing
+footprint-64B-ccx1/baseline/4
+                        time:   [535.95 ns 536.06 ns 536.21 ns]
+Found 4 outliers among 30 measurements (13.33%)
+  2 (6.67%) high mild
+  2 (6.67%) high severe
+Benchmarking footprint-64B-ccx1/lock/4
+Benchmarking footprint-64B-ccx1/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-64B-ccx1/lock/4: Collecting 30 samples in estimated 2.0000 s (2.1M iterations)
+Benchmarking footprint-64B-ccx1/lock/4: Analyzing
+footprint-64B-ccx1/lock/4
+                        time:   [963.85 ns 967.89 ns 971.50 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) low mild
+Benchmarking footprint-64B-ccx1/ticket/4
+Benchmarking footprint-64B-ccx1/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-64B-ccx1/ticket/4: Collecting 30 samples in estimated 2.0000 s (2.9M iterations)
+Benchmarking footprint-64B-ccx1/ticket/4: Analyzing
+footprint-64B-ccx1/ticket/4
+                        time:   [647.36 ns 660.74 ns 674.39 ns]
+
+Benchmarking footprint-64B-ccx2/baseline/2
+Benchmarking footprint-64B-ccx2/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-64B-ccx2/baseline/2: Collecting 30 samples in estimated 2.0000 s (3.7M iterations)
+Benchmarking footprint-64B-ccx2/baseline/2: Analyzing
+footprint-64B-ccx2/baseline/2
+                        time:   [536.72 ns 536.92 ns 537.17 ns]
+Found 3 outliers among 30 measurements (10.00%)
+  1 (3.33%) high mild
+  2 (6.67%) high severe
+Benchmarking footprint-64B-ccx2/lock/2
+Benchmarking footprint-64B-ccx2/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-64B-ccx2/lock/2: Collecting 30 samples in estimated 2.0000 s (2.1M iterations)
+Benchmarking footprint-64B-ccx2/lock/2: Analyzing
+footprint-64B-ccx2/lock/2
+                        time:   [929.86 ns 932.91 ns 935.79 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) low mild
+Benchmarking footprint-64B-ccx2/ticket/2
+Benchmarking footprint-64B-ccx2/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-64B-ccx2/ticket/2: Collecting 30 samples in estimated 2.0000 s (2.8M iterations)
+Benchmarking footprint-64B-ccx2/ticket/2: Analyzing
+footprint-64B-ccx2/ticket/2
+                        time:   [744.36 ns 758.93 ns 773.41 ns]
+Benchmarking footprint-64B-ccx2/baseline/4
+Benchmarking footprint-64B-ccx2/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-64B-ccx2/baseline/4: Collecting 30 samples in estimated 2.0000 s (3.7M iterations)
+Benchmarking footprint-64B-ccx2/baseline/4: Analyzing
+footprint-64B-ccx2/baseline/4
+                        time:   [536.18 ns 536.28 ns 536.41 ns]
+Found 2 outliers among 30 measurements (6.67%)
+  1 (3.33%) high mild
+  1 (3.33%) high severe
+Benchmarking footprint-64B-ccx2/lock/4
+Benchmarking footprint-64B-ccx2/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-64B-ccx2/lock/4: Collecting 30 samples in estimated 2.0000 s (2.1M iterations)
+Benchmarking footprint-64B-ccx2/lock/4: Analyzing
+footprint-64B-ccx2/lock/4
+                        time:   [987.08 ns 998.86 ns 1.0109 µs]
+Benchmarking footprint-64B-ccx2/ticket/4
+Benchmarking footprint-64B-ccx2/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-64B-ccx2/ticket/4: Collecting 30 samples in estimated 2.0000 s (2.0M iterations)
+Benchmarking footprint-64B-ccx2/ticket/4: Analyzing
+footprint-64B-ccx2/ticket/4
+                        time:   [879.61 ns 910.95 ns 943.68 ns]
+
+Benchmarking footprint-1216B-ccx1/baseline/2
+Benchmarking footprint-1216B-ccx1/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-1216B-ccx1/baseline/2: Collecting 30 samples in estimated 2.0000 s (3.6M iterations)
+Benchmarking footprint-1216B-ccx1/baseline/2: Analyzing
+footprint-1216B-ccx1/baseline/2
+                        time:   [555.33 ns 555.42 ns 555.56 ns]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high severe
+Benchmarking footprint-1216B-ccx1/lock/2
+Benchmarking footprint-1216B-ccx1/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-1216B-ccx1/lock/2: Collecting 30 samples in estimated 2.0000 s (2.5M iterations)
+Benchmarking footprint-1216B-ccx1/lock/2: Analyzing
+footprint-1216B-ccx1/lock/2
+                        time:   [775.63 ns 785.49 ns 795.71 ns]
+Benchmarking footprint-1216B-ccx1/ticket/2
+Benchmarking footprint-1216B-ccx1/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-1216B-ccx1/ticket/2: Collecting 30 samples in estimated 2.0000 s (3.0M iterations)
+Benchmarking footprint-1216B-ccx1/ticket/2: Analyzing
+footprint-1216B-ccx1/ticket/2
+                        time:   [654.51 ns 658.72 ns 663.03 ns]
+Benchmarking footprint-1216B-ccx1/baseline/4
+Benchmarking footprint-1216B-ccx1/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-1216B-ccx1/baseline/4: Collecting 30 samples in estimated 2.0000 s (3.6M iterations)
+Benchmarking footprint-1216B-ccx1/baseline/4: Analyzing
+footprint-1216B-ccx1/baseline/4
+                        time:   [555.31 ns 555.42 ns 555.55 ns]
+Found 3 outliers among 30 measurements (10.00%)
+  2 (6.67%) high mild
+  1 (3.33%) high severe
+Benchmarking footprint-1216B-ccx1/lock/4
+Benchmarking footprint-1216B-ccx1/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-1216B-ccx1/lock/4: Collecting 30 samples in estimated 2.0000 s (2.0M iterations)
+Benchmarking footprint-1216B-ccx1/lock/4: Analyzing
+footprint-1216B-ccx1/lock/4
+                        time:   [999.43 ns 1.0045 µs 1.0115 µs]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high severe
+Benchmarking footprint-1216B-ccx1/ticket/4
+Benchmarking footprint-1216B-ccx1/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-1216B-ccx1/ticket/4: Collecting 30 samples in estimated 2.0000 s (2.7M iterations)
+Benchmarking footprint-1216B-ccx1/ticket/4: Analyzing
+footprint-1216B-ccx1/ticket/4
+                        time:   [695.70 ns 703.64 ns 711.76 ns]
+
+Benchmarking footprint-1216B-ccx2/baseline/2
+Benchmarking footprint-1216B-ccx2/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-1216B-ccx2/baseline/2: Collecting 30 samples in estimated 2.0000 s (3.6M iterations)
+Benchmarking footprint-1216B-ccx2/baseline/2: Analyzing
+footprint-1216B-ccx2/baseline/2
+                        time:   [555.25 ns 555.38 ns 555.54 ns]
+Found 3 outliers among 30 measurements (10.00%)
+  1 (3.33%) high mild
+  2 (6.67%) high severe
+Benchmarking footprint-1216B-ccx2/lock/2
+Benchmarking footprint-1216B-ccx2/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-1216B-ccx2/lock/2: Collecting 30 samples in estimated 2.0000 s (2.1M iterations)
+Benchmarking footprint-1216B-ccx2/lock/2: Analyzing
+footprint-1216B-ccx2/lock/2
+                        time:   [944.73 ns 950.31 ns 955.26 ns]
+Found 2 outliers among 30 measurements (6.67%)
+  2 (6.67%) low mild
+Benchmarking footprint-1216B-ccx2/ticket/2
+Benchmarking footprint-1216B-ccx2/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-1216B-ccx2/ticket/2: Collecting 30 samples in estimated 2.0000 s (2.2M iterations)
+Benchmarking footprint-1216B-ccx2/ticket/2: Analyzing
+footprint-1216B-ccx2/ticket/2
+                        time:   [927.72 ns 941.69 ns 955.60 ns]
+Benchmarking footprint-1216B-ccx2/baseline/4
+Benchmarking footprint-1216B-ccx2/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-1216B-ccx2/baseline/4: Collecting 30 samples in estimated 2.0000 s (3.6M iterations)
+Benchmarking footprint-1216B-ccx2/baseline/4: Analyzing
+footprint-1216B-ccx2/baseline/4
+                        time:   [555.25 ns 555.59 ns 556.15 ns]
+Found 3 outliers among 30 measurements (10.00%)
+  1 (3.33%) high mild
+  2 (6.67%) high severe
+Benchmarking footprint-1216B-ccx2/lock/4
+Benchmarking footprint-1216B-ccx2/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-1216B-ccx2/lock/4: Collecting 30 samples in estimated 2.0000 s (1.9M iterations)
+Benchmarking footprint-1216B-ccx2/lock/4: Analyzing
+footprint-1216B-ccx2/lock/4
+                        time:   [1.0818 µs 1.0883 µs 1.0947 µs]
+Benchmarking footprint-1216B-ccx2/ticket/4
+Benchmarking footprint-1216B-ccx2/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-1216B-ccx2/ticket/4: Collecting 30 samples in estimated 2.0000 s (2.0M iterations)
+Benchmarking footprint-1216B-ccx2/ticket/4: Analyzing
+footprint-1216B-ccx2/ticket/4
+                        time:   [982.79 ns 1.0178 µs 1.0549 µs]
+
+Benchmarking footprint-16KiB-ccx1/baseline/2
+Benchmarking footprint-16KiB-ccx1/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-16KiB-ccx1/baseline/2: Collecting 30 samples in estimated 2.0000 s (2.3M iterations)
+Benchmarking footprint-16KiB-ccx1/baseline/2: Analyzing
+footprint-16KiB-ccx1/baseline/2
+                        time:   [872.21 ns 872.38 ns 872.59 ns]
+Found 2 outliers among 30 measurements (6.67%)
+  1 (3.33%) high mild
+  1 (3.33%) high severe
+Benchmarking footprint-16KiB-ccx1/lock/2
+Benchmarking footprint-16KiB-ccx1/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-16KiB-ccx1/lock/2: Collecting 30 samples in estimated 2.0000 s (1.7M iterations)
+Benchmarking footprint-16KiB-ccx1/lock/2: Analyzing
+footprint-16KiB-ccx1/lock/2
+                        time:   [1.1059 µs 1.1211 µs 1.1396 µs]
+Found 6 outliers among 30 measurements (20.00%)
+  1 (3.33%) high mild
+  5 (16.67%) high severe
+Benchmarking footprint-16KiB-ccx1/ticket/2
+Benchmarking footprint-16KiB-ccx1/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-16KiB-ccx1/ticket/2: Collecting 30 samples in estimated 2.0000 s (1.4M iterations)
+Benchmarking footprint-16KiB-ccx1/ticket/2: Analyzing
+footprint-16KiB-ccx1/ticket/2
+                        time:   [1.3737 µs 1.3766 µs 1.3795 µs]
+Benchmarking footprint-16KiB-ccx1/baseline/4
+Benchmarking footprint-16KiB-ccx1/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-16KiB-ccx1/baseline/4: Collecting 30 samples in estimated 2.0000 s (2.3M iterations)
+Benchmarking footprint-16KiB-ccx1/baseline/4: Analyzing
+footprint-16KiB-ccx1/baseline/4
+                        time:   [872.44 ns 872.61 ns 872.82 ns]
+Found 4 outliers among 30 measurements (13.33%)
+  3 (10.00%) high mild
+  1 (3.33%) high severe
+Benchmarking footprint-16KiB-ccx1/lock/4
+Benchmarking footprint-16KiB-ccx1/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-16KiB-ccx1/lock/4: Collecting 30 samples in estimated 2.0000 s (1.3M iterations)
+Benchmarking footprint-16KiB-ccx1/lock/4: Analyzing
+footprint-16KiB-ccx1/lock/4
+                        time:   [1.5441 µs 1.5499 µs 1.5559 µs]
+Benchmarking footprint-16KiB-ccx1/ticket/4
+Benchmarking footprint-16KiB-ccx1/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-16KiB-ccx1/ticket/4: Collecting 30 samples in estimated 2.0000 s (1.4M iterations)
+Benchmarking footprint-16KiB-ccx1/ticket/4: Analyzing
+footprint-16KiB-ccx1/ticket/4
+                        time:   [1.4193 µs 1.4329 µs 1.4501 µs]
+Found 2 outliers among 30 measurements (6.67%)
+  1 (3.33%) high mild
+  1 (3.33%) high severe
+
+Benchmarking footprint-16KiB-ccx2/baseline/2
+Benchmarking footprint-16KiB-ccx2/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-16KiB-ccx2/baseline/2: Collecting 30 samples in estimated 2.0000 s (2.3M iterations)
+Benchmarking footprint-16KiB-ccx2/baseline/2: Analyzing
+footprint-16KiB-ccx2/baseline/2
+                        time:   [873.10 ns 873.94 ns 875.30 ns]
+Found 2 outliers among 30 measurements (6.67%)
+  2 (6.67%) high severe
+Benchmarking footprint-16KiB-ccx2/lock/2
+Benchmarking footprint-16KiB-ccx2/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-16KiB-ccx2/lock/2: Collecting 30 samples in estimated 2.0000 s (1.4M iterations)
+Benchmarking footprint-16KiB-ccx2/lock/2: Analyzing
+footprint-16KiB-ccx2/lock/2
+                        time:   [1.4130 µs 1.4247 µs 1.4342 µs]
+Found 4 outliers among 30 measurements (13.33%)
+  2 (6.67%) low severe
+  1 (3.33%) low mild
+  1 (3.33%) high mild
+Benchmarking footprint-16KiB-ccx2/ticket/2
+Benchmarking footprint-16KiB-ccx2/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-16KiB-ccx2/ticket/2: Collecting 30 samples in estimated 2.0000 s (625k iterations)
+Benchmarking footprint-16KiB-ccx2/ticket/2: Analyzing
+footprint-16KiB-ccx2/ticket/2
+                        time:   [3.2274 µs 3.2452 µs 3.2629 µs]
+Benchmarking footprint-16KiB-ccx2/baseline/4
+Benchmarking footprint-16KiB-ccx2/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-16KiB-ccx2/baseline/4: Collecting 30 samples in estimated 2.0000 s (2.3M iterations)
+Benchmarking footprint-16KiB-ccx2/baseline/4: Analyzing
+footprint-16KiB-ccx2/baseline/4
+                        time:   [873.03 ns 873.21 ns 873.44 ns]
+Found 3 outliers among 30 measurements (10.00%)
+  2 (6.67%) high mild
+  1 (3.33%) high severe
+Benchmarking footprint-16KiB-ccx2/lock/4
+Benchmarking footprint-16KiB-ccx2/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-16KiB-ccx2/lock/4: Collecting 30 samples in estimated 2.0000 s (892k iterations)
+Benchmarking footprint-16KiB-ccx2/lock/4: Analyzing
+footprint-16KiB-ccx2/lock/4
+                        time:   [2.1995 µs 2.2282 µs 2.2572 µs]
+Benchmarking footprint-16KiB-ccx2/ticket/4
+Benchmarking footprint-16KiB-ccx2/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-16KiB-ccx2/ticket/4: Collecting 30 samples in estimated 2.0000 s (622k iterations)
+Benchmarking footprint-16KiB-ccx2/ticket/4: Analyzing
+footprint-16KiB-ccx2/ticket/4
+                        time:   [2.6545 µs 2.8088 µs 2.9671 µs]
+
+Benchmarking footprint-256KiB-ccx1/baseline/2
+Benchmarking footprint-256KiB-ccx1/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx1/baseline/2: Collecting 30 samples in estimated 2.0001 s (333k iterations)
+Benchmarking footprint-256KiB-ccx1/baseline/2: Analyzing
+footprint-256KiB-ccx1/baseline/2
+                        time:   [5.9841 µs 5.9855 µs 5.9871 µs]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high mild
+Benchmarking footprint-256KiB-ccx1/lock/2
+Benchmarking footprint-256KiB-ccx1/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx1/lock/2: Collecting 30 samples in estimated 2.0002 s (302k iterations)
+Benchmarking footprint-256KiB-ccx1/lock/2: Analyzing
+footprint-256KiB-ccx1/lock/2
+                        time:   [6.6150 µs 6.6491 µs 6.6833 µs]
+Benchmarking footprint-256KiB-ccx1/ticket/2
+Benchmarking footprint-256KiB-ccx1/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx1/ticket/2: Collecting 30 samples in estimated 2.0001 s (214k iterations)
+Benchmarking footprint-256KiB-ccx1/ticket/2: Analyzing
+footprint-256KiB-ccx1/ticket/2
+                        time:   [9.3549 µs 9.3666 µs 9.3783 µs]
+Benchmarking footprint-256KiB-ccx1/futex/2
+Benchmarking footprint-256KiB-ccx1/futex/2: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx1/futex/2: Collecting 30 samples in estimated 2.0000 s (298k iterations)
+Benchmarking footprint-256KiB-ccx1/futex/2: Analyzing
+footprint-256KiB-ccx1/futex/2
+                        time:   [6.6762 µs 6.7107 µs 6.7443 µs]
+Benchmarking footprint-256KiB-ccx1/baseline/4
+Benchmarking footprint-256KiB-ccx1/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx1/baseline/4: Collecting 30 samples in estimated 2.0001 s (333k iterations)
+Benchmarking footprint-256KiB-ccx1/baseline/4: Analyzing
+footprint-256KiB-ccx1/baseline/4
+                        time:   [5.9845 µs 5.9868 µs 5.9898 µs]
+Found 3 outliers among 30 measurements (10.00%)
+  3 (10.00%) high severe
+Benchmarking footprint-256KiB-ccx1/lock/4
+Benchmarking footprint-256KiB-ccx1/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx1/lock/4: Collecting 30 samples in estimated 2.0002 s (305k iterations)
+Benchmarking footprint-256KiB-ccx1/lock/4: Analyzing
+footprint-256KiB-ccx1/lock/4
+                        time:   [6.5770 µs 6.6242 µs 6.7007 µs]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high severe
+Benchmarking footprint-256KiB-ccx1/ticket/4
+Benchmarking footprint-256KiB-ccx1/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx1/ticket/4: Collecting 30 samples in estimated 2.0000 s (212k iterations)
+Benchmarking footprint-256KiB-ccx1/ticket/4: Analyzing
+footprint-256KiB-ccx1/ticket/4
+                        time:   [9.3471 µs 9.3650 µs 9.3858 µs]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high mild
+Benchmarking footprint-256KiB-ccx1/futex/4
+Benchmarking footprint-256KiB-ccx1/futex/4: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx1/futex/4: Collecting 30 samples in estimated 2.0001 s (298k iterations)
+Benchmarking footprint-256KiB-ccx1/futex/4: Analyzing
+footprint-256KiB-ccx1/futex/4
+                        time:   [6.5947 µs 6.6165 µs 6.6386 µs]
+
+Benchmarking footprint-256KiB-ccx2/baseline/2
+Benchmarking footprint-256KiB-ccx2/baseline/2: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx2/baseline/2: Collecting 30 samples in estimated 2.0001 s (333k iterations)
+Benchmarking footprint-256KiB-ccx2/baseline/2: Analyzing
+footprint-256KiB-ccx2/baseline/2
+                        time:   [5.9840 µs 5.9851 µs 5.9864 µs]
+Found 1 outliers among 30 measurements (3.33%)
+  1 (3.33%) high severe
+Benchmarking footprint-256KiB-ccx2/lock/2
+Benchmarking footprint-256KiB-ccx2/lock/2: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx2/lock/2: Collecting 30 samples in estimated 2.0000 s (244k iterations)
+Benchmarking footprint-256KiB-ccx2/lock/2: Analyzing
+footprint-256KiB-ccx2/lock/2
+                        time:   [7.9536 µs 8.0115 µs 8.0708 µs]
+Benchmarking footprint-256KiB-ccx2/ticket/2
+Benchmarking footprint-256KiB-ccx2/ticket/2: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx2/ticket/2: Collecting 30 samples in estimated 2.0007 s (75k iterations)
+Benchmarking footprint-256KiB-ccx2/ticket/2: Analyzing
+footprint-256KiB-ccx2/ticket/2
+                        time:   [26.826 µs 26.848 µs 26.871 µs]
+Benchmarking footprint-256KiB-ccx2/futex/2
+Benchmarking footprint-256KiB-ccx2/futex/2: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx2/futex/2: Collecting 30 samples in estimated 2.0001 s (238k iterations)
+Benchmarking footprint-256KiB-ccx2/futex/2: Analyzing
+footprint-256KiB-ccx2/futex/2
+                        time:   [8.1336 µs 8.2096 µs 8.2838 µs]
+Benchmarking footprint-256KiB-ccx2/baseline/4
+Benchmarking footprint-256KiB-ccx2/baseline/4: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx2/baseline/4: Collecting 30 samples in estimated 2.0000 s (334k iterations)
+Benchmarking footprint-256KiB-ccx2/baseline/4: Analyzing
+footprint-256KiB-ccx2/baseline/4
+                        time:   [5.9807 µs 5.9840 µs 5.9896 µs]
+Found 2 outliers among 30 measurements (6.67%)
+  2 (6.67%) high severe
+Benchmarking footprint-256KiB-ccx2/lock/4
+Benchmarking footprint-256KiB-ccx2/lock/4: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx2/lock/4: Collecting 30 samples in estimated 2.0000 s (275k iterations)
+Benchmarking footprint-256KiB-ccx2/lock/4: Analyzing
+footprint-256KiB-ccx2/lock/4
+                        time:   [7.2337 µs 7.2797 µs 7.3268 µs]
+Found 2 outliers among 30 measurements (6.67%)
+  1 (3.33%) low mild
+  1 (3.33%) high mild
+Benchmarking footprint-256KiB-ccx2/ticket/4
+Benchmarking footprint-256KiB-ccx2/ticket/4: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx2/ticket/4: Collecting 30 samples in estimated 2.0000 s (108k iterations)
+Benchmarking footprint-256KiB-ccx2/ticket/4: Analyzing
+footprint-256KiB-ccx2/ticket/4
+                        time:   [19.623 µs 21.082 µs 22.547 µs]
+Benchmarking footprint-256KiB-ccx2/futex/4
+Benchmarking footprint-256KiB-ccx2/futex/4: Warming up for 500.00 ms
+Benchmarking footprint-256KiB-ccx2/futex/4: Collecting 30 samples in estimated 2.0002 s (268k iterations)
+Benchmarking footprint-256KiB-ccx2/futex/4: Analyzing
+footprint-256KiB-ccx2/futex/4
+                        time:   [7.4381 µs 7.4856 µs 7.5357 µs]
+
+
+Waits under contention, ns (50000 units per thread, one run each)
+what                   threads     p50      p99     p99.9       max  note
+lock: wait to acquire        1      30       31        40      4999  longest run by one thread: 50000
+lock: wait to acquire        2      30    17994     40487     88558  longest run by one thread: 451
+lock: wait to acquire        4      30    24586     36048     72246  longest run by one thread: 90
+lock: wait to acquire        8     852    41729     65253    224454  longest run by one thread: 125
+queue: send                  1     140     1633      9969    425814  
+queue: driver's pop          1      40      120       291    132851  longest pump: 31027 units
+queue: send                  2     230     1893     10139    105178  
+queue: driver's pop          2      40     1303      2545     57438  longest pump: 62199 units
+queue: send                  4     231     9658     15920    149031  
+queue: driver's pop          4      40     2936     12274    124475  longest pump: 147131 units
+queue: send                  8     341    17974     31339    306199  
+queue: driver's pop          8      40     6161     18515    324472  longest pump: 207039 units
+(spreads took 1.4 s)
+
+Lock hand-offs (5000 units per thread, one run each, untimed)
+bytes    lock   threads     units   changes   longest
+0B       mutex        2     10000       807       132
+0B       mutex        4     20000      7361        31
+0B       mutex        8     40000     32730       229
+0B       ticket       2     10000      9979        11
+0B       ticket       4     20000     19995         4
+0B       ticket       8     40000     39998         2
+64B      mutex        2     10000       756       620
+64B      mutex        4     20000      7647        22
+64B      mutex        8     40000     33933        87
+64B      ticket       2     10000      9977        12
+64B      ticket       4     20000     19995         3
+64B      ticket       8     40000     39999         1
+1216B    mutex        2     10000       830       137
+1216B    mutex        4     20000      7872        96
+1216B    mutex        8     40000     34220        15
+1216B    ticket       2     10000      9977        12
+1216B    ticket       4     20000     19996         3
+1216B    ticket       8     40000     39999         1
+16KiB    mutex        2     10000       593       592
+16KiB    mutex        4     20000      7588       233
+16KiB    mutex        8     40000     16871       296
+16KiB    ticket       2     10000      9987         7
+16KiB    ticket       4     20000     19997         2
+16KiB    ticket       8     40000     39998         2
+256KiB   mutex        2     10000       119       829
+256KiB   mutex        4     20000       104      3378
+256KiB   mutex        8     40000       355       888
+256KiB   ticket       2     10000      9999         1
+256KiB   ticket       4     20000     19999         1
+256KiB   ticket       8     40000     39999         1
+
+Pinned: the same, with the workers' sleeps (voluntary context switches)
+bytes    where lock   threads     units   changes   longest    sleeps
+0B       ccx1  mutex        2     10000       895       123      1225
+0B       ccx1  mutex        4     20000      7677       197      5969
+0B       ccx1  ticket       2     10000      9985         8         0
+0B       ccx1  ticket       4     20000     19992         7         0
+0B       ccx2  mutex        2     10000       839       554       952
+0B       ccx2  mutex        4     20000      7249       166      4886
+0B       ccx2  ticket       2     10000      9979        11         0
+0B       ccx2  ticket       4     20000     19992         8         0
+64B      ccx1  mutex        2     10000       817       688      1134
+64B      ccx1  mutex        4     20000      7945        25      6389
+64B      ccx1  ticket       2     10000      9983         9         0
+64B      ccx1  ticket       4     20000     19993         7         0
+64B      ccx2  mutex        2     10000       839       236       962
+64B      ccx2  mutex        4     20000      7410        95      5188
+64B      ccx2  ticket       2     10000      9983         9         0
+64B      ccx2  ticket       4     20000     19989         8         0
+1216B    ccx1  mutex        2     10000       758      1428      1097
+1216B    ccx1  mutex        4     20000      7451       317      6834
+1216B    ccx1  ticket       2     10000      9983         9         0
+1216B    ccx1  ticket       4     20000     19993         6         0
+1216B    ccx2  mutex        2     10000       672       874       877
+1216B    ccx2  mutex        4     20000      7551        54      5898
+1216B    ccx2  ticket       2     10000      9985         8         0
+1216B    ccx2  ticket       4     20000     19993         7         0
+16KiB    ccx1  mutex        2     10000        41      4772      1012
+16KiB    ccx1  mutex        4     20000      7038       250     10832
+16KiB    ccx1  ticket       2     10000      9991         5         0
+16KiB    ccx1  ticket       4     20000     19996         4         0
+16KiB    ccx2  mutex        2     10000       455      1159      1390
+16KiB    ccx2  mutex        4     20000      7462       270     12370
+16KiB    ccx2  ticket       2     10000      9991         5         0
+16KiB    ccx2  ticket       4     20000     19997         3         0
+256KiB   ccx1  mutex        2     10000        14      3338      6607
+256KiB   ccx1  mutex        4     20000        13      4638     15327
+256KiB   ccx1  ticket       2     10000      9999         1         0
+256KiB   ccx1  ticket       4     20000     19999         1         0
+256KiB   ccx2  mutex        2     10000        71      2004      7780
+256KiB   ccx2  mutex        4     20000        77      2251     18589
+256KiB   ccx2  ticket       2     10000      9999         1         0
+256KiB   ccx2  ticket       4     20000     19999         1         0
+(hand-offs took 4.7 s)
+
+Pinned copy of std's mutex: futex calls per unit, and ns per call (20000 units per thread, one run each)
+bytes    where threads  wakes/u  woken/u  slept/u     wake     wait   to-run
+0B       ccx1        2    0.221    0.119    0.119     1454     3744     5907
+0B       ccx1        4    0.598    0.297    0.297     1233     3774     1420
+0B       ccx2        2    0.203    0.094    0.094     1737     4146     7421
+0B       ccx2        4    0.586    0.261    0.261     1544     3960     1555
+256KiB   ccx1        2    0.893    0.890    0.890      956     7078     4866
+256KiB   ccx1        4    0.790    0.790    0.790      859    16951     4711
+256KiB   ccx2        2    0.878    0.862    0.862     1873     8443     6511
+256KiB   ccx2        4    0.859    0.858    0.858     1264    19634     5659
+wake: inside futex_wake. wait: inside futex_wait, asleep behind the holder
+included. to-run: a wake's send to the woken thread's return, over waits that
+slept and were woken (exact at 2 threads, reads low at 4).
+(pinned futex calls took 2.0 s)
+
+$ python3 scripts/ratios.py single contended footprint-
+
+benchmark                       ratio   95% interval       baseline mean
+contended/lock/2                 1.719  [ 1.701,  1.737]         500.0 ns
+contended/lock/4                 1.901  [ 1.894,  1.912]         498.4 ns
+contended/lock/8                 2.025  [ 2.018,  2.033]         497.9 ns
+contended/queue/2                1.273  [ 1.261,  1.287]         500.0 ns
+contended/queue/4                1.392  [ 1.374,  1.411]         498.4 ns
+contended/queue/8                1.517  [ 1.492,  1.542]         497.9 ns
+footprint-0B-ccx1/futex/2        1.622  [ 1.619,  1.625]         535.7 ns
+footprint-0B-ccx1/futex/4        1.682  [ 1.673,  1.696]         535.9 ns
+footprint-0B-ccx1/lock/2         1.589  [ 1.579,  1.599]         535.7 ns
+footprint-0B-ccx1/lock/4         1.749  [ 1.740,  1.755]         535.9 ns
+footprint-0B-ccx1/ticket/2       1.124  [ 1.116,  1.131]         535.7 ns
+footprint-0B-ccx1/ticket/4       1.208  [ 1.191,  1.226]         535.9 ns
+footprint-0B-ccx2/futex/2        1.784  [ 1.780,  1.788]         535.8 ns
+footprint-0B-ccx2/futex/4        1.767  [ 1.763,  1.770]         535.8 ns
+footprint-0B-ccx2/lock/2         1.731  [ 1.720,  1.740]         535.8 ns
+footprint-0B-ccx2/lock/4         1.791  [ 1.767,  1.815]         535.8 ns
+footprint-0B-ccx2/ticket/2       1.415  [ 1.388,  1.442]         535.8 ns
+footprint-0B-ccx2/ticket/4       1.614  [ 1.584,  1.646]         535.8 ns
+footprint-0B/lock/2              1.714  [ 1.692,  1.733]         528.5 ns
+footprint-0B/lock/4              1.747  [ 1.729,  1.773]         527.8 ns
+footprint-0B/lock/8              1.864  [ 1.845,  1.882]         527.9 ns
+footprint-0B/queue/2             1.223  [ 1.218,  1.228]         528.5 ns
+footprint-0B/queue/4             1.330  [ 1.325,  1.335]         527.8 ns
+footprint-0B/queue/8             1.430  [ 1.421,  1.443]         527.9 ns
+footprint-0B/ticket/2            1.386  [ 1.362,  1.413]         528.5 ns
+footprint-0B/ticket/4            1.619  [ 1.591,  1.647]         527.8 ns
+footprint-0B/ticket/8            1.741  [ 1.685,  1.793]         527.9 ns
+footprint-1216B-ccx1/lock/2      1.414  [ 1.396,  1.433]         555.4 ns
+footprint-1216B-ccx1/lock/4      1.808  [ 1.799,  1.821]         555.4 ns
+footprint-1216B-ccx1/ticket/2    1.186  [ 1.178,  1.194]         555.4 ns
+footprint-1216B-ccx1/ticket/4    1.267  [ 1.253,  1.282]         555.4 ns
+footprint-1216B-ccx2/lock/2      1.711  [ 1.701,  1.720]         555.4 ns
+footprint-1216B-ccx2/lock/4      1.959  [ 1.947,  1.970]         555.6 ns
+footprint-1216B-ccx2/ticket/2    1.696  [ 1.670,  1.721]         555.4 ns
+footprint-1216B-ccx2/ticket/4    1.831  [ 1.767,  1.899]         555.6 ns
+footprint-1216B/lock/2           1.706  [ 1.691,  1.721]         546.9 ns
+footprint-1216B/lock/4           1.975  [ 1.954,  1.995]         546.0 ns
+footprint-1216B/lock/8           2.054  [ 2.023,  2.080]         548.4 ns
+footprint-1216B/queue/2          1.212  [ 1.204,  1.220]         546.9 ns
+footprint-1216B/queue/4          1.317  [ 1.312,  1.323]         546.0 ns
+footprint-1216B/queue/8          1.412  [ 1.397,  1.424]         548.4 ns
+footprint-1216B/ticket/2         1.639  [ 1.580,  1.686]         546.9 ns
+footprint-1216B/ticket/4         1.842  [ 1.784,  1.903]         546.0 ns
+footprint-1216B/ticket/8         1.903  [ 1.852,  1.951]         548.4 ns
+footprint-16KiB-ccx1/lock/2      1.284  [ 1.267,  1.306]         872.4 ns
+footprint-16KiB-ccx1/lock/4      1.776  [ 1.769,  1.783]         872.6 ns
+footprint-16KiB-ccx1/ticket/2    1.578  [ 1.575,  1.581]         872.4 ns
+footprint-16KiB-ccx1/ticket/4    1.641  [ 1.627,  1.662]         872.6 ns
+footprint-16KiB-ccx2/lock/2      1.631  [ 1.617,  1.641]         873.9 ns
+footprint-16KiB-ccx2/lock/4      2.552  [ 2.519,  2.585]         873.2 ns
+footprint-16KiB-ccx2/ticket/2    3.713  [ 3.693,  3.735]         873.9 ns
+footprint-16KiB-ccx2/ticket/4    3.216  [ 3.040,  3.397]         873.2 ns
+footprint-16KiB/lock/2           1.641  [ 1.633,  1.649]         861.4 ns
+footprint-16KiB/lock/4           2.519  [ 2.491,  2.543]         863.2 ns
+footprint-16KiB/lock/8           2.388  [ 2.360,  2.411]         862.3 ns
+footprint-16KiB/queue/2          1.135  [ 1.131,  1.139]         861.4 ns
+footprint-16KiB/queue/4          1.182  [ 1.176,  1.187]         863.2 ns
+footprint-16KiB/queue/8          1.248  [ 1.239,  1.256]         862.3 ns
+footprint-16KiB/ticket/2         3.499  [ 3.222,  3.707]         861.4 ns
+footprint-16KiB/ticket/4         3.058  [ 2.872,  3.245]         863.2 ns
+footprint-16KiB/ticket/8         2.823  [ 2.722,  2.924]         862.3 ns
+footprint-256KiB-ccx1/futex/2    1.121  [ 1.115,  1.127]        5985.5 ns
+footprint-256KiB-ccx1/futex/4    1.105  [ 1.101,  1.109]        5986.8 ns
+footprint-256KiB-ccx1/lock/2     1.111  [ 1.105,  1.117]        5985.5 ns
+footprint-256KiB-ccx1/lock/4     1.106  [ 1.099,  1.119]        5986.8 ns
+footprint-256KiB-ccx1/ticket/2   1.565  [ 1.563,  1.567]        5985.5 ns
+footprint-256KiB-ccx1/ticket/4   1.564  [ 1.561,  1.568]        5986.8 ns
+footprint-256KiB-ccx2/futex/2    1.372  [ 1.359,  1.384]        5985.1 ns
+footprint-256KiB-ccx2/futex/4    1.251  [ 1.243,  1.259]        5984.0 ns
+footprint-256KiB-ccx2/lock/2     1.338  [ 1.329,  1.348]        5985.1 ns
+footprint-256KiB-ccx2/lock/4     1.216  [ 1.209,  1.224]        5984.0 ns
+footprint-256KiB-ccx2/ticket/2   4.486  [ 4.482,  4.490]        5985.1 ns
+footprint-256KiB-ccx2/ticket/4   3.523  [ 3.279,  3.769]        5984.0 ns
+footprint-256KiB/lock/2          1.355  [ 1.330,  1.374]        5884.5 ns
+footprint-256KiB/lock/4          1.236  [ 1.224,  1.248]        5887.2 ns
+footprint-256KiB/lock/8          1.247  [ 1.228,  1.264]        5922.9 ns
+footprint-256KiB/queue/2         1.013  [ 1.011,  1.014]        5884.5 ns
+footprint-256KiB/queue/4         1.019  [ 1.017,  1.020]        5887.2 ns
+footprint-256KiB/queue/8         1.016  [ 1.013,  1.019]        5922.9 ns
+footprint-256KiB/ticket/2        4.412  [ 4.192,  4.525]        5884.5 ns
+footprint-256KiB/ticket/4        3.486  [ 3.248,  3.734]        5887.2 ns
+footprint-256KiB/ticket/8        3.172  [ 2.938,  3.377]        5922.9 ns
+footprint-64B-ccx1/lock/2        1.589  [ 1.578,  1.600]         536.2 ns
+footprint-64B-ccx1/lock/4        1.806  [ 1.798,  1.812]         536.1 ns
+footprint-64B-ccx1/ticket/2      1.160  [ 1.146,  1.174]         536.2 ns
+footprint-64B-ccx1/ticket/4      1.233  [ 1.208,  1.258]         536.1 ns
+footprint-64B-ccx2/lock/2        1.738  [ 1.732,  1.743]         536.9 ns
+footprint-64B-ccx2/lock/4        1.863  [ 1.841,  1.885]         536.3 ns
+footprint-64B-ccx2/ticket/2      1.413  [ 1.386,  1.441]         536.9 ns
+footprint-64B-ccx2/ticket/4      1.699  [ 1.640,  1.760]         536.3 ns
+footprint-64B/lock/2             1.727  [ 1.712,  1.742]         528.2 ns
+footprint-64B/lock/4             1.866  [ 1.834,  1.906]         529.8 ns
+footprint-64B/lock/8             1.950  [ 1.934,  1.965]         531.5 ns
+footprint-64B/queue/2            1.229  [ 1.224,  1.233]         528.2 ns
+footprint-64B/queue/4            1.324  [ 1.319,  1.331]         529.8 ns
+footprint-64B/queue/8            1.425  [ 1.415,  1.437]         531.5 ns
+footprint-64B/ticket/2           1.381  [ 1.359,  1.404]         528.2 ns
+footprint-64B/ticket/4           1.659  [ 1.610,  1.711]         529.8 ns
+footprint-64B/ticket/8           1.770  [ 1.708,  1.831]         531.5 ns
+single/lock/1                    1.047  [ 1.045,  1.049]         504.9 ns
+single/lock/64                   1.014  [ 1.007,  1.018]       32217.8 ns
+single/queue/1                   1.146  [ 1.143,  1.149]         504.9 ns
+single/queue/64                  1.106  [ 1.098,  1.111]       32217.8 ns
+

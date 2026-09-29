@@ -1,0 +1,410 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-29 - rfd-0003-incremental-mark-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0003-incremental-mark-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.10s
+     Running benches/rfd-0003-incremental-mark-wallclock.rs (target/release/deps/rfd_0003_incremental_mark_wallclock-de4c66747e7f297f)
+Gnuplot not found, using plotters backend
+Benchmarking incremental-run/baseline/3900
+Benchmarking incremental-run/baseline/3900: Warming up for 200.00 ms
+Benchmarking incremental-run/baseline/3900: Collecting 10 samples in estimated 6.0555 s (250 iterations)
+Benchmarking incremental-run/baseline/3900: Analyzing
+incremental-run/baseline/3900
+                        time:   [22.730 ms 22.774 ms 22.818 ms]
+Benchmarking incremental-run/atomic-barriers/3900
+Benchmarking incremental-run/atomic-barriers/3900: Warming up for 200.00 ms
+Benchmarking incremental-run/atomic-barriers/3900: Collecting 10 samples in estimated 6.0892 s (250 iterations)
+Benchmarking incremental-run/atomic-barriers/3900: Analyzing
+incremental-run/atomic-barriers/3900
+                        time:   [22.791 ms 22.848 ms 22.905 ms]
+Benchmarking incremental-run/k250/3900
+Benchmarking incremental-run/k250/3900: Warming up for 200.00 ms
+Benchmarking incremental-run/k250/3900: Collecting 10 samples in estimated 6.2004 s (130 iterations)
+Benchmarking incremental-run/k250/3900: Analyzing
+incremental-run/k250/3900
+                        time:   [45.856 ms 46.049 ms 46.250 ms]
+Benchmarking incremental-run/k1000/3900
+Benchmarking incremental-run/k1000/3900: Warming up for 200.00 ms
+Benchmarking incremental-run/k1000/3900: Collecting 10 samples in estimated 6.1860 s (220 iterations)
+Benchmarking incremental-run/k1000/3900: Analyzing
+incremental-run/k1000/3900
+                        time:   [26.461 ms 26.550 ms 26.644 ms]
+Benchmarking incremental-run/k4000/3900
+Benchmarking incremental-run/k4000/3900: Warming up for 200.00 ms
+Benchmarking incremental-run/k4000/3900: Collecting 10 samples in estimated 6.0651 s (250 iterations)
+Benchmarking incremental-run/k4000/3900: Analyzing
+incremental-run/k4000/3900
+                        time:   [22.715 ms 22.771 ms 22.828 ms]
+Benchmarking incremental-run/k250-atomic-sweep/3900
+Benchmarking incremental-run/k250-atomic-sweep/3900: Warming up for 200.00 ms
+Benchmarking incremental-run/k250-atomic-sweep/3900: Collecting 10 samples in estimated 6.0002 s (150 iterations)
+Benchmarking incremental-run/k250-atomic-sweep/3900: Analyzing
+incremental-run/k250-atomic-sweep/3900
+                        time:   [37.903 ms 37.979 ms 38.053 ms]
+Benchmarking incremental-run/k1000-atomic-sweep/3900
+Benchmarking incremental-run/k1000-atomic-sweep/3900: Warming up for 200.00 ms
+Benchmarking incremental-run/k1000-atomic-sweep/3900: Collecting 10 samples in estimated 6.0369 s (220 iterations)
+Benchmarking incremental-run/k1000-atomic-sweep/3900: Analyzing
+incremental-run/k1000-atomic-sweep/3900
+                        time:   [25.513 ms 25.564 ms 25.630 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking incremental-run/k4000-atomic-sweep/3900
+Benchmarking incremental-run/k4000-atomic-sweep/3900: Warming up for 200.00 ms
+Benchmarking incremental-run/k4000-atomic-sweep/3900: Collecting 10 samples in estimated 6.0037 s (250 iterations)
+Benchmarking incremental-run/k4000-atomic-sweep/3900: Analyzing
+incremental-run/k4000-atomic-sweep/3900
+                        time:   [22.421 ms 22.520 ms 22.626 ms]
+Found 4 outliers among 10 measurements (40.00%)
+  2 (20.00%) low mild
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+
+Benchmarking incremental-pause/baseline/3900
+Benchmarking incremental-pause/baseline/3900: Warming up for 200.00 ms
+Benchmarking incremental-pause/baseline/3900: Collecting 20 samples in estimated 530.36 ms (320 iterations)
+Benchmarking incremental-pause/baseline/3900: Analyzing
+incremental-pause/baseline/3900
+                        time:   [167.16 µs 167.52 µs 167.93 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+Benchmarking incremental-pause/k250/3900
+Benchmarking incremental-pause/k250/3900: Warming up for 200.00 ms
+Benchmarking incremental-pause/k250/3900: Collecting 20 samples in estimated 509.05 ms (300 iterations)
+Benchmarking incremental-pause/k250/3900: Analyzing
+incremental-pause/k250/3900
+                        time:   [29.365 µs 29.506 µs 29.638 µs]
+Found 4 outliers among 20 measurements (20.00%)
+  1 (5.00%) low severe
+  2 (10.00%) low mild
+  1 (5.00%) high mild
+Benchmarking incremental-pause/k1000/3900
+Benchmarking incremental-pause/k1000/3900: Warming up for 200.00 ms
+Benchmarking incremental-pause/k1000/3900: Collecting 20 samples in estimated 529.75 ms (340 iterations)
+Benchmarking incremental-pause/k1000/3900: Analyzing
+incremental-pause/k1000/3900
+                        time:   [20.197 µs 20.352 µs 20.510 µs]
+Benchmarking incremental-pause/k4000/3900
+Benchmarking incremental-pause/k4000/3900: Warming up for 200.00 ms
+Benchmarking incremental-pause/k4000/3900: Collecting 20 samples in estimated 523.27 ms (340 iterations)
+Benchmarking incremental-pause/k4000/3900: Analyzing
+incremental-pause/k4000/3900
+                        time:   [44.864 µs 45.076 µs 45.328 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) high mild
+  2 (10.00%) high severe
+Benchmarking incremental-pause/k250-atomic-sweep/3900
+Benchmarking incremental-pause/k250-atomic-sweep/3900: Warming up for 200.00 ms
+Benchmarking incremental-pause/k250-atomic-sweep/3900: Collecting 20 samples in estimated 532.68 ms (320 iterations)
+Benchmarking incremental-pause/k250-atomic-sweep/3900: Analyzing
+incremental-pause/k250-atomic-sweep/3900
+                        time:   [88.113 µs 88.259 µs 88.408 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+Benchmarking incremental-pause/k1000-atomic-sweep/3900
+Benchmarking incremental-pause/k1000-atomic-sweep/3900: Warming up for 200.00 ms
+Benchmarking incremental-pause/k1000-atomic-sweep/3900: Collecting 20 samples in estimated 503.01 ms (320 iterations)
+Benchmarking incremental-pause/k1000-atomic-sweep/3900: Analyzing
+incremental-pause/k1000-atomic-sweep/3900
+                        time:   [73.139 µs 73.247 µs 73.363 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) low mild
+  2 (10.00%) high mild
+Benchmarking incremental-pause/k4000-atomic-sweep/3900
+Benchmarking incremental-pause/k4000-atomic-sweep/3900: Warming up for 200.00 ms
+Benchmarking incremental-pause/k4000-atomic-sweep/3900: Collecting 20 samples in estimated 502.59 ms (320 iterations)
+Benchmarking incremental-pause/k4000-atomic-sweep/3900: Analyzing
+incremental-pause/k4000-atomic-sweep/3900
+                        time:   [90.239 µs 91.417 µs 92.663 µs]
+
+Benchmarking incremental-fast-click/baseline/1
+Benchmarking incremental-fast-click/baseline/1: Warming up for 200.00 ms
+Benchmarking incremental-fast-click/baseline/1: Collecting 20 samples in estimated 597.21 ms (420 iterations)
+Benchmarking incremental-fast-click/baseline/1: Analyzing
+incremental-fast-click/baseline/1
+                        time:   [691.87 ns 706.20 ns 736.16 ns]
+Found 5 outliers among 20 measurements (25.00%)
+  3 (15.00%) high mild
+  2 (10.00%) high severe
+Benchmarking incremental-fast-click/idle/1
+Benchmarking incremental-fast-click/idle/1: Warming up for 200.00 ms
+
+Warning: Unable to complete 20 samples in 500.0ms. You may wish to increase target time to 543.9ms, enable flat sampling, or reduce sample count to 10.
+Benchmarking incremental-fast-click/idle/1: Collecting 20 samples in estimated 543.90 ms (210 iterations)
+Benchmarking incremental-fast-click/idle/1: Analyzing
+incremental-fast-click/idle/1
+                        time:   [1.0242 µs 1.0437 µs 1.0680 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking incremental-fast-click/mark/1
+Benchmarking incremental-fast-click/mark/1: Warming up for 200.00 ms
+
+Warning: Unable to complete 20 samples in 500.0ms. You may wish to increase target time to 531.3ms, enable flat sampling, or reduce sample count to 10.
+Benchmarking incremental-fast-click/mark/1: Collecting 20 samples in estimated 531.28 ms (210 iterations)
+Benchmarking incremental-fast-click/mark/1: Analyzing
+incremental-fast-click/mark/1
+                        time:   [1.0407 µs 1.0765 µs 1.1243 µs]
+Benchmarking incremental-fast-click/sweep/1
+Benchmarking incremental-fast-click/sweep/1: Warming up for 200.00 ms
+
+Warning: Unable to complete 20 samples in 500.0ms. You may wish to increase target time to 559.4ms, enable flat sampling, or reduce sample count to 10.
+Benchmarking incremental-fast-click/sweep/1: Collecting 20 samples in estimated 559.38 ms (210 iterations)
+Benchmarking incremental-fast-click/sweep/1: Analyzing
+incremental-fast-click/sweep/1
+                        time:   [987.93 ns 1.0282 µs 1.0675 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+
+Benchmarking incremental-fast-navigate/baseline/1
+Benchmarking incremental-fast-navigate/baseline/1: Warming up for 200.00 ms
+Benchmarking incremental-fast-navigate/baseline/1: Collecting 20 samples in estimated 801.38 ms (420 iterations)
+Benchmarking incremental-fast-navigate/baseline/1: Analyzing
+incremental-fast-navigate/baseline/1
+                        time:   [396.76 µs 398.03 µs 399.49 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking incremental-fast-navigate/idle/1
+Benchmarking incremental-fast-navigate/idle/1: Warming up for 200.00 ms
+
+Warning: Unable to complete 20 samples in 500.0ms. You may wish to increase target time to 670.9ms, enable flat sampling, or reduce sample count to 10.
+Benchmarking incremental-fast-navigate/idle/1: Collecting 20 samples in estimated 670.94 ms (210 iterations)
+Benchmarking incremental-fast-navigate/idle/1: Analyzing
+incremental-fast-navigate/idle/1
+                        time:   [465.06 µs 465.86 µs 466.77 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+Benchmarking incremental-fast-navigate/mark/1
+Benchmarking incremental-fast-navigate/mark/1: Warming up for 200.00 ms
+Benchmarking incremental-fast-navigate/mark/1: Collecting 20 samples in estimated 862.72 ms (420 iterations)
+Benchmarking incremental-fast-navigate/mark/1: Analyzing
+incremental-fast-navigate/mark/1
+                        time:   [494.30 µs 495.65 µs 497.26 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking incremental-fast-navigate/sweep/1
+Benchmarking incremental-fast-navigate/sweep/1: Warming up for 200.00 ms
+
+Warning: Unable to complete 20 samples in 500.0ms. You may wish to increase target time to 673.8ms, enable flat sampling, or reduce sample count to 10.
+Benchmarking incremental-fast-navigate/sweep/1: Collecting 20 samples in estimated 673.80 ms (210 iterations)
+Benchmarking incremental-fast-navigate/sweep/1: Analyzing
+incremental-fast-navigate/sweep/1
+                        time:   [476.42 µs 479.26 µs 482.18 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+Benchmarking incremental-ext-run/baseline/3900
+Benchmarking incremental-ext-run/baseline/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-run/baseline/3900: Collecting 10 samples in estimated 6.1867 s (260 iterations)
+Benchmarking incremental-ext-run/baseline/3900: Analyzing
+incremental-ext-run/baseline/3900
+                        time:   [22.099 ms 22.162 ms 22.234 ms]
+Benchmarking incremental-ext-run/k1000/3900
+Benchmarking incremental-ext-run/k1000/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-run/k1000/3900: Collecting 10 samples in estimated 6.0601 s (220 iterations)
+Benchmarking incremental-ext-run/k1000/3900: Analyzing
+incremental-ext-run/k1000/3900
+                        time:   [25.886 ms 25.910 ms 25.940 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low severe
+  2 (20.00%) high severe
+Benchmarking incremental-ext-run/k250-born/3900
+Benchmarking incremental-ext-run/k250-born/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-run/k250-born/3900: Collecting 10 samples in estimated 6.1328 s (160 iterations)
+Benchmarking incremental-ext-run/k250-born/3900: Analyzing
+incremental-ext-run/k250-born/3900
+                        time:   [35.893 ms 35.958 ms 36.034 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking incremental-ext-run/k500-born/3900
+Benchmarking incremental-ext-run/k500-born/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-run/k500-born/3900: Collecting 10 samples in estimated 6.2567 s (210 iterations)
+Benchmarking incremental-ext-run/k500-born/3900: Analyzing
+incremental-ext-run/k500-born/3900
+                        time:   [28.266 ms 28.324 ms 28.388 ms]
+Benchmarking incremental-ext-run/k1000-early/3900
+Benchmarking incremental-ext-run/k1000-early/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-run/k1000-early/3900: Collecting 10 samples in estimated 6.1571 s (230 iterations)
+Benchmarking incremental-ext-run/k1000-early/3900: Analyzing
+incremental-ext-run/k1000-early/3900
+                        time:   [25.216 ms 25.282 ms 25.359 ms]
+Benchmarking incremental-ext-run/k1000-born/3900
+Benchmarking incremental-ext-run/k1000-born/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-run/k1000-born/3900: Collecting 10 samples in estimated 6.0648 s (230 iterations)
+Benchmarking incremental-ext-run/k1000-born/3900: Analyzing
+incremental-ext-run/k1000-born/3900
+                        time:   [25.040 ms 25.074 ms 25.104 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low severe
+Benchmarking incremental-ext-run/k2000/3900
+Benchmarking incremental-ext-run/k2000/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-run/k2000/3900: Collecting 10 samples in estimated 6.2104 s (250 iterations)
+Benchmarking incremental-ext-run/k2000/3900: Analyzing
+incremental-ext-run/k2000/3900
+                        time:   [23.343 ms 23.383 ms 23.430 ms]
+Benchmarking incremental-ext-run/region-debt4/3900
+Benchmarking incremental-ext-run/region-debt4/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-run/region-debt4/3900: Collecting 10 samples in estimated 6.1328 s (230 iterations)
+Benchmarking incremental-ext-run/region-debt4/3900: Analyzing
+incremental-ext-run/region-debt4/3900
+                        time:   [25.141 ms 25.222 ms 25.306 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low mild
+  1 (10.00%) high mild
+Benchmarking incremental-ext-run/region-debt8/3900
+Benchmarking incremental-ext-run/region-debt8/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-run/region-debt8/3900: Collecting 10 samples in estimated 6.1307 s (240 iterations)
+Benchmarking incremental-ext-run/region-debt8/3900: Analyzing
+incremental-ext-run/region-debt8/3900
+                        time:   [23.721 ms 23.786 ms 23.860 ms]
+
+Benchmarking incremental-ext-pause/baseline/3900
+Benchmarking incremental-ext-pause/baseline/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-pause/baseline/3900: Collecting 20 samples in estimated 526.38 ms (320 iterations)
+Benchmarking incremental-ext-pause/baseline/3900: Analyzing
+incremental-ext-pause/baseline/3900
+                        time:   [166.93 µs 167.44 µs 168.10 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high severe
+Benchmarking incremental-ext-pause/k1000/3900
+Benchmarking incremental-ext-pause/k1000/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-pause/k1000/3900: Collecting 20 samples in estimated 529.32 ms (340 iterations)
+Benchmarking incremental-ext-pause/k1000/3900: Analyzing
+incremental-ext-pause/k1000/3900
+                        time:   [20.934 µs 21.125 µs 21.349 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+Benchmarking incremental-ext-pause/k250-born/3900
+Benchmarking incremental-ext-pause/k250-born/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-pause/k250-born/3900: Collecting 20 samples in estimated 510.48 ms (320 iterations)
+Benchmarking incremental-ext-pause/k250-born/3900: Analyzing
+incremental-ext-pause/k250-born/3900
+                        time:   [19.397 µs 19.535 µs 19.693 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking incremental-ext-pause/k500-born/3900
+Benchmarking incremental-ext-pause/k500-born/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-pause/k500-born/3900: Collecting 20 samples in estimated 530.19 ms (340 iterations)
+Benchmarking incremental-ext-pause/k500-born/3900: Analyzing
+incremental-ext-pause/k500-born/3900
+                        time:   [16.613 µs 16.712 µs 16.824 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking incremental-ext-pause/k1000-early/3900
+Benchmarking incremental-ext-pause/k1000-early/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-pause/k1000-early/3900: Collecting 20 samples in estimated 523.59 ms (340 iterations)
+Benchmarking incremental-ext-pause/k1000-early/3900: Analyzing
+incremental-ext-pause/k1000-early/3900
+                        time:   [19.529 µs 19.796 µs 20.114 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) high mild
+Benchmarking incremental-ext-pause/k1000-born/3900
+Benchmarking incremental-ext-pause/k1000-born/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-pause/k1000-born/3900: Collecting 20 samples in estimated 526.14 ms (340 iterations)
+Benchmarking incremental-ext-pause/k1000-born/3900: Analyzing
+incremental-ext-pause/k1000-born/3900
+                        time:   [19.078 µs 19.245 µs 19.412 µs]
+Benchmarking incremental-ext-pause/k2000/3900
+Benchmarking incremental-ext-pause/k2000/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-pause/k2000/3900: Collecting 20 samples in estimated 521.90 ms (340 iterations)
+Benchmarking incremental-ext-pause/k2000/3900: Analyzing
+incremental-ext-pause/k2000/3900
+                        time:   [25.311 µs 25.381 µs 25.457 µs]
+Benchmarking incremental-ext-pause/region-debt4/3900
+Benchmarking incremental-ext-pause/region-debt4/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-pause/region-debt4/3900: Collecting 20 samples in estimated 506.65 ms (320 iterations)
+Benchmarking incremental-ext-pause/region-debt4/3900: Analyzing
+incremental-ext-pause/region-debt4/3900
+                        time:   [38.851 µs 39.016 µs 39.192 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking incremental-ext-pause/region-debt8/3900
+Benchmarking incremental-ext-pause/region-debt8/3900: Warming up for 200.00 ms
+Benchmarking incremental-ext-pause/region-debt8/3900: Collecting 20 samples in estimated 514.45 ms (320 iterations)
+Benchmarking incremental-ext-pause/region-debt8/3900: Analyzing
+incremental-ext-pause/region-debt8/3900
+                        time:   [65.157 µs 65.598 µs 66.303 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) high mild
+  2 (10.00%) high severe
+
+Benchmarking incremental-uneven-run/baseline/3600
+Benchmarking incremental-uneven-run/baseline/3600: Warming up for 200.00 ms
+Benchmarking incremental-uneven-run/baseline/3600: Collecting 10 samples in estimated 11.669 s (60 iterations)
+Benchmarking incremental-uneven-run/baseline/3600: Analyzing
+incremental-uneven-run/baseline/3600
+                        time:   [190.31 ms 190.68 ms 191.10 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking incremental-uneven-run/atomic-barriers/3600
+Benchmarking incremental-uneven-run/atomic-barriers/3600: Warming up for 200.00 ms
+Benchmarking incremental-uneven-run/atomic-barriers/3600: Collecting 10 samples in estimated 11.924 s (60 iterations)
+Benchmarking incremental-uneven-run/atomic-barriers/3600: Analyzing
+incremental-uneven-run/atomic-barriers/3600
+                        time:   [193.14 ms 194.32 ms 195.72 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking incremental-uneven-run/k1000/3600
+Benchmarking incremental-uneven-run/k1000/3600: Warming up for 200.00 ms
+Benchmarking incremental-uneven-run/k1000/3600: Collecting 10 samples in estimated 10.118 s (50 iterations)
+Benchmarking incremental-uneven-run/k1000/3600: Analyzing
+incremental-uneven-run/k1000/3600
+                        time:   [195.52 ms 196.18 ms 196.88 ms]
+
+Benchmarking incremental-uneven-pause/baseline/3600
+Benchmarking incremental-uneven-pause/baseline/3600: Warming up for 200.00 ms
+Benchmarking incremental-uneven-pause/baseline/3600: Collecting 20 samples in estimated 548.75 ms (200 iterations)
+Benchmarking incremental-uneven-pause/baseline/3600: Analyzing
+incremental-uneven-pause/baseline/3600
+                        time:   [395.84 µs 397.88 µs 399.92 µs]
+Benchmarking incremental-uneven-pause/k1000/3600
+Benchmarking incremental-uneven-pause/k1000/3600: Warming up for 200.00 ms
+Benchmarking incremental-uneven-pause/k1000/3600: Collecting 20 samples in estimated 517.25 ms (200 iterations)
+Benchmarking incremental-uneven-pause/k1000/3600: Analyzing
+incremental-uneven-pause/k1000/3600
+                        time:   [279.72 µs 281.28 µs 283.23 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high severe
+
+
+$ python3 scripts/ratios.py incremental-
+
+benchmark                                    ratio   95% interval       baseline mean
+incremental-ext-pause/k1000-born/3900         0.115  [ 0.114,  0.116]      167435.3 ns
+incremental-ext-pause/k1000-early/3900        0.118  [ 0.117,  0.120]      167435.3 ns
+incremental-ext-pause/k1000/3900              0.126  [ 0.125,  0.128]      167435.3 ns
+incremental-ext-pause/k2000/3900              0.152  [ 0.151,  0.152]      167435.3 ns
+incremental-ext-pause/k250-born/3900          0.117  [ 0.116,  0.118]      167435.3 ns
+incremental-ext-pause/k500-born/3900          0.100  [ 0.099,  0.101]      167435.3 ns
+incremental-ext-pause/region-debt4/3900       0.233  [ 0.232,  0.234]      167435.3 ns
+incremental-ext-pause/region-debt8/3900       0.392  [ 0.389,  0.396]      167435.3 ns
+incremental-ext-run/k1000-born/3900           1.131  [ 1.127,  1.135]    22162440.7 ns
+incremental-ext-run/k1000-early/3900          1.141  [ 1.136,  1.146]    22162440.7 ns
+incremental-ext-run/k1000/3900                1.169  [ 1.165,  1.173]    22162440.7 ns
+incremental-ext-run/k2000/3900                1.055  [ 1.051,  1.059]    22162440.7 ns
+incremental-ext-run/k250-born/3900            1.623  [ 1.616,  1.628]    22162440.7 ns
+incremental-ext-run/k500-born/3900            1.278  [ 1.273,  1.283]    22162440.7 ns
+incremental-ext-run/region-debt4/3900         1.138  [ 1.133,  1.143]    22162440.7 ns
+incremental-ext-run/region-debt8/3900         1.073  [ 1.069,  1.078]    22162440.7 ns
+incremental-fast-click/idle/1                 1.471  [ 1.385,  1.542]         725.6 ns
+incremental-fast-click/mark/1                 1.528  [ 1.436,  1.612]         725.6 ns
+incremental-fast-click/sweep/1                1.426  [ 1.329,  1.525]         725.6 ns
+incremental-fast-navigate/idle/1              1.167  [ 1.158,  1.172]      399060.6 ns
+incremental-fast-navigate/mark/1              1.239  [ 1.230,  1.246]      399060.6 ns
+incremental-fast-navigate/sweep/1             1.200  [ 1.188,  1.211]      399060.6 ns
+incremental-pause/k1000-atomic-sweep/3900     0.437  [ 0.436,  0.438]      167521.9 ns
+incremental-pause/k1000/3900                  0.121  [ 0.121,  0.122]      167521.9 ns
+incremental-pause/k250-atomic-sweep/3900      0.527  [ 0.525,  0.528]      167521.9 ns
+incremental-pause/k250/3900                   0.176  [ 0.175,  0.177]      167521.9 ns
+incremental-pause/k4000-atomic-sweep/3900     0.546  [ 0.539,  0.553]      167521.9 ns
+incremental-pause/k4000/3900                  0.269  [ 0.268,  0.271]      167521.9 ns
+incremental-run/atomic-barriers/3900          1.003  [ 1.000,  1.006]    22773934.8 ns
+incremental-run/k1000-atomic-sweep/3900       1.122  [ 1.119,  1.126]    22773934.8 ns
+incremental-run/k1000/3900                    1.166  [ 1.161,  1.171]    22773934.8 ns
+incremental-run/k250-atomic-sweep/3900        1.668  [ 1.663,  1.672]    22773934.8 ns
+incremental-run/k250/3900                     2.022  [ 2.013,  2.032]    22773934.8 ns
+incremental-run/k4000-atomic-sweep/3900       0.989  [ 0.984,  0.994]    22773934.8 ns
+incremental-run/k4000/3900                    1.000  [ 0.997,  1.003]    22773934.8 ns
+incremental-uneven-pause/k1000/3600           0.707  [ 0.701,  0.713]      397881.0 ns
+incremental-uneven-run/atomic-barriers/3600   1.019  [ 1.013,  1.027]   190677793.6 ns
+incremental-uneven-run/k1000/3600             1.029  [ 1.025,  1.033]   190677793.6 ns
+

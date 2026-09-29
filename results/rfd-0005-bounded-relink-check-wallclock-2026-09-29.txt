@@ -1,0 +1,122 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-29 - rfd-0005-bounded-relink-check-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0005-bounded-relink-check-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.10s
+     Running benches/rfd-0005-bounded-relink-check-wallclock.rs (target/release/deps/rfd_0005_bounded_relink_check_wallclock-acbaf36cdec10943)
+Gnuplot not found, using plotters backend
+Benchmarking moves/baseline/settled
+Benchmarking moves/baseline/settled: Warming up for 3.0000 s
+Benchmarking moves/baseline/settled: Collecting 10 samples in estimated 4.2131 s (990 iterations)
+Benchmarking moves/baseline/settled: Analyzing
+moves/baseline/settled  time:   [3.4956 ms 3.4961 ms 3.4970 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking moves/pk/settled
+Benchmarking moves/pk/settled: Warming up for 3.0000 s
+Benchmarking moves/pk/settled: Collecting 10 samples in estimated 4.0020 s (3960 iterations)
+Benchmarking moves/pk/settled: Analyzing
+moves/pk/settled        time:   [63.462 µs 63.728 µs 64.174 µs]
+Benchmarking moves/summaries/settled
+Benchmarking moves/summaries/settled: Warming up for 3.0000 s
+Benchmarking moves/summaries/settled: Collecting 10 samples in estimated 4.2402 s (715 iterations)
+Benchmarking moves/summaries/settled: Analyzing
+moves/summaries/settled time:   [4.5311 ms 4.5339 ms 4.5381 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking moves/baseline/mixed
+Benchmarking moves/baseline/mixed: Warming up for 3.0000 s
+Benchmarking moves/baseline/mixed: Collecting 10 samples in estimated 4.0994 s (1155 iterations)
+Benchmarking moves/baseline/mixed: Analyzing
+moves/baseline/mixed    time:   [2.5184 ms 2.5213 ms 2.5254 ms]
+Benchmarking moves/pk/mixed
+Benchmarking moves/pk/mixed: Warming up for 3.0000 s
+Benchmarking moves/pk/mixed: Collecting 10 samples in estimated 5.6550 s (110 iterations)
+Benchmarking moves/pk/mixed: Analyzing
+moves/pk/mixed          time:   [50.250 ms 50.296 ms 50.339 ms]
+Benchmarking moves/summaries/mixed
+Benchmarking moves/summaries/mixed: Warming up for 3.0000 s
+Benchmarking moves/summaries/mixed: Collecting 10 samples in estimated 4.0653 s (935 iterations)
+Benchmarking moves/summaries/mixed: Analyzing
+moves/summaries/mixed   time:   [3.2293 ms 3.2359 ms 3.2409 ms]
+Benchmarking moves/baseline/churn
+Benchmarking moves/baseline/churn: Warming up for 3.0000 s
+Benchmarking moves/baseline/churn: Collecting 10 samples in estimated 4.1281 s (1375 iterations)
+Benchmarking moves/baseline/churn: Analyzing
+moves/baseline/churn    time:   [1.7552 ms 1.7603 ms 1.7671 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking moves/pk/churn
+Benchmarking moves/pk/churn: Warming up for 3.0000 s
+Benchmarking moves/pk/churn: Collecting 10 samples in estimated 4.9044 s (30 iterations)
+Benchmarking moves/pk/churn: Analyzing
+moves/pk/churn          time:   [162.27 ms 162.40 ms 162.55 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking moves/summaries/churn
+Benchmarking moves/summaries/churn: Warming up for 3.0000 s
+Benchmarking moves/summaries/churn: Collecting 10 samples in estimated 4.1495 s (1155 iterations)
+Benchmarking moves/summaries/churn: Analyzing
+moves/summaries/churn   time:   [2.3518 ms 2.3544 ms 2.3601 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking moves/baseline/lazy
+Benchmarking moves/baseline/lazy: Warming up for 3.0000 s
+Benchmarking moves/baseline/lazy: Collecting 10 samples in estimated 4.1535 s (1375 iterations)
+Benchmarking moves/baseline/lazy: Analyzing
+moves/baseline/lazy     time:   [1.4870 ms 1.4872 ms 1.4877 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking moves/pk/lazy
+Benchmarking moves/pk/lazy: Warming up for 3.0000 s
+Benchmarking moves/pk/lazy: Collecting 10 samples in estimated 7.5344 s (20 iterations)
+Benchmarking moves/pk/lazy: Analyzing
+moves/pk/lazy           time:   [372.64 ms 373.89 ms 375.47 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking moves/summaries/lazy
+Benchmarking moves/summaries/lazy: Warming up for 3.0000 s
+Benchmarking moves/summaries/lazy: Collecting 10 samples in estimated 4.1031 s (1155 iterations)
+Benchmarking moves/summaries/lazy: Analyzing
+moves/summaries/lazy    time:   [2.1077 ms 2.1149 ms 2.1226 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+
+Benchmarking build/baseline/lazy
+Benchmarking build/baseline/lazy: Warming up for 3.0000 s
+Benchmarking build/baseline/lazy: Collecting 20 samples in estimated 4.4134 s (2100 iterations)
+Benchmarking build/baseline/lazy: Analyzing
+build/baseline/lazy     time:   [479.26 µs 481.38 µs 483.30 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking build/pk/lazy
+Benchmarking build/pk/lazy: Warming up for 3.0000 s
+Benchmarking build/pk/lazy: Collecting 20 samples in estimated 4.0426 s (2100 iterations)
+Benchmarking build/pk/lazy: Analyzing
+build/pk/lazy           time:   [505.69 µs 506.13 µs 506.71 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking build/summaries/lazy
+Benchmarking build/summaries/lazy: Warming up for 3.0000 s
+Benchmarking build/summaries/lazy: Collecting 20 samples in estimated 4.4547 s (1890 iterations)
+Benchmarking build/summaries/lazy: Analyzing
+build/summaries/lazy    time:   [816.75 µs 819.00 µs 821.84 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+
+
+$ python3 scripts/ratios.py moves build
+
+benchmark                ratio   95% interval       baseline mean
+build/pk/lazy             1.057  [ 1.043,  1.078]      481844.8 ns
+build/summaries/lazy      1.704  [ 1.685,  1.719]      481844.8 ns
+moves/pk/churn           92.154  [91.882, 92.408]     1762374.9 ns
+moves/pk/lazy            251.057  [250.015, 252.249]     1489168.9 ns
+moves/pk/mixed           19.908  [19.860, 19.955]     2526698.1 ns
+moves/pk/settled          0.018  [ 0.018,  0.018]     3496644.8 ns
+moves/summaries/churn     1.338  [ 1.333,  1.343]     1762374.9 ns
+moves/summaries/lazy      1.418  [ 1.413,  1.424]     1489168.9 ns
+moves/summaries/mixed     1.280  [ 1.277,  1.283]     2526698.1 ns
+moves/summaries/settled   1.302  [ 1.295,  1.315]     3496644.8 ns
+

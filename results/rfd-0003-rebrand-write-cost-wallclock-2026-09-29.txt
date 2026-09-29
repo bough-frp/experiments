@@ -1,0 +1,863 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-29 - rfd-0003-rebrand-write-cost-wallclock at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo bench --bench rfd-0003-rebrand-write-cost-wallclock
+
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.10s
+     Running benches/rfd-0003-rebrand-write-cost-wallclock.rs (target/release/deps/rfd_0003_rebrand_write_cost_wallclock-9d4834238873c58f)
+Gnuplot not found, using plotters backend
+Benchmarking write_store/baseline/u64
+Benchmarking write_store/baseline/u64: Warming up for 500.00 ms
+Benchmarking write_store/baseline/u64: Collecting 50 samples in estimated 2.0000 s (266M iterations)
+Benchmarking write_store/baseline/u64: Analyzing
+write_store/baseline/u64
+                        time:   [7.4099 ns 7.4395 ns 7.4690 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) low mild
+  1 (2.00%) high mild
+Benchmarking write_store/baseline/three
+Benchmarking write_store/baseline/three: Warming up for 500.00 ms
+Benchmarking write_store/baseline/three: Collecting 50 samples in estimated 2.0000 s (171M iterations)
+Benchmarking write_store/baseline/three: Analyzing
+write_store/baseline/three
+                        time:   [11.704 ns 11.713 ns 11.724 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+  5 (10.00%) high severe
+Benchmarking write_store/baseline/vec10
+Benchmarking write_store/baseline/vec10: Warming up for 500.00 ms
+Benchmarking write_store/baseline/vec10: Collecting 50 samples in estimated 2.0000 s (86M iterations)
+Benchmarking write_store/baseline/vec10: Analyzing
+write_store/baseline/vec10
+                        time:   [23.478 ns 23.584 ns 23.698 ns]
+Found 15 outliers among 50 measurements (30.00%)
+  10 (20.00%) low severe
+  2 (4.00%) high mild
+  3 (6.00%) high severe
+Benchmarking write_store/baseline/vec1000
+Benchmarking write_store/baseline/vec1000: Warming up for 500.00 ms
+Benchmarking write_store/baseline/vec1000: Collecting 50 samples in estimated 2.0000 s (6.6M iterations)
+Benchmarking write_store/baseline/vec1000: Analyzing
+write_store/baseline/vec1000
+                        time:   [304.57 ns 305.01 ns 305.52 ns]
+Benchmarking write_store/baseline/nested
+Benchmarking write_store/baseline/nested: Warming up for 500.00 ms
+Benchmarking write_store/baseline/nested: Collecting 50 samples in estimated 2.0000 s (34M iterations)
+Benchmarking write_store/baseline/nested: Analyzing
+write_store/baseline/nested
+                        time:   [57.938 ns 58.130 ns 58.355 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  1 (2.00%) low mild
+  2 (4.00%) high mild
+  2 (4.00%) high severe
+Benchmarking write_store/rebrand/u64
+Benchmarking write_store/rebrand/u64: Warming up for 500.00 ms
+Benchmarking write_store/rebrand/u64: Collecting 50 samples in estimated 2.0000 s (265M iterations)
+Benchmarking write_store/rebrand/u64: Analyzing
+write_store/rebrand/u64 time:   [7.4031 ns 7.4239 ns 7.4419 ns]
+Benchmarking write_store/rebrand/three
+Benchmarking write_store/rebrand/three: Warming up for 500.00 ms
+Benchmarking write_store/rebrand/three: Collecting 50 samples in estimated 2.0000 s (169M iterations)
+Benchmarking write_store/rebrand/three: Analyzing
+write_store/rebrand/three
+                        time:   [11.787 ns 11.829 ns 11.876 ns]
+Benchmarking write_store/rebrand/vec10
+Benchmarking write_store/rebrand/vec10: Warming up for 500.00 ms
+Benchmarking write_store/rebrand/vec10: Collecting 50 samples in estimated 2.0000 s (50M iterations)
+Benchmarking write_store/rebrand/vec10: Analyzing
+write_store/rebrand/vec10
+                        time:   [40.328 ns 40.392 ns 40.446 ns]
+Benchmarking write_store/rebrand/vec1000
+Benchmarking write_store/rebrand/vec1000: Warming up for 500.00 ms
+Benchmarking write_store/rebrand/vec1000: Collecting 50 samples in estimated 2.0006 s (3.5M iterations)
+Benchmarking write_store/rebrand/vec1000: Analyzing
+write_store/rebrand/vec1000
+                        time:   [574.34 ns 575.30 ns 576.24 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking write_store/rebrand/nested
+Benchmarking write_store/rebrand/nested: Warming up for 500.00 ms
+Benchmarking write_store/rebrand/nested: Collecting 50 samples in estimated 2.0000 s (21M iterations)
+Benchmarking write_store/rebrand/nested: Analyzing
+write_store/rebrand/nested
+                        time:   [94.928 ns 95.187 ns 95.447 ns]
+Benchmarking write_store/view/u64
+Benchmarking write_store/view/u64: Warming up for 500.00 ms
+Benchmarking write_store/view/u64: Collecting 50 samples in estimated 2.0000 s (266M iterations)
+Benchmarking write_store/view/u64: Analyzing
+write_store/view/u64    time:   [7.6231 ns 7.6797 ns 7.7693 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high severe
+Benchmarking write_store/view/three
+Benchmarking write_store/view/three: Warming up for 500.00 ms
+Benchmarking write_store/view/three: Collecting 50 samples in estimated 2.0000 s (168M iterations)
+Benchmarking write_store/view/three: Analyzing
+write_store/view/three  time:   [11.996 ns 11.997 ns 11.999 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  2 (4.00%) high mild
+  3 (6.00%) high severe
+Benchmarking write_store/view/vec10
+Benchmarking write_store/view/vec10: Warming up for 500.00 ms
+Benchmarking write_store/view/vec10: Collecting 50 samples in estimated 2.0000 s (49M iterations)
+Benchmarking write_store/view/vec10: Analyzing
+write_store/view/vec10  time:   [40.510 ns 40.552 ns 40.589 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  3 (6.00%) high mild
+Benchmarking write_store/view/vec1000
+Benchmarking write_store/view/vec1000: Warming up for 500.00 ms
+Benchmarking write_store/view/vec1000: Collecting 50 samples in estimated 2.0004 s (3.5M iterations)
+Benchmarking write_store/view/vec1000: Analyzing
+write_store/view/vec1000
+                        time:   [568.88 ns 570.01 ns 571.27 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking write_store/view/nested
+Benchmarking write_store/view/nested: Warming up for 500.00 ms
+Benchmarking write_store/view/nested: Collecting 50 samples in estimated 2.0001 s (21M iterations)
+Benchmarking write_store/view/nested: Analyzing
+write_store/view/nested time:   [95.402 ns 95.529 ns 95.681 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  1 (2.00%) high mild
+  2 (4.00%) high severe
+Benchmarking write_store/owned/u64
+Benchmarking write_store/owned/u64: Warming up for 500.00 ms
+Benchmarking write_store/owned/u64: Collecting 50 samples in estimated 2.0000 s (264M iterations)
+Benchmarking write_store/owned/u64: Analyzing
+write_store/owned/u64   time:   [7.4736 ns 7.4978 ns 7.5193 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking write_store/owned/three
+Benchmarking write_store/owned/three: Warming up for 500.00 ms
+Benchmarking write_store/owned/three: Collecting 50 samples in estimated 2.0000 s (166M iterations)
+Benchmarking write_store/owned/three: Analyzing
+write_store/owned/three time:   [11.959 ns 12.001 ns 12.041 ns]
+Found 8 outliers among 50 measurements (16.00%)
+  4 (8.00%) low severe
+  2 (4.00%) high mild
+  2 (4.00%) high severe
+Benchmarking write_store/owned/vec10
+Benchmarking write_store/owned/vec10: Warming up for 500.00 ms
+Benchmarking write_store/owned/vec10: Collecting 50 samples in estimated 2.0000 s (49M iterations)
+Benchmarking write_store/owned/vec10: Analyzing
+write_store/owned/vec10 time:   [41.060 ns 41.062 ns 41.065 ns]
+Found 9 outliers among 50 measurements (18.00%)
+  1 (2.00%) low mild
+  3 (6.00%) high mild
+  5 (10.00%) high severe
+Benchmarking write_store/owned/vec1000
+Benchmarking write_store/owned/vec1000: Warming up for 500.00 ms
+Benchmarking write_store/owned/vec1000: Collecting 50 samples in estimated 2.0003 s (3.0M iterations)
+Benchmarking write_store/owned/vec1000: Analyzing
+write_store/owned/vec1000
+                        time:   [672.20 ns 672.96 ns 673.85 ns]
+Found 12 outliers among 50 measurements (24.00%)
+  2 (4.00%) low mild
+  6 (12.00%) high mild
+  4 (8.00%) high severe
+Benchmarking write_store/owned/nested
+Benchmarking write_store/owned/nested: Warming up for 500.00 ms
+Benchmarking write_store/owned/nested: Collecting 50 samples in estimated 2.0000 s (27M iterations)
+Benchmarking write_store/owned/nested: Analyzing
+write_store/owned/nested
+                        time:   [74.313 ns 74.390 ns 74.483 ns]
+
+Benchmarking write_update/baseline/u64
+Benchmarking write_update/baseline/u64: Warming up for 500.00 ms
+Benchmarking write_update/baseline/u64: Collecting 50 samples in estimated 2.0000 s (246M iterations)
+Benchmarking write_update/baseline/u64: Analyzing
+write_update/baseline/u64
+                        time:   [8.1333 ns 8.1466 ns 8.1594 ns]
+Benchmarking write_update/baseline/three
+Benchmarking write_update/baseline/three: Warming up for 500.00 ms
+Benchmarking write_update/baseline/three: Collecting 50 samples in estimated 2.0000 s (217M iterations)
+Benchmarking write_update/baseline/three: Analyzing
+write_update/baseline/three
+                        time:   [9.1867 ns 9.1981 ns 9.2075 ns]
+Benchmarking write_update/baseline/vec10
+Benchmarking write_update/baseline/vec10: Warming up for 500.00 ms
+Benchmarking write_update/baseline/vec10: Collecting 50 samples in estimated 2.0000 s (171M iterations)
+Benchmarking write_update/baseline/vec10: Analyzing
+write_update/baseline/vec10
+                        time:   [11.697 ns 11.727 ns 11.756 ns]
+Benchmarking write_update/baseline/vec1000
+Benchmarking write_update/baseline/vec1000: Warming up for 500.00 ms
+Benchmarking write_update/baseline/vec1000: Collecting 50 samples in estimated 2.0000 s (177M iterations)
+Benchmarking write_update/baseline/vec1000: Analyzing
+write_update/baseline/vec1000
+                        time:   [11.505 ns 11.532 ns 11.553 ns]
+Benchmarking write_update/baseline/nested
+Benchmarking write_update/baseline/nested: Warming up for 500.00 ms
+Benchmarking write_update/baseline/nested: Collecting 50 samples in estimated 2.0000 s (143M iterations)
+Benchmarking write_update/baseline/nested: Analyzing
+write_update/baseline/nested
+                        time:   [14.128 ns 14.145 ns 14.164 ns]
+Found 6 outliers among 50 measurements (12.00%)
+  5 (10.00%) high mild
+  1 (2.00%) high severe
+Benchmarking write_update/rebrand/u64
+Benchmarking write_update/rebrand/u64: Warming up for 500.00 ms
+Benchmarking write_update/rebrand/u64: Collecting 50 samples in estimated 2.0000 s (206M iterations)
+Benchmarking write_update/rebrand/u64: Analyzing
+write_update/rebrand/u64
+                        time:   [9.5866 ns 9.6120 ns 9.6398 ns]
+Benchmarking write_update/rebrand/three
+Benchmarking write_update/rebrand/three: Warming up for 500.00 ms
+Benchmarking write_update/rebrand/three: Collecting 50 samples in estimated 2.0000 s (115M iterations)
+Benchmarking write_update/rebrand/three: Analyzing
+write_update/rebrand/three
+                        time:   [17.276 ns 17.291 ns 17.310 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high severe
+Benchmarking write_update/rebrand/vec10
+Benchmarking write_update/rebrand/vec10: Warming up for 500.00 ms
+Benchmarking write_update/rebrand/vec10: Collecting 50 samples in estimated 2.0000 s (46M iterations)
+Benchmarking write_update/rebrand/vec10: Analyzing
+write_update/rebrand/vec10
+                        time:   [44.154 ns 44.351 ns 44.509 ns]
+Benchmarking write_update/rebrand/vec1000
+Benchmarking write_update/rebrand/vec1000: Warming up for 500.00 ms
+Benchmarking write_update/rebrand/vec1000: Collecting 50 samples in estimated 2.0007 s (3.5M iterations)
+Benchmarking write_update/rebrand/vec1000: Analyzing
+write_update/rebrand/vec1000
+                        time:   [578.86 ns 581.32 ns 584.37 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking write_update/rebrand/nested
+Benchmarking write_update/rebrand/nested: Warming up for 500.00 ms
+Benchmarking write_update/rebrand/nested: Collecting 50 samples in estimated 2.0001 s (17M iterations)
+Benchmarking write_update/rebrand/nested: Analyzing
+write_update/rebrand/nested
+                        time:   [120.52 ns 120.77 ns 120.99 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low severe
+  1 (2.00%) low mild
+Benchmarking write_update/view/u64
+Benchmarking write_update/view/u64: Warming up for 500.00 ms
+Benchmarking write_update/view/u64: Collecting 50 samples in estimated 2.0000 s (245M iterations)
+Benchmarking write_update/view/u64: Analyzing
+write_update/view/u64   time:   [8.1203 ns 8.1276 ns 8.1346 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking write_update/view/three
+Benchmarking write_update/view/three: Warming up for 500.00 ms
+Benchmarking write_update/view/three: Collecting 50 samples in estimated 2.0000 s (120M iterations)
+Benchmarking write_update/view/three: Analyzing
+write_update/view/three time:   [16.630 ns 16.672 ns 16.715 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking write_update/view/vec10
+Benchmarking write_update/view/vec10: Warming up for 500.00 ms
+Benchmarking write_update/view/vec10: Collecting 50 samples in estimated 2.0000 s (45M iterations)
+Benchmarking write_update/view/vec10: Analyzing
+write_update/view/vec10 time:   [44.692 ns 44.737 ns 44.773 ns]
+Benchmarking write_update/view/vec1000
+Benchmarking write_update/view/vec1000: Warming up for 500.00 ms
+Benchmarking write_update/view/vec1000: Collecting 50 samples in estimated 2.0001 s (3.5M iterations)
+Benchmarking write_update/view/vec1000: Analyzing
+write_update/view/vec1000
+                        time:   [567.25 ns 568.86 ns 570.54 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  2 (4.00%) low mild
+  2 (4.00%) high mild
+Benchmarking write_update/view/nested
+Benchmarking write_update/view/nested: Warming up for 500.00 ms
+Benchmarking write_update/view/nested: Collecting 50 samples in estimated 2.0000 s (16M iterations)
+Benchmarking write_update/view/nested: Analyzing
+write_update/view/nested
+                        time:   [125.03 ns 125.29 ns 125.64 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking write_update/owned/u64
+Benchmarking write_update/owned/u64: Warming up for 500.00 ms
+Benchmarking write_update/owned/u64: Collecting 50 samples in estimated 2.0000 s (204M iterations)
+Benchmarking write_update/owned/u64: Analyzing
+write_update/owned/u64  time:   [9.9363 ns 9.9474 ns 9.9586 ns]
+Benchmarking write_update/owned/three
+Benchmarking write_update/owned/three: Warming up for 500.00 ms
+Benchmarking write_update/owned/three: Collecting 50 samples in estimated 2.0000 s (108M iterations)
+Benchmarking write_update/owned/three: Analyzing
+write_update/owned/three
+                        time:   [18.551 ns 18.587 ns 18.630 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  2 (4.00%) high mild
+  2 (4.00%) high severe
+Benchmarking write_update/owned/vec10
+Benchmarking write_update/owned/vec10: Warming up for 500.00 ms
+Benchmarking write_update/owned/vec10: Collecting 50 samples in estimated 2.0000 s (53M iterations)
+Benchmarking write_update/owned/vec10: Analyzing
+write_update/owned/vec10
+                        time:   [38.152 ns 38.224 ns 38.308 ns]
+Found 6 outliers among 50 measurements (12.00%)
+  2 (4.00%) high mild
+  4 (8.00%) high severe
+Benchmarking write_update/owned/vec1000
+Benchmarking write_update/owned/vec1000: Warming up for 500.00 ms
+Benchmarking write_update/owned/vec1000: Collecting 50 samples in estimated 2.0006 s (2.8M iterations)
+Benchmarking write_update/owned/vec1000: Analyzing
+write_update/owned/vec1000
+                        time:   [716.47 ns 716.59 ns 716.74 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  2 (4.00%) high mild
+  2 (4.00%) high severe
+Benchmarking write_update/owned/nested
+Benchmarking write_update/owned/nested: Warming up for 500.00 ms
+Benchmarking write_update/owned/nested: Collecting 50 samples in estimated 2.0001 s (38M iterations)
+Benchmarking write_update/owned/nested: Analyzing
+write_update/owned/nested
+                        time:   [53.368 ns 53.392 ns 53.427 ns]
+Found 6 outliers among 50 measurements (12.00%)
+  1 (2.00%) high mild
+  5 (10.00%) high severe
+Benchmarking write_update/borrow/u64
+Benchmarking write_update/borrow/u64: Warming up for 500.00 ms
+Benchmarking write_update/borrow/u64: Collecting 50 samples in estimated 2.0000 s (239M iterations)
+Benchmarking write_update/borrow/u64: Analyzing
+write_update/borrow/u64 time:   [8.3730 ns 8.3861 ns 8.4003 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking write_update/borrow/three
+Benchmarking write_update/borrow/three: Warming up for 500.00 ms
+Benchmarking write_update/borrow/three: Collecting 50 samples in estimated 2.0000 s (186M iterations)
+Benchmarking write_update/borrow/three: Analyzing
+write_update/borrow/three
+                        time:   [10.719 ns 10.728 ns 10.739 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking write_update/borrow/vec10
+Benchmarking write_update/borrow/vec10: Warming up for 500.00 ms
+Benchmarking write_update/borrow/vec10: Collecting 50 samples in estimated 2.0000 s (169M iterations)
+Benchmarking write_update/borrow/vec10: Analyzing
+write_update/borrow/vec10
+                        time:   [12.070 ns 12.111 ns 12.142 ns]
+Benchmarking write_update/borrow/vec1000
+Benchmarking write_update/borrow/vec1000: Warming up for 500.00 ms
+Benchmarking write_update/borrow/vec1000: Collecting 50 samples in estimated 2.0000 s (172M iterations)
+Benchmarking write_update/borrow/vec1000: Analyzing
+write_update/borrow/vec1000
+                        time:   [11.758 ns 11.775 ns 11.791 ns]
+Benchmarking write_update/borrow/nested
+Benchmarking write_update/borrow/nested: Warming up for 500.00 ms
+Benchmarking write_update/borrow/nested: Collecting 50 samples in estimated 2.0000 s (91M iterations)
+Benchmarking write_update/borrow/nested: Analyzing
+write_update/borrow/nested
+                        time:   [22.188 ns 22.243 ns 22.306 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  5 (10.00%) high mild
+
+Benchmarking write_hold/baseline/u64
+Benchmarking write_hold/baseline/u64: Warming up for 500.00 ms
+Benchmarking write_hold/baseline/u64: Collecting 50 samples in estimated 2.0002 s (5.9M iterations)
+Benchmarking write_hold/baseline/u64: Analyzing
+write_hold/baseline/u64 time:   [340.67 ns 341.48 ns 342.21 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) low mild
+Benchmarking write_hold/baseline/three
+Benchmarking write_hold/baseline/three: Warming up for 500.00 ms
+Benchmarking write_hold/baseline/three: Collecting 50 samples in estimated 2.0002 s (5.7M iterations)
+Benchmarking write_hold/baseline/three: Analyzing
+write_hold/baseline/three
+                        time:   [348.64 ns 349.72 ns 350.98 ns]
+Benchmarking write_hold/baseline/vec10
+Benchmarking write_hold/baseline/vec10: Warming up for 500.00 ms
+Benchmarking write_hold/baseline/vec10: Collecting 50 samples in estimated 2.0003 s (5.3M iterations)
+Benchmarking write_hold/baseline/vec10: Analyzing
+write_hold/baseline/vec10
+                        time:   [367.62 ns 369.05 ns 370.44 ns]
+Benchmarking write_hold/baseline/vec1000
+Benchmarking write_hold/baseline/vec1000: Warming up for 500.00 ms
+Benchmarking write_hold/baseline/vec1000: Collecting 50 samples in estimated 2.0004 s (3.0M iterations)
+Benchmarking write_hold/baseline/vec1000: Analyzing
+write_hold/baseline/vec1000
+                        time:   [673.22 ns 674.63 ns 676.08 ns]
+Benchmarking write_hold/baseline/nested
+Benchmarking write_hold/baseline/nested: Warming up for 500.00 ms
+Benchmarking write_hold/baseline/nested: Collecting 50 samples in estimated 2.0003 s (4.9M iterations)
+Benchmarking write_hold/baseline/nested: Analyzing
+write_hold/baseline/nested
+                        time:   [408.92 ns 410.42 ns 411.60 ns]
+Benchmarking write_hold/rebrand/u64
+Benchmarking write_hold/rebrand/u64: Warming up for 500.00 ms
+Benchmarking write_hold/rebrand/u64: Collecting 50 samples in estimated 2.0002 s (5.9M iterations)
+Benchmarking write_hold/rebrand/u64: Analyzing
+write_hold/rebrand/u64  time:   [336.41 ns 337.96 ns 339.71 ns]
+Benchmarking write_hold/rebrand/three
+Benchmarking write_hold/rebrand/three: Warming up for 500.00 ms
+Benchmarking write_hold/rebrand/three: Collecting 50 samples in estimated 2.0002 s (5.6M iterations)
+Benchmarking write_hold/rebrand/three: Analyzing
+write_hold/rebrand/three
+                        time:   [360.36 ns 362.01 ns 363.36 ns]
+Benchmarking write_hold/rebrand/vec10
+Benchmarking write_hold/rebrand/vec10: Warming up for 500.00 ms
+Benchmarking write_hold/rebrand/vec10: Collecting 50 samples in estimated 2.0004 s (5.0M iterations)
+Benchmarking write_hold/rebrand/vec10: Analyzing
+write_hold/rebrand/vec10
+                        time:   [386.53 ns 387.34 ns 388.30 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking write_hold/rebrand/vec1000
+Benchmarking write_hold/rebrand/vec1000: Warming up for 500.00 ms
+Benchmarking write_hold/rebrand/vec1000: Collecting 50 samples in estimated 2.0009 s (2.1M iterations)
+Benchmarking write_hold/rebrand/vec1000: Analyzing
+write_hold/rebrand/vec1000
+                        time:   [988.96 ns 990.09 ns 991.17 ns]
+Benchmarking write_hold/rebrand/nested
+Benchmarking write_hold/rebrand/nested: Warming up for 500.00 ms
+Benchmarking write_hold/rebrand/nested: Collecting 50 samples in estimated 2.0002 s (4.4M iterations)
+Benchmarking write_hold/rebrand/nested: Analyzing
+write_hold/rebrand/nested
+                        time:   [458.75 ns 459.87 ns 460.98 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  1 (2.00%) low mild
+  3 (6.00%) high mild
+Benchmarking write_hold/view/u64
+Benchmarking write_hold/view/u64: Warming up for 500.00 ms
+Benchmarking write_hold/view/u64: Collecting 50 samples in estimated 2.0004 s (5.9M iterations)
+Benchmarking write_hold/view/u64: Analyzing
+write_hold/view/u64     time:   [340.71 ns 342.11 ns 343.43 ns]
+Benchmarking write_hold/view/three
+Benchmarking write_hold/view/three: Warming up for 500.00 ms
+Benchmarking write_hold/view/three: Collecting 50 samples in estimated 2.0002 s (5.6M iterations)
+Benchmarking write_hold/view/three: Analyzing
+write_hold/view/three   time:   [355.32 ns 356.45 ns 357.59 ns]
+Benchmarking write_hold/view/vec10
+Benchmarking write_hold/view/vec10: Warming up for 500.00 ms
+Benchmarking write_hold/view/vec10: Collecting 50 samples in estimated 2.0004 s (5.1M iterations)
+Benchmarking write_hold/view/vec10: Analyzing
+write_hold/view/vec10   time:   [390.84 ns 391.96 ns 392.93 ns]
+Benchmarking write_hold/view/vec1000
+Benchmarking write_hold/view/vec1000: Warming up for 500.00 ms
+Benchmarking write_hold/view/vec1000: Collecting 50 samples in estimated 2.0011 s (2.0M iterations)
+Benchmarking write_hold/view/vec1000: Analyzing
+write_hold/view/vec1000 time:   [993.43 ns 999.05 ns 1.0046 µs]
+Found 4 outliers among 50 measurements (8.00%)
+  2 (4.00%) high mild
+  2 (4.00%) high severe
+Benchmarking write_hold/view/nested
+Benchmarking write_hold/view/nested: Warming up for 500.00 ms
+Benchmarking write_hold/view/nested: Collecting 50 samples in estimated 2.0002 s (4.4M iterations)
+Benchmarking write_hold/view/nested: Analyzing
+write_hold/view/nested  time:   [455.68 ns 456.50 ns 457.24 ns]
+Benchmarking write_hold/owned/u64
+Benchmarking write_hold/owned/u64: Warming up for 500.00 ms
+Benchmarking write_hold/owned/u64: Collecting 50 samples in estimated 2.0001 s (5.9M iterations)
+Benchmarking write_hold/owned/u64: Analyzing
+write_hold/owned/u64    time:   [337.01 ns 337.88 ns 338.66 ns]
+Benchmarking write_hold/owned/three
+Benchmarking write_hold/owned/three: Warming up for 500.00 ms
+Benchmarking write_hold/owned/three: Collecting 50 samples in estimated 2.0002 s (5.8M iterations)
+Benchmarking write_hold/owned/three: Analyzing
+write_hold/owned/three  time:   [348.06 ns 348.87 ns 349.66 ns]
+Benchmarking write_hold/owned/vec10
+Benchmarking write_hold/owned/vec10: Warming up for 500.00 ms
+Benchmarking write_hold/owned/vec10: Collecting 50 samples in estimated 2.0002 s (5.1M iterations)
+Benchmarking write_hold/owned/vec10: Analyzing
+write_hold/owned/vec10  time:   [384.47 ns 385.75 ns 387.00 ns]
+Benchmarking write_hold/owned/vec1000
+Benchmarking write_hold/owned/vec1000: Warming up for 500.00 ms
+Benchmarking write_hold/owned/vec1000: Collecting 50 samples in estimated 2.0009 s (1.9M iterations)
+Benchmarking write_hold/owned/vec1000: Analyzing
+write_hold/owned/vec1000
+                        time:   [1.0483 µs 1.0497 µs 1.0513 µs]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high severe
+Benchmarking write_hold/owned/nested
+Benchmarking write_hold/owned/nested: Warming up for 500.00 ms
+Benchmarking write_hold/owned/nested: Collecting 50 samples in estimated 2.0001 s (4.6M iterations)
+Benchmarking write_hold/owned/nested: Analyzing
+write_hold/owned/nested time:   [431.67 ns 432.65 ns 433.52 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+
+Benchmarking write_accumulate/baseline/u64
+Benchmarking write_accumulate/baseline/u64: Warming up for 500.00 ms
+Benchmarking write_accumulate/baseline/u64: Collecting 50 samples in estimated 2.0003 s (6.0M iterations)
+Benchmarking write_accumulate/baseline/u64: Analyzing
+write_accumulate/baseline/u64
+                        time:   [331.11 ns 331.95 ns 332.77 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking write_accumulate/baseline/three
+Benchmarking write_accumulate/baseline/three: Warming up for 500.00 ms
+Benchmarking write_accumulate/baseline/three: Collecting 50 samples in estimated 2.0002 s (5.9M iterations)
+Benchmarking write_accumulate/baseline/three: Analyzing
+write_accumulate/baseline/three
+                        time:   [334.75 ns 336.12 ns 336.98 ns]
+Found 5 outliers among 50 measurements (10.00%)
+  1 (2.00%) low severe
+  4 (8.00%) low mild
+Benchmarking write_accumulate/baseline/vec10
+Benchmarking write_accumulate/baseline/vec10: Warming up for 500.00 ms
+Benchmarking write_accumulate/baseline/vec10: Collecting 50 samples in estimated 2.0001 s (5.6M iterations)
+Benchmarking write_accumulate/baseline/vec10: Analyzing
+write_accumulate/baseline/vec10
+                        time:   [356.47 ns 357.44 ns 358.17 ns]
+Benchmarking write_accumulate/baseline/vec1000
+Benchmarking write_accumulate/baseline/vec1000: Warming up for 500.00 ms
+Benchmarking write_accumulate/baseline/vec1000: Collecting 50 samples in estimated 2.0003 s (5.7M iterations)
+Benchmarking write_accumulate/baseline/vec1000: Analyzing
+write_accumulate/baseline/vec1000
+                        time:   [350.14 ns 351.56 ns 352.86 ns]
+Benchmarking write_accumulate/baseline/nested
+Benchmarking write_accumulate/baseline/nested: Warming up for 500.00 ms
+Benchmarking write_accumulate/baseline/nested: Collecting 50 samples in estimated 2.0004 s (5.7M iterations)
+Benchmarking write_accumulate/baseline/nested: Analyzing
+write_accumulate/baseline/nested
+                        time:   [341.91 ns 343.24 ns 344.84 ns]
+Benchmarking write_accumulate/rebrand/u64
+Benchmarking write_accumulate/rebrand/u64: Warming up for 500.00 ms
+Benchmarking write_accumulate/rebrand/u64: Collecting 50 samples in estimated 2.0003 s (6.0M iterations)
+Benchmarking write_accumulate/rebrand/u64: Analyzing
+write_accumulate/rebrand/u64
+                        time:   [332.44 ns 333.15 ns 333.93 ns]
+Benchmarking write_accumulate/rebrand/three
+Benchmarking write_accumulate/rebrand/three: Warming up for 500.00 ms
+Benchmarking write_accumulate/rebrand/three: Collecting 50 samples in estimated 2.0001 s (5.8M iterations)
+Benchmarking write_accumulate/rebrand/three: Analyzing
+write_accumulate/rebrand/three
+                        time:   [348.37 ns 349.31 ns 350.01 ns]
+Benchmarking write_accumulate/rebrand/vec10
+Benchmarking write_accumulate/rebrand/vec10: Warming up for 500.00 ms
+Benchmarking write_accumulate/rebrand/vec10: Collecting 50 samples in estimated 2.0003 s (5.3M iterations)
+Benchmarking write_accumulate/rebrand/vec10: Analyzing
+write_accumulate/rebrand/vec10
+                        time:   [375.08 ns 376.43 ns 377.78 ns]
+Benchmarking write_accumulate/rebrand/vec1000
+Benchmarking write_accumulate/rebrand/vec1000: Warming up for 500.00 ms
+Benchmarking write_accumulate/rebrand/vec1000: Collecting 50 samples in estimated 2.0010 s (2.0M iterations)
+Benchmarking write_accumulate/rebrand/vec1000: Analyzing
+write_accumulate/rebrand/vec1000
+                        time:   [970.88 ns 973.60 ns 976.29 ns]
+Benchmarking write_accumulate/rebrand/nested
+Benchmarking write_accumulate/rebrand/nested: Warming up for 500.00 ms
+Benchmarking write_accumulate/rebrand/nested: Collecting 50 samples in estimated 2.0001 s (4.6M iterations)
+Benchmarking write_accumulate/rebrand/nested: Analyzing
+write_accumulate/rebrand/nested
+                        time:   [429.68 ns 430.38 ns 431.03 ns]
+Benchmarking write_accumulate/view/u64
+Benchmarking write_accumulate/view/u64: Warming up for 500.00 ms
+Benchmarking write_accumulate/view/u64: Collecting 50 samples in estimated 2.0001 s (6.0M iterations)
+Benchmarking write_accumulate/view/u64: Analyzing
+write_accumulate/view/u64
+                        time:   [333.52 ns 334.42 ns 335.22 ns]
+Benchmarking write_accumulate/view/three
+Benchmarking write_accumulate/view/three: Warming up for 500.00 ms
+Benchmarking write_accumulate/view/three: Collecting 50 samples in estimated 2.0003 s (5.9M iterations)
+Benchmarking write_accumulate/view/three: Analyzing
+write_accumulate/view/three
+                        time:   [342.33 ns 343.36 ns 344.47 ns]
+Benchmarking write_accumulate/view/vec10
+Benchmarking write_accumulate/view/vec10: Warming up for 500.00 ms
+Benchmarking write_accumulate/view/vec10: Collecting 50 samples in estimated 2.0004 s (5.2M iterations)
+Benchmarking write_accumulate/view/vec10: Analyzing
+write_accumulate/view/vec10
+                        time:   [378.76 ns 379.67 ns 380.64 ns]
+Benchmarking write_accumulate/view/vec1000
+Benchmarking write_accumulate/view/vec1000: Warming up for 500.00 ms
+Benchmarking write_accumulate/view/vec1000: Collecting 50 samples in estimated 2.0006 s (2.0M iterations)
+Benchmarking write_accumulate/view/vec1000: Analyzing
+write_accumulate/view/vec1000
+                        time:   [982.96 ns 987.05 ns 990.43 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) low severe
+  1 (2.00%) low mild
+Benchmarking write_accumulate/view/nested
+Benchmarking write_accumulate/view/nested: Warming up for 500.00 ms
+Benchmarking write_accumulate/view/nested: Collecting 50 samples in estimated 2.0004 s (4.6M iterations)
+Benchmarking write_accumulate/view/nested: Analyzing
+write_accumulate/view/nested
+                        time:   [431.17 ns 432.35 ns 433.66 ns]
+Benchmarking write_accumulate/owned/u64
+Benchmarking write_accumulate/owned/u64: Warming up for 500.00 ms
+Benchmarking write_accumulate/owned/u64: Collecting 50 samples in estimated 2.0002 s (6.1M iterations)
+Benchmarking write_accumulate/owned/u64: Analyzing
+write_accumulate/owned/u64
+                        time:   [332.43 ns 333.28 ns 334.20 ns]
+Benchmarking write_accumulate/owned/three
+Benchmarking write_accumulate/owned/three: Warming up for 500.00 ms
+Benchmarking write_accumulate/owned/three: Collecting 50 samples in estimated 2.0000 s (5.9M iterations)
+Benchmarking write_accumulate/owned/three: Analyzing
+write_accumulate/owned/three
+                        time:   [341.10 ns 342.44 ns 343.52 ns]
+Benchmarking write_accumulate/owned/vec10
+Benchmarking write_accumulate/owned/vec10: Warming up for 500.00 ms
+Benchmarking write_accumulate/owned/vec10: Collecting 50 samples in estimated 2.0003 s (5.3M iterations)
+Benchmarking write_accumulate/owned/vec10: Analyzing
+write_accumulate/owned/vec10
+                        time:   [375.76 ns 377.40 ns 378.90 ns]
+Benchmarking write_accumulate/owned/vec1000
+Benchmarking write_accumulate/owned/vec1000: Warming up for 500.00 ms
+Benchmarking write_accumulate/owned/vec1000: Collecting 50 samples in estimated 2.0010 s (1.8M iterations)
+Benchmarking write_accumulate/owned/vec1000: Analyzing
+write_accumulate/owned/vec1000
+                        time:   [1.1007 µs 1.1051 µs 1.1095 µs]
+Benchmarking write_accumulate/owned/nested
+Benchmarking write_accumulate/owned/nested: Warming up for 500.00 ms
+Benchmarking write_accumulate/owned/nested: Collecting 50 samples in estimated 2.0001 s (5.2M iterations)
+Benchmarking write_accumulate/owned/nested: Analyzing
+write_accumulate/owned/nested
+                        time:   [383.21 ns 384.33 ns 385.40 ns]
+Benchmarking write_accumulate/borrow/u64
+Benchmarking write_accumulate/borrow/u64: Warming up for 500.00 ms
+Benchmarking write_accumulate/borrow/u64: Collecting 50 samples in estimated 2.0003 s (6.0M iterations)
+Benchmarking write_accumulate/borrow/u64: Analyzing
+write_accumulate/borrow/u64
+                        time:   [332.39 ns 334.62 ns 336.55 ns]
+Benchmarking write_accumulate/borrow/three
+Benchmarking write_accumulate/borrow/three: Warming up for 500.00 ms
+Benchmarking write_accumulate/borrow/three: Collecting 50 samples in estimated 2.0000 s (5.9M iterations)
+Benchmarking write_accumulate/borrow/three: Analyzing
+write_accumulate/borrow/three
+                        time:   [339.32 ns 340.36 ns 341.46 ns]
+Benchmarking write_accumulate/borrow/vec10
+Benchmarking write_accumulate/borrow/vec10: Warming up for 500.00 ms
+Benchmarking write_accumulate/borrow/vec10: Collecting 50 samples in estimated 2.0002 s (5.7M iterations)
+Benchmarking write_accumulate/borrow/vec10: Analyzing
+write_accumulate/borrow/vec10
+                        time:   [347.86 ns 349.07 ns 350.38 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking write_accumulate/borrow/vec1000
+Benchmarking write_accumulate/borrow/vec1000: Warming up for 500.00 ms
+Benchmarking write_accumulate/borrow/vec1000: Collecting 50 samples in estimated 2.0002 s (5.6M iterations)
+Benchmarking write_accumulate/borrow/vec1000: Analyzing
+write_accumulate/borrow/vec1000
+                        time:   [357.31 ns 358.93 ns 360.46 ns]
+Benchmarking write_accumulate/borrow/nested
+Benchmarking write_accumulate/borrow/nested: Warming up for 500.00 ms
+Benchmarking write_accumulate/borrow/nested: Collecting 50 samples in estimated 2.0001 s (5.7M iterations)
+Benchmarking write_accumulate/borrow/nested: Analyzing
+write_accumulate/borrow/nested
+                        time:   [345.59 ns 346.74 ns 348.01 ns]
+
+Benchmarking write_switch_cell/baseline/u64
+Benchmarking write_switch_cell/baseline/u64: Warming up for 500.00 ms
+Benchmarking write_switch_cell/baseline/u64: Collecting 50 samples in estimated 2.0004 s (5.5M iterations)
+Benchmarking write_switch_cell/baseline/u64: Analyzing
+write_switch_cell/baseline/u64
+                        time:   [362.06 ns 363.03 ns 364.16 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking write_switch_cell/baseline/three
+Benchmarking write_switch_cell/baseline/three: Warming up for 500.00 ms
+Benchmarking write_switch_cell/baseline/three: Collecting 50 samples in estimated 2.0000 s (5.8M iterations)
+Benchmarking write_switch_cell/baseline/three: Analyzing
+write_switch_cell/baseline/three
+                        time:   [349.66 ns 351.04 ns 352.61 ns]
+Benchmarking write_switch_cell/baseline/vec10
+Benchmarking write_switch_cell/baseline/vec10: Warming up for 500.00 ms
+Benchmarking write_switch_cell/baseline/vec10: Collecting 50 samples in estimated 2.0004 s (5.5M iterations)
+Benchmarking write_switch_cell/baseline/vec10: Analyzing
+write_switch_cell/baseline/vec10
+                        time:   [359.08 ns 360.01 ns 360.98 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking write_switch_cell/baseline/vec1000
+Benchmarking write_switch_cell/baseline/vec1000: Warming up for 500.00 ms
+Benchmarking write_switch_cell/baseline/vec1000: Collecting 50 samples in estimated 2.0004 s (5.5M iterations)
+Benchmarking write_switch_cell/baseline/vec1000: Analyzing
+write_switch_cell/baseline/vec1000
+                        time:   [361.23 ns 362.19 ns 363.27 ns]
+Benchmarking write_switch_cell/baseline/nested
+Benchmarking write_switch_cell/baseline/nested: Warming up for 500.00 ms
+Benchmarking write_switch_cell/baseline/nested: Collecting 50 samples in estimated 2.0004 s (5.6M iterations)
+Benchmarking write_switch_cell/baseline/nested: Analyzing
+write_switch_cell/baseline/nested
+                        time:   [363.76 ns 364.49 ns 365.09 ns]
+Benchmarking write_switch_cell/rebrand/u64
+Benchmarking write_switch_cell/rebrand/u64: Warming up for 500.00 ms
+Benchmarking write_switch_cell/rebrand/u64: Collecting 50 samples in estimated 2.0004 s (5.5M iterations)
+Benchmarking write_switch_cell/rebrand/u64: Analyzing
+write_switch_cell/rebrand/u64
+                        time:   [357.15 ns 358.11 ns 359.16 ns]
+Benchmarking write_switch_cell/rebrand/three
+Benchmarking write_switch_cell/rebrand/three: Warming up for 500.00 ms
+Benchmarking write_switch_cell/rebrand/three: Collecting 50 samples in estimated 2.0003 s (5.7M iterations)
+Benchmarking write_switch_cell/rebrand/three: Analyzing
+write_switch_cell/rebrand/three
+                        time:   [354.21 ns 355.48 ns 356.65 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  1 (2.00%) low mild
+  2 (4.00%) high mild
+Benchmarking write_switch_cell/rebrand/vec10
+Benchmarking write_switch_cell/rebrand/vec10: Warming up for 500.00 ms
+Benchmarking write_switch_cell/rebrand/vec10: Collecting 50 samples in estimated 2.0003 s (5.6M iterations)
+Benchmarking write_switch_cell/rebrand/vec10: Analyzing
+write_switch_cell/rebrand/vec10
+                        time:   [359.55 ns 360.37 ns 361.08 ns]
+Benchmarking write_switch_cell/rebrand/vec1000
+Benchmarking write_switch_cell/rebrand/vec1000: Warming up for 500.00 ms
+Benchmarking write_switch_cell/rebrand/vec1000: Collecting 50 samples in estimated 2.0002 s (5.6M iterations)
+Benchmarking write_switch_cell/rebrand/vec1000: Analyzing
+write_switch_cell/rebrand/vec1000
+                        time:   [362.48 ns 364.28 ns 366.06 ns]
+Benchmarking write_switch_cell/rebrand/nested
+Benchmarking write_switch_cell/rebrand/nested: Warming up for 500.00 ms
+Benchmarking write_switch_cell/rebrand/nested: Collecting 50 samples in estimated 2.0005 s (5.5M iterations)
+Benchmarking write_switch_cell/rebrand/nested: Analyzing
+write_switch_cell/rebrand/nested
+                        time:   [366.34 ns 367.23 ns 367.92 ns]
+Benchmarking write_switch_cell/view/u64
+Benchmarking write_switch_cell/view/u64: Warming up for 500.00 ms
+Benchmarking write_switch_cell/view/u64: Collecting 50 samples in estimated 2.0001 s (5.6M iterations)
+Benchmarking write_switch_cell/view/u64: Analyzing
+write_switch_cell/view/u64
+                        time:   [357.55 ns 358.61 ns 359.67 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking write_switch_cell/view/three
+Benchmarking write_switch_cell/view/three: Warming up for 500.00 ms
+Benchmarking write_switch_cell/view/three: Collecting 50 samples in estimated 2.0000 s (5.7M iterations)
+Benchmarking write_switch_cell/view/three: Analyzing
+write_switch_cell/view/three
+                        time:   [352.26 ns 352.97 ns 353.67 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking write_switch_cell/view/vec10
+Benchmarking write_switch_cell/view/vec10: Warming up for 500.00 ms
+Benchmarking write_switch_cell/view/vec10: Collecting 50 samples in estimated 2.0004 s (5.5M iterations)
+Benchmarking write_switch_cell/view/vec10: Analyzing
+write_switch_cell/view/vec10
+                        time:   [363.24 ns 364.35 ns 365.35 ns]
+Benchmarking write_switch_cell/view/vec1000
+Benchmarking write_switch_cell/view/vec1000: Warming up for 500.00 ms
+Benchmarking write_switch_cell/view/vec1000: Collecting 50 samples in estimated 2.0005 s (5.5M iterations)
+Benchmarking write_switch_cell/view/vec1000: Analyzing
+write_switch_cell/view/vec1000
+                        time:   [371.11 ns 371.69 ns 372.17 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking write_switch_cell/view/nested
+Benchmarking write_switch_cell/view/nested: Warming up for 500.00 ms
+Benchmarking write_switch_cell/view/nested: Collecting 50 samples in estimated 2.0001 s (5.5M iterations)
+Benchmarking write_switch_cell/view/nested: Analyzing
+write_switch_cell/view/nested
+                        time:   [362.92 ns 364.63 ns 366.19 ns]
+Benchmarking write_switch_cell/owned/u64
+Benchmarking write_switch_cell/owned/u64: Warming up for 500.00 ms
+Benchmarking write_switch_cell/owned/u64: Collecting 50 samples in estimated 2.0004 s (5.6M iterations)
+Benchmarking write_switch_cell/owned/u64: Analyzing
+write_switch_cell/owned/u64
+                        time:   [353.73 ns 354.93 ns 356.22 ns]
+Benchmarking write_switch_cell/owned/three
+Benchmarking write_switch_cell/owned/three: Warming up for 500.00 ms
+Benchmarking write_switch_cell/owned/three: Collecting 50 samples in estimated 2.0004 s (5.5M iterations)
+Benchmarking write_switch_cell/owned/three: Analyzing
+write_switch_cell/owned/three
+                        time:   [365.02 ns 365.94 ns 366.63 ns]
+Benchmarking write_switch_cell/owned/vec10
+Benchmarking write_switch_cell/owned/vec10: Warming up for 500.00 ms
+Benchmarking write_switch_cell/owned/vec10: Collecting 50 samples in estimated 2.0001 s (5.6M iterations)
+Benchmarking write_switch_cell/owned/vec10: Analyzing
+write_switch_cell/owned/vec10
+                        time:   [358.40 ns 359.42 ns 360.41 ns]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+Benchmarking write_switch_cell/owned/vec1000
+Benchmarking write_switch_cell/owned/vec1000: Warming up for 500.00 ms
+Benchmarking write_switch_cell/owned/vec1000: Collecting 50 samples in estimated 2.0004 s (5.5M iterations)
+Benchmarking write_switch_cell/owned/vec1000: Analyzing
+write_switch_cell/owned/vec1000
+                        time:   [358.59 ns 359.88 ns 361.16 ns]
+Benchmarking write_switch_cell/owned/nested
+Benchmarking write_switch_cell/owned/nested: Warming up for 500.00 ms
+Benchmarking write_switch_cell/owned/nested: Collecting 50 samples in estimated 2.0001 s (5.4M iterations)
+Benchmarking write_switch_cell/owned/nested: Analyzing
+write_switch_cell/owned/nested
+                        time:   [369.11 ns 370.53 ns 371.87 ns]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+
+
+$ python3 scripts/ratios.py write_
+
+benchmark                          ratio   95% interval       baseline mean
+write_accumulate/borrow/nested      1.003  [ 0.998,  1.008]         347.1 ns
+write_accumulate/borrow/three       1.011  [ 1.008,  1.015]         336.5 ns
+write_accumulate/borrow/u64         1.005  [ 1.000,  1.010]         332.5 ns
+write_accumulate/borrow/vec10       0.980  [ 0.976,  0.985]         354.7 ns
+write_accumulate/borrow/vec1000     1.026  [ 1.020,  1.032]         349.8 ns
+write_accumulate/owned/nested       1.104  [ 1.099,  1.110]         347.1 ns
+write_accumulate/owned/three        1.014  [ 1.010,  1.018]         336.5 ns
+write_accumulate/owned/u64          1.003  [ 1.000,  1.007]         332.5 ns
+write_accumulate/owned/vec10        1.055  [ 1.049,  1.061]         354.7 ns
+write_accumulate/owned/vec1000      3.165  [ 3.150,  3.180]         349.8 ns
+write_accumulate/rebrand/nested     1.241  [ 1.236,  1.247]         347.1 ns
+write_accumulate/rebrand/three      1.030  [ 1.026,  1.034]         336.5 ns
+write_accumulate/rebrand/u64        1.007  [ 1.003,  1.010]         332.5 ns
+write_accumulate/rebrand/vec10      1.065  [ 1.060,  1.070]         354.7 ns
+write_accumulate/rebrand/vec1000    2.792  [ 2.780,  2.804]         349.8 ns
+write_accumulate/view/nested        1.252  [ 1.246,  1.258]         347.1 ns
+write_accumulate/view/three         1.019  [ 1.015,  1.022]         336.5 ns
+write_accumulate/view/u64           1.004  [ 1.001,  1.008]         332.5 ns
+write_accumulate/view/vec10         1.078  [ 1.072,  1.083]         354.7 ns
+write_accumulate/view/vec1000       2.823  [ 2.812,  2.834]         349.8 ns
+write_hold/owned/nested             1.061  [ 1.058,  1.064]         408.7 ns
+write_hold/owned/three              0.994  [ 0.990,  0.998]         350.4 ns
+write_hold/owned/u64                0.992  [ 0.989,  0.995]         340.3 ns
+write_hold/owned/vec10              1.046  [ 1.041,  1.050]         368.8 ns
+write_hold/owned/vec1000            1.548  [ 1.543,  1.553]         677.6 ns
+write_hold/rebrand/nested           1.125  [ 1.122,  1.128]         408.7 ns
+write_hold/rebrand/three            1.028  [ 1.024,  1.033]         350.4 ns
+write_hold/rebrand/u64              0.999  [ 0.995,  1.003]         340.3 ns
+write_hold/rebrand/vec10            1.052  [ 1.049,  1.056]         368.8 ns
+write_hold/rebrand/vec1000          1.455  [ 1.449,  1.460]         677.6 ns
+write_hold/view/nested              1.114  [ 1.111,  1.117]         408.7 ns
+write_hold/view/three               1.016  [ 1.012,  1.020]         350.4 ns
+write_hold/view/u64                 1.005  [ 1.002,  1.009]         340.3 ns
+write_hold/view/vec10               1.058  [ 1.054,  1.062]         368.8 ns
+write_hold/view/vec1000             1.468  [ 1.463,  1.474]         677.6 ns
+write_store/owned/nested            1.287  [ 1.284,  1.290]          58.0 ns
+write_store/owned/three             1.028  [ 1.026,  1.030]          11.7 ns
+write_store/owned/u64               1.002  [ 0.999,  1.005]           7.5 ns
+write_store/owned/vec10             1.733  [ 1.730,  1.738]          23.7 ns
+write_store/owned/vec1000           2.210  [ 2.205,  2.214]         305.1 ns
+write_store/rebrand/nested          1.641  [ 1.637,  1.646]          58.0 ns
+write_store/rebrand/three           1.008  [ 1.005,  1.011]          11.7 ns
+write_store/rebrand/u64             0.990  [ 0.987,  0.994]           7.5 ns
+write_store/rebrand/vec10           1.703  [ 1.698,  1.708]          23.7 ns
+write_store/rebrand/vec1000         1.883  [ 1.879,  1.886]         305.1 ns
+write_store/view/nested             1.647  [ 1.644,  1.651]          58.0 ns
+write_store/view/three              1.025  [ 1.024,  1.025]          11.7 ns
+write_store/view/u64                1.030  [ 1.025,  1.036]           7.5 ns
+write_store/view/vec10              1.712  [ 1.708,  1.717]          23.7 ns
+write_store/view/vec1000            1.871  [ 1.867,  1.875]         305.1 ns
+write_switch_cell/owned/nested      1.019  [ 1.015,  1.023]         363.2 ns
+write_switch_cell/owned/three       1.027  [ 1.021,  1.032]         353.1 ns
+write_switch_cell/owned/u64         0.977  [ 0.973,  0.981]         365.2 ns
+write_switch_cell/owned/vec10       0.997  [ 0.993,  1.001]         358.7 ns
+write_switch_cell/owned/vec1000     0.994  [ 0.989,  1.000]         364.6 ns
+write_switch_cell/rebrand/nested    1.006  [ 1.002,  1.009]         363.2 ns
+write_switch_cell/rebrand/three     1.008  [ 1.003,  1.012]         353.1 ns
+write_switch_cell/rebrand/u64       0.985  [ 0.981,  0.989]         365.2 ns
+write_switch_cell/rebrand/vec10     0.999  [ 0.996,  1.003]         358.7 ns
+write_switch_cell/rebrand/vec1000   0.999  [ 0.995,  1.004]         364.6 ns
+write_switch_cell/view/nested       1.000  [ 0.996,  1.003]         363.2 ns
+write_switch_cell/view/three        0.999  [ 0.995,  1.004]         353.1 ns
+write_switch_cell/view/u64          0.978  [ 0.975,  0.982]         365.2 ns
+write_switch_cell/view/vec10        1.013  [ 1.009,  1.017]         358.7 ns
+write_switch_cell/view/vec1000      1.015  [ 1.011,  1.019]         364.6 ns
+write_update/borrow/nested          1.570  [ 1.566,  1.573]          14.2 ns
+write_update/borrow/three           1.169  [ 1.168,  1.171]           9.2 ns
+write_update/borrow/u64             1.029  [ 1.027,  1.031]           8.1 ns
+write_update/borrow/vec10           1.025  [ 1.021,  1.029]          11.7 ns
+write_update/borrow/vec1000         1.024  [ 1.021,  1.026]          11.5 ns
+write_update/owned/nested           3.779  [ 3.768,  3.791]          14.2 ns
+write_update/owned/three            2.026  [ 2.023,  2.030]           9.2 ns
+write_update/owned/u64              1.220  [ 1.217,  1.222]           8.1 ns
+write_update/owned/vec10            3.256  [ 3.246,  3.266]          11.7 ns
+write_update/owned/vec1000         62.488  [62.335, 62.635]          11.5 ns
+write_update/rebrand/nested         8.524  [ 8.504,  8.542]          14.2 ns
+write_update/rebrand/three          1.884  [ 1.881,  1.888]           9.2 ns
+write_update/rebrand/u64            1.187  [ 1.184,  1.191]           8.1 ns
+write_update/rebrand/vec10          3.766  [ 3.751,  3.780]          11.7 ns
+write_update/rebrand/vec1000       50.829  [50.642, 51.010]          11.5 ns
+write_update/view/nested            8.836  [ 8.817,  8.854]          14.2 ns
+write_update/view/three             1.822  [ 1.818,  1.827]           9.2 ns
+write_update/view/u64               1.000  [ 0.998,  1.001]           8.1 ns
+write_update/view/vec10             3.811  [ 3.800,  3.822]          11.7 ns
+write_update/view/vec1000          49.794  [49.609, 49.971]          11.5 ns
+

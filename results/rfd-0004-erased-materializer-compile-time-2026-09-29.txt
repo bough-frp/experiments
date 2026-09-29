@@ -1,0 +1,46 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-29 - rfd-0004-erased-materializer at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0004-erased-materializer --
+
+    Finished `release` profile [optimized] target(s) in 0.03s
+     Running `target/release/rfd-0004-erased-materializer`
+F36's chain shapes, from data: 9 adapter kinds (map, filter, snapshot(Cell), gate(Cell), filter_map, map_to, snapshot(State), gate(State), once), a linear or a shared head,
+six materializers, every chain of up to 2 and 3 adapters; generated under /home/zefs/prog/bough/research-scratch-space/verify/wallclock/experiments/target/rfd-0004-erased-materializer.
+Release build of each crate from clean, 3 times, interleaved.
+
+rep 1/3: baseline depth 2: 10.4 s
+rep 1/3: boxed    depth 2: 4.3 s
+rep 1/3: fnptr    depth 2: 3.5 s
+rep 1/3: flat     depth 2: 10.9 s
+rep 1/3: baseline depth 3: 101.2 s
+rep 1/3: boxed    depth 3: 37.5 s
+rep 1/3: fnptr    depth 3: 29.0 s
+rep 1/3: flat     depth 3: 104.9 s
+rep 2/3: baseline depth 2: 10.4 s
+rep 2/3: boxed    depth 2: 4.3 s
+rep 2/3: fnptr    depth 2: 3.5 s
+rep 2/3: flat     depth 2: 10.8 s
+rep 2/3: baseline depth 3: 100.8 s
+rep 2/3: boxed    depth 3: 37.3 s
+rep 2/3: fnptr    depth 3: 28.9 s
+rep 2/3: flat     depth 3: 105.7 s
+rep 3/3: baseline depth 2: 10.5 s
+rep 3/3: boxed    depth 2: 4.3 s
+rep 3/3: fnptr    depth 2: 3.5 s
+rep 3/3: flat     depth 2: 10.9 s
+rep 3/3: baseline depth 3: 101.8 s
+rep 3/3: boxed    depth 3: 37.4 s
+rep 3/3: fnptr    depth 3: 28.9 s
+rep 3/3: flat     depth 3: 104.9 s
+depth  design    chain types   eval fns   median s vs baseline  builds (s)                binary KiB  checksum
+2      baseline          182        910       10.4        1.00  10.4 10.4 10.5                  2430  -8906643037894416193
+2      boxed             182          7        4.3        0.41  4.3 4.3 4.3                     1690  -8906643037894416193
+2      fnptr             182          7        3.5        0.34  3.5 3.5 3.5                     1364  -8906643037894416193
+2      flat              182        912       10.9        1.04  10.9 10.8 10.9                  2976  -8906643037894416193
+3      baseline         1640       8200      101.2        1.00  101.2 100.8 101.8              19183  1123800637675809446
+3      boxed            1640          7       37.4        0.37  37.5 37.3 37.4                 11743  1123800637675809446
+3      fnptr            1640          7       28.9        0.29  29.0 28.9 28.9                  7596  1123800637675809446
+3      flat             1640       8202      104.9        1.04  104.9 105.7 104.9              25537  1123800637675809446
+
+builds took 906 s in all
+verdict: at depth 2 boxed built in 0.41, fnptr in 0.34 and flat in 1.04 of baseline's time, every checksum the same; at depth 3 boxed built in 0.37, fnptr in 0.29 and flat in 1.04 of baseline's time, every checksum the same.
+

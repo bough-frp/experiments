@@ -1,0 +1,80 @@
+> rustc 1.98.1 (released 2026-09-01) - measured 2026-09-29 - rfd-0002-decoupled-marker at experiments@daa6419 - Ryzen 7 2700X, Fedora 44 container on Bazzite 44
+$ cargo run --release --bin rfd-0002-decoupled-marker -- --compile-time
+
+    Finished `release` profile [optimized] target(s) in 0.06s
+     Running `target/release/rfd-0002-decoupled-marker --compile-time`
+rustc: rustc 1.98.1 (48a229cea 2026-09-01)  (rust-toolchain.toml)
+runs: 10 per design per mode, interleaved, after one untimed build; generated program: 8 x 64 depth-three chains
+ratio: median / baseline median [bootstrap 95% interval, 2000 resamples]
+
+check (--emit=metadata)
+  program                    baseline ms  marker / baseline        rows / baseline
+  defer-backward-feeds-loop         67.7  1.041 [1.030, 1.056]     -
+  defer-countdown                   66.6  1.045 [1.032, 1.054]     -
+  defer-no-filter                   65.7  1.039 [1.025, 1.044]     -
+  depends-on-forward                66.5  1.027 [1.017, 1.036]     -
+  f1-counter                        67.4  1.032 [1.027, 1.048]     -
+  gate-counter                      66.3  1.043 [1.027, 1.050]     -
+  navigation                        65.9  1.031 [1.020, 1.035]     -
+  nested-loop-in-child              66.4  1.043 [1.034, 1.051]     -
+  nested-split-feeds-parent         68.0  1.040 [1.032, 1.048]     -
+  nested-split-loop-in-child        67.7  1.038 [1.028, 1.049]     -
+  sample-in-construct               66.5  1.028 [1.019, 1.048]     -
+  snapshot-in-merge                 66.4  1.045 [1.041, 1.050]     -
+  snapshot-of-steps                 66.0  1.042 [1.035, 1.052]     -
+  split-fed-by-children             67.7  1.043 [1.022, 1.054]     -
+  stream-counter                    66.6  1.049 [1.037, 1.057]     -
+  switch-inner-reads-forward        67.4  1.035 [1.026, 1.043]     -
+  switch-of-switch                  66.0  1.040 [1.028, 1.048]     -
+  two-loops-reset-definition        67.8  1.035 [1.029, 1.044]     -
+  fixtures, geometric mean                1.039
+  generated, depth three          1013.9  1.150 [1.144, 1.158]     1.248 [1.240, 1.256]
+
+build (--emit=link, opt-level 0)
+  program                    baseline ms  marker / baseline        rows / baseline
+  defer-backward-feeds-loop        103.5  1.024 [1.017, 1.035]     -
+  defer-countdown                   96.6  1.030 [1.022, 1.035]     -
+  defer-no-filter                   95.2  1.035 [1.023, 1.042]     -
+  depends-on-forward               104.1  1.031 [1.023, 1.042]     -
+  f1-counter                        96.0  1.030 [1.016, 1.057]     -
+  gate-counter                      97.6  1.027 [1.009, 1.038]     -
+  navigation                        91.6  1.047 [1.033, 1.058]     -
+  nested-loop-in-child              97.1  1.028 [1.019, 1.041]     -
+  nested-split-feeds-parent         99.5  1.031 [1.025, 1.040]     -
+  nested-split-loop-in-child        97.8  1.030 [1.022, 1.040]     -
+  sample-in-construct               94.6  1.027 [1.023, 1.039]     -
+  snapshot-in-merge                 98.0  1.027 [1.018, 1.043]     -
+  snapshot-of-steps                 96.4  1.029 [1.023, 1.044]     -
+  split-fed-by-children            104.0  1.024 [1.013, 1.030]     -
+  stream-counter                    97.0  1.029 [1.023, 1.038]     -
+  switch-inner-reads-forward        98.6  1.037 [1.024, 1.047]     -
+  switch-of-switch                  91.7  1.060 [1.044, 1.067]     -
+  two-loops-reset-definition       104.0  1.036 [1.023, 1.046]     -
+  fixtures, geometric mean                1.032
+  generated, depth three          2739.0  1.080 [1.075, 1.083]     1.114 [1.109, 1.118]
+
+build (--emit=link, opt-level 3)
+  program                    baseline ms  marker / baseline        rows / baseline
+  defer-backward-feeds-loop        164.8  1.025 [1.016, 1.034]     -
+  defer-countdown                  152.0  1.026 [1.019, 1.034]     -
+  defer-no-filter                  150.4  1.017 [1.008, 1.024]     -
+  depends-on-forward               161.0  1.022 [1.011, 1.032]     -
+  f1-counter                       144.1  1.021 [1.006, 1.031]     -
+  gate-counter                     151.9  1.008 [1.001, 1.022]     -
+  navigation                       139.9  1.042 [1.038, 1.054]     -
+  nested-loop-in-child             147.6  1.028 [1.018, 1.036]     -
+  nested-split-feeds-parent        155.4  1.022 [1.016, 1.032]     -
+  nested-split-loop-in-child       148.9  1.019 [1.010, 1.026]     -
+  sample-in-construct              146.1  1.017 [1.011, 1.024]     -
+  snapshot-in-merge                150.0  1.022 [1.013, 1.028]     -
+  snapshot-of-steps                148.5  1.020 [1.015, 1.025]     -
+  split-fed-by-children            161.1  1.027 [1.015, 1.032]     -
+  stream-counter                   149.2  1.026 [1.014, 1.036]     -
+  switch-inner-reads-forward       152.0  1.016 [1.005, 1.034]     -
+  switch-of-switch                 140.7  1.039 [1.034, 1.051]     -
+  two-loops-reset-definition       162.5  1.026 [1.017, 1.035]     -
+  fixtures, geometric mean                1.023
+  generated, depth three          7709.6  1.035 [1.033, 1.041]     1.047 [1.045, 1.050]
+
+absolute times are for scale only; quote the ratios, from an idle machine
+
